@@ -1,0 +1,14 @@
+.idea/
+.idea/*
+
+tmp
+bin
+lib
+include
+pip-selfcheck.json
+
+config.cfg
+
+*.swp
+
+__pycache__/
