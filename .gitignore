@@ -5,6 +5,7 @@ tmp
 bin
 lib
 include
+scripts
 pip-selfcheck.json
 
 config.cfg
