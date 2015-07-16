@@ -26,7 +26,7 @@
                             {% if current_user.is_authenticated() %}
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> <strong>{{ current_user.username }}</strong></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ url_for('main.screen') }}">Log out</a></li>
+                                <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
                                 {% if current_user.is_administrator() %}
                                 <li role="separator" class="divider"></li>
                                 <li><a href="/admin">Admin panel</a></li>
@@ -35,8 +35,8 @@
                             {% else %}
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Not logged in!</a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ url_for('main.screen') }}">Log in</a></li>
-                                <li><a href="{{ url_for('main.screen') }}">Register</a></li>
+                                <li><a href="{{ url_for('auth.login') }}">Log in</a></li>
+                                <li><a href="{{ url_for('auth.register') }}">Register</a></li>
                             </ul>
                             {% endif %}
                         </li>

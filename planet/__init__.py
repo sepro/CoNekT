@@ -15,11 +15,15 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'main'
+login_manager.login_view = 'auth.login'
+
+from planet.models.users import User
 
 from planet.controllers.main import main
+from planet.controllers.auth import auth
 
 app.register_blueprint(main)
+app.register_blueprint(auth, url_prefix='/auth')
 
 
 
