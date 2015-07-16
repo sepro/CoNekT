@@ -1,7 +1,7 @@
 from planet import db
 from sqlalchemy import Enum
 
-from planet.models.relationships import sequence_go
+from planet.models.relationships import sequence_go, sequence_interpro, sequence_family
 
 class Sequence(db.Model):
     __tablename__ = 'sequences'
@@ -17,3 +17,10 @@ class Sequence(db.Model):
     go_labels = db.relationship('go', secondary=sequence_go,
                                 backref=db.backref('sequences', lazy='dynamic'),
                                 lazy='dynamic')
+
+    interpro_domains = db.relationship('interpro', secondary=sequence_interpro,
+                                       backref=db.backref('sequences', lazy='dynamic'),
+                                       lazy='dynamic')
+    families = db.relationship('go', secondary=sequence_family,
+                               backref=db.backref('sequences', lazy='dynamic'),
+                               lazy='dynamic')

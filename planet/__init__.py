@@ -23,6 +23,8 @@ from planet.models.users import User
 from planet.models.species import Species
 from planet.models.sequences import Sequence
 from planet.models.go import GO
+from planet.models.interpro import Interpro
+from planet.models.gene_families import GeneFamilyMethod, GeneFamily
 
 # Import all relationships (tables for many-to-many relationships)
 

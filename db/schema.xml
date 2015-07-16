@@ -211,9 +211,10 @@
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="gf_clustering_method" null="1" autoincrement="0">
-<datatype>MEDIUMTEXT</datatype>
-<default>NULL</default></row>
+<row name="gene_family_clustering_methods_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="gene_family_clustering_methods" row="id" />
+</row>
 <row name="name" null="1" autoincrement="0">
 <datatype>VARCHAR(20)</datatype>
 <default>NULL</default></row>
@@ -321,6 +322,17 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="coexpression_clusters" row="id" />
 </row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1324" y="469" name="gene_family_clustering_methods">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="method" null="1" autoincrement="0">
+<datatype>MEDIUMTEXT</datatype>
+<default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
