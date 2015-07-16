@@ -25,6 +25,7 @@ from planet.models.sequences import Sequence
 from planet.models.go import GO
 from planet.models.interpro import Interpro
 from planet.models.gene_families import GeneFamilyMethod, GeneFamily
+from planet.models.coexpression_clusters import CoexpressionClusteringMethod, CoexpressionCluster
 
 # Import all relationships (tables for many-to-many relationships)
 

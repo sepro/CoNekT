@@ -19,3 +19,10 @@ sequence_family = db.Table('sequence_family',
                            db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id')),
                            db.Column('gene_family_id', db.Integer, db.ForeignKey('gene_families.id'))
                            )
+
+sequence_coexpression_cluster = db.Table('sequence_coexpression_cluster',
+                                         db.Column('id', db.Integer, primary_key=True),
+                                         db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id')),
+                                         db.Column('coexpression_cluster_id', db.Integer,
+                                                   db.ForeignKey('coexpression_clusters.id'))
+                                         )
