@@ -104,7 +104,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="255" y="306" name="sequence">
+<table x="273" y="44" name="sequence">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -112,10 +112,10 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="species" row="id" />
 </row>
-<row name="identifier" null="1" autoincrement="0">
+<row name="name" null="1" autoincrement="0">
 <datatype>VARCHAR(50)</datatype>
 <default>NULL</default></row>
-<row name="sequence" null="1" autoincrement="0">
+<row name="transcript" null="1" autoincrement="0">
 <datatype>MEDIUMTEXT</datatype>
 <default>NULL</default></row>
 <row name="coding_sequence" null="1" autoincrement="0">
@@ -138,7 +138,7 @@
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="go_id" null="1" autoincrement="0">
+<row name="label" null="1" autoincrement="0">
 <datatype>MEDIUMTEXT</datatype>
 <default>NULL</default></row>
 <row name="description" null="1" autoincrement="0">
@@ -211,10 +211,9 @@
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="gf_clustering_method_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="gf_clustering_method" row="id" />
-</row>
+<row name="gf_clustering_method" null="1" autoincrement="0">
+<datatype>MEDIUMTEXT</datatype>
+<default>NULL</default></row>
 <row name="name" null="1" autoincrement="0">
 <datatype>VARCHAR(20)</datatype>
 <default>NULL</default></row>
@@ -279,17 +278,6 @@
 <default>NULL</default></row>
 <row name="unit" null="1" autoincrement="0">
 <datatype>ENUM</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="1303" y="455" name="gf_clustering_method">
-<row name="id" null="1" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="description" null="1" autoincrement="0">
-<datatype>MEDIUMTEXT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>

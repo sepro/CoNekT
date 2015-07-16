@@ -17,13 +17,21 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 
+# Import all models here
+
 from planet.models.users import User
+from planet.models.species import Species
+from planet.models.sequences import Sequence
+from planet.models.go import GO
+
+# Import all relationships (tables for many-to-many relationships)
+
+import planet.models.relationships
+
+# Import controllers and register as blueprint
 
 from planet.controllers.main import main
 from planet.controllers.auth import auth
 
 app.register_blueprint(main)
 app.register_blueprint(auth, url_prefix='/auth')
-
-
-

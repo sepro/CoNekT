@@ -3,13 +3,17 @@ from planet import db
 from datetime import datetime
 
 class User(db.Model):
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.Text)
+    first_name = db.Column(db.Text)
+    last_name = db.Column(db.Text)
     password_hash = db.Column(db.Text)
     email = db.Column(db.Text)
     reset_key = db.Column(db.Text)
     is_admin = db.Column(db.Boolean)
     is_banned = db.Column(db.Boolean)
+    wants_newsletter = db.Column(db.Boolean)
     registered = db.Column(db.DateTime)
 
     def __init__(self, username, password, email, reset_key='', is_admin=False, is_banned=False,
@@ -21,6 +25,7 @@ class User(db.Model):
         self.is_admin = is_admin
         self.is_banned = is_banned
         self.registered = registered
+        self.wants_newsletter = False
 
     def __repr__(self):
         return '<User %d>' % self.id
