@@ -7,7 +7,7 @@ class Sequence(db.Model):
     __tablename__ = 'sequences'
     id = db.Column(db.Integer, primary_key=True)
     species_id = db.Column(db.Integer, db.ForeignKey('species.id'))
-    name = db.Column(db.Text)
+    name = db.Column(db.String(50), index=True)
     transcript = db.Column(db.Text)
     coding_sequence = db.Column(db.Text)
     type = db.Column(Enum('protein_coding', 'TE', 'RNA', name='sequence_type'))
