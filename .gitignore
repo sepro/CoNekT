@@ -5,10 +5,14 @@ tmp
 bin
 lib
 include
-scripts
 pip-selfcheck.json
+scripts
 
 config.cfg
+config.py
+
+db/*
+uploads/*
 
 *.swp
 

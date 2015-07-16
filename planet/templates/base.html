@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initialscale=1">
+        <title>PlaNet</title>
+        <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ url_for('main.screen') }}">PlaNet 2.0</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            {% if current_user.is_authenticated() %}
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> <strong>{{ current_user.username }}</strong></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('main.screen') }}">Log out</a></li>
+                                {% if current_user.is_administrator() %}
+                                <li role="separator" class="divider"></li>
+                                <li><a href="/admin">Admin panel</a></li>
+                                {% endif %}
+                            </ul>
+                            {% else %}
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Not logged in!</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('main.screen') }}">Log in</a></li>
+                                <li><a href="{{ url_for('main.screen') }}">Register</a></li>
+                            </ul>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code to get flash function working -->
+        <div class="container">
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+            <br />
+            <div class="alert alert-{{category}} alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="container">
+            {% block container %}{% endblock %}
+        </div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+{% block extrajs %}{% endblock %}
+</body>
+</html>
