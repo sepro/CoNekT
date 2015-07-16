@@ -12,3 +12,6 @@ class Species(db.Model):
     project_page = db.Column(db.Text)
 
     sequences = db.relationship('Sequence', backref='species')
+
+    def __repr__(self):
+        return '<Species %d>' % self.id
