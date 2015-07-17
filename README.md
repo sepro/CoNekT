@@ -46,7 +46,9 @@ You now have a fresh installation of PlaNet. Follow instructions below to fill t
 Building PlaNet
 ---------------
 
-TO DO add build instructions
+Default tables need to be populated
+
+python build.py populate_go <FILE> : will add go terms from an OBO file to the database
 
 
 
