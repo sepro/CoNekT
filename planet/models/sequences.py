@@ -1,5 +1,4 @@
 from planet import db
-from sqlalchemy import Enum
 
 from planet.models.relationships import sequence_go, sequence_interpro, sequence_family, sequence_coexpression_cluster
 
@@ -10,7 +9,7 @@ class Sequence(db.Model):
     name = db.Column(db.String(50), index=True)
     transcript = db.Column(db.Text)
     coding_sequence = db.Column(db.Text)
-    type = db.Column(Enum('protein_coding', 'TE', 'RNA', name='sequence_type'))
+    type = db.Column(db.Enum('protein_coding', 'TE', 'RNA', name='sequence_type'))
     is_mitochondrial = db.Column(db.Boolean)
     is_chloroplast = db.Column(db.Boolean)
 
