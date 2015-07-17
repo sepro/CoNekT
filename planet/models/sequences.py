@@ -13,17 +13,17 @@ class Sequence(db.Model):
     is_mitochondrial = db.Column(db.Boolean)
     is_chloroplast = db.Column(db.Boolean)
 
-    go_labels = db.relationship('go', secondary=sequence_go,
+    go_labels = db.relationship('GO', secondary=sequence_go,
                                 backref=db.backref('sequences', lazy='dynamic'),
                                 lazy='dynamic')
 
-    interpro_domains = db.relationship('interpro', secondary=sequence_interpro,
+    interpro_domains = db.relationship('Interpro', secondary=sequence_interpro,
                                        backref=db.backref('sequences', lazy='dynamic'),
                                        lazy='dynamic')
-    families = db.relationship('gene_families', secondary=sequence_family,
+    families = db.relationship('GeneFamily', secondary=sequence_family,
                                backref=db.backref('sequences', lazy='dynamic'),
                                lazy='dynamic')
 
-    coexpression_clusters = db.relationship('coexpression_clusters', secondary=sequence_coexpression_cluster,
+    coexpression_clusters = db.relationship('CoexpressionCluster', secondary=sequence_coexpression_cluster,
                                             backref=db.backref('sequences', lazy='dynamic'),
                                             lazy='dynamic')
