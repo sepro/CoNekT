@@ -10,6 +10,7 @@ from config import SQLALCHEMY_DATABASE_URI
 from config import SQLALCHEMY_MIGRATE_REPO
 from config import UPLOAD_FOLDER
 from config import ADMIN_PASSWORD
+from config import ADMIN_EMAIL
 
 from planet import app, db
 from planet.models.users import User
@@ -32,7 +33,7 @@ else:
 
 # If there are no users in the database create an admin account
 if len(User.query.all()) == 0:
-    db.session.add(User("admin", ADMIN_PASSWORD, "admin@website.com", is_admin=True))
+    db.session.add(User("admin", ADMIN_PASSWORD, ADMIN_EMAIL, is_admin=True))
     db.session.commit()
 
     print("\nAn admin account has been created. Username=\'admin\' and password=\'" + ADMIN_PASSWORD + "\'")

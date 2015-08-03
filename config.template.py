@@ -12,6 +12,7 @@ SECRET_KEY = 'change me !'
 
 # Password for the initial admin account
 ADMIN_PASSWORD = 'admin'
+ADMIN_EMAIL = 'admin@web.com'
 
 # Path where uploads are stored
 UPLOAD_FOLDER = os.path.join(basedir, 'uploads')
