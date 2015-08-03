@@ -1,25 +1,19 @@
 # PlaNet
-Code to build PlaNet and set up the website
+Code to build PlaNet and set up the website. 
+
+Setting up PlaNet
+-----------------
+Below are the instructions to set up a new PlaNet version.
 
 [Linux Installation instructions](docs/install_linux.md)
+Windows Installation instructions (TODO)
 
-Building PlaNet
----------------
+[Build PlaNet](docs/build_planet.md)
 
-Default tables need to be populated
-
-python build.py populate_go <FILE> : will add go terms from an OBO file to the database
+[Run website](docs/run_website.md)
 
 
 
-PlaNet Website
---------------
-
-PlaNet is a flask app, all that is required to start the website is running
-
-    python run.py
-
-To run this permanently on a server check the web on how to host a flask app using nginx or supervisor.
 
 Contact
 -------
