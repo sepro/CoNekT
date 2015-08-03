@@ -74,7 +74,7 @@ class OboEntry:
 
 class Parser:
     """
-    reads the specified obo file
+    Reads the specified obo file
     """
     def __init__(self):
         self.terms = []
