@@ -1,6 +1,8 @@
 """
 Parser class for obo files (ontology structure files).
 """
+from copy import deepcopy
+
 class OboEntry:
     def __init__(self):
         self.id = ''
@@ -8,9 +10,9 @@ class OboEntry:
         self.namespace = ''
         self.definition = ''
         self.is_a = []
-        self.part_of = []
         self.synonym = []
         self.alt_id = []
+        self.extended_go = []
         self.is_obsolete = False
 
     def set_id(self, term_id):
@@ -25,11 +27,11 @@ class OboEntry:
     def set_definition(self, definition):
         self.definition = definition
 
+    def set_extended_go(self, parents):
+        self.extended_go = parents
+
     def add_is_a(self, label):
         self.is_a.append(label)
-
-    def add_part_of(self, label):
-        self.part_of.append(label)
 
     def add_synonym(self, label):
         self.synonym.append(label)
@@ -59,6 +61,17 @@ class OboEntry:
         elif key == "is_obsolete" and value == "true":
             self.make_obsolete()
 
+    def print(self):
+            print("ID:\t\t" + self.id)
+            print("Name:\t\t" + self.name)
+            print("Namespace:\t" + self.namespace)
+            print("Definition:\t" + self.definition)
+            print("is_a: " + str(self.is_a))
+            print("extended_parents: " + str(self.extended_go))
+
+            if self.is_obsolete:
+                print("OBSOLETE")
+
 class Parser:
     """
     reads the specified obo file
@@ -68,15 +81,7 @@ class Parser:
 
     def print(self):
         for term in self.terms:
-            print("ID:\t\t" + term.id)
-            print("Name:\t\t" + term.name)
-            print("Namespace:\t" + term.namespace)
-            print("Definition:\t" + term.definition)
-            print("is_a: " + str(term.is_a))
-            print("part_of: " + str(term.part_of))
-
-            if term.is_obsolete:
-                print("OBSOLETE")
+            term.print()
 
     def readfile(self, filename):
         """
@@ -114,3 +119,25 @@ class Parser:
 
             if current_term:
                 self.terms.append(current_term)
+
+    def extend_go(self):
+        hashed_terms = {}
+
+        for term in self.terms:
+            hashed_terms[term.id] = term
+
+        for term in self.terms:
+            extended_go = deepcopy(term.is_a)
+
+            found_new = True
+
+            while found_new:
+                found_new = False
+                for parent_term in extended_go:
+                    new_gos = hashed_terms[parent_term].is_a
+                    for new_go in new_gos:
+                        if new_go not in extended_go:
+                            found_new = True
+                            extended_go.append(new_go)
+
+            term.set_extended_go(extended_go)
