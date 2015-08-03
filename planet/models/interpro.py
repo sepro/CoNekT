@@ -6,3 +6,6 @@ class Interpro(db.Model):
     label = db.Column(db.String(50), unique=True, index=True)
     description = db.Column(db.Text)
 
+    def __init__(self, label, description):
+        self.label = label
+        self.description = description
