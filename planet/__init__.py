@@ -35,6 +35,10 @@ import planet.models.relationships
 
 from planet.controllers.main import main
 from planet.controllers.auth import auth
+from planet.controllers.sequence import sequence
+from planet.controllers.species import species
 
 app.register_blueprint(main)
 app.register_blueprint(auth, url_prefix='/auth')
+app.register_blueprint(sequence, url_prefix='/sequence')
+app.register_blueprint(species, url_prefix='/species')

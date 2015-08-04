@@ -10,7 +10,7 @@ class Species(db.Model):
     pubmed_id = db.Column(db.Integer)
     project_page = db.Column(db.Text)
 
-    sequences = db.relationship('Sequence', backref='species')
+    sequences = db.relationship('Sequence', backref='species', lazy='dynamic')
 
     def __init__(self, code, name):
         self.code = code

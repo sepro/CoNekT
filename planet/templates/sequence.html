@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<div class="top-pad">
+
+    {% if sequence %}
+    <h1>Sequence: <strong>{{ sequence.name }}</strong> <small>({{ sequence.type }})</small></h1>
+
+    Species: <em><a href="{{ url_for('species.species_view', species_id=sequence.species.id) }}">{{ sequence.species.name }}</a></em>
+    <br />
+
+
+    <h3>Coding Sequence <small>(length: {{ sequence.coding_sequence|length }} bp )</small></h3>
+    <div class="well sequence">{{ sequence.coding_sequence }}</div>
+
+    {% endif %}
+</div>
+
+</div>
+{% endblock %}
