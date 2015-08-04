@@ -13,6 +13,8 @@ from planet import app
 from build.go import populate_go as pg
 from build.interpro_xml import populate_interpro as pi
 
+from build.species import add_species_from_fasta
+
 
 manager = Manager(app)
 
@@ -33,6 +35,17 @@ def populate_interpro(filename):
     :param filename: path to the interpro.xml
     """
     pi(filename)
+
+@manager.command
+def add_fasta_species(filename, species_code, species_name):
+    """
+    Function that adds a species based on a fasta file with coding sequences
+
+    :param filename: path to the fasta file
+    :param species_code: short code for the species (usually three letters)
+    :param species_name: full name of the species
+    """
+    add_species_from_fasta(filename, species_code, species_name)
 
 if __name__ == "__main__":
 

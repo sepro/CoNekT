@@ -16,8 +16,6 @@ def populate_interpro(filename, empty=True):
 
     interpro_parser.readfile(filename)
 
-    interpro_parser.print()
-
     for domain in interpro_parser.domains:
         interpro = Interpro(domain.label, domain.description)
 

@@ -27,3 +27,11 @@ class Sequence(db.Model):
     coexpression_clusters = db.relationship('CoexpressionCluster', secondary=sequence_coexpression_cluster,
                                             backref=db.backref('sequences', lazy='dynamic'),
                                             lazy='dynamic')
+
+    def __init__(self, species_id, name, coding_sequence, type='protein_coding', is_chloroplast=False, is_mitochondrial=False):
+        self.species_id = species_id
+        self.name = name
+        self.coding_sequence = coding_sequence
+        self.type = type
+        self.is_chloroplast = is_chloroplast
+        self.is_mitochondrial = is_mitochondrial

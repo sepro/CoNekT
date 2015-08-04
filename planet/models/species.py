@@ -12,5 +12,9 @@ class Species(db.Model):
 
     sequences = db.relationship('Sequence', backref='species')
 
+    def __init__(self, code, name):
+        self.code = code
+        self.name = name
+
     def __repr__(self):
         return '<Species %d>' % self.id
