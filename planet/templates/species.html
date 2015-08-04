@@ -19,6 +19,30 @@
             Website : <a href="{{ species.project_page }}">{{ species.project_page }}</a><br />
         {% endif %}
 
+    {% elif all_species %}
+    <h1>Species Overview</h1>
+     <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Transcripts</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for s in all_species  %}
+                <tr>
+                    <td>{{ s.id }}</td>
+                    <td>{{ s.code }}</td>
+                    <td><em><a href="{{ url_for('species.species_view', species_id=s.id) }}">{{ s.name }}</a></em></td>
+                    <td>{{ s.sequences.count() }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
     {% endif %}
 </div>
 
