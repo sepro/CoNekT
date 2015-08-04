@@ -6,13 +6,11 @@ Setting up PlaNet
 Below are the instructions to set up a new PlaNet version.
 
 [Linux Installation instructions](docs/install_linux.md)
-Windows Installation instructions (TODO)
+[Windows Installation instructions]  (docs/install_windows.md)
 
 [Build PlaNet](docs/building_planet.md)
 
 [Run website](docs/run_website.md)
-
-
 
 
 Contact
