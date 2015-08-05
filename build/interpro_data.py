@@ -5,6 +5,7 @@ from planet.models.interpro import Interpro
 
 from planet import db
 
+
 def add_interpro_from_plaza(filename):
     """
     Adds GO annotation from PLAZA 3.0 to the database
@@ -31,11 +32,11 @@ def add_interpro_from_plaza(filename):
     for gene, domains in interpro_parser.annotation.items():
         if gene in gene_hash.keys():
             current_sequence = gene_hash[gene]
-            print(current_sequence.id)
             for domain in domains:
                 if domain in domain_hash.keys():
                     current_domain = domain_hash[domain]
-                    current_sequence.interpro_domains.append(current_domain)
+                    if current_domain not in current_sequence.interpro_domains:
+                        current_sequence.interpro_domains.append(current_domain)
                 else:
                     print(domain, "not found in the database.")
         else:

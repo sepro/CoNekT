@@ -2,6 +2,7 @@ from planet import db
 
 from planet.models.relationships import sequence_go, sequence_interpro, sequence_family, sequence_coexpression_cluster
 
+
 class Sequence(db.Model):
     __tablename__ = 'sequences'
     id = db.Column(db.Integer, primary_key=True)

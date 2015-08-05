@@ -1,5 +1,6 @@
 from planet import db
 
+
 class GO(db.Model):
     __tablename__ = 'go'
     id = db.Column(db.Integer, primary_key=True)

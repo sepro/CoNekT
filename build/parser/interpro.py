@@ -3,11 +3,11 @@ Parser class for interpro.xml: xml file from EBI with the info on all InterPro D
 """
 import xml.etree.ElementTree as ET
 
+
 class InterPro:
     def __init__(self):
         self.label = ''
         self.description = ''
-
 
     def set_label(self, label):
         self.label = label
@@ -17,6 +17,7 @@ class InterPro:
 
     def print(self):
         print(self.label, self.description)
+
 
 class Parser:
     """

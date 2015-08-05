@@ -1,5 +1,6 @@
 import sys
 
+
 class Fasta:
     def __init__(self):
         self.sequences = {}

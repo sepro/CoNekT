@@ -9,15 +9,19 @@ from planet import db
 
 from datetime import datetime
 
+
 auth = Blueprint('auth', __name__)
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 @auth.before_request
 def get_current_user():
     g.user = current_user
+
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -56,6 +60,7 @@ def register():
 
     return render_template('register.html', form=form)
 
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     """
@@ -84,6 +89,7 @@ def login():
         flash(form.errors, 'danger')
 
     return render_template('login.html', form=form)
+
 
 @auth.route('/logout')
 @login_required

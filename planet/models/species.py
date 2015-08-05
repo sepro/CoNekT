@@ -1,5 +1,6 @@
 from planet import db
 
+
 class Species(db.Model):
     __tablename__ = 'species'
     id = db.Column(db.Integer, primary_key=True)

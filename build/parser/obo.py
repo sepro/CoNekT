@@ -3,6 +3,7 @@ Parser class for obo files (ontology structure files).
 """
 from copy import deepcopy
 
+
 class OboEntry:
     def __init__(self):
         self.id = ''
@@ -71,6 +72,7 @@ class OboEntry:
 
             if self.is_obsolete:
                 print("OBSOLETE")
+
 
 class Parser:
     """

@@ -1,6 +1,4 @@
-from config import DEBUG
-
-from planet import app,db
+from planet import db
 from planet.models.go import GO
 from planet.models.sequences import Sequence
 from build.parser.obo import Parser as OBOParser
@@ -39,6 +37,7 @@ def populate_go(filename, empty=True):
     except:
         db.session.rollback()
 
+
 def add_go_from_plaza(filename):
     """
     Adds GO annotation from PLAZA 3.0 to the database
@@ -66,5 +65,3 @@ def add_go_from_plaza(filename):
                 db.session.rollback()
         else:
             print("Gene", gene, "not found in the database.")
-
-
