@@ -12,6 +12,11 @@ Below are the instructions to set up a new PlaNet version.
 
 [Run website](docs/run_website.md)
 
+Instructions for Developers
+---------------------------
+
+Basic information on how PlaNet 2.0 is designed can be found [Linux Installation instructions](docs/developer.md)
+
 
 Contact
 -------
