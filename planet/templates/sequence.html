@@ -31,7 +31,8 @@
                         <tbody>
                             {% for go in sequence.go_labels %}
                             <tr>
-                                <td><a href="{{ url_for('go.go_view', go_id=go.id) }}">{{ go.label }}</a></td>
+                                <td><a href="{{ url_for('go.go_view', go_id=go.id) }}" data-toggle="tooltip"
+                                       data-placement="top" title="{{ go.description }}">{{ go.label }}</a></td>
                                 <td>{{ go.name }}</td>
                             </tr>
                             {% endfor %}
@@ -80,4 +81,12 @@
 </div>
 
 </div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
 {% endblock %}

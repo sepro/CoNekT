@@ -17,6 +17,11 @@ Instructions for Developers
 
 Basic information on how PlaNet 2.0 is designed can be found [Linux Installation instructions](docs/developer.md)
 
+Acknowledgements
+----------------
+
+PlaNet 2.0 is based upon many open-source projects, check the full list [here](docs/acknowledgements.md)
+
 
 Contact
 -------
