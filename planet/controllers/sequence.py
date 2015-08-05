@@ -7,7 +7,7 @@ sequence = Blueprint('sequence', __name__)
 
 @sequence.route('/')
 def sequence_overview():
-    return "TEST OK"
+    return redirect(url_for('main.screen'))
 
 @sequence.route('/view/<sequence_id>')
 def sequence_view(sequence_id):

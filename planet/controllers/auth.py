@@ -40,8 +40,13 @@ def register():
             return render_template('register.html', form=form)
 
         user = User(username, password, email, '', False, False, datetime.now().replace(microsecond=0))
-        db.session.add(user)
-        db.session.commit()
+
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except:
+            db.session.rollback()
+
         flash('You are now registered. Please login.', 'success')
 
         return redirect(url_for('auth.login'))

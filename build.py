@@ -6,6 +6,11 @@ usage:
 build.py populate_go <FILE> : populates go table with terms from an OBO file
 build.py populate_interpro <FILE> : populates go table with terms from interpro.xml
 
+build.py add_fasta_species <FILE> <CODE> <NAME> : Adds the sequences (coding sequences !) to the database for the
+desired species
+
+build.py add_plaza_go <FILE> : adds go annotation downloaded from PLAZA 3.0 to the database
+
 """
 from flask.ext.script import Manager
 from planet import app
@@ -14,7 +19,7 @@ from build.go import populate_go as pg
 from build.interpro_xml import populate_interpro as pi
 
 from build.species import add_species_from_fasta
-
+from build.go import add_go_from_plaza
 
 manager = Manager(app)
 
@@ -46,6 +51,15 @@ def add_fasta_species(filename, species_code, species_name):
     :param species_name: full name of the species
     """
     add_species_from_fasta(filename, species_code, species_name)
+
+@manager.command
+def add_plaza_go(filename):
+    """
+    Function that add go information to genes from GO data downloadable from PLAZA 3.0
+
+    :param filename: path to the data (csv file)
+    """
+    add_go_from_plaza(filename)
 
 if __name__ == "__main__":
 

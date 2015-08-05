@@ -21,6 +21,9 @@
                     <a class="navbar-brand" href="{{ url_for('main.screen') }}">PlaNet 2.0</a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li><a href="{{ url_for('species.species_overview') }}">Species</a></li>
+                    </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             {% if current_user.is_authenticated() %}
