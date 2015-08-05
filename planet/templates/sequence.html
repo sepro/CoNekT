@@ -10,9 +10,72 @@
     <br />
 
 
-    <h3>Coding Sequence <small>(length: {{ sequence.coding_sequence|length }} bp )</small></h3>
+    <h3>Coding Sequence <small>(length: {{ sequence.coding_sequence|length }} bp)</small></h3>
     <div class="well sequence">{{ sequence.coding_sequence }}</div>
 
+    <br />
+    <h3>Functional Annotation</h3>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">GO annotation</div>
+                {% if sequence.go_labels.count() > 0 %}
+                <div class="table-responsive">
+                    <table class="table  table-striped">
+                        <thead>
+                            <tr>
+                                <th>Label</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for go in sequence.go_labels %}
+                            <tr>
+                                <td>{{ go.label }}</td>
+                                <td>{{ go.name }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="panel-body">
+                    <p>No GO annotation available for this sequence</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">InterPro domains</div>
+                {% if sequence.interpro_domains.count() > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Label</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for domain in sequence.interpro_domains %}
+                            <tr>
+                                <td>{{ domain.label }}</td>
+                                <td>{{ domain.description }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="panel-body">
+                    <p>No InterPro domains available for this sequence</p>
+                </div>
+                {% endif %}
+            </div>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
     {% endif %}
 </div>
 
