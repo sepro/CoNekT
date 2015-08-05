@@ -31,7 +31,7 @@
                         <tbody>
                             {% for go in sequence.go_labels %}
                             <tr>
-                                <td>{{ go.label }}</td>
+                                <td><a href="{{ url_for('go.go_view', go_id=go.id) }}">{{ go.label }}</a></td>
                                 <td>{{ go.name }}</td>
                             </tr>
                             {% endfor %}

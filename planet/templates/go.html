@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<div class="top-pad">
+
+    {% if go %}
+    <h1>{{ go.label }}: <strong>{{ go.name }}</strong> <small>({{ go.type }})</small></h1>
+
+    <p>{{ go.description }}</p>
+    <br />
+
+    {% endif %}
+</div>
+
+</div>
+{% endblock %}
