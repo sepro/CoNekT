@@ -3,13 +3,23 @@ Script to populate the database, frontend for parser functions
 
 usage:
 
+POPULATE DATABASE
+-----------------
+
 build.py populate_go <FILE> : populates go table with terms from an OBO file
 build.py populate_interpro <FILE> : populates go table with terms from interpro.xml
+
+ADDING SEQUENCES/SPECIES
+------------------------
 
 build.py add_fasta_species <FILE> <CODE> <NAME> : Adds the sequences (coding sequences !) to the database for the
 desired species
 
+ADDING FUNCTIONAL ANNOTATION
+----------------------------
+
 build.py add_plaza_go <FILE> : adds go annotation downloaded from PLAZA 3.0 to the database
+build.py add_plaza_interpro <FILE> : adds go annotation downloaded from PLAZA 3.0 to the database
 
 """
 from flask.ext.script import Manager
@@ -22,7 +32,9 @@ from build.species import add_species_from_fasta
 from build.go import add_go_from_plaza
 from build.interpro_data import add_interpro_from_plaza
 
+
 manager = Manager(app)
+
 
 @manager.command
 def populate_go(filename):
@@ -33,6 +45,7 @@ def populate_go(filename):
     """
     pg(filename)
 
+
 @manager.command
 def populate_interpro(filename):
     """
@@ -41,6 +54,7 @@ def populate_interpro(filename):
     :param filename: path to the interpro.xml
     """
     pi(filename)
+
 
 @manager.command
 def add_fasta_species(filename, species_code, species_name):
@@ -53,6 +67,7 @@ def add_fasta_species(filename, species_code, species_name):
     """
     add_species_from_fasta(filename, species_code, species_name)
 
+
 @manager.command
 def add_plaza_go(filename):
     """
@@ -62,6 +77,7 @@ def add_plaza_go(filename):
     """
     add_go_from_plaza(filename)
 
+
 @manager.command
 def add_plaza_interpro(filename):
     """
@@ -70,6 +86,7 @@ def add_plaza_interpro(filename):
     :param filename: path to the data (csv file)
     """
     add_interpro_from_plaza(filename)
+
 
 if __name__ == "__main__":
 

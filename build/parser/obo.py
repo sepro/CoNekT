@@ -5,6 +5,9 @@ from copy import deepcopy
 
 
 class OboEntry:
+    """
+    Class to store data for a single entry in an OBO file
+    """
     def __init__(self):
         self.id = ''
         self.name = ''
@@ -44,6 +47,9 @@ class OboEntry:
         self.is_obsolete = True
 
     def process(self, key, value):
+        """
+        function to process new data for the current entry from the OBO file
+        """
         if key == "id":
             self.set_id(value)
         elif key == "name":
@@ -63,15 +69,18 @@ class OboEntry:
             self.make_obsolete()
 
     def print(self):
-            print("ID:\t\t" + self.id)
-            print("Name:\t\t" + self.name)
-            print("Namespace:\t" + self.namespace)
-            print("Definition:\t" + self.definition)
-            print("is_a: " + str(self.is_a))
-            print("extended_parents: " + str(self.extended_go))
+        """
+        print term to terminal
+        """
+        print("ID:\t\t" + self.id)
+        print("Name:\t\t" + self.name)
+        print("Namespace:\t" + self.namespace)
+        print("Definition:\t" + self.definition)
+        print("is_a: " + str(self.is_a))
+        print("extended_parents: " + str(self.extended_go))
 
-            if self.is_obsolete:
-                print("OBSOLETE")
+        if self.is_obsolete:
+            print("OBSOLETE")
 
 
 class Parser:
@@ -82,6 +91,9 @@ class Parser:
         self.terms = []
 
     def print(self):
+        """
+        prints all the terms to the terminal
+        """
         for term in self.terms:
             term.print()
 
@@ -123,6 +135,9 @@ class Parser:
                 self.terms.append(current_term)
 
     def extend_go(self):
+        """
+        Run this after loading the OBO file to fill the extended GO table (all parental terms of the label).
+        """
         hashed_terms = {}
 
         for term in self.terms:
