@@ -1,6 +1,7 @@
-from flask import Blueprint, redirect, url_for, render_template, jsonify
+from flask import Blueprint, redirect, url_for, render_template, jsonify, Response
 
 from planet.models.go import GO
+import json
 
 
 go = Blueprint('go', __name__)
@@ -39,3 +40,41 @@ def go_json_species(go_id):
             output[s.species.code] += 1
 
     return jsonify(output)
+
+
+@go.route('/json/test/')
+def go_json_test():
+    output = [
+                    {
+                        "value": 100,
+                        "color":"#F7464A",
+                        "highlight": "#FF5A5E",
+                        "label": "Red"
+                    },
+                    {
+                        "value": 50,
+                        "color": "#46BFBD",
+                        "highlight": "#5AD3D1",
+                        "label": "Green"
+                    },
+                    {
+                        "value": 100,
+                        "color": "#FDB45C",
+                        "highlight": "#FFC870",
+                        "label": "Yellow"
+                    },
+                    {
+                        "value": 40,
+                        "color": "#949FB1",
+                        "highlight": "#A8B3C5",
+                        "label": "Grey"
+                    },
+                    {
+                        "value": 120,
+                        "color": "#4D5360",
+                        "highlight": "#616774",
+                        "label": "Dark Grey"
+                    }
+
+                ]
+    return Response(json.dumps(output), mimetype='application/json')
