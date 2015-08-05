@@ -20,6 +20,7 @@ from build.interpro_xml import populate_interpro as pi
 
 from build.species import add_species_from_fasta
 from build.go import add_go_from_plaza
+from build.interpro_data import add_interpro_from_plaza
 
 manager = Manager(app)
 
@@ -55,11 +56,20 @@ def add_fasta_species(filename, species_code, species_name):
 @manager.command
 def add_plaza_go(filename):
     """
-    Function that add go information to genes from GO data downloadable from PLAZA 3.0
+    Function that adds go information to genes from GO data downloadable from PLAZA 3.0
 
     :param filename: path to the data (csv file)
     """
     add_go_from_plaza(filename)
+
+@manager.command
+def add_plaza_interpro(filename):
+    """
+    Function that adds domain information to genes from InterPro data downloadable from PLAZA 3.0
+
+    :param filename: path to the data (csv file)
+    """
+    add_interpro_from_plaza(filename)
 
 if __name__ == "__main__":
 

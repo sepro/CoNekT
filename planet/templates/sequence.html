@@ -61,7 +61,7 @@
                         <tbody>
                             {% for domain in sequence.interpro_domains %}
                             <tr>
-                                <td>{{ domain.label }}</td>
+                                <td><a href="{{ url_for('interpro.interpro_view', interpro_id=domain.id) }}">{{ domain.label }}</a></td>
                                 <td>{{ domain.description }}</td>
                             </tr>
                             {% endfor %}

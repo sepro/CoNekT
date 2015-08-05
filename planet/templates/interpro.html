@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<div class="top-pad">
+
+    {% if interpro %}
+    <h1>{{ interpro.label }}: <strong>{{ interpro.description }}</strong></h1>
+
+    <p>There are <strong>{{ interpro.sequences.count() }}</strong> sequences with this label.</p>
+
+    {% endif %}
+</div>
+
+</div>
+{% endblock %}
