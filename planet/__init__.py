@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 
+from flask_admin import Admin
 
 # Set up app, database and login manager before importing models and controllers
 # Important for db_create script
@@ -48,8 +49,19 @@ app.register_blueprint(go, url_prefix='/go')
 app.register_blueprint(interpro, url_prefix='/interpro')
 app.register_blueprint(family, url_prefix='/family')
 
+# Admin panel
+from planet.admin.views import MyAdminIndexView
+from planet.admin.views import SpeciesAdminView
+
+admin = Admin(app, index_view=MyAdminIndexView())
+admin.add_view(SpeciesAdminView(Species, db.session))
+
 # Custom error handler for 404 errors
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('error/404.html'), 404
+
+@app.errorhandler(403)
+def page_not_found(e):
+    return render_template('error/403.html'), 403
