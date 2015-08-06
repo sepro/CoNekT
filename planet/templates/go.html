@@ -8,15 +8,20 @@
 
     <p>{{ go.description }}</p>
     <br />
-
-    <p>There are <strong>{{ go.sequences.count() }}</strong> sequences with this label.</p>
-
-        {% if go.sequences.count() > 1 %}
-        <div id="canvas-holder">
-			<canvas id="chart-area" width="300" height="300"/>
-		</div>
-        {% endif %}
-
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p>There are <strong>{{ go.sequences.count() }}</strong> sequences with this label.</p>
+                    {% if go.sequences.count() > 1 %}
+                    <div id="canvas-holder" class="center-block">
+                        <canvas id="chart-area" class="center-block" width="300" height="300"/>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
     {% endif %}
 </div>
 
@@ -27,9 +32,9 @@
     {% if go.sequences.count() > 1 %}
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 	<script>
-			$.getJSON( "{{ url_for('go.go_json_test') }}", function( data ) {
+			$.getJSON( "{{ url_for('go.go_json_species', go_id=go.id) }}", function( data ) {
 				var ctx = document.getElementById("chart-area").getContext("2d");
-				window.myPie = new Chart(ctx).Pie(data);
+				window.myPie = new Chart(ctx).Doughnut(data, {animateRotate : false});
 			});
 	</script>
     {% endif %}

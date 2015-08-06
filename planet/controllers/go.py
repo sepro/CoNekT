@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, render_template, jsonify, Response
+from flask import Blueprint, redirect, url_for, render_template, Response
 
 from planet.models.go import GO
 import json
@@ -31,50 +31,17 @@ def go_json_species(go_id):
     current_go = GO.query.get_or_404(go_id)
     sequences = current_go.sequences.all()
 
-    output = {}
+    counts = {}
 
     for s in sequences:
-        if s.species.code not in output.keys():
-            output[s.species.code] = 1
+        if s.species.code not in counts.keys():
+            counts[s.species.code] = {}
+            counts[s.species.code]["label"] = s.species.name
+            counts[s.species.code]["color"] = s.species.color
+            counts[s.species.code]["highlight"] = s.species.highlight
+            counts[s.species.code]["value"] = 1
         else:
-            output[s.species.code] += 1
+            counts[s.species.code]["value"] += 1
 
-    return jsonify(output)
+    return Response(json.dumps([counts[s] for s in counts.keys()]), mimetype='application/json')
 
-
-@go.route('/json/test/')
-def go_json_test():
-    output = [
-                    {
-                        "value": 100,
-                        "color":"#F7464A",
-                        "highlight": "#FF5A5E",
-                        "label": "Red"
-                    },
-                    {
-                        "value": 50,
-                        "color": "#46BFBD",
-                        "highlight": "#5AD3D1",
-                        "label": "Green"
-                    },
-                    {
-                        "value": 100,
-                        "color": "#FDB45C",
-                        "highlight": "#FFC870",
-                        "label": "Yellow"
-                    },
-                    {
-                        "value": 40,
-                        "color": "#949FB1",
-                        "highlight": "#A8B3C5",
-                        "label": "Grey"
-                    },
-                    {
-                        "value": 120,
-                        "color": "#4D5360",
-                        "highlight": "#616774",
-                        "label": "Dark Grey"
-                    }
-
-                ]
-    return Response(json.dumps(output), mimetype='application/json')
