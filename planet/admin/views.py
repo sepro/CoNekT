@@ -8,6 +8,10 @@ class MyAdminIndexView(AdminIndexView):
         return current_user.is_authenticated() and current_user.is_administrator()
 
 class MyModelView(ModelView):
+
+    def is_accessible(self):
+        return current_user.is_authenticated() and current_user.is_administrator()
+
     def _get_endpoint(self, endpoint):
         """
         Override to rename views (and avoid clash with blueprints in the app itself)
@@ -18,9 +22,6 @@ class MyModelView(ModelView):
         return '%s' % self.__class__.__name__.lower()
 
 class SpeciesAdminView(MyModelView):
-
-    def is_accessible(self):
-        return current_user.is_authenticated() and current_user.is_administrator()
 
     def create_model(self, form):
         model = self.model(form.code.data,
