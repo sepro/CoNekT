@@ -1,6 +1,5 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask_admin import Admin
 from flask.ext.login import LoginManager
 
 
@@ -49,3 +48,8 @@ app.register_blueprint(go, url_prefix='/go')
 app.register_blueprint(interpro, url_prefix='/interpro')
 app.register_blueprint(family, url_prefix='/family')
 
+# Custom error handler for 404 errors
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error/404.html'), 404

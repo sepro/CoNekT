@@ -49,19 +49,32 @@ def add_go_from_plaza(filename):
 
     go_parser.read_plaza_go(filename)
 
-    for gene, gos in go_parser.annotation.items():
-        current_sequence = Sequence.query.filter_by(name=gene).first()
-        if current_sequence is not None:
-            for go in gos:
-                current_go = GO.query.filter_by(label=go).first()
+    gene_hash = {}
+    go_hash = {}
 
-                if current_go is not None:
-                    current_sequence.go_labels.append(current_go)
+    all_sequences = Sequence.query.all()
+    all_go = GO.query.all()
+
+    for sequence in all_sequences:
+        gene_hash[sequence.name] = sequence
+
+    for term in all_go:
+        go_hash[term.label] = term
+
+    for gene, terms in go_parser.annotation.items():
+        if gene in gene_hash.keys():
+            current_sequence = gene_hash[gene]
+            for term in terms:
+                if term in go_hash.keys():
+                    current_term = go_hash[term]
+                    if current_term not in current_sequence.go_labels:
+                        current_sequence.go_labels.append(current_term)
                 else:
-                    print("GO", go, "not found in the database.")
-            try:
-                db.session.commit()
-            except:
-                db.session.rollback()
+                    print(term, "not found in the database.")
         else:
             print("Gene", gene, "not found in the database.")
+
+    try:
+        db.session.commit()
+    except:
+        db.session.rollback()
