@@ -14,7 +14,7 @@
     <div class="well sequence">{{ sequence.coding_sequence }}</div>
 
     <br />
-    <h3>Functional Annotation</h3>
+    <h3>Sequence details</h3>
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
@@ -72,6 +72,36 @@
                 {% else %}
                 <div class="panel-body">
                     <p>No InterPro domains available for this sequence</p>
+                </div>
+                {% endif %}
+            </div>
+        </div> <!-- end col -->
+
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Gene Families</div>
+                {% if sequence.families.count() > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Method</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for family in sequence.families %}
+                            <tr>
+                                <td><a href="{{ url_for('family.family_view', family_id=family.id) }}">{{ family.name }}</a></td>
+                                <td>{{ family.method.method }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="panel-body">
+                    <p>This sequence isn't a member of any gene families</p>
                 </div>
                 {% endif %}
             </div>
