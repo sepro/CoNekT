@@ -48,3 +48,4 @@ app.register_blueprint(species, url_prefix='/species')
 app.register_blueprint(go, url_prefix='/go')
 app.register_blueprint(interpro, url_prefix='/interpro')
 app.register_blueprint(family, url_prefix='/family')
+
