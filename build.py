@@ -31,6 +31,7 @@ from build.interpro_xml import populate_interpro as pi
 from build.species import add_species_from_fasta
 from build.go import add_go_from_plaza
 from build.interpro_data import add_interpro_from_plaza
+from build.families import add_families_from_plaza
 
 
 manager = Manager(app)
@@ -87,6 +88,17 @@ def add_plaza_interpro(filename):
     """
     add_interpro_from_plaza(filename)
 
+
+@manager.command
+def add_plaza_families(filename, description):
+    """
+    Function that adds gene families to genes, downloadable from PLAZA 3.0
+
+    :param filename: path to the data (csv file)
+    :param description: description of the method
+    """
+
+    add_families_from_plaza(filename,description)
 
 if __name__ == "__main__":
 
