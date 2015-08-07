@@ -16,14 +16,14 @@ def go_overview():
 def go_find(go_label):
     current_go = GO.query.filter_by(label=go_label).first_or_404()
 
-    return render_template('go.html', go=current_go)
+    return render_template('go.html', go=current_go, count=current_go.sequences.count())
 
 
 @go.route('/view/<go_id>')
 def go_view(go_id):
     current_go = GO.query.get_or_404(go_id)
 
-    return render_template('go.html', go=current_go)
+    return render_template('go.html', go=current_go, count=current_go.sequences.count())
 
 
 @go.route('/json/species/<go_id>')

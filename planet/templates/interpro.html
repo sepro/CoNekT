@@ -10,8 +10,8 @@
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <p>There are <strong>{{ interpro.sequences.count() }}</strong> sequences with this label.</p>
-                    {% if interpro.sequences.count() > 0 %}
+                    <p>There are <strong>{{ count }}</strong> sequences with this label.</p>
+                    {% if count > 0 %}
                     <div id="canvas-holder" class="center-block">
                         <canvas id="chart-area" class="center-block" width="300" height="300"/>
                     </div>
@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block extrajs %}
-    {% if interpro.sequences.count() > 0 %}
+    {% if count > 0 %}
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 	<script>
 			$.getJSON( "{{ url_for('interpro.interpro_json_species', interpro_id=interpro.id) }}", function( data ) {

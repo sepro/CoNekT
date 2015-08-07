@@ -15,14 +15,14 @@ def interpro_overview():
 def interpro_find(interpro_domain):
     current_interpro = Interpro.query.filter_by(label=interpro_domain).first_or_404()
 
-    return render_template('interpro.html', interpro=current_interpro)
+    return render_template('interpro.html', interpro=current_interpro, count=current_interpro.sequences.count())
 
 
 @interpro.route('/view/<interpro_id>')
 def interpro_view(interpro_id):
     current_interpro = Interpro.query.get_or_404(interpro_id)
 
-    return render_template('interpro.html', interpro=current_interpro)
+    return render_template('interpro.html', interpro=current_interpro, count=current_interpro.sequences.count())
 
 
 @interpro.route('/json/species/<interpro_id>')

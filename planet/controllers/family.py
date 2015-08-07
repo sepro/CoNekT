@@ -16,14 +16,14 @@ def family_overview():
 def family_find(family_name):
     current_family = GeneFamily.query.filter_by(name=family_name).first_or_404()
 
-    return render_template('family.html', family=current_family)
+    return render_template('family.html', family=current_family, count=current_family.sequences.count())
 
 
 @family.route('/view/<family_id>')
 def family_view(family_id):
     current_family = GeneFamily.query.get_or_404(family_id)
 
-    return render_template('family.html', family=current_family)
+    return render_template('family.html', family=current_family, count=current_family.sequences.count())
 
 
 @family.route('/json/species/<family_id>')
