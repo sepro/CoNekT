@@ -22,10 +22,13 @@ def parse_expression_plot(plotfile, conversion):
 
         gene_id = plot.probe_list[probe].upper()
 
+        output = {"order": plot.conditions,
+                  "data": profile}
+
         if gene_id in sequence_dict.keys():
-            db.session.add(ExpressionProfile(probe, sequence_dict[gene_id].id, json.dumps(profile)))
+            db.session.add(ExpressionProfile(probe, sequence_dict[gene_id].id, json.dumps(output)))
         else:
-            db.session.add(ExpressionProfile(probe, None, json.dumps(profile)))
+            db.session.add(ExpressionProfile(probe, None, json.dumps(output)))
 
     try:
         db.session.commit()

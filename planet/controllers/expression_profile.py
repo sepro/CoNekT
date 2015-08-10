@@ -25,10 +25,10 @@ def expression_profile_json(profile_id):
     data = json.loads(current_profile.profile)
 
     processed_data = {}
-    for key, expression_values in data.items():
+    for key, expression_values in data["data"].items():
         processed_data[key] = mean(expression_values)
 
-    output = {"labels": list(processed_data.keys()),
+    output = {"labels": list(data["order"]),
               "datasets": [{
                     "label": "Expression Profile for " + current_profile.probe,
                     "fillColor": "rgba(220,220,220,0.2)",
@@ -37,7 +37,7 @@ def expression_profile_json(profile_id):
                     "pointStrokeColor": "#fff",
                     "pointHighlightFill": "#fff",
                     "pointHighlightStroke": "rgba(220,220,220,1)",
-                    "data": list(processed_data.values())}
+                    "data": list([processed_data[c] for c in data["order"]])}
               ]}
 
     return Response(json.dumps(output), mimetype='application/json')
