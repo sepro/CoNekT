@@ -26,7 +26,7 @@ class Parser:
             self.conditions = headers
             for row in reader:
                 probe_id = row.pop(0)
-                parsed_row = [x.strip('-').split('-') for x in row]
-                probe_data = dict(zip(headers, parsed_row))
+                expr_values = [x.strip('-').split('-') for x in row]
+                probe_data = dict(zip(headers, expr_values))
                 self.profiles[probe_id] = probe_data
 
