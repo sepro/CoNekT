@@ -33,6 +33,8 @@ from build.go import add_go_from_plaza
 from build.interpro_data import add_interpro_from_plaza
 from build.families import add_families_from_plaza
 
+from build.expression import parse_expression_plot
+
 
 manager = Manager(app)
 
@@ -98,7 +100,12 @@ def add_plaza_families(filename, description):
     :param description: description of the method
     """
 
-    add_families_from_plaza(filename,description)
+    add_families_from_plaza(filename, description)
+
+@manager.command
+def add_expression(plot, conversion):
+    parse_expression_plot(plot, conversion)
+
 
 if __name__ == "__main__":
 

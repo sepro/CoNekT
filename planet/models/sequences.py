@@ -14,7 +14,7 @@ class Sequence(db.Model):
     is_mitochondrial = db.Column(db.Boolean)
     is_chloroplast = db.Column(db.Boolean)
 
-    expression_profile = db.relationship("ExpressionProfile", uselist=False, backref="sequence")
+    expression_profiles = db.relationship('ExpressionProfile', backref='gene', lazy='dynamic')
 
     go_labels = db.relationship('GO', secondary=sequence_go, backref=db.backref('sequences', lazy='dynamic'),
                                 lazy='dynamic')
