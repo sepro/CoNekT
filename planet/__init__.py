@@ -30,6 +30,7 @@ from planet.models.go import GO
 from planet.models.interpro import Interpro
 from planet.models.gene_families import GeneFamilyMethod, GeneFamily
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod, CoexpressionCluster
+from planet.models.expression_profiles import ExpressionProfile
 
 # Import all relationships (tables for many-to-many relationships)
 
