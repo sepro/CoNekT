@@ -107,6 +107,34 @@
             </div>
         </div> <!-- end col -->
     </div> <!-- end row -->
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Expression Profiles</div>
+                {% if sequence.expression_profiles.count() > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Probe name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for profile in sequence.expression_profiles %}
+                            <tr>
+                                <td><a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">{{ profile.probe }}</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="panel-body">
+                    <p>This sequence isn't a member of any gene families</p>
+                </div>
+                {% endif %}
+
+    </div>
     {% endif %}
 </div>
 

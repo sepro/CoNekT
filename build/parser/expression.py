@@ -27,6 +27,11 @@ class Parser:
             for row in reader:
                 probe_id = row.pop(0)
                 expr_values = [x.strip('-').split('-') for x in row]
-                probe_data = dict(zip(headers, expr_values))
+
+                float_values = []
+                for condition in expr_values:
+                    float_values.append([float(x) for x in condition])
+
+                probe_data = dict(zip(headers, float_values))
                 self.profiles[probe_id] = probe_data
 

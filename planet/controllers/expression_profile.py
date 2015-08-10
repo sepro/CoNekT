@@ -26,19 +26,7 @@ def expression_profile_json(profile_id):
 
     processed_data = {}
     for key, expression_values in data.items():
-        sum = 0
-        count = 0
-
-        for value in expression_values:
-            sum += float(value)
-            count += 1
-
-        mean = 0
-
-        if (count>0):
-            mean = sum/count
-
-        processed_data[key] = mean
+        processed_data[key] = mean(expression_values)
 
     output = {"labels": list(processed_data.keys()),
               "datasets": [{
