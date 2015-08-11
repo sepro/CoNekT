@@ -55,3 +55,8 @@ input[readonly] {
     max-height: 100px;
     overflow-y:scroll;
 }
+
+.searchbar{
+    display: inline;
+    margin-top: 5px;
+}

@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, g
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 
@@ -74,3 +74,10 @@ def page_not_found(e):
 @app.errorhandler(403)
 def page_not_found(e):
     return render_template('error/403.html'), 403
+
+# Register form for basic searches, needs to be done here as it is included on every page!
+from planet.forms.search import BasicSearchForm
+
+@app.before_request
+def before_request():
+    g.search_form = BasicSearchForm()

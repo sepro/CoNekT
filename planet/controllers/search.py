@@ -7,6 +7,7 @@ from planet.models.interpro import Interpro
 from planet.models.gene_families import GeneFamily
 from planet.models.expression_profiles import ExpressionProfile
 
+from planet.forms.search import BasicSearchForm
 
 search = Blueprint('search', __name__)
 
@@ -32,9 +33,8 @@ def search_single_keyword(keyword):
                            families=families,
                            profiles=profiles)
 
-@search.route('/string/')
-def search_string():
-    term_string = "RNA"
+
+def search_string(term_string):
     terms = term_string.split()
 
     sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
@@ -49,9 +49,24 @@ def search_string():
     families = GeneFamily.query.filter(GeneFamily.name.in_(terms)).all()
     profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(terms)).all()
 
-    return render_template("search_results.html", keyword=term_string,
-                           go=go,
-                           interpro=interpro,
-                           sequences=sequences,
-                           families=families,
-                           profiles=profiles)
+    return {"go": go,
+            "interpro": interpro,
+            "sequences": sequences,
+            "families": families,
+            "profiles": profiles}
+
+
+@search.route('/', methods=['GET', 'POST'])
+def simple():
+    if not g.search_form.validate_on_submit():
+        flash("Empty search term", "warning")
+        return redirect(url_for('main.screen'))
+    else:
+        results = search_string(g.search_form.terms.data)
+
+        return render_template("search_results.html", keyword=g.search_form.terms.data,
+                               go=results["go"],
+                               interpro=results["interpro"],
+                               sequences=results["sequences"],
+                               families=results["families"],
+                               profiles=results["profiles"])
