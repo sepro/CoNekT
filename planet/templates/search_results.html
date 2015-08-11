@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<div class="top-pad">
+
+    <h1>Search results for: <strong>{{ keyword }}</strong></h1>
+    {% if sequences %}
+    <h2>Found {{ sequences|length }} sequences</h2>
+    {% for s in sequences %}
+        <p><a href="{{ url_for('sequence.sequence_view', sequence_id=s.id)}}">{{ s.name }}</a></p>
+    {% endfor %}
+
+    {% endif %}
+
+    {% if go %}
+    <h2>Found {{ go|length }} GO terms</h2>
+    {% for g in go %}
+        <p><a href="{{ url_for('go.go_view', go_id=g.id)}}">{{ g.label }}</a>: {{ g.name }}</p>
+    {% endfor %}
+
+    {% endif %}
+
+    {% if interpro %}
+    <h2>Found {{ interpro|length }} InterPro domains</h2>
+    {% for i in interpro %}
+        <p><a href="{{ url_for('interpro.interpro_view', interpro_id=i.id)}}">{{ i.label }}</a>: {{ i.description }}</p>
+    {% endfor %}
+
+    {% endif %}
+
+    {% if families %}
+    <h2>Found {{ families|length }} families</h2>
+    {% for f in families %}
+        <p><a href="{{ url_for('family.family_view', family_id=f.id)}}">{{ f.name }}</a>: {{ f.method.method }}</p>
+    {% endfor %}
+
+    {% endif %}
+
+    {% if profiles %}
+    <h2>Found {{ profiles|length }} expression profiles</h2>
+    {% for p in profiles %}
+        <p><a href="{{ url_for('expression_profile.expression_profile_view', profile_id=p.id)}}">{{ p.probe }}</a>
+            {% if p.gene.name %}: {{ p.gene.name }} {% endif %}</p>
+    {% endfor %}
+
+    {% endif %}
+
+    {% if not (sequences or go or interpro or families or profiles) %}
+        <p>No results found for <strong>{{ keyword }}</strong></p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extrajs %}
+
+{% endblock %}
