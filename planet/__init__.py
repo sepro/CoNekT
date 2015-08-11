@@ -1,3 +1,16 @@
+"""
+Everything that needs to be set up to get flask running is initialized in this file.
+
+  * set up and configure the app
+  * start the database (db)
+  * load LoginManager (for user system)
+  * start Flask Debug Toolbar
+  * load all (!) models used (essential to create the database using db_create)
+  * load all (!) controllers and register their blueprints to a subdomain
+  * add admin panel
+
+  * set up global things like the search form and custom 403/404 error messages
+"""
 from flask import Flask, render_template, g
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
@@ -64,6 +77,30 @@ from planet.admin.views import SpeciesAdminView
 
 admin = Admin(app, index_view=MyAdminIndexView())
 admin.add_view(SpeciesAdminView(Species, db.session))
+
+#  ______________________________
+# < Beware, code overrides below >
+#  ------------------------------
+#    \         ,        ,
+#     \       /(        )`
+#      \      \ \___   / |
+#             /- _  `-/  '
+#            (/\/ \ \   /\
+#            / /   | `    \
+#            O O   ) /    |
+#            `-^--'`<     '
+#           (_.)  _  )   /
+#            `.___/`    /
+#              `-----' /
+# <----.     __ / __   \
+# <----|====O)))==) \) /====
+# <----'    `--' `.__,' \
+#              |        |
+#               \       /
+#         ______( (_  / \______
+#       ,'  ,-----'   |        \
+#       `--{__________)        \/
+
 
 # Custom error handler for 404 errors
 

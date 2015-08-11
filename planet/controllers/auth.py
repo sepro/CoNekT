@@ -94,6 +94,9 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
+    """
+    Logs the current user out and redirects to the main screen
+    """
     flash('You have successfully logged out.', 'success')
     logout_user()
     return redirect(url_for('main.screen'))

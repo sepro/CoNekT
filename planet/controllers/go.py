@@ -9,11 +9,19 @@ go = Blueprint('go', __name__)
 
 @go.route('/')
 def go_overview():
+    """
+    For lack of a better alternative redirect users to the main page
+    """
     return redirect(url_for('main.screen'))
 
 
 @go.route('/find/<go_label>')
 def go_find(go_label):
+    """
+    Find a go term based on the label and show the details for this term
+
+    :param go_label: Label of the GO term
+    """
     current_go = GO.query.filter_by(label=go_label).first_or_404()
 
     return render_template('go.html', go=current_go, count=current_go.sequences.count())
@@ -21,6 +29,11 @@ def go_find(go_label):
 
 @go.route('/view/<go_id>')
 def go_view(go_id):
+    """
+    Get a go term based on the ID and show the details for this term
+
+    :param go_id: ID of the go term
+    """
     current_go = GO.query.get_or_404(go_id)
 
     return render_template('go.html', go=current_go, count=current_go.sequences.count())
@@ -28,6 +41,12 @@ def go_view(go_id):
 
 @go.route('/json/species/<go_id>')
 def go_json_species(go_id):
+    """
+    Generates a JSON object with the species composition that can be rendered using Chart.js pie charts or doughnut
+    plots
+
+    :param go_id: ID of the go term to render
+    """
     current_go = GO.query.get_or_404(go_id)
     sequences = current_go.sequences.all()
 

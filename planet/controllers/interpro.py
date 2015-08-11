@@ -8,11 +8,19 @@ interpro = Blueprint('interpro', __name__)
 
 @interpro.route('/')
 def interpro_overview():
+    """
+    For lack of a better alternative redirect users to the main page
+    """
     return redirect(url_for('main.screen'))
 
 
 @interpro.route('/find/<interpro_domain>')
 def interpro_find(interpro_domain):
+    """
+    Find an interpro domain based on the label and show the details for this domain
+
+    :param interpro_domain: Name of the interpro domain
+    """
     current_interpro = Interpro.query.filter_by(label=interpro_domain).first_or_404()
 
     return render_template('interpro.html', interpro=current_interpro, count=current_interpro.sequences.count())
@@ -20,6 +28,11 @@ def interpro_find(interpro_domain):
 
 @interpro.route('/view/<interpro_id>')
 def interpro_view(interpro_id):
+    """
+    Get an interpro domain based on the ID and show the details for this domain
+
+    :param interpro_id: ID of the interpro domain
+    """
     current_interpro = Interpro.query.get_or_404(interpro_id)
 
     return render_template('interpro.html', interpro=current_interpro, count=current_interpro.sequences.count())
@@ -27,6 +40,12 @@ def interpro_view(interpro_id):
 
 @interpro.route('/json/species/<interpro_id>')
 def interpro_json_species(interpro_id):
+    """
+    Generates a JSON object with the species composition that can be rendered using Chart.js pie charts or doughnut
+    plots
+
+    :param interpro_id: ID of the interpro domain to render
+    """
     current_interpro = Interpro.query.get_or_404(interpro_id)
     sequences = current_interpro.sequences.all()
 

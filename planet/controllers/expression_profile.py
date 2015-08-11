@@ -11,10 +11,18 @@ expression_profile = Blueprint('expression_profile', __name__)
 
 @expression_profile.route('/')
 def expression_profile_overview():
+    """
+    For lack of a better alternative redirect users to the main page
+    """
     return redirect(url_for('main.screen'))
 
 @expression_profile.route('/view/<profile_id>')
 def expression_profile_view(profile_id):
+    """
+    Gets expression profile data from the database and renders it.
+
+    :param profile_id: ID of the profile to show
+    """
     current_profile = ExpressionProfile.query.get_or_404(profile_id)
 
     return render_template("expression_profile.html", profile=current_profile)
@@ -22,6 +30,11 @@ def expression_profile_view(profile_id):
 
 @expression_profile.route('/json/radar/<profile_id>')
 def expression_profile_radar_json(profile_id):
+    """
+    Generates a JSON object that can be rendered using Chart.js radar plots
+
+    :param profile_id: ID of the profile to render
+    """
     current_profile = ExpressionProfile.query.get_or_404(profile_id)
     data = json.loads(current_profile.profile)
 
@@ -46,6 +59,11 @@ def expression_profile_radar_json(profile_id):
 
 @expression_profile.route('/json/plot/<profile_id>')
 def expression_profile_plot_json(profile_id):
+    """
+    Generates a JSON object that can be rendered using Chart.js line plots
+
+    :param profile_id: ID of the profile to render
+    """
     current_profile = ExpressionProfile.query.get_or_404(profile_id)
     data = json.loads(current_profile.profile)
 

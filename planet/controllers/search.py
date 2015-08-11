@@ -7,13 +7,17 @@ from planet.models.interpro import Interpro
 from planet.models.gene_families import GeneFamily
 from planet.models.expression_profiles import ExpressionProfile
 
-from planet.forms.search import BasicSearchForm
 
 search = Blueprint('search', __name__)
 
 
 @search.route('/keyword/<keyword>')
 def search_single_keyword(keyword):
+    """
+    Function to perform a keyword search without a form.
+
+    :param keyword: Keyword to look for
+    """
     sequences = Sequence.query.with_entities(Sequence.id, Sequence.name).filter_by(name=keyword).all()
 
     go = GO.query.filter(or_(GO.description.like("%"+keyword+"%"),
@@ -34,7 +38,14 @@ def search_single_keyword(keyword):
                            profiles=profiles)
 
 
-def search_string(term_string):
+def __search_string(term_string):
+    """
+    Private function to be used internally by the simple search. Performs an intuitive search on various fields.
+
+
+    :param term_string: space-separated strings to search for
+    :return: dict with results per type
+    """
     terms = term_string.split()
 
     sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
@@ -58,11 +69,16 @@ def search_string(term_string):
 
 @search.route('/', methods=['GET', 'POST'])
 def simple():
+    """
+    Simple search function, is started from the nav bars search box.
+
+    IMPORTANT: g.search_form needs to be defined globally (cfr. in the planet package __init__.py) !
+    """
     if not g.search_form.validate_on_submit():
         flash("Empty search term", "warning")
         return redirect(url_for('main.screen'))
     else:
-        results = search_string(g.search_form.terms.data)
+        results = __search_string(g.search_form.terms.data)
 
         return render_template("search_results.html", keyword=g.search_form.terms.data,
                                go=results["go"],

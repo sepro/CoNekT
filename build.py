@@ -21,6 +21,17 @@ ADDING FUNCTIONAL ANNOTATION
 build.py add_plaza_go <FILE> : adds go annotation downloaded from PLAZA 3.0 to the database
 build.py add_plaza_interpro <FILE> : adds go annotation downloaded from PLAZA 3.0 to the database
 
+ADDING GENE FAMILIES
+--------------------
+
+build.py add_plaza_families <FILE> <DESCRIPTION>: addes gene families (from PLAZA) to the db with the
+description for the method
+
+ADDING EXPRESSION DATA
+----------------------
+
+build.py add_expression <PLOT_FILE> <CONVERSION_FILE> : adds expression plot data from PlaNet 1 pipeline to the db
+
 """
 from flask.ext.script import Manager
 from planet import app
@@ -104,6 +115,13 @@ def add_plaza_families(filename, description):
 
 @manager.command
 def add_expression(plot, conversion):
+    """
+    Function to add expression plots (plot.txt files from PlaNet 1 pipeline). Requires a conversion table to link probes
+    to sequences (e.g. .hrr file from PlaNet 1)
+
+    :param plot: path to plot file
+    :param conversion: path to conversion table
+    """
     parse_expression_plot(plot, conversion)
 
 
