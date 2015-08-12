@@ -1,15 +1,13 @@
-from build.parser.expression import Parser as ExpressionParser
+import json
 
+from build.parser.planet.expression_plot import Parser as ExpressionPlotParser
 from planet import db
 from planet.models.sequences import Sequence
 from planet.models.expression_profiles import ExpressionProfile
 
 
-import json
-
-
 def parse_expression_plot(plotfile, conversion):
-    plot = ExpressionParser()
+    plot = ExpressionPlotParser()
     plot.read_plot(plotfile, conversion)
 
     sequences = Sequence.query.all()

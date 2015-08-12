@@ -44,6 +44,7 @@ from planet.models.interpro import Interpro
 from planet.models.gene_families import GeneFamilyMethod, GeneFamily
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod, CoexpressionCluster
 from planet.models.expression_profiles import ExpressionProfile
+from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
 
 # Import all relationships (tables for many-to-many relationships)
 

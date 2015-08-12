@@ -6,6 +6,8 @@ class CoexpressionClusteringMethod(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     method = db.Column(db.Text)
 
+    clusters = db.relationship('CoexpressionCluster', backref='method', lazy='dynamic')
+
 
 class CoexpressionCluster(db.Model):
     __tablename__ = 'coexpression_clusters'
