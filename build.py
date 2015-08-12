@@ -31,7 +31,9 @@ description for the method
 ADDING EXPRESSION DATA
 ----------------------
 
-build.py add_expression <PLOT_FILE> <CONVERSION_FILE> : adds expression plot data from PlaNet 1 pipeline to the db
+build.py add_expression_plot <PLOT_FILE> <CONVERSION_FILE> : adds expression plot data from PlaNet 1 pipeline to the db
+build.py add_expression_network <NETWORK_FILE> <SPECIES> <DESCRIPTION>: adds expression network
+for species (from .hrr file)
 
 """
 from flask.ext.script import Manager
@@ -46,6 +48,7 @@ from build.interpro_data import add_interpro_from_plaza
 from build.families import add_families_from_plaza
 
 from build.expression import parse_expression_plot
+from build.expression import parse_expression_network
 
 
 manager = Manager(app)
@@ -115,7 +118,7 @@ def add_plaza_families(filename, description):
     add_families_from_plaza(filename, description)
 
 @manager.command
-def add_expression(plot, conversion):
+def add_expression_plot(plot, conversion):
     """
     Function to add expression plots (plot.txt files from PlaNet 1 pipeline). Requires a conversion table to link probes
     to sequences (e.g. .hrr file from PlaNet 1)
@@ -125,6 +128,9 @@ def add_expression(plot, conversion):
     """
     parse_expression_plot(plot, conversion)
 
+@manager.command
+def add_expression_network(network_file, species, description):
+    parse_expression_network(network_file, species, description)
 
 if __name__ == "__main__":
 

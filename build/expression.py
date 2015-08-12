@@ -1,6 +1,7 @@
 import json
 
 from build.parser.planet.expression_plot import Parser as ExpressionPlotParser
+from build.parser.planet.expression_network import Parser as NetworkParser
 from planet import db
 from planet.models.sequences import Sequence
 from planet.models.expression_profiles import ExpressionProfile
@@ -32,3 +33,13 @@ def parse_expression_plot(plotfile, conversion):
         db.session.commit()
     except:
         db.session.rollback()
+
+
+def parse_expression_network(network_file, species, description):
+
+    network_parser = NetworkParser()
+    network_parser.read_expression_network(network_file)
+
+    print(json.dumps(network_parser.network["267637_at"], sort_keys=True, indent=4, separators=(',', ': ')))
+
+
