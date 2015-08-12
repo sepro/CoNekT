@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Script to populate the database, frontend for parser functions
 

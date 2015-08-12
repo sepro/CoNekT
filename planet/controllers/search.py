@@ -1,5 +1,6 @@
 from flask import g, Blueprint, flash, redirect, url_for, render_template, request
 from sqlalchemy.sql import or_, and_
+from sqlalchemy import func
 
 from planet.models.sequences import Sequence
 from planet.models.go import GO
@@ -18,17 +19,18 @@ def search_single_keyword(keyword):
 
     :param keyword: Keyword to look for
     """
-    sequences = Sequence.query.with_entities(Sequence.id, Sequence.name).filter_by(name=keyword).all()
+    sequences = Sequence.query.with_entities(Sequence.id, Sequence.name)\
+        .filter(func.upper(Sequence.name) == keyword.upper()).all()
 
-    go = GO.query.filter(or_(GO.description.like("%"+keyword+"%"),
-                             GO.name.like("%"+keyword+"%"),
-                             GO.label == keyword)).all()
+    go = GO.query.filter(or_(GO.description.ilike("%"+keyword+"%"),
+                             GO.name.ilike("%"+keyword+"%"),
+                             func.upper(GO.label) == keyword.upper())).all()
 
-    interpro = Interpro.query.filter(or_(Interpro.description.like("%"+keyword+"%"),
-                                         Interpro.label == keyword)).all()
+    interpro = Interpro.query.filter(or_(Interpro.description.ilike("%"+keyword+"%"),
+                                         func.upper(Interpro.label) == keyword.upper())).all()
 
-    families = GeneFamily.query.filter_by(name=keyword).all()
-    profiles = ExpressionProfile.query.filter_by(probe=keyword).all()
+    families = GeneFamily.query.filter(func.upper(GeneFamily.name) == keyword.upper()).all()
+    profiles = ExpressionProfile.query.filter(func.upper(ExpressionProfile.probe) == keyword.upper()).all()
 
     return render_template("search_results.html", keyword=keyword,
                            sequences=sequences,
@@ -42,23 +44,24 @@ def __search_string(term_string):
     """
     Private function to be used internally by the simple search. Performs an intuitive search on various fields.
 
+    all terms are converted into uppercase to make searches case insensitive
 
     :param term_string: space-separated strings to search for
     :return: dict with results per type
     """
-    terms = term_string.split()
+    terms = term_string.upper().split()
 
-    sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
+    sequences = Sequence.query.filter(func.upper(Sequence.name).in_(terms)).all()
 
-    go = GO.query.filter(or_(and_(*[GO.description.like("%"+term+"%") for term in terms]),
-                             and_(*[GO.name.like("%"+term+"%") for term in terms]),
-                             GO.label.in_(terms))).all()
+    go = GO.query.filter(or_(and_(*[GO.description.ilike("%"+term+"%") for term in terms]),
+                             and_(*[GO.name.ilike("%"+term+"%") for term in terms]),
+                             func.upper(GO.label).in_(terms))).all()
 
-    interpro = Interpro.query.filter(or_(and_(*[Interpro.description.like("%"+term+"%") for term in terms]),
-                                         Interpro.label.in_(terms))).all()
+    interpro = Interpro.query.filter(or_(and_(*[Interpro.description.ilike("%"+term+"%") for term in terms]),
+                                         func.upper(Interpro.label).in_(terms))).all()
 
-    families = GeneFamily.query.filter(GeneFamily.name.in_(terms)).all()
-    profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(terms)).all()
+    families = GeneFamily.query.filter(func.upper(GeneFamily.name).in_(terms)).all()
+    profiles = ExpressionProfile.query.filter(func.upper(ExpressionProfile.probe).in_(terms)).all()
 
     return {"go": go,
             "interpro": interpro,
