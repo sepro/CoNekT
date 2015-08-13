@@ -3,7 +3,7 @@
 {% block container %}
 <div class="top-pad">
     <h1>Expression Graph: <strong>{{ node.probe }}</strong> <small>({{ node.method.description }})</small></h1>
-    <div id="cy" json="{{ url_for('expression_network.expression_network_json', node_id=node.id) }}"></div>
+    <div id="cy" json="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}"></div>
 
 </div>
 
