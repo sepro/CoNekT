@@ -18,11 +18,19 @@ def expression_network_json(node_id):
     node = ExpressionNetwork.query.get(node_id)
     links = json.loads(node.network)
 
-    nodes = [{"data": {"id": node.probe, "name": node.probe}}]
+    nodes = [{"data": {"id": node.probe,
+                       "name": node.probe,
+                       "gene_link": url_for('sequence.sequence_view', sequence_id=node.gene_id),
+                       "gene_name": node.gene.name,
+                       "node_type": "query"}}]
     edges = []
 
     for link in links:
-        nodes.append({"data": {"id": link["probe_name"], "name": link["probe_name"]}})
+        nodes.append({"data": {"id": link["probe_name"],
+                               "name": link["probe_name"],
+                               "gene_link": url_for('sequence.sequence_view', sequence_id=link["gene_id"]),
+                               "gene_name": link["gene_name"],
+                               "node_type": "linked"}})
         edges.append({"data": {"source": node.probe, "target": link["probe_name"]}})
 
     return json.dumps({"nodes": nodes, "edges": edges})

@@ -6,33 +6,36 @@ $('#cy').cytoscape({
   style: cytoscape.stylesheet()
     .selector('node')
       .css({
-        'content': 'data(name)',
+        'content': 'data(gene_name)',
         'text-valign': 'center',
         'color': 'white',
-        'text-outline-width': 2,
+        'text-outline-width': 1,
         'text-outline-color': '#888'
+      })
+    .selector('node[node_type = "query"]')
+      .css({
+        'color': 'black',
+        'text-outline-width': 2,
+        'text-outline-color': '#EEE'
       })
     .selector('edge')
       .css({
-        'target-arrow-shape': 'triangle'
+        'curve-style': 'haystack',
+        'opacity': 0.75,
       })
     .selector(':selected')
       .css({
-        'background-color': 'black',
+        'border-width':'6px',
+        'border-color':'#AAD8FF',
+        'border-opacity':'0.5',
+        'background-color':'#77828C',
         'line-color': 'black',
-        'target-arrow-color': 'black',
-        'source-arrow-color': 'black'
-      })
-    .selector('.faded')
-      .css({
-        'opacity': 0.25,
-        'text-opacity': 0
       }),
   
   elements: $.getJSON(url),
   layout: {
-    name: 'grid',
-    padding: 10
+    name: 'concentric',
+    padding: 20
   },
   
   // on graph initial layout done (could be async depending on layout...)
@@ -40,22 +43,35 @@ $('#cy').cytoscape({
     window.cy = this;
     
     // giddy up...
-    
-    cy.elements().unselectify();
-    
-    cy.on('tap', 'node', function(e){
-      var node = e.cyTarget; 
-      var neighborhood = node.neighborhood().add(node);
-      
-      cy.elements().addClass('faded');
-      neighborhood.removeClass('faded');
-    });
-    
-    cy.on('tap', function(e){
-      if( e.cyTarget === cy ){
-        cy.elements().removeClass('faded');
+
+
+    cy.nodes().forEach(function(n){
+    var g = n.data('gene_link');
+
+    n.qtip({
+      content: [
+        {
+          platform: 'Planet',
+          name: n.data('gene_name'),
+          url: g
+        }
+      ].map(function( link ){
+        return link.platform + ': <a href="' + link.url + '">' + link.name + '</a>';
+      }).join('<br />\n'),
+      position: {
+        my: 'bottom center',
+        at: 'top center'
+      },
+      style: {
+        classes: 'qtip-bootstrap',
+        tip: {
+          width: 16,
+          height: 8
+        }
       }
     });
+  });
+
   }
 });
 
