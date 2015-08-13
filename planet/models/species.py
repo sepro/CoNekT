@@ -14,6 +14,7 @@ class Species(db.Model):
     highlight = db.Column(db.String(7), default="#DEDEDE")
 
     sequences = db.relationship('Sequence', backref='species', lazy='dynamic')
+    networks = db.relationship('ExpressionNetworkMethod', backref='species', lazy='dynamic')
 
     def __init__(self, code, name, data_type='genome', ncbi_tax_id=None, pubmed_id=None, project_page=None,
                  color="#C7C7C7", highlight="#DEDEDE"):

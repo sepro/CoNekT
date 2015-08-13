@@ -11,7 +11,7 @@ class Parser:
 
         ids are based on line number starting with 0 !
 
-        :param network_file:
+        :param network_file: path to the file with the network (hrr)
         :return:
         """
         id_to_probe = {}
@@ -20,16 +20,22 @@ class Parser:
             reader = csv.reader(csvfile, delimiter='\t')
             for probe_id, parts in enumerate(reader):
 
+                # probe_id in this case is the line number (starting from zero), parts is a list of all the columns.
+                # The columns at index 5 and beyond are the links (line number+score)
+
                 probe = parts[0]
                 gene_id = parts[1]
                 links = parts[5:]
 
                 id_to_probe[probe_id] = probe
 
+                # add a gene to the network with no links/edges
                 self.network[probe] = {"probe_name": probe,
                                        "gene_name": gene_id,
                                        "linked_probes": []}
 
+                # read the edges, probe_names and gene_names cannot be added at this point as
+                # the file hasn't been read completely
                 for link in links:
                     linked_id, link_score = link.split('+')
                     new_link = {"link_id": int(linked_id),
@@ -38,7 +44,7 @@ class Parser:
                                 "link_score": int(link_score)}
                     self.network[probe]["linked_probes"].append(new_link)
 
-        # Now the id_to_probe table is competed add missing information
+        # Now the id_to_probe table is competed, add missing information and remove line number identifiers
         for probe in self.network.values():
             for linked_probe in probe["linked_probes"]:
                 linked_probe["probe_name"] = id_to_probe[linked_probe["link_id"]]
