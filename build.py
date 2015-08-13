@@ -129,8 +129,8 @@ def add_expression_plot(plot, conversion):
     parse_expression_plot(plot, conversion)
 
 @manager.command
-def add_expression_network(network_file, species, description):
-    parse_expression_network(network_file, species, description)
+def add_expression_network(network_file, species, description, score_type="rank"):
+    parse_expression_network(network_file, species, description, score_type)
 
 if __name__ == "__main__":
 

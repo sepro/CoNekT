@@ -26,7 +26,9 @@ class Sequence(db.Model):
                                backref=db.backref('sequences', lazy='dynamic'), lazy='dynamic')
 
     coexpression_clusters = db.relationship('CoexpressionCluster', secondary=sequence_coexpression_cluster,
-                                            backref=db.backref('sequences', lazy='dynamic'),lazy='dynamic')
+                                            backref=db.backref('sequences', lazy='dynamic'), lazy='dynamic')
+
+    network_nodes = db.relationship('ExpressionNetwork', backref='gene', lazy='dynamic')
 
     def __init__(self, species_id, name, coding_sequence, type='protein_coding', is_chloroplast=False, is_mitochondrial=False):
         self.species_id = species_id
