@@ -3,6 +3,8 @@ from sqlalchemy.sql import and_
 
 from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
 
+from utils.benchmark import benchmark
+
 import json
 
 
@@ -39,6 +41,7 @@ def expression_network_view(node_id, depth=0):
 
 @expression_network.route('/json/<node_id>')
 @expression_network.route('/json/<node_id>/<int:depth>')
+@benchmark
 def expression_network_json(node_id, depth=0):
     """
     Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)
