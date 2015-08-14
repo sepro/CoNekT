@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, url_for, render_template, Response
+from sqlalchemy.sql import or_, and_
 
 from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
 
@@ -12,8 +13,8 @@ def expression_network_overview():
 
     return render_template("expression_network.html", networks=networks)
 
-def __process_link(link):
 
+def __process_link(link):
     output = {}
     if link["gene_id"] is not None:
         output = {"data": {"id": link["probe_name"],
@@ -46,11 +47,12 @@ def expression_network_json(node_id, depth=0):
                        "node_type": "query"}}]
     edges = []
 
-    # two variables necessary for doing deeper searches
+    # lists necessary for doing deeper searches
     additional_nodes = []
     existing_edges = []
     existing_nodes = [node.probe]
 
+    # add direct neighbors of the gene of interest
     for link in links:
         nodes.append(__process_link(link))
         edges.append({"data": {"source": node.probe, "target": link["probe_name"], "depth": 0}})
@@ -62,23 +64,37 @@ def expression_network_json(node_id, depth=0):
     # iterate n times to add deeper links
 
     for i in range(1, depth+1):
+        new_nodes = ExpressionNetwork.query.filter(and_(ExpressionNetwork.probe.in_(additional_nodes),
+                                                        ExpressionNetwork.method_id == method_id))
         next_nodes = []
-        for additional_node in additional_nodes:
-            new_node = ExpressionNetwork.query.filter_by(probe=additional_node, method_id=method_id).first()
+
+        for new_node in new_nodes:
             new_links = json.loads(new_node.network)
 
             for link in new_links:
                 if link["probe_name"] not in existing_nodes:
                     nodes.append(__process_link(link))
-
-                if [[new_node.probe, link["probe_name"]]] not in existing_nodes:
-                    edges.append({"data": {"source": new_node.probe, "target": link["probe_name"], "depth": i}})
-                    existing_edges.append([new_node.probe, link["probe_name"]])
-                    existing_edges.append([link["probe_name"], new_node.probe])
                     existing_nodes.append(link["probe_name"])
                     next_nodes.append(link["probe_name"])
 
+                if [new_node.probe, link["probe_name"]] not in existing_edges:
+                    edges.append({"data": {"source": new_node.probe, "target": link["probe_name"], "depth": i}})
+                    existing_edges.append([new_node.probe, link["probe_name"]])
+                    existing_edges.append([link["probe_name"], new_node.probe])
+
         additional_nodes = next_nodes
+
+    # Add links between the last set of nodes added
+    new_nodes = ExpressionNetwork.query.filter(and_(ExpressionNetwork.probe.in_(additional_nodes),
+                                                    ExpressionNetwork.method_id == method_id))
+    for new_node in new_nodes:
+        new_links = json.loads(new_node.network)
+        for link in new_links:
+            if link["probe_name"] in existing_nodes:
+                if [new_node.probe, link["probe_name"]] not in existing_edges:
+                    edges.append({"data": {"source": new_node.probe, "target": link["probe_name"], "depth": depth+1}})
+                    existing_edges.append([new_node.probe, link["probe_name"]])
+                    existing_edges.append([link["probe_name"], new_node.probe])
 
     return json.dumps({"nodes": nodes, "edges": edges})
 
