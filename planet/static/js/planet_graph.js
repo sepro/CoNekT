@@ -8,7 +8,8 @@ $('#cy').cytoscape({
       .css({
         'content': 'data(gene_name)',
         'text-valign': 'center',
-        'color': 'white',
+        'color': '#FFF',
+        'background-color': 'data(color)',
         'text-outline-width': 1,
         'text-outline-color': '#888'
       })
@@ -22,6 +23,8 @@ $('#cy').cytoscape({
       .css({
         'curve-style': 'haystack',
         'opacity': 0.75,
+        'width': 'mapData(depth, 4, 0, 1, 5)',
+        'line-color': 'data(color)'
       })
     .selector(':selected')
       .css({
@@ -38,16 +41,15 @@ $('#cy').cytoscape({
     padding: 20
   },
   
-  // on graph initial layout done (could be async depending on layout...)
+
   ready: function(){
     window.cy = this;
-    
-    // giddy up...
 
 
     cy.nodes().forEach(function(n){
     var g = n.data('gene_link');
 
+    // code to add tooltips to the selected node
     n.qtip({
       content: [
         {
