@@ -1,6 +1,7 @@
 from flask import Blueprint, url_for, render_template, flash, redirect
 
 from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
+from planet.models.expression_networks_cytoscape import ExpressionNetworkCytoscape
 
 from utils.benchmark import benchmark
 
@@ -48,7 +49,7 @@ def expression_network_json(node_id, depth=0):
     :param node_id: id of the network's probe (the query) to visualize
     :param depth: How many steps to include, 0 only the query and the direct neighborhood, 1 a step further, ...
     """
-    network = ExpressionNetwork.get_neighborhood(node_id, depth)
+    network = ExpressionNetworkCytoscape.get_neighborhood(node_id, depth)
 
     return json.dumps(network)
 

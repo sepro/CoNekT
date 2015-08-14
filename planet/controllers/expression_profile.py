@@ -51,8 +51,7 @@ def expression_profile_radar_json(profile_id):
                     "pointStrokeColor": "#fff",
                     "pointHighlightFill": "#fff",
                     "pointHighlightStroke": "rgba(220,220,220,1)",
-                    "data": list([processed_data[c] for c in data["order"]])}
-              ]}
+                    "data": list([processed_data[c] for c in data["order"]])}]}
 
     return Response(json.dumps(output), mimetype='application/json')
 
@@ -103,7 +102,6 @@ def expression_profile_plot_json(profile_id):
                     "pointStrokeColor": "#fff",
                     "pointHighlightFill": "#fff",
                     "pointHighlightStroke": "rgba(220,220,220,1)",
-                    "data": list([processed_maxs[c] for c in data["order"]])}
-              ]}
+                    "data": list([processed_maxs[c] for c in data["order"]])}]}
 
     return Response(json.dumps(output), mimetype='application/json')
