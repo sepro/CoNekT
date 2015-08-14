@@ -3,9 +3,12 @@ from flask.ext.admin import AdminIndexView
 
 from flask.ext.login import current_user
 
+
 class MyAdminIndexView(AdminIndexView):
+
     def is_accessible(self):
         return current_user.is_authenticated() and current_user.is_administrator()
+
 
 class MyModelView(ModelView):
 
@@ -20,6 +23,7 @@ class MyModelView(ModelView):
             return endpoint
 
         return '%s' % self.__class__.__name__.lower()
+
 
 class SpeciesAdminView(MyModelView):
 

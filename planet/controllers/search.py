@@ -1,4 +1,4 @@
-from flask import g, Blueprint, flash, redirect, url_for, render_template, request
+from flask import g, Blueprint, flash, redirect, url_for, render_template
 from sqlalchemy.sql import or_, and_
 from sqlalchemy import func
 
