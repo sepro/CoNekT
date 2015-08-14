@@ -5,6 +5,10 @@ from sqlalchemy import and_
 
 
 class ExpressionNetworkCytoscape(ExpressionNetwork):
+    """
+    This class extends the ExpressionNetwork class to add specific functions to generate data compatible with
+    cytoscape.js and planet_graph.js
+    """
     @staticmethod
     def get_neighborhood(probe, depth=0):
         node = ExpressionNetworkCytoscape.query.get(probe)
@@ -43,8 +47,9 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
         # iterate n times to add deeper links
 
         for i in range(1, depth+1):
-            new_nodes = ExpressionNetworkCytoscape.query.filter(and_(ExpressionNetworkCytoscape.probe.in_(additional_nodes),
-                                                            ExpressionNetworkCytoscape.method_id == method_id))
+            new_nodes = ExpressionNetworkCytoscape.\
+                query.filter(and_(ExpressionNetworkCytoscape.probe.in_(additional_nodes),
+                                  ExpressionNetworkCytoscape.method_id == method_id))
             next_nodes = []
 
             for new_node in new_nodes:
@@ -69,7 +74,7 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
 
         # Add links between the last set of nodes added
         new_nodes = ExpressionNetworkCytoscape.query.filter(and_(ExpressionNetworkCytoscape.probe.in_(additional_nodes),
-                                                        ExpressionNetworkCytoscape.method_id == method_id))
+                                                                 ExpressionNetworkCytoscape.method_id == method_id))
         for new_node in new_nodes:
             new_links = json.loads(new_node.network)
             for link in new_links:
