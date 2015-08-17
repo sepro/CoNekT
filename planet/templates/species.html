@@ -20,6 +20,7 @@
         {% endif %}
 
         <div id="genes"></div>
+        <button class="btn btn-primary" id="page-next">Next</button>
 
 
 
@@ -59,7 +60,18 @@
     {% if species %}
         <script>
         $( document ).ready(function() {
+            var current_page = 1;
+
+            $( "#genes" ).prepend('<div class="loading-indication"><img src="{{ url_for('static', filename='img/ajax_loading.gif')}}" /> Loading...</div>');
             $( "#genes" ).load( "{{ url_for('sequence.sequence_species', species_id=species.id, page=1)}}" );
+
+            $( "#page-next" ).click( function () {
+                current_page++;
+                $( "#genes" ).html('<div class="loading-indication"><img src="{{ url_for('static', filename='img/ajax_loading.gif')}}" /> Loading...</div>');
+                $( "#genes" ).load( "{{ url_for('sequence.sequence_species', species_id=species.id) }}" + current_page );
+
+            });
+
         });
         </script>
     {% endif %}
