@@ -37,6 +37,6 @@ Remove get-pip.py
 
 Build initial database
 
-    Scripts\python.exe db_create.py
+    Scripts\python.exe db_action.py create
 
 You now have a fresh installation of PlaNet. Follow instructions below to fill the database

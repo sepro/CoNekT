@@ -38,6 +38,6 @@ Change settings in config.py
 
 Build initial database
 
-    python db_create.py
+    python db_action.py create
 
 You now have a fresh installation of PlaNet. Follow instructions below to fill the database

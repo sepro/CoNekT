@@ -19,7 +19,7 @@ Flask packages like Flask-Login, Flask-Admin and Flask-DebugToolbar are initiali
 ## Database Maintenance
 
 
-In case there are changes to the Models a migration script can and should be generated using **db_migrate.py**.
+In case there are changes to the Models a migration script can and should be generated using **db_action.py migrate**.
 This will create a file in **migration/versions/** which should be committed to the repository (after manual inspection).
 
-To apply the new changes to an existing database run **db_upgrade**.
+To apply the new changes to an existing database run **db_action.py update**.
