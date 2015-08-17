@@ -19,6 +19,10 @@
             Website : <a href="{{ species.project_page }}">{{ species.project_page }}</a><br />
         {% endif %}
 
+        <div id="genes"></div>
+
+
+
     {% elif all_species %}
     <h1>Species Overview</h1>
      <div class="table-responsive">
@@ -39,7 +43,7 @@
                     <td>{{ s.code }}</td>
                     <td><em><a href="{{ url_for('species.species_view', species_id=s.id) }}">{{ s.name }}</a></em></td>
                     <td>{{ s.sequences.count() }}</td>
-                    <td>{{ s.networks.count() }}</td>
+                    <td><a href="{{url_for('expression_network.expression_network_species', species_id=s.id)}}">{{ s.networks.count() }}</a></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -49,4 +53,14 @@
 </div>
 
 </div>
+{% endblock %}
+
+{% block extrajs %}
+    {% if species %}
+        <script>
+        $( document ).ready(function() {
+            $( "#genes" ).load( "{{ url_for('sequence.sequence_species', species_id=species.id, page=1)}}" );
+        });
+        </script>
+    {% endif %}
 {% endblock %}

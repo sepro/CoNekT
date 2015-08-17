@@ -21,6 +21,16 @@ def expression_network_overview():
     return render_template("expression_network.html", networks=networks)
 
 
+@expression_network.route('/species/<species_id>')
+def expression_network_species(species_id):
+    """
+    Overview of all networks in the current database with basic information
+    """
+    networks = ExpressionNetworkMethod.query.filter_by(species_id=species_id).all()
+
+    return render_template("expression_network.html", networks=networks)
+
+
 @expression_network.route('/view/<node_id>')
 @expression_network.route('/view/<node_id>/<int:depth>')
 def expression_network_view(node_id, depth=0):

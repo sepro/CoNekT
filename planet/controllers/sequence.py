@@ -36,5 +36,12 @@ def sequence_view(sequence_id):
     """
     current_sequence = Sequence.query.get_or_404(sequence_id)
 
-
     return render_template('sequence.html', sequence=current_sequence)
+
+
+@sequence.route('/species/<species_id>/')
+@sequence.route('/species/<species_id>/<int:page>')
+def sequence_species(species_id, page=1):
+    sequences = Sequence.query.filter_by(species_id=species_id).order_by(Sequence.name).paginate(page, 20, False).items
+
+    return render_template('pages/sequences.html', sequences=sequences)
