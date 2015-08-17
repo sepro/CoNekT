@@ -19,7 +19,7 @@
             Website : <a href="{{ species.project_page }}">{{ species.project_page }}</a><br />
         {% endif %}
 
-        <div id="genes"></div>
+        <div id="genes" base-url="{{ url_for('sequence.sequence_species', species_id=species.id) }}" loader-url="{{ url_for('static', filename='img/ajax_loading.gif')}}"></div>
         <button class="btn btn-primary" id="page-next">Next</button>
 
 
@@ -58,21 +58,6 @@
 
 {% block extrajs %}
     {% if species %}
-        <script>
-        $( document ).ready(function() {
-            var current_page = 1;
-
-            $( "#genes" ).prepend('<div class="loading-indication"><img src="{{ url_for('static', filename='img/ajax_loading.gif')}}" /> Loading...</div>');
-            $( "#genes" ).load( "{{ url_for('sequence.sequence_species', species_id=species.id, page=1)}}" );
-
-            $( "#page-next" ).click( function () {
-                current_page++;
-                $( "#genes" ).html('<div class="loading-indication"><img src="{{ url_for('static', filename='img/ajax_loading.gif')}}" /> Loading...</div>');
-                $( "#genes" ).load( "{{ url_for('sequence.sequence_species', species_id=species.id) }}" + current_page );
-
-            });
-
-        });
-        </script>
+        <script src="{{ url_for('static', filename='js/planet_pagination.js') }}"></script>
     {% endif %}
 {% endblock %}
