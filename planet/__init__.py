@@ -76,10 +76,12 @@ app.register_blueprint(search, url_prefix='/search')
 
 # Admin panel
 from planet.admin.views import MyAdminIndexView
-from planet.admin.views import SpeciesAdminView
+from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView
 
-admin = Admin(app, index_view=MyAdminIndexView())
-admin.add_view(SpeciesAdminView(Species, db.session))
+admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'))
+admin.add_view(SpeciesAdminView(Species, db.session, url='species/'))
+admin.add_view(GeneFamilyMethodAdminView(GeneFamilyMethod, db.session, url='families/'))
+admin.add_view(ExpressionNetworkMethodAdminView(ExpressionNetworkMethod, db.session, url='networks/'))
 
 #  ______________________________
 # < Beware, code overrides below >

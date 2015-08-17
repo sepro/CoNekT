@@ -28,4 +28,4 @@ class Species(db.Model):
         self.highlight = highlight
 
     def __repr__(self):
-        return '<Species %d>' % self.id
+        return str(self.id) + ". " + self.name
