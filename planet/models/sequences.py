@@ -30,7 +30,8 @@ class Sequence(db.Model):
 
     network_nodes = db.relationship('ExpressionNetwork', backref='gene', lazy='dynamic')
 
-    def __init__(self, species_id, name, coding_sequence, type='protein_coding', is_chloroplast=False, is_mitochondrial=False):
+    def __init__(self, species_id, name, coding_sequence, type='protein_coding', is_chloroplast=False,
+                 is_mitochondrial=False):
         self.species_id = species_id
         self.name = name
         self.coding_sequence = coding_sequence

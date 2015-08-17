@@ -111,6 +111,7 @@ admin.add_view(SpeciesAdminView(Species, db.session))
 def page_not_found(e):
     return render_template('error/404.html'), 404
 
+
 @app.errorhandler(403)
 def page_not_found(e):
     return render_template('error/403.html'), 403

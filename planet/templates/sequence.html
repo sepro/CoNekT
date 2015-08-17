@@ -20,6 +20,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">GO annotation</div>
                 {% if sequence.go_labels.count() > 0 %}
+                <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table  table-striped">
                         <thead>
@@ -39,6 +40,7 @@
                         </tbody>
                     </table>
                 </div>
+                </div>
                 {% else %}
                 <div class="panel-body">
                     <p>No GO annotation available for this sequence</p>
@@ -51,6 +53,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">InterPro domains</div>
                 {% if sequence.interpro_domains.count() > 0 %}
+                <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -69,6 +72,7 @@
                         </tbody>
                     </table>
                 </div>
+                </div>
                 {% else %}
                 <div class="panel-body">
                     <p>No InterPro domains available for this sequence</p>
@@ -81,6 +85,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Gene Families</div>
                 {% if sequence.families.count() > 0 %}
+                <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -99,6 +104,7 @@
                         </tbody>
                     </table>
                 </div>
+                </div>
                 {% else %}
                 <div class="panel-body">
                     <p>This sequence isn't a member of any gene families</p>
@@ -112,6 +118,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Expression Profiles</div>
                 {% if sequence.expression_profiles.count() > 0 %}
+                <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -128,6 +135,7 @@
                         </tbody>
                     </table>
                 </div>
+                </div>
                 {% else %}
                 <div class="panel-body">
                     <p>This sequence isn't a member of any gene families</p>
@@ -139,8 +147,9 @@
 </div>
 
 </div>
-{% endblock %}
 
+    {% endblock %}
+</div>
 {% block extrajs %}
 <script>
 $(function () {

@@ -78,3 +78,5 @@ input[readonly] {
   left: 1em;
   top: 1em;
 }
+
+.panel-scroll { height:250px; max-height: 250px; width: 100%; margin: 0; overflow-y: auto; }
