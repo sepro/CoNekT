@@ -14,9 +14,6 @@ SECRET_KEY = 'change me !'
 ADMIN_PASSWORD = 'admin'
 ADMIN_EMAIL = 'admin@web.com'
 
-# Path where uploads are stored
-UPLOAD_FOLDER = os.path.join(basedir, 'uploads')
-
 # Database settings, database location and path to migration scripts
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db', 'planet.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'migration')
