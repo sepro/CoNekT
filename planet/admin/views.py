@@ -27,9 +27,16 @@ class MyModelView(ModelView):
 
 class SpeciesAdminView(MyModelView):
 
+    column_list = ('code', 'name', 'data_type', 'ncbi_tax_id', 'pubmed_id', 'project_page', 'color', 'highlight', )
+    column_exclude_list = ('sequences', 'networks', )
+    form_excluded_column = ('sequences', 'networks', )
+    form_create_rules = ('code', 'name', 'data_type', 'ncbi_tax_id', 'pubmed_id', 'project_page', 'color', 'highlight', )
+    form_edit_rules = ('code', 'name', 'data_type', 'ncbi_tax_id', 'pubmed_id', 'project_page', 'color', 'highlight', )
+
     def create_model(self, form):
         model = self.model(form.code.data,
                            form.name.data,
+                           form.data_type.data,
                            form.ncbi_tax_id.data,
                            form.pubmed_id.data,
                            form.project_page.data,

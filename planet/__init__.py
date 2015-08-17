@@ -119,6 +119,7 @@ def page_not_found(e):
 # Register form for basic searches, needs to be done here as it is included on every page!
 from planet.forms.search import BasicSearchForm
 
+
 @app.before_request
 def before_request():
     g.search_form = BasicSearchForm()

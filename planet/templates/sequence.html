@@ -138,10 +138,40 @@
                 </div>
                 {% else %}
                 <div class="panel-body">
-                    <p>This sequence isn't a member of any gene families</p>
+                    <p>This sequence doens't have an expression profile associated with it</p>
                 </div>
                 {% endif %}
-
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Networks</div>
+                {% if sequence.network_nodes.count() > 0 %}
+                <div class="panel-scroll">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Network</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for network in sequence.network_nodes %}
+                            <tr>
+                                <td>{{ network.method.description }}: <a href="{{ url_for('expression_network.expression_network_view', node_id=network.id, depth=1) }}">{{ network.probe }}</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+                {% else %}
+                <div class="panel-body">
+                    <p>This sequence isn't included in a network</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
     {% endif %}
 </div>

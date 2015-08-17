@@ -36,4 +36,5 @@ def sequence_view(sequence_id):
     """
     current_sequence = Sequence.query.get_or_404(sequence_id)
 
+
     return render_template('sequence.html', sequence=current_sequence)
