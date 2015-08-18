@@ -2,7 +2,6 @@ from migrate.versioning import api
 
 from config import SQLALCHEMY_DATABASE_URI
 from config import SQLALCHEMY_MIGRATE_REPO
-from config import UPLOAD_FOLDER
 from config import ADMIN_PASSWORD
 from config import ADMIN_EMAIL
 
@@ -24,10 +23,6 @@ def create():
     function to create the initial database and migration information
     """
     db.create_all(app=app)
-
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
-        print("\nThe upload folder has been created")
 
     if not os.path.exists(SQLALCHEMY_MIGRATE_REPO):
         api.create(SQLALCHEMY_MIGRATE_REPO, 'database repository')

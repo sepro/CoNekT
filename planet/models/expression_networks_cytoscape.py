@@ -3,6 +3,7 @@ from sqlalchemy import and_
 
 from planet.models.expression_networks import ExpressionNetwork
 from planet.models.sequences import Sequence
+from planet.models.relationships import SequenceFamilyAssociation
 
 from utils.color import string_to_hex_color
 from utils.benchmark import benchmark
@@ -102,6 +103,12 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
     @staticmethod
     @benchmark
     def colorize_network_family(network, family_method_id):
+        """
+        Colors a cytoscape compatible network (dict) based on gene family
+
+        :param network: dict containing the network
+        :param family_method_id: desired type/method used to construct the families
+        """
         colored_network = deepcopy(network)
 
         sequence_ids = []
@@ -109,15 +116,16 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
             if "data" in node.keys() and "gene_id" in node["data"].keys():
                 sequence_ids.append(node["data"]["gene_id"])
 
-        sequences = Sequence.query.filter(Sequence.id.in_(sequence_ids)).all()
+        sequence_families = SequenceFamilyAssociation.query.\
+            filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids)).all()
+
         families = {}
 
-        for s in sequences:
-            for f in s.families:
-                if f.method_id == family_method_id:
-                    families[s.id] = {}
-                    families[s.id]["name"] = f.name
-                    families[s.id]["id"] = f.id
+        for s in sequence_families:
+            if s.family.method_id == family_method_id:
+                families[s.sequence_id] = {}
+                families[s.sequence_id]["name"] = s.family.name
+                families[s.sequence_id]["id"] = s.gene_family_id
 
         for node in colored_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys() \
