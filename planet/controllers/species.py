@@ -24,5 +24,6 @@ def species_view(species_id):
     :param species_id: ID of the species to show
     """
     current_species = Species.query.get_or_404(species_id)
+    sequence_count = current_species.sequences.count()
 
-    return render_template('species.html', species=current_species)
+    return render_template('species.html', species=current_species, sequence_count=sequence_count)

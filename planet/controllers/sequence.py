@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, render_template
+from flask import Blueprint, redirect, url_for, render_template,g
 
 from planet.models.sequences import Sequence
 
@@ -42,6 +42,8 @@ def sequence_view(sequence_id):
 @sequence.route('/species/<species_id>/')
 @sequence.route('/species/<species_id>/<int:page>')
 def sequence_species(species_id, page=1):
-    sequences = Sequence.query.filter_by(species_id=species_id).order_by(Sequence.name).paginate(page, 20, False).items
+    sequences = Sequence.query.filter_by(species_id=species_id).order_by(Sequence.name).paginate(page,
+                                                                                                 g.page_items,
+                                                                                                 False).items
 
     return render_template('pages/sequences.html', sequences=sequences)

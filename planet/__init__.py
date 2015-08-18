@@ -125,3 +125,4 @@ from planet.forms.search import BasicSearchForm
 @app.before_request
 def before_request():
     g.search_form = BasicSearchForm()
+    g.page_items = 7

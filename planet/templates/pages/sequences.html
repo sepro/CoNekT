@@ -1,7 +1,13 @@
-<ul>
-{% for sequence in sequences %}
-
-<li>{{ sequence.name }}</li>
-
-{% endfor %}
-</ul>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tbody>
+            {% for sequence in sequences %}
+                <tr>
+                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=sequence.id) }}">{{ sequence.name }}</a></td>
+                    <td><em>{{ sequence.species.name }}</em></td>
+                    <td>{{ sequence.type }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
