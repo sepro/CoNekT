@@ -1,7 +1,13 @@
-import json
 from flask import url_for
-from planet import ExpressionNetwork
 from sqlalchemy import and_
+
+from planet.models.expression_networks import ExpressionNetwork
+from planet.models.sequences import Sequence
+
+from utils.color import string_to_hex_color
+
+import json
+from copy import deepcopy
 
 
 class ExpressionNetworkCytoscape(ExpressionNetwork):
@@ -19,6 +25,7 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
         # add the initial node
         nodes = [{"data": {"id": node.probe,
                            "name": node.probe,
+                           "gene_id": node.gene_id,
                            "gene_link": url_for('sequence.sequence_view', sequence_id=node.gene_id),
                            "gene_name": node.gene.name,
                            "node_type": "query",
@@ -91,6 +98,32 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
         return {"nodes": nodes, "edges": edges}
 
     @staticmethod
+    def colorize_network_family(network, family_method_id):
+        colored_network = deepcopy(network)
+
+        sequence_ids = []
+        for node in colored_network["nodes"]:
+            if "data" in node.keys() and "gene_id" in node["data"].keys():
+                sequence_ids.append(node["data"]["gene_id"])
+
+        sequences = Sequence.query.filter(Sequence.id.in_(sequence_ids)).all()
+        families = {}
+
+        for s in sequences:
+            for f in s.families:
+                if f.method_id == family_method_id:
+                    families[s.id] = {}
+                    families[s.id]["name"] = f.name
+                    families[s.id]["id"] = f.id
+
+        for node in colored_network["nodes"]:
+            if "data" in node.keys() and "gene_id" in node["data"].keys() \
+                    and node["data"]["gene_id"] in families.keys():
+                node["data"]["color"] = string_to_hex_color(families[node["data"]["gene_id"]]["name"])
+
+        return colored_network
+
+    @staticmethod
     def __process_link(linked_probe):
         """
         Internal function that processes a linked probe (from the ExpressionNetwork.network field) to a data entry
@@ -102,6 +135,7 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
         if linked_probe["gene_id"] is not None:
             return {"data": {"id": linked_probe["probe_name"],
                              "name": linked_probe["probe_name"],
+                             "gene_id": linked_probe["gene_id"],
                              "gene_link": url_for('sequence.sequence_view', sequence_id=linked_probe["gene_id"]),
                              "gene_name": linked_probe["gene_name"],
                              "node_type": "linked",
@@ -109,6 +143,7 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
         else:
             return {"data": {"id": linked_probe["probe_name"],
                              "name": linked_probe["probe_name"],
+                             "gene_id": None,
                              "gene_link": url_for('sequence.sequence_view', sequence_id=""),
                              "gene_name": linked_probe["gene_name"],
                              "node_type": "linked",

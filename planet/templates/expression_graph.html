@@ -4,6 +4,16 @@
 <div class="top-pad">
     <h1>Expression Graph: <strong>{{ node.probe }}</strong> <small>({{ node.method.description }})</small></h1>
     Depth:
+
+    {% if family_method_id %}
+    <div class="btn-group" role="group">
+        <a href="{{ url_for('expression_network.expression_network_view_family', family_method_id=family_method_id, node_id=node.id, depth=0)}}" role="button" class="btn btn-primary {% if depth == 0 %}active{% endif%}">Low</a>
+        <a href="{{ url_for('expression_network.expression_network_view_family', family_method_id=family_method_id, node_id=node.id, depth=1)}}" role="button" class="btn btn-primary {% if depth == 1 %}active{% endif%}">Middle</a>
+        <a href="{{ url_for('expression_network.expression_network_view_family', family_method_id=family_method_id, node_id=node.id, depth=2)}}" role="button" class="btn btn-primary {% if depth == 2 %}active{% endif%}">High</a>
+    </div>
+
+    <div id="cy" json="{{ url_for('expression_network.expression_network_json_family', family_method_id=family_method_id, node_id=node.id, depth=depth) }}"></div>
+    {% else %}
     <div class="btn-group" role="group">
         <a href="{{ url_for('expression_network.expression_network_view', node_id=node.id, depth=0)}}" role="button" class="btn btn-primary {% if depth == 0 %}active{% endif%}">Low</a>
         <a href="{{ url_for('expression_network.expression_network_view', node_id=node.id, depth=1)}}" role="button" class="btn btn-primary {% if depth == 1 %}active{% endif%}">Middle</a>
@@ -11,6 +21,7 @@
     </div>
 
     <div id="cy" json="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}"></div>
+    {% endif %}
 
 </div>
 
