@@ -2,7 +2,6 @@ from flask import url_for
 from sqlalchemy import and_
 
 from planet.models.expression_networks import ExpressionNetwork
-from planet.models.sequences import Sequence
 from planet.models.relationships import SequenceFamilyAssociation
 
 from utils.color import string_to_hex_color
