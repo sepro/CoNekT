@@ -15,7 +15,9 @@ def benchmark(method):
         result = method(*args, **kw)
         te = time.time()
 
-        print('%r (%r, %r) %2.2f sec' % (method.__name__, args, kw, te-ts))
+        args_str = (str(args)[:75] + ' ... ') if len(str(args)) > 75 else str(args)
+
+        print('%r (%r, %r) %2.3f sec' % (method.__name__, args_str, kw, te-ts))
         return result
 
     return timed

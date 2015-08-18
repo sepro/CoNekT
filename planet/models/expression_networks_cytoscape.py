@@ -5,6 +5,7 @@ from planet.models.expression_networks import ExpressionNetwork
 from planet.models.sequences import Sequence
 
 from utils.color import string_to_hex_color
+from utils.benchmark import benchmark
 
 import json
 from copy import deepcopy
@@ -16,6 +17,7 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
     cytoscape.js and planet_graph.js
     """
     @staticmethod
+    @benchmark
     def get_neighborhood(probe, depth=0):
         node = ExpressionNetworkCytoscape.query.get(probe)
         links = json.loads(node.network)
@@ -98,6 +100,7 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
         return {"nodes": nodes, "edges": edges}
 
     @staticmethod
+    @benchmark
     def colorize_network_family(network, family_method_id):
         colored_network = deepcopy(network)
 

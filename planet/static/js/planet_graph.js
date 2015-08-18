@@ -47,17 +47,18 @@ $('#cy').cytoscape({
 
 
     cy.nodes().forEach(function(n){
-    var g = n.data('gene_link');
-
     // code to add tooltips to the selected node
-    n.qtip({
-      content: [
+    var content = [
         {
           platform: 'Planet',
           name: n.data('gene_name'),
-          url: g
+          url: n.data('gene_link')
         }
-      ].map(function( link ){
+      ]
+
+
+    n.qtip({
+      content: content.map(function( link ){
         return link.platform + ': <a href="' + link.url + '">' + link.name + '</a>';
       }).join('<br />\n'),
       position: {

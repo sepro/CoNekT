@@ -69,7 +69,6 @@ def expression_network_view_family(family_method_id, node_id, depth=0):
 
 @expression_network.route('/json/<node_id>')
 @expression_network.route('/json/<node_id>/<int:depth>')
-@benchmark
 def expression_network_json(node_id, depth=0):
     """
     Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)
@@ -84,7 +83,6 @@ def expression_network_json(node_id, depth=0):
 
 @expression_network.route('/json/family/<int:family_method_id>/node/<node_id>')
 @expression_network.route('/json/family/<int:family_method_id>/node/<node_id>/<int:depth>')
-@benchmark
 def expression_network_json_family(family_method_id, node_id, depth=0):
     """
     Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)
