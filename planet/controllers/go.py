@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, render_template, Response
+from flask import Blueprint, redirect, url_for, render_template, Response, g
 
 from planet.models.go import GO
 import json
@@ -37,6 +37,16 @@ def go_view(go_id):
     current_go = GO.query.get_or_404(go_id)
 
     return render_template('go.html', go=current_go, count=current_go.sequences.count())
+
+
+@go.route('/sequences/<go_id>/')
+@go.route('/sequences/<go_id>/<int:page>')
+def go_sequences(go_id, page=1):
+    sequences = GO.query.get(go_id).sequences.paginate(page,
+                                                       g.page_items,
+                                                       False).items
+
+    return render_template('pages/sequences.html', sequences=sequences)
 
 
 @go.route('/json/species/<go_id>')

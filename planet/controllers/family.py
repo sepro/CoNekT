@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, render_template, Response
+from flask import Blueprint, redirect, url_for, render_template, Response, g
 
 from planet.models.gene_families import GeneFamily
 import json
@@ -37,6 +37,16 @@ def family_view(family_id):
     current_family = GeneFamily.query.get_or_404(family_id)
 
     return render_template('family.html', family=current_family, count=current_family.sequences.count())
+
+
+@family.route('/sequences/<family_id>/')
+@family.route('/sequences/<family_id>/<int:page>')
+def family_sequences(family_id, page=1):
+    sequences = GeneFamily.query.get(family_id).sequences.paginate(page,
+                                                                   g.page_items,
+                                                                   False).items
+
+    return render_template('pages/sequences.html', sequences=sequences)
 
 
 @family.route('/json/species/<family_id>')

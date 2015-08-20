@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, render_template, Response
+from flask import Blueprint, redirect, url_for, render_template, Response, g
 
 from planet.models.interpro import Interpro
 import json
@@ -36,6 +36,16 @@ def interpro_view(interpro_id):
     current_interpro = Interpro.query.get_or_404(interpro_id)
 
     return render_template('interpro.html', interpro=current_interpro, count=current_interpro.sequences.count())
+
+
+@interpro.route('/sequences/<interpro_id>/')
+@interpro.route('/sequences/<interpro_id>/<int:page>')
+def interpro_sequences(interpro_id, page=1):
+    sequences = Interpro.query.get(interpro_id).sequences.paginate(page,
+                                                                   g.page_items,
+                                                                   False).items
+
+    return render_template('pages/sequences.html', sequences=sequences)
 
 
 @interpro.route('/json/species/<interpro_id>')

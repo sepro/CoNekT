@@ -24,7 +24,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Sequences</div>
                     <div style="height:300px;overflow-y:auto;" id="planet-pagination"
-                         base-url="{{ url_for('sequence.sequence_species', species_id=species.id) }}"
+                         base-url="{{ url_for('species.species_sequences', species_id=species.id) }}"
                          loader-url="{{ url_for('static', filename='img/ajax_loading.gif')}}"
                          page-count="{{ (sequence_count / g.page_items)|round(0, 'ceil')|int }}"></div>
                     <div class="panel-body">

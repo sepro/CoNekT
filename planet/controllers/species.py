@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, g
 
 from planet.models.species import Species
 
@@ -27,3 +27,13 @@ def species_view(species_id):
     sequence_count = current_species.sequences.count()
 
     return render_template('species.html', species=current_species, sequence_count=sequence_count)
+
+
+@species.route('/sequences/<species_id>/')
+@species.route('/sequences/<species_id>/<int:page>')
+def species_sequences(species_id, page=1):
+    sequences = Species.query.get(species_id).sequences.paginate(page,
+                                                                 g.page_items,
+                                                                 False).items
+
+    return render_template('pages/sequences.html', sequences=sequences)
