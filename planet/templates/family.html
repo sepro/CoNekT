@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block container %}
+{% import 'macros/sequence_pagination.html' as macro %}
 <div class="top-pad">
 
     {% if family %}
@@ -22,23 +23,9 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Sequences</div>
-                <div style="height:300px;overflow-y:auto;" id="planet-pagination"
-                     base-url="{{ url_for('family.family_sequences', family_id=family.id) }}"
-                     loader-url="{{ url_for('static', filename='img/ajax_loading.gif')}}"
-                     page-count="{{ (count / g.page_items)|round(0, 'ceil')|int }}"></div>
-                <div class="panel-body">
-                    <button class="btn btn-primary" id="planet-pagination-first"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span></button>
-                    <button class="btn btn-primary" id="planet-pagination-back"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span></button>
-                    <button class="btn btn-primary" id="planet-pagination-next"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></button>
-                    <button class="btn btn-primary" id="planet-pagination-last"><span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span></button>
-                </div>
-            </div>
-        </div>
-    </div>
+
+    {{ macro.sequence_pagination(url_for('family.family_sequences', family_id=family.id), count) }}
+
     {% endif %}
 </div>
 
