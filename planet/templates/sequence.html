@@ -19,7 +19,7 @@
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">GO annotation</div>
-                {% if sequence.go_labels.count() > 0 %}
+                {% if sequence.go_associations.count() > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table  table-striped">
@@ -27,14 +27,16 @@
                             <tr>
                                 <th>Label</th>
                                 <th>Name</th>
+                                <th>Evidence</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for go in sequence.go_labels %}
+                            {% for go_association in sequence.go_associations %}
                             <tr>
-                                <td><a href="{{ url_for('go.go_view', go_id=go.id) }}" data-toggle="tooltip"
-                                       data-placement="top" title="{{ go.description }}">{{ go.label }}</a></td>
-                                <td>{{ go.name }}</td>
+                                <td><a href="{{ url_for('go.go_view', go_id=go_association.go.id) }}" data-toggle="tooltip"
+                                       data-placement="top" title="{{ go_association.go.description }}">{{ go_association.go.label }}</a></td>
+                                <td>{{ go_association.go.name }}</td>
+                                <td>{{ go_association.evidence }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
