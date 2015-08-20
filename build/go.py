@@ -1,6 +1,7 @@
 from planet import db
 from planet.models.go import GO
 from planet.models.sequences import Sequence
+from planet.models.relationships import SequenceGOAssociation
 from build.parser.obo import Parser as OBOParser
 from build.parser.plaza.go import Parser as GOParser
 
@@ -61,18 +62,26 @@ def add_go_from_plaza(filename):
     for term in all_go:
         go_hash[term.label] = term
 
+    associations = []
+    counter = 0
     for gene, terms in go_parser.annotation.items():
         if gene in gene_hash.keys():
             current_sequence = gene_hash[gene]
             for term in terms:
-                if term in go_hash.keys():
-                    current_term = go_hash[term]
-                    if current_term not in current_sequence.go_labels:
-                        current_sequence.go_labels.append(current_term)
+                if term["id"] in go_hash.keys():
+                    current_term = go_hash[term["id"]]
+                    association = {
+                        "sequence_id": current_sequence.id,
+                        "go_id": current_term.id,
+                        "evidence": term["evidence"],
+                        "source": term["source"]}
+                    associations.append(association)
                 else:
                     print(term, "not found in the database.")
         else:
             print("Gene", gene, "not found in the database.")
+
+    db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
 
     try:
         db.session.commit()
