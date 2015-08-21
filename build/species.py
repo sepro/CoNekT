@@ -20,8 +20,15 @@ def add_species_from_fasta(filename, species_code, species_name):
         db.session.commit()
         species = new_species
 
+    new_sequences = []
     for name, sequence in fasta_data.sequences.items():
-        new_sequence = Sequence(species.id, name, sequence)
-        db.session.add(new_sequence)
+        new_sequence = {"species_id": species.id,
+                        "name": name,
+                        "coding_sequence": sequence,
+                        "type": "protein_coding",
+                        "is_mitochondrial": False,
+                        "is_chloroplast": False}
+        new_sequences.append(new_sequence)
 
-    db.session.commit()
+    db.engine.execute(Sequence.__table__.insert(), new_sequences)
+

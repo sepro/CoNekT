@@ -10,7 +10,9 @@ class Parser:
             reader = csv.DictReader(csvfile, delimiter=';')
             for row in reader:
                 gene = row['gene_id']
-                domain = row['motif_id']
+                domain = {"id": row['motif_id'],
+                          "start": row['start'],
+                          "stop": row['stop']}
 
                 if gene not in self.annotation.keys():
                     self.annotation[gene] = []

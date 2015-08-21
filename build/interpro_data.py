@@ -2,6 +2,7 @@ from build.parser.plaza.interpro import Parser as IPDParser
 
 from planet.models.sequences import Sequence
 from planet.models.interpro import Interpro
+from planet.models.relationships import SequenceInterproAssociation
 
 from planet import db
 
@@ -29,20 +30,26 @@ def add_interpro_from_plaza(filename):
     for domain in all_domains:
         domain_hash[domain.label] = domain
 
+    new_domains = []
+
     for gene, domains in interpro_parser.annotation.items():
         if gene in gene_hash.keys():
             current_sequence = gene_hash[gene]
             for domain in domains:
-                if domain in domain_hash.keys():
-                    current_domain = domain_hash[domain]
-                    if current_domain not in current_sequence.interpro_domains:
-                        current_sequence.interpro_domains.append(current_domain)
+                if domain["id"] in domain_hash.keys():
+                    current_domain = domain_hash[domain["id"]]
+
+                    new_domain = {"sequence_id": current_sequence.id,
+                                  "interpro_id": current_domain.id,
+                                  "start": domain["start"],
+                                  "stop": domain["stop"]}
+
+                    new_domains.append(new_domain)
+
                 else:
-                    print(domain, "not found in the database.")
+                    print(domain["id"], "not found in the database.")
         else:
             print("Gene", gene, "not found in the database.")
 
-    try:
-        db.session.commit()
-    except:
-        db.session.rollback()
+    db.engine.execute(SequenceInterproAssociation.__table__.insert(), new_domains)
+

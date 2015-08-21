@@ -20,6 +20,8 @@ def parse_expression_plot(plotfile, conversion):
     for s in sequences:
         sequence_dict[s.name.upper()] = s
 
+    new_probes = []
+
     for probe, profile in plot.profiles.items():
 
         gene_id = plot.probe_list[probe].upper()
@@ -28,14 +30,17 @@ def parse_expression_plot(plotfile, conversion):
                   "data": profile}
 
         if gene_id in sequence_dict.keys():
-            db.session.add(ExpressionProfile(probe, sequence_dict[gene_id].id, json.dumps(output)))
+            new_probe = {"probe": probe,
+                         "gene_id": sequence_dict[gene_id].id,
+                         "profile": json.dumps(output)}
+            new_probes.append(new_probe)
         else:
-            db.session.add(ExpressionProfile(probe, None, json.dumps(output)))
+            new_probe = {"probe": probe,
+                         "gene_id": None,
+                         "profile": json.dumps(output)}
+            new_probes.append(new_probe)
 
-    try:
-        db.session.commit()
-    except:
-        db.session.rollback()
+    db.engine.execute(ExpressionProfile.__table__.insert(), new_probes)
 
 
 def parse_expression_network(network_file, species, description, score_type="rank"):
@@ -69,6 +74,7 @@ def parse_expression_network(network_file, species, description, score_type="ran
         db.session.rollback()
 
     # go over nodes, do sanity checks and add them to the db
+    new_nodes = []
     for node in network_parser.network.values():
         if node["gene_name"].upper() in sequence_dict.keys():
             node["gene_id"] = sequence_dict[node["gene_name"].upper()].id        # add gene_id
@@ -83,16 +89,11 @@ def parse_expression_network(network_file, species, description, score_type="ran
             else:
                 linked_gene["gene_id"] = None
 
-        new_node = ExpressionNetwork(node["probe_name"],
-                                     node["gene_id"],
-                                     json.dumps(node["linked_probes"]),
-                                     network_method.id)
+        new_node = {"probe": node["probe_name"],
+                    "gene_id": node["gene_id"],
+                    "network": json.dumps(node["linked_probes"]),
+                    "method_id": network_method.id}
 
-        db.session.add(new_node)
+        new_nodes.append(new_node)
 
-    try:
-        db.session.commit()
-    except:
-        db.session.rollback()
-
-    # print(json.dumps(network_parser.network["267637_at"], sort_keys=True, indent=4, separators=(',', ': ')))
+    db.engine.execute(ExpressionNetwork.__table__.insert(), new_nodes)

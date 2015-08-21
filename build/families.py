@@ -4,6 +4,7 @@ from planet.models.gene_families import GeneFamily, GeneFamilyMethod
 
 from build.parser.plaza.families import Parser as FamilyParser
 
+
 def add_families_from_plaza(filename, description):
     family_parser = FamilyParser()
     family_parser.read(filename)

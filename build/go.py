@@ -63,7 +63,7 @@ def add_go_from_plaza(filename):
         go_hash[term.label] = term
 
     associations = []
-    counter = 0
+
     for gene, terms in go_parser.annotation.items():
         if gene in gene_hash.keys():
             current_sequence = gene_hash[gene]
@@ -82,8 +82,3 @@ def add_go_from_plaza(filename):
             print("Gene", gene, "not found in the database.")
 
     db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
-
-    try:
-        db.session.commit()
-    except:
-        db.session.rollback()
