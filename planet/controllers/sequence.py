@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, render_template,g
+from flask import Blueprint, redirect, url_for, render_template, make_response
 
 from planet.models.sequences import Sequence
 
@@ -39,4 +39,17 @@ def sequence_view(sequence_id):
     return render_template('sequence.html', sequence=current_sequence)
 
 
+@sequence.route('/fasta/coding/<sequence_id>')
+def sequence_fasta_coding(sequence_id):
+    """
+    Returns the coding sequence as a downloadable fasta file
 
+    :param sequence_id: ID of the sequence
+    """
+    current_sequence = Sequence.query.get_or_404(sequence_id)
+
+    fasta = ">" + current_sequence.name + "\n" + current_sequence.coding_sequence + "\n"
+    response = make_response(fasta)
+    response.headers["Content-Disposition"] = "attachment; filename=" + current_sequence.name + ".coding.fasta"
+
+    return response

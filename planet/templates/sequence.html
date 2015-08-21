@@ -10,7 +10,10 @@
     <br />
 
 
-    <h3>Coding Sequence <small>(length: {{ sequence.coding_sequence|length }} bp)</small></h3>
+    <h3>Coding Sequence <small>(length: {{ sequence.coding_sequence|length }} bp)
+        <a href="{{ url_for('sequence.sequence_fasta_coding', sequence_id=sequence.id) }}" data-toggle="tooltip" data-placement="top" title="Download coding sequence">
+            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+        </a></small></h3>
     <div class="well sequence">{{ sequence.coding_sequence }}</div>
 
     <br />
