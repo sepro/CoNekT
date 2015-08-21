@@ -10,9 +10,9 @@ class Sequence(db.Model):
     name = db.Column(db.String(50), index=True)
     transcript = db.Column(db.Text)
     coding_sequence = db.Column(db.Text)
-    type = db.Column(db.Enum('protein_coding', 'TE', 'RNA', name='sequence_type'))
-    is_mitochondrial = db.Column(db.Boolean)
-    is_chloroplast = db.Column(db.Boolean)
+    type = db.Column(db.Enum('protein_coding', 'TE', 'RNA', name='sequence_type'), default='protein_coding')
+    is_mitochondrial = db.Column(db.Boolean, default=False)
+    is_chloroplast = db.Column(db.Boolean, default=False)
 
     expression_profiles = db.relationship('ExpressionProfile', backref='gene', lazy='dynamic')
 

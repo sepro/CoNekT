@@ -41,9 +41,9 @@ def interpro_view(interpro_id):
 @interpro.route('/sequences/<interpro_id>/')
 @interpro.route('/sequences/<interpro_id>/<int:page>')
 def interpro_sequences(interpro_id, page=1):
-    sequences = Interpro.query.get(interpro_id).sequences.paginate(page,
-                                                                   g.page_items,
-                                                                   False).items
+    sequences = Interpro.query.get(interpro_id).sequences.order_by('name').paginate(page,
+                                                                                    g.page_items,
+                                                                                    False).items
 
     return render_template('pages/sequences.html', sequences=sequences)
 

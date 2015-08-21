@@ -44,7 +44,7 @@
                 </div>
                 </div>
                 {% else %}
-                <div class="panel-body">
+                <div class="panel-body panel-scroll">
                     <p>No GO annotation available for this sequence</p>
                 </div>
                 {% endif %}
@@ -54,7 +54,7 @@
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">InterPro domains</div>
-                {% if sequence.interpro_domains.count() > 0 %}
+                {% if sequence.interpro_associations.count() > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -62,13 +62,27 @@
                             <tr>
                                 <th>Label</th>
                                 <th>Description</th>
+                                <th>Start</th>
+                                <th>Stop</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for domain in sequence.interpro_domains %}
+                            {% for association in sequence.interpro_associations %}
                             <tr>
-                                <td><a href="{{ url_for('interpro.interpro_view', interpro_id=domain.id) }}">{{ domain.label }}</a></td>
-                                <td>{{ domain.description }}</td>
+                                <td><a href="{{ url_for('interpro.interpro_view', interpro_id=association.domain.id) }}">{{ association.domain.label }}</a></td>
+                                <td>{{ association.domain.description }}</td>
+
+                                {% if association.start %}
+                                    <td>{{ association.start }}</td>
+                                {% else %}
+                                    <td> - </td>
+                                {% endif %}
+
+                                {% if association.stop %}
+                                    <td>{{ association.stop }}</td>
+                                {% else %}
+                                    <td> - </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -76,7 +90,7 @@
                 </div>
                 </div>
                 {% else %}
-                <div class="panel-body">
+                <div class="panel-body panel-scroll">
                     <p>No InterPro domains available for this sequence</p>
                 </div>
                 {% endif %}
@@ -108,7 +122,7 @@
                 </div>
                 </div>
                 {% else %}
-                <div class="panel-body">
+                <div class="panel-body panel-scroll">
                     <p>This sequence isn't a member of any gene families</p>
                 </div>
                 {% endif %}
@@ -139,7 +153,7 @@
                 </div>
                 </div>
                 {% else %}
-                <div class="panel-body">
+                <div class="panel-body panel-scroll">
                     <p>This sequence doens't have an expression profile associated with it</p>
                 </div>
                 {% endif %}
@@ -168,7 +182,7 @@
                 </div>
                 </div>
                 {% else %}
-                <div class="panel-body">
+                <div class="panel-body panel-scroll">
                     <p>This sequence isn't included in a network</p>
                 </div>
                 {% endif %}

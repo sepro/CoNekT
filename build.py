@@ -117,6 +117,7 @@ def add_plaza_families(filename, description):
 
     add_families_from_plaza(filename, description)
 
+
 @manager.command
 def add_expression_plot(plot, conversion):
     """
@@ -127,6 +128,7 @@ def add_expression_plot(plot, conversion):
     :param conversion: path to conversion table
     """
     parse_expression_plot(plot, conversion)
+
 
 @manager.command
 def add_expression_network(network_file, species, description, score_type="rank"):

@@ -42,9 +42,9 @@ def family_view(family_id):
 @family.route('/sequences/<family_id>/')
 @family.route('/sequences/<family_id>/<int:page>')
 def family_sequences(family_id, page=1):
-    sequences = GeneFamily.query.get(family_id).sequences.paginate(page,
-                                                                   g.page_items,
-                                                                   False).items
+    sequences = GeneFamily.query.get(family_id).sequences.order_by('name').paginate(page,
+                                                                                    g.page_items,
+                                                                                    False).items
 
     return render_template('pages/sequences.html', sequences=sequences)
 
