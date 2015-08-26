@@ -16,6 +16,7 @@ def expression_profile_overview():
     """
     return redirect(url_for('main.screen'))
 
+
 @expression_profile.route('/view/<profile_id>')
 def expression_profile_view(profile_id):
     """
@@ -24,6 +25,18 @@ def expression_profile_view(profile_id):
     :param profile_id: ID of the profile to show
     """
     current_profile = ExpressionProfile.query.get_or_404(profile_id)
+
+    return render_template("expression_profile.html", profile=current_profile)
+
+
+@expression_profile.route('/find/<probe>')
+def expression_profile_find(probe):
+    """
+    Gets expression profile data from the database and renders it.
+
+    :param profile_id: ID of the profile to show
+    """
+    current_profile = ExpressionProfile.query.filter_by(probe=probe).first()
 
     return render_template("expression_profile.html", profile=current_profile)
 

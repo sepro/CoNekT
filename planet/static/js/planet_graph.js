@@ -53,6 +53,10 @@ $('#cy').cytoscape({
           platform: 'Planet',
           name: n.data('gene_name'),
           url: n.data('gene_link')
+        }, {
+          platform: 'Profile',
+          name: n.data('id'),
+          url: n.data('profile_link')
         }
       ]
 
