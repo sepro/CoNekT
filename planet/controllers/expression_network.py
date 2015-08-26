@@ -81,20 +81,6 @@ def expression_network_json(node_id, depth=0):
     return json.dumps(network)
 
 
-@expression_network.route('/json/test/<node_id>')
-@expression_network.route('/json/test/<node_id>/<int:depth>')
-def expression_network_json_test(node_id, depth=0):
-    """
-    Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)
-
-    :param node_id: id of the network's probe (the query) to visualize
-    :param depth: How many steps to include, 0 only the query and the direct neighborhood, 1 a step further, ...
-    """
-    network = ExpressionNetwork.get_neighborhood(node_id, depth)
-
-    return json.dumps(network)
-
-
 @expression_network.route('/json/family/<int:family_method_id>/node/<node_id>')
 @expression_network.route('/json/family/<int:family_method_id>/node/<node_id>/<int:depth>')
 def expression_network_json_family(family_method_id, node_id, depth=0):
