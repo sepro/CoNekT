@@ -87,14 +87,18 @@ cy = cytoscape({
 
 
 $('.cy-node-color').click(function() {
-
   attr = $( this ).attr( 'attr' );
-
-  $('.cy-node-color').removeClass( 'active' );
-  $( this ).addClass( 'active' );
 
   cy.nodes().forEach(function(n){
     n.style('background-color', n.data(attr))
+    })
+})
+
+$('.cy-edge-color').click(function() {
+  attr = $( this ).attr( 'attr' );
+
+  cy.edges().forEach(function(e){
+      e.style('line-color', e.data(attr))
     })
 })
 

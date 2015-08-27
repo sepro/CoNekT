@@ -58,7 +58,8 @@ def expression_network_json(node_id, depth=0):
     :param depth: How many steps to include, 0 only the query and the direct neighborhood, 1 a step further, ...
     """
     network = ExpressionNetworkCytoscape.get_neighborhood(node_id, depth)
-
-    return json.dumps(ExpressionNetworkCytoscape.colorize_network_family(network, 1))
+    network = ExpressionNetworkCytoscape.colorize_network_family(network, 1)
+    network = ExpressionNetworkCytoscape.colorize_edges_by_depth(network)
+    return json.dumps(network)
 
 
