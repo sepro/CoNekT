@@ -82,6 +82,22 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
 
     @staticmethod
     @benchmark
+    def colorize_nodes_by_depth(network):
+        """
+        Colors a cytoscape compatible network (dict) based on edge depth
+        """
+        colored_network = deepcopy(network)
+
+        colors = ["#3CE500", "#B7D800", "#CB7300", "#BF0003"]
+
+        for node in colored_network["nodes"]:
+            if "data" in node.keys() and "depth" in node["data"].keys():
+                node["data"]["depth_color"] = colors[node["data"]["depth"]]
+
+        return colored_network
+
+    @staticmethod
+    @benchmark
     def colorize_edges_by_depth(network):
         """
         Colors a cytoscape compatible network (dict) based on edge depth
