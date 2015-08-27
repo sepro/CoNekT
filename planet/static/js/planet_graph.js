@@ -129,4 +129,25 @@ $('.cy-layout').click(function() {
     cy.layout({ name: layout });
 })
 
+
+
 }); // on dom ready
+
+$('#cy-download-img').click(function() {
+
+  var png64 = cy.png();
+  var canvas = document.getElementById("png-eg");
+
+  var ctx = canvas.getContext("2d");
+
+  var image = new Image();
+
+  image.onload = function() {
+    ctx.drawImage(image, 0, 0);
+    setTimeout(image.onload,5000);
+  };
+  image.src = png64;
+
+  var dt = canvas.toDataURL('image/png');
+  this.href = dt.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+})
