@@ -74,6 +74,8 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
         for node in colored_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys() \
                     and node["data"]["gene_id"] in families.keys():
-                node["data"]["color"] = string_to_hex_color(families[node["data"]["gene_id"]]["name"])
+                node["data"]["family_color"] = string_to_hex_color(families[node["data"]["gene_id"]]["name"])
+            else:
+                node["data"]["family_color"] = "#CCC"
 
         return colored_network

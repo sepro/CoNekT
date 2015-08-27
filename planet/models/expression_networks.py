@@ -45,9 +45,10 @@ class ExpressionNetwork(db.Model):
         # add the initial node
         nodes = [{"id": node.probe,
                   "name": node.probe,
-                  "gene_id": node.gene_id,
+                  "gene_id": int(node.gene_id),
                   "gene_name": node.gene.name,
-                  "node_type": "query"}]
+                  "node_type": "query",
+                  "depth": 0}]
         edges = []
 
         # lists necessary for doing deeper searches
@@ -58,7 +59,7 @@ class ExpressionNetwork(db.Model):
         # add direct neighbors of the gene of interest
 
         for link in links:
-            nodes.append(ExpressionNetwork.__process_link(link))
+            nodes.append(ExpressionNetwork.__process_link(link, depth=0))
             edges.append({"source": node.probe,
                           "target": link["probe_name"],
                           "depth": 0,
@@ -82,7 +83,7 @@ class ExpressionNetwork(db.Model):
 
                 for link in new_links:
                     if link["probe_name"] not in existing_nodes:
-                        nodes.append(ExpressionNetwork.__process_link(link))
+                        nodes.append(ExpressionNetwork.__process_link(link, depth=depth))
                         existing_nodes.append(link["probe_name"])
                         next_nodes.append(link["probe_name"])
 
@@ -116,7 +117,7 @@ class ExpressionNetwork(db.Model):
         return {"nodes": nodes, "edges": edges}
 
     @staticmethod
-    def __process_link(linked_probe):
+    def __process_link(linked_probe, depth):
         """
         Internal function that processes a linked probe (from the ExpressionNetwork.network field) to a data entry
         compatible with cytoscape.js
@@ -129,10 +130,12 @@ class ExpressionNetwork(db.Model):
                     "name": linked_probe["probe_name"],
                     "gene_id": linked_probe["gene_id"],
                     "gene_name": linked_probe["gene_name"],
-                    "node_type": "linked"}
+                    "node_type": "linked",
+                    "depth": depth}
         else:
             return {"id": linked_probe["probe_name"],
                     "name": linked_probe["probe_name"],
                     "gene_id": None,
                     "gene_name": linked_probe["gene_name"],
-                    "node_type": "linked"}
+                    "node_type": "linked",
+                    "depth": depth}

@@ -1,28 +1,58 @@
 {% extends 'base.html' %}
 
 {% block container %}
-<div class="top-pad">
-    <h1>Expression Graph: <strong>{{ node.probe }}</strong> <small>({{ node.method.description }})</small></h1>
-    Depth:
-
-    {% if family_method_id %}
-    <div class="btn-group" role="group">
-        <a href="{{ url_for('expression_network.expression_network_view_family', family_method_id=family_method_id, node_id=node.id, depth=0)}}" role="button" class="btn btn-primary {% if depth == 0 %}active{% endif%}">Low</a>
-        <a href="{{ url_for('expression_network.expression_network_view_family', family_method_id=family_method_id, node_id=node.id, depth=1)}}" role="button" class="btn btn-primary {% if depth == 1 %}active{% endif%}">Middle</a>
-        <a href="{{ url_for('expression_network.expression_network_view_family', family_method_id=family_method_id, node_id=node.id, depth=2)}}" role="button" class="btn btn-primary {% if depth == 2 %}active{% endif%}">High</a>
+<div class=container-fluid">
+    <div class="row">
+        <div class="col-sm-4 col-md-3 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#"><strong>Options</strong></a></li>
+            <li><br/></li>
+            <li><p>Depth</p>
+                <div class="text-center">
+                    <div class="btn-group" role="group">
+                        <a href="#" role="button" class="btn btn-primary cy-depth-filter" cutoff=1>Direct</a>
+                        <a href="#" role="button" class="btn btn-primary cy-depth-filter active" cutoff=2>2<sup>nd</sup> Degree</a>
+                    </div>
+                </div>
+            </li>
+            <li><hr /></li>
+            <li><p>Nodes</p></li>
+            <li>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Color <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="cy-node-color active" attr="color">Default</a></li>
+                        <li><a href="#" class="cy-node-color" attr="family_color">Family</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><hr /></li>
+            <li><p>Layout</p></li>
+            <li>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Select layout <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="cy-layout" layout="breadthfirst">Breadthfirst</a></li>
+                        <li><a href="#" class="cy-layout" layout="circle">Circle</a></li>
+                        <li><a href="#" class="cy-layout" layout="concentric">Concentric</a></li>
+                        <li><a href="#" class="cy-layout" layout="cose">Cose</a></li>
+                        <li><a href="#" class="cy-layout" layout="grid">Grid</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" class="cy-layout" layout="random">Random</a></li>
+                    </ul>
+                </div>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
+            <h1>Expression Graph: <strong>{{ node.probe }}</strong> <small>({{ node.method.description }})</small></h1>
+                <div id="cy" json="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}"></div>
+        </div>
     </div>
-
-    <div id="cy" json="{{ url_for('expression_network.expression_network_json_family', family_method_id=family_method_id, node_id=node.id, depth=depth) }}"></div>
-    {% else %}
-    <div class="btn-group" role="group">
-        <a href="{{ url_for('expression_network.expression_network_view', node_id=node.id, depth=0)}}" role="button" class="btn btn-primary {% if depth == 0 %}active{% endif%}">Low</a>
-        <a href="{{ url_for('expression_network.expression_network_view', node_id=node.id, depth=1)}}" role="button" class="btn btn-primary {% if depth == 1 %}active{% endif%}">Middle</a>
-        <a href="{{ url_for('expression_network.expression_network_view', node_id=node.id, depth=2)}}" role="button" class="btn btn-primary {% if depth == 2 %}active{% endif%}">High</a>
-    </div>
-
-    <div id="cy" json="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}"></div>
-    {% endif %}
-
 </div>
 
 </div>

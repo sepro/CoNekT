@@ -1,8 +1,11 @@
+var cy;
+
 $(function(){ // on dom ready
 
 url = $('#cy').attr( "json" );
 
-$('#cy').cytoscape({
+cy = cytoscape({
+  container: document.getElementById('cy'),
   style: cytoscape.stylesheet()
     .selector('node')
       .css({
@@ -23,7 +26,7 @@ $('#cy').cytoscape({
       .css({
         'curve-style': 'haystack',
         'opacity': 0.75,
-        'width': 'mapData(depth, 4, 0, 1, 5)',
+        'width': 'mapData(depth, 2, 0, 1, 2)',
         'line-color': 'data(color)'
       })
     .selector(':selected')
@@ -81,5 +84,49 @@ $('#cy').cytoscape({
 
   }
 });
+
+
+$('.cy-node-color').click(function() {
+
+  attr = $( this ).attr( 'attr' );
+
+  $('.cy-node-color').removeClass( 'active' );
+  $( this ).addClass( 'active' );
+
+  cy.nodes().forEach(function(n){
+    n.style('background-color', n.data(attr))
+    })
+})
+
+$('.cy-depth-filter').click(function() {
+    $( '.cy-depth-filter' ).removeClass( 'active' );
+    $( this ).addClass( 'active' );
+
+    cutoff = $( this ).attr( 'cutoff' );
+
+    cy.nodes().forEach(function(n){
+      if (n.data('depth')> cutoff - 1)
+      {
+        n.style('display', 'none')
+      } else {
+        n.style('display', 'element')
+      }
+    })
+
+    cy.edges().forEach(function(e){
+      if (e.data('depth')> cutoff)
+      {
+        e.style('display', 'none')
+      } else {
+        e.style('display', 'element')
+      }
+    })
+})
+
+$('.cy-layout').click(function() {
+    layout = $( this ).attr( 'layout' );
+
+    cy.layout({ name: layout });
+})
 
 }); // on dom ready
