@@ -88,18 +88,12 @@ cy = cytoscape({
 
 $('.cy-node-color').click(function() {
   attr = $( this ).attr( 'attr' );
-
-  cy.nodes().forEach(function(n){
-    n.style('background-color', n.data(attr))
-    })
+  cy.nodes().style('background-color', function( ele ){ return ele.data(attr)});
 })
 
 $('.cy-edge-color').click(function() {
   attr = $( this ).attr( 'attr' );
-
-  cy.edges().forEach(function(e){
-      e.style('line-color', e.data(attr))
-    })
+  cy.edges().style('line-color', function( ele ){ return ele.data(attr)});
 })
 
 $('.cy-depth-filter').click(function() {
@@ -108,23 +102,11 @@ $('.cy-depth-filter').click(function() {
 
     cutoff = $( this ).attr( 'cutoff' );
 
-    cy.nodes().forEach(function(n){
-      if (n.data('depth')> cutoff - 1)
-      {
-        n.style('display', 'none')
-      } else {
-        n.style('display', 'element')
-      }
-    })
+    cy.nodes("[depth>" + (cutoff-1) + "]").style('display', 'none');
+    cy.nodes("[depth<=" + (cutoff-1) + "]").style('display', 'element');
 
-    cy.edges().forEach(function(e){
-      if (e.data('depth')> cutoff)
-      {
-        e.style('display', 'none')
-      } else {
-        e.style('display', 'element')
-      }
-    })
+    cy.edges("[depth>" + cutoff + "]").style('display', 'none');
+    cy.edges("[depth<=" + cutoff + "]").style('display', 'element');
 })
 
 $('.cy-layout').click(function() {
