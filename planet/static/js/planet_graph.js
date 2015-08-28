@@ -2,7 +2,7 @@ var cy;
 
 $(function(){ // on dom ready
 
-url = $('#cy').attr( "json" );
+var url = $('#cy').attr( "json" );
 
 cy = cytoscape({
   container: document.getElementById('cy'),
@@ -118,14 +118,14 @@ cy = cytoscape({
 
 
 $('.cy-node-color').click(function() {
-  attr = $( this ).attr( 'attr' );
+  var attr = $( this ).attr( 'attr' );
   cy.nodes().style('background-color', function( ele ){ return ele.data(attr)});
 })
 
 
 
 $('.cy-edge-color').click(function() {
-  attr = $( this ).attr( 'attr' );
+  var attr = $( this ).attr( 'attr' );
   if (attr === "link_score") {
     cy.edges().style('line-color', function( ele ){
         var value = Math.floor(((31 - ele.data(attr))/30)*16);
@@ -143,7 +143,7 @@ $('.cy-depth-filter').click(function() {
     $( '.cy-depth-filter' ).removeClass( 'active' );
     $( this ).addClass( 'active' );
 
-    cutoff = $( this ).attr( 'cutoff' );
+    var cutoff = $( this ).attr( 'cutoff' );
 
     cy.nodes("[depth>" + (cutoff-1) + "]").style('display', 'none');
     cy.nodes("[depth<=" + (cutoff-1) + "]").style('display', 'element');
@@ -153,7 +153,7 @@ $('.cy-depth-filter').click(function() {
 })
 
 $('.cy-layout').click(function() {
-    layout = $( this ).attr( 'layout' );
+    var layout = $( this ).attr( 'layout' );
 
     cy.layout({ name: layout });
 })
@@ -164,7 +164,7 @@ function valueToColor(value)
   if (value === null)  {
     return "#FFF";
   } else {
-    color = "#" + (15-value).toString(16) + "" + value.toString(16) + "0";
+    var color = "#" + (15-value).toString(16) + "" + value.toString(16) + "0";
     return color;
   }
 }
