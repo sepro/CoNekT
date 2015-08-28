@@ -25,7 +25,7 @@ cy = cytoscape({
     .selector('edge')
       .css({
         'curve-style': 'haystack',
-        'opacity': 0.75,
+        'opacity': 1,
         'width': 'mapData(depth, 2, 0, 1, 2)',
         'line-color': 'data(color)'
       })
@@ -82,6 +82,37 @@ cy = cytoscape({
     });
   });
 
+    cy.edges().forEach(function(e){
+    // code to add tooltips to the selected node
+    var content = [
+        {
+          name: 'Link Score',
+          value: e.data('link_score')
+        }, {
+          name: 'Depth',
+          value: e.data('depth')
+        }
+      ]
+
+
+    e.qtip({
+      content: content.map(function( link ){
+        return link.name + ":" + link.value;
+      }).join('<br />\n'),
+      position: {
+        my: 'bottom center',
+        at: 'center center'
+      },
+      style: {
+        classes: 'qtip-bootstrap',
+        tip: {
+          width: 16,
+          height: 8
+        }
+      }
+    });
+  }); // end cy.edges.forEach...
+
   }
 });
 
@@ -91,10 +122,22 @@ $('.cy-node-color').click(function() {
   cy.nodes().style('background-color', function( ele ){ return ele.data(attr)});
 })
 
+
+
 $('.cy-edge-color').click(function() {
   attr = $( this ).attr( 'attr' );
-  cy.edges().style('line-color', function( ele ){ return ele.data(attr)});
+  if (attr === "link_score") {
+    cy.edges().style('line-color', function( ele ){
+        var value = Math.floor(((31 - ele.data(attr))/30)*16);
+        return valueToColor(value);
+      });
+  } else {
+    cy.edges().style('line-color', function( ele ){ return ele.data(attr)});
+  }
+
 })
+
+
 
 $('.cy-depth-filter').click(function() {
     $( '.cy-depth-filter' ).removeClass( 'active' );
@@ -115,7 +158,16 @@ $('.cy-layout').click(function() {
     cy.layout({ name: layout });
 })
 
-
+function valueToColor(value)
+{
+  value = value > 15 ? 15 : value;
+  if (value === null)  {
+    return "#FFF";
+  } else {
+    color = "#" + (15-value).toString(16) + "" + value.toString(16) + "0";
+    return color;
+  }
+}
 
 }); // on dom ready
 
