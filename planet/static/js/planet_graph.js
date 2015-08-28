@@ -25,7 +25,7 @@ cy = cytoscape({
     .selector('edge')
       .css({
         'curve-style': 'haystack',
-        'opacity': 1,
+        'opacity': 0.7,
         'width': 'mapData(depth, 2, 0, 1, 2)',
         'line-color': 'data(color)'
       })
