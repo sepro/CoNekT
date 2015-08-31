@@ -4,7 +4,7 @@ from sqlalchemy import and_
 from planet.models.expression_networks import ExpressionNetwork
 from planet.models.relationships import SequenceFamilyAssociation
 
-from utils.color import string_to_hex_color
+from utils.color import string_to_hex_color, string_to_shape
 from utils.benchmark import benchmark
 
 import json
@@ -30,7 +30,7 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
         for e in network["edges"]:
             output["edges"].append({"data": e})
 
-        # add basic colors to nodes and url to gene pages
+        # add basic colors and shapes to nodes and url to gene pages
 
         for n in output["nodes"]:
             if n["data"]["gene_id"] is not None:
@@ -38,6 +38,7 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
 
             n["data"]["profile_link"] = url_for("expression_profile.expression_profile_find", probe=n["data"]["id"])
             n["data"]["color"] = "#CCC"
+            n["data"]["shape"] = "ellipse"
 
         for e in output["edges"]:
             e["data"]["color"] = "#888"
@@ -46,17 +47,17 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
 
     @staticmethod
     @benchmark
-    def colorize_network_family(network, family_method_id):
+    def add_family_data_nodes(network, family_method_id):
         """
         Colors a cytoscape compatible network (dict) based on gene family
 
         :param network: dict containing the network
         :param family_method_id: desired type/method used to construct the families
         """
-        colored_network = deepcopy(network)
+        completed_network = deepcopy(network)
 
         sequence_ids = []
-        for node in colored_network["nodes"]:
+        for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys():
                 sequence_ids.append(node["data"]["gene_id"])
 
@@ -71,18 +72,20 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
                 families[s.sequence_id]["name"] = s.family.name
                 families[s.sequence_id]["id"] = s.gene_family_id
 
-        for node in colored_network["nodes"]:
+        for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys() \
                     and node["data"]["gene_id"] in families.keys():
                 node["data"]["family_color"] = string_to_hex_color(families[node["data"]["gene_id"]]["name"])
+                node["data"]["family_shape"] = string_to_shape(families[node["data"]["gene_id"]]["name"])
             else:
                 node["data"]["family_color"] = "#CCC"
+                node["data"]["family_shape"] = "rectangle"
 
-        return colored_network
+        return completed_network
 
     @staticmethod
     @benchmark
-    def colorize_nodes_by_depth(network):
+    def add_depth_data_nodes(network):
         """
         Colors a cytoscape compatible network (dict) based on edge depth
         """
@@ -98,7 +101,7 @@ class ExpressionNetworkCytoscape(ExpressionNetwork):
 
     @staticmethod
     @benchmark
-    def colorize_edges_by_depth(network):
+    def add_depth_data_edges(network):
         """
         Colors a cytoscape compatible network (dict) based on edge depth
         """

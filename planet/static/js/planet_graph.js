@@ -26,7 +26,7 @@ cy = cytoscape({
       .css({
         'curve-style': 'haystack',
         'opacity': 0.7,
-        'width': 'mapData(depth, 2, 0, 1, 2)',
+        'width': 1,
         'line-color': 'data(color)'
       })
     .selector(':selected')
@@ -122,7 +122,10 @@ $('.cy-node-color').click(function() {
   cy.nodes().style('background-color', function( ele ){ return ele.data(attr)});
 })
 
-
+$('.cy-node-shape').click(function() {
+  var attr = $( this ).attr( 'attr' );
+  cy.nodes().style('shape', function( ele ){ return ele.data(attr)});
+})
 
 $('.cy-edge-color').click(function() {
   var attr = $( this ).attr( 'attr' );
@@ -137,7 +140,16 @@ $('.cy-edge-color').click(function() {
 
 })
 
+$('.cy-edge-width').click(function() {
+  var attr = $( this ).attr( 'attr' );
+  if (attr === "default") {
+    cy.edges().style('width', 1);
+  } else if (attr === "depth")
+  {
+    cy.edges().style('width', function( ele ){ return (3 - ele.data('depth'))/2});
+  }
 
+})
 
 $('.cy-depth-filter').click(function() {
     $( '.cy-depth-filter' ).removeClass( 'active' );
