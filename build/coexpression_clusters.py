@@ -1,17 +1,17 @@
 from build.parser.planet.expression_clusters import Parser
 from planet import db
-from planet.models.species import Species
+from planet.models.expression_networks import ExpressionNetworkMethod
 from planet.models.sequences import Sequence
 from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
 from planet.models.relationships import SequenceCoexpressionClusterAssociation
 
 
-def add_from_planet(hrr_file, hcca_file, description, species):
+def add_planet_coexpression_clusters(hrr_file, hcca_file, description, network):
 
-    # check if species exists
-    species = Species.query.filter_by(code=species).first()
-    if species is None:
-        print("ERROR: species", species, "not found.")
+    # check if network exists
+    network = ExpressionNetworkMethod.query.get(network).first()
+    if network is None:
+        print("ERROR: network not found.")
         quit()
 
 

@@ -14,6 +14,8 @@ class ExpressionNetworkMethod(db.Model):
 
     probes = db.relationship('ExpressionNetwork', backref='method', lazy='dynamic')
 
+    clustering_methods = db.relationship('CoexpressionClusteringMethod', backref='network_method', lazy='dynamic')
+
     def __init__(self, species_id, description, edge_type="rank"):
         self.species_id = species_id
         self.description = description

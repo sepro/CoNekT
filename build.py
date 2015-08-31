@@ -50,6 +50,8 @@ from build.families import add_families_from_plaza
 from build.expression import parse_expression_plot
 from build.expression import parse_expression_network
 
+from build.coexpression_clusters import add_planet_coexpression_clusters
+
 
 manager = Manager(app)
 
@@ -133,6 +135,11 @@ def add_expression_plot(plot, conversion):
 @manager.command
 def add_expression_network(network_file, species, description, score_type="rank"):
     parse_expression_network(network_file, species, description, score_type)
+
+
+@manager.command
+def add_planet_clusters(hrr_file, hcca_file, description, network):
+    add_planet_coexpression_clusters(hrr_file, hcca_file, description, network)
 
 if __name__ == "__main__":
 
