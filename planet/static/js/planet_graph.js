@@ -48,7 +48,6 @@ cy = cytoscape({
   ready: function(){
     window.cy = this;
 
-
     cy.nodes().forEach(function(n){
     // code to add tooltips to the selected node
     var content = [
@@ -170,6 +169,11 @@ $('.cy-layout').click(function() {
     cy.layout({ name: layout });
 })
 
+$(".dropdown-menu li a").click(function(){
+  $(this).parents(".btn-group").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+  $(this).parents(".btn-group").find('.btn').val($(this).data('value'));
+});
+
 function valueToColor(value)
 {
   value = value > 15 ? 15 : value;
@@ -181,7 +185,7 @@ function valueToColor(value)
   }
 }
 
-}); // on dom ready
+}); // end on dom ready
 
 $('#cy-download-img').click(function() {
 
