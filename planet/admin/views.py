@@ -62,3 +62,11 @@ class ExpressionNetworkMethodAdminView(MyModelView):
     column_display_pk = True
 
     can_create = False
+
+
+class CoexpressionClusteringMethodAdminView(MyModelView):
+    form_columns = ('method', 'network_method')
+
+    column_display_pk = True
+
+    can_create = False

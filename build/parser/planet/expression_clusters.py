@@ -21,7 +21,6 @@ class Parser:
         with open(network_file) as csvfile:
             reader = csv.reader(csvfile, delimiter='\t')
             for probe_id, parts in enumerate(reader):
-
                 # probe_id in this case is the line number (starting from zero)
 
                 probe = parts[0]
@@ -34,12 +33,12 @@ class Parser:
         with open(cluster_file) as csvfile:
             reader = csv.reader(csvfile, delimiter='\t')
             for parts in reader:
-                probe_id = parts[0]
+                probe_id = int(parts[0])
                 cluster_id = parts[1]
 
                 if cluster_id not in self.clusters:
                     self.clusters[cluster_id] = []
 
-                if probe_id in id_to_probe:
+                if probe_id in id_to_probe.keys():
                     self.clusters[cluster_id].append({'probe': id_to_probe[probe_id]['probe'],
                                                       'gene': id_to_probe[probe_id]['gene']})
