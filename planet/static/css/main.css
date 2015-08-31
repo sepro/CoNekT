@@ -141,6 +141,11 @@ input[readonly] {
   background-color: #428bca;
 }
 
+.sidebar .dropdown-menu {
+  min-width: 120px;
+  width: 120px;
+}
+
 
 /*
  * Main content
