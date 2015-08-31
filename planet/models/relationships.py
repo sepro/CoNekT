@@ -27,6 +27,15 @@ sequence_coexpression_cluster = db.Table('sequence_coexpression_cluster',
                                          )
 
 
+class SequenceCoexpressionClusterAssociation(db.Model):
+    __tablename__ = 'sequence_coexpression_cluster'
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, primary_key=True)
+    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
+    coexpression_cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
+
+
 class SequenceFamilyAssociation(db.Model):
     __tablename__ = 'sequence_family'
     __table_args__ = {'extend_existing': True}

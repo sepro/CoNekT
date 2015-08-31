@@ -4,6 +4,7 @@ from planet import db
 class CoexpressionClusteringMethod(db.Model):
     __tablename__ = 'coexpression_clustering_methods'
     id = db.Column(db.Integer, primary_key=True)
+    species_id = db.Column(db.Integer, db.ForeignKey('species.id'))
     method = db.Column(db.Text)
 
     clusters = db.relationship('CoexpressionCluster', backref='method', lazy='dynamic')
