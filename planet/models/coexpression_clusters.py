@@ -30,22 +30,26 @@ class CoexpressionCluster(db.Model):
         nodes = []
         edges = []
 
+        existing_edges = []
+
         for node in network:
             nodes.append({"id": node.probe,
                           "name": node.probe,
                           "gene_id": int(node.gene_id) if node.gene_id is not None else None,
-                          "gene_name": node.gene.name if node.gene_id is not None else None,
+                          "gene_name": node.gene.name if node.gene_id is not None else node.probe,
                           "depth": 0})
 
             links = json.loads(node.network)
 
             for link in links:
                 # only add links that are in the cluster !
-                if link["probe_name"] in probes:
+                if link["probe_name"] in probes and [node.probe, link["probe_name"]] not in existing_edges:
                     edges.append({"source": node.probe,
                                   "target": link["probe_name"],
                                   "depth": 0,
                                   "link_score": link["link_score"],
                                   "edge_type": cluster.method.network_method.edge_type})
+                    existing_edges.append([node.probe, link["probe_name"]])
+                    existing_edges.append([link["probe_name"], node.probe])
 
         return {"nodes": nodes, "edges": edges}

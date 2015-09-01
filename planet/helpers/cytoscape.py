@@ -1,27 +1,18 @@
 from flask import url_for
-from sqlalchemy import and_
 
-from planet.models.expression_networks import ExpressionNetwork
 from planet.models.relationships import SequenceFamilyAssociation
 
 from utils.color import string_to_hex_color, string_to_shape
 from utils.benchmark import benchmark
 
-import json
 from copy import deepcopy
 
 
-class ExpressionNetworkCytoscape(ExpressionNetwork):
-    """
-    This class extends the ExpressionNetwork class to add specific functions to generate data compatible with
-    cytoscape.js and planet_graph.js
-    """
+class CytoscapeHelper:
+
     @staticmethod
     @benchmark
-    def get_neighborhood(probe, depth=0):
-
-        network = super(ExpressionNetworkCytoscape, ExpressionNetworkCytoscape).get_neighborhood(probe, depth)
-
+    def parse_network(network):
         output = {"nodes": [], "edges": []}
 
         for n in network["nodes"]:
