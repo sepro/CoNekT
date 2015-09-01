@@ -12,6 +12,7 @@ class ExpressionNetworkMethod(db.Model):
     description = db.Column(db.Text)
     edge_type = db.Column(db.Enum("rank", "weight", name='edge_type'))
 
+    species = db.relationship('Species', lazy='select')
     probes = db.relationship('ExpressionNetwork', backref='method', lazy='dynamic')
 
     clustering_methods = db.relationship('CoexpressionClusteringMethod', backref='network_method', lazy='dynamic')

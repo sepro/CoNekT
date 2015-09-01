@@ -45,7 +45,7 @@ def expression_network_view(node_id, depth=1):
         return redirect(url_for('expression_network.expression_network_view', node_id=node_id, depth=2))
 
     node = ExpressionNetwork.query.get(node_id)
-    return render_template("expression_graph.html", node=node, depth=depth)
+    return render_template("expression_network_graph.html", node=node, depth=depth)
 
 
 @expression_network.route('/json/<node_id>')

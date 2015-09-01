@@ -36,6 +36,10 @@ class SequenceCoexpressionClusterAssociation(db.Model):
     sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
     coexpression_cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
 
+    sequence = db.relationship('Sequence', backref=db.backref('coexpression_cluster_associations', lazy='dynamic'),
+                               lazy='select')
+    cluster = db.relationship('CoexpressionCluster', backref=db.backref('members', lazy='dynamic'), lazy='select')
+
 
 class SequenceFamilyAssociation(db.Model):
     __tablename__ = 'sequence_family'
