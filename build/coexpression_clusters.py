@@ -18,8 +18,8 @@ def add_planet_coexpression_clusters(hrr_file, hcca_file, description, network):
     sequences = Sequence.query.all()
 
     sequence_dict = {}
-    for s in sequences:
-        sequence_dict[s.name.upper()] = s
+    for member in sequences:
+        sequence_dict[member.name.upper()] = member
 
     # add coexpression clustering method to the database
     clustering_method = CoexpressionClusteringMethod()
@@ -37,16 +37,35 @@ def add_planet_coexpression_clusters(hrr_file, hcca_file, description, network):
     cluster_parser = Parser()
     cluster_parser.read_expression_clusters(hrr_file, hcca_file)
 
+    added_clusters = {}
+
     for cluster_id, cluster in cluster_parser.clusters.items():
         if not id == "sNA":
             new_cluster = CoexpressionCluster()
             new_cluster.method_id = clustering_method.id
             new_cluster.name = cluster_id
+            added_clusters[cluster_id] = new_cluster
             db.session.add(new_cluster)
 
-            for s in cluster:
-                if s['gene'].upper() in sequence_dict:
-                    sequence_dict[s['gene'].upper()].coexpression_clusters.append(new_cluster)
+    try:
+        db.session.commit()
+    except:
+        db.session.rollback()
+        quit()
+
+    for cluster_id, cluster in cluster_parser.clusters.items():
+        if not id == "sNA":
+            current_cluster = added_clusters[cluster_id]
+
+            for member in cluster:
+                new_association = SequenceCoexpressionClusterAssociation()
+                new_association.probe = member['probe']
+                new_association.sequence_id = None
+                if member['gene'].upper() in sequence_dict.keys():
+                    new_association.sequence_id = sequence_dict[member['gene'].upper()].id
+                new_association.coexpression_cluster_id = current_cluster.id
+                db.session.add(new_association)
+
     try:
         db.session.commit()
     except:
