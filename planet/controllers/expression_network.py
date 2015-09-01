@@ -43,6 +43,7 @@ def expression_network_graph(node_id, depth=1):
         return redirect(url_for('expression_network.expression_network_graph', node_id=node_id, depth=2))
 
     node = ExpressionNetwork.query.get(node_id)
+
     return render_template("expression_graph.html", node=node, depth=depth)
 
 
@@ -56,10 +57,12 @@ def expression_network_json(node_id, depth=1):
     :param depth: How many steps to include, 0 only the query and the direct neighborhood, 1 a step further, ...
     """
     network = ExpressionNetwork.get_neighborhood(node_id, depth)
+
     network_cytoscape = CytoscapeHelper.parse_network(network)
     network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, 1)
     network_cytoscape = CytoscapeHelper.add_depth_data_edges(network_cytoscape)
     network_cytoscape = CytoscapeHelper.add_depth_data_nodes(network_cytoscape)
+
     return json.dumps(network_cytoscape)
 
 

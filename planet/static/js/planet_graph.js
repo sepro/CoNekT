@@ -117,8 +117,14 @@ cy = cytoscape({
 
 
 $('.cy-node-color').click(function() {
-  var attr = $( this ).attr( 'attr' );
-  cy.nodes().style('background-color', function( ele ){ return ele.data(attr)});
+ var attr = $( this ).attr( 'attr' );
+ if (attr === "neighbors") {
+    cy.nodes().style('background-color', function( ele ){
+        return valueToColor(ele.data(attr));
+      });
+  } else {
+    cy.nodes().style('background-color', function( ele ){ return ele.data(attr)});
+  }
 })
 
 $('.cy-node-shape').click(function() {
@@ -133,7 +139,8 @@ $('.cy-edge-color').click(function() {
         var value = Math.floor(((31 - ele.data(attr))/30)*16);
         return valueToColor(value);
       });
-  } else {
+  }
+  else{
     cy.edges().style('line-color', function( ele ){ return ele.data(attr)});
   }
 

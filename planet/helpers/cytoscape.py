@@ -92,6 +92,24 @@ class CytoscapeHelper:
 
     @staticmethod
     @benchmark
+    def add_connection_data_nodes(network):
+        colored_network = deepcopy(network)
+
+        for node in colored_network["nodes"]:
+            if "data" in node.keys() and "id" in node["data"].keys():
+                probe = node["data"]["id"]
+                neighbors = 0
+                for edge in colored_network["edges"]:
+                    if "data" in edge.keys() and "source" in edge["data"].keys() and "target" in edge["data"].keys():
+                        if probe == edge["data"]["source"] or probe == edge["data"]["target"]:
+                            neighbors += 1
+
+                node["data"]["neighbors"] = neighbors
+
+        return colored_network
+
+    @staticmethod
+    @benchmark
     def add_depth_data_edges(network):
         """
         Colors a cytoscape compatible network (dict) based on edge depth
