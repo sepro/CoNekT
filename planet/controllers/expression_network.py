@@ -29,7 +29,7 @@ def expression_network_species(species_id):
     return render_template("expression_network.html", networks=networks)
 
 
-@expression_network.route('/graph/<node_id>/')
+@expression_network.route('/graph/<node_id>')
 def expression_network_graph(node_id, depth=1):
     """
     Page that displays the network graph for a specific network's probe, the depth indicates how many steps away from
