@@ -29,8 +29,8 @@ def expression_network_species(species_id):
     return render_template("expression_network.html", networks=networks)
 
 
-@expression_network.route('/view/<node_id>/')
-def expression_network_view(node_id, depth=1):
+@expression_network.route('/graph/<node_id>/')
+def expression_network_graph(node_id, depth=1):
     """
     Page that displays the network graph for a specific network's probe, the depth indicates how many steps away from
     the query gene the network is retrieved. For performance reasons depths > 2 are not allowed
@@ -40,15 +40,15 @@ def expression_network_view(node_id, depth=1):
     """
     if depth > 1:
         flash("Depth cannot be larger than 2. Showing the network with depth 1", "warning")
-        return redirect(url_for('expression_network.expression_network_view', node_id=node_id, depth=2))
+        return redirect(url_for('expression_network.expression_network_graph', node_id=node_id, depth=2))
 
     node = ExpressionNetwork.query.get(node_id)
-    return render_template("expression_network_graph.html", node=node, depth=depth)
+    return render_template("expression_graph.html", node=node, depth=depth)
 
 
 @expression_network.route('/json/<node_id>')
 @expression_network.route('/json/<node_id>/<int:depth>')
-def expression_network_json(node_id, depth=0):
+def expression_network_json(node_id, depth=1):
     """
     Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)
 

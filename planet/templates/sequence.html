@@ -177,7 +177,7 @@
                         <tbody>
                             {% for network in sequence.network_nodes %}
                             <tr>
-                                <td>{{ network.method.description }}: <a href="{{ url_for('expression_network.expression_network_view', node_id=network.id, depth=1) }}">{{ network.probe }}</a></td>
+                                <td>{{ network.method.description }}: <a href="{{ url_for('expression_network.expression_network_graph', node_id=network.id, depth=1) }}">{{ network.probe }}</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>

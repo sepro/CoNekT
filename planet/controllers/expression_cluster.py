@@ -3,8 +3,6 @@ from flask import Blueprint, url_for, render_template, flash, redirect
 from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
 from planet.helpers.cytoscape import CytoscapeHelper
 
-from utils.benchmark import benchmark
-
 import json
 
 
@@ -21,10 +19,10 @@ def expression_cluster_overview():
     return render_template("expression_cluster.html", cluster_methods=cluster_methods)
 
 
-@expression_cluster.route('/view/<cluster_id>')
-def expression_cluster_view(cluster_id):
+@expression_cluster.route('/graph/<cluster_id>/')
+def expression_cluster_graph(cluster_id):
     cluster = CoexpressionCluster.query.get(cluster_id)
-    return render_template("expression_cluster_graph.html", cluster=cluster)
+    return render_template("expression_graph.html", cluster=cluster)
 
 
 @expression_cluster.route('/json/<cluster_id>')
