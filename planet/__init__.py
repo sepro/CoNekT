@@ -59,6 +59,7 @@ from planet.controllers.species import species
 from planet.controllers.go import go
 from planet.controllers.interpro import interpro
 from planet.controllers.family import family
+from planet.controllers.expression_cluster import expression_cluster
 from planet.controllers.expression_profile import expression_profile
 from planet.controllers.expression_network import expression_network
 from planet.controllers.search import search
@@ -70,7 +71,8 @@ app.register_blueprint(species, url_prefix='/species')
 app.register_blueprint(go, url_prefix='/go')
 app.register_blueprint(interpro, url_prefix='/interpro')
 app.register_blueprint(family, url_prefix='/family')
-app.register_blueprint(expression_profile, url_prefix='/expro')
+app.register_blueprint(expression_cluster, url_prefix='/cluster')
+app.register_blueprint(expression_profile, url_prefix='/profile')
 app.register_blueprint(expression_network, url_prefix='/network')
 app.register_blueprint(search, url_prefix='/search')
 

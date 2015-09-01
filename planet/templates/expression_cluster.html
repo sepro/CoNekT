@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<div class="top-pad">
+
+    {% if cluster_methods %}
+    <h1>Clustering Methods Overview</h1>
+     <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Species</th>
+                    <th>Description</th>
+                    <th>Network</th>
+                    <th>Cluster count</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for c in cluster_methods  %}
+                <tr>
+                    <td>{{ c.id }}</td>
+                    <td><em><a href="{{ url_for('species.species_view', species_id=c.network_method.species.id) }}">{{ c.network_method.species.name }}</a></em></td>
+                    <td>{{ c.method }}</td>
+                    <td>{{ c.network_method.description }}</td>
+                    <td>{{ c.clusters.count() }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extrajs %}
+{% endblock %}
