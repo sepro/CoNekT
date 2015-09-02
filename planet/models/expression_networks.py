@@ -12,7 +12,6 @@ class ExpressionNetworkMethod(db.Model):
     description = db.Column(db.Text)
     edge_type = db.Column(db.Enum("rank", "weight", name='edge_type'))
 
-    species = db.relationship('Species', lazy='select')
     probes = db.relationship('ExpressionNetwork', backref='method', lazy='dynamic')
 
     clustering_methods = db.relationship('CoexpressionClusteringMethod', backref='network_method', lazy='dynamic')
@@ -27,13 +26,13 @@ class ExpressionNetwork(db.Model):
     __tablename__ = 'expression_networks'
     id = db.Column(db.Integer, primary_key=True)
     probe = db.Column(db.String(50))
-    gene_id = db.Column(db.String(50), db.ForeignKey('sequences.id'))
+    sequence_id = db.Column(db.String(50), db.ForeignKey('sequences.id'))
     network = db.Column(db.Text)
     method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'))
 
-    def __init__(self, probe, gene_id, network, method_id):
+    def __init__(self, probe, sequence_id, network, method_id):
         self.probe = probe
-        self.gene_id = gene_id
+        self.sequence_id = sequence_id
         self.network = network
         self.method_id = method_id
 
@@ -48,8 +47,8 @@ class ExpressionNetwork(db.Model):
         # add the initial node
         nodes = [{"id": node.probe,
                   "name": node.probe,
-                  "gene_id": int(node.gene_id),
-                  "gene_name": node.gene.name,
+                  "gene_id": int(node.sequence_id) if node.sequence_id is not None else None,
+                  "gene_name": node.gene.name if node.sequence_id is not None else node.probe,
                   "node_type": "query",
                   "depth": 0}]
         edges = []
@@ -139,6 +138,6 @@ class ExpressionNetwork(db.Model):
             return {"id": linked_probe["probe_name"],
                     "name": linked_probe["probe_name"],
                     "gene_id": None,
-                    "gene_name": linked_probe["gene_name"],
+                    "gene_name": linked_probe["probe_name"],
                     "node_type": "linked",
                     "depth": depth}

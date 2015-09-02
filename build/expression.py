@@ -90,7 +90,7 @@ def parse_expression_network(network_file, species, description, score_type="ran
                 linked_gene["gene_id"] = None
 
         new_node = {"probe": node["probe_name"],
-                    "gene_id": node["gene_id"],
+                    "sequence_id": node["gene_id"],
                     "network": json.dumps(node["linked_probes"]),
                     "method_id": network_method.id}
 

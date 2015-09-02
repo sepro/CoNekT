@@ -13,8 +13,8 @@ class Species(db.Model):
     color = db.Column(db.String(7), default="#C7C7C7")
     highlight = db.Column(db.String(7), default="#DEDEDE")
 
-    sequences = db.relationship('Sequence', lazy='dynamic')
-    networks = db.relationship('ExpressionNetworkMethod', lazy='dynamic')
+    sequences = db.relationship('Sequence', backref='species', lazy='dynamic')
+    networks = db.relationship('ExpressionNetworkMethod', backref='species', lazy='dynamic')
 
     def __init__(self, code, name, data_type='genome', ncbi_tax_id=None, pubmed_id=None, project_page=None,
                  color="#C7C7C7", highlight="#DEDEDE"):

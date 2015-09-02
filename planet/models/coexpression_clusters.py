@@ -35,8 +35,8 @@ class CoexpressionCluster(db.Model):
         for node in network:
             nodes.append({"id": node.probe,
                           "name": node.probe,
-                          "gene_id": int(node.gene_id) if node.gene_id is not None else None,
-                          "gene_name": node.gene.name if node.gene_id is not None else node.probe,
+                          "gene_id": int(node.sequence_id) if node.sequence_id is not None else None,
+                          "gene_name": node.gene.name if node.sequence_id is not None else node.probe,
                           "depth": 0})
 
             links = json.loads(node.network)
