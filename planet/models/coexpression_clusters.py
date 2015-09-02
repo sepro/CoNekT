@@ -21,12 +21,14 @@ class CoexpressionCluster(db.Model):
     name = db.Column(db.String(50), unique=True, index=True)
 
     sequences = db.relationship('Sequence', secondary=sequence_coexpression_cluster, lazy='dynamic')
+    sequence_associations = db.relationship('SequenceCoexpressionClusterAssociation', backref='coexpression_cluster',
+                                            lazy='dynamic')
 
     @staticmethod
     def get_cluster(cluster_id):
         cluster = CoexpressionCluster.query.get(cluster_id)
 
-        probes = [member.probe for member in cluster.members.all()]
+        probes = [member.probe for member in cluster.sequence_associations.all()]
 
         network = cluster.method.network_method.probes.filter(ExpressionNetwork.probe.in_(probes)).all()
 
@@ -39,7 +41,7 @@ class CoexpressionCluster(db.Model):
             nodes.append({"id": node.probe,
                           "name": node.probe,
                           "gene_id": int(node.sequence_id) if node.sequence_id is not None else None,
-                          "gene_name": node.gene.name if node.sequence_id is not None else node.probe,
+                          "gene_name": node.sequence.name if node.sequence_id is not None else node.probe,
                           "depth": 0})
 
             links = json.loads(node.network)

@@ -31,12 +31,12 @@ def parse_expression_plot(plotfile, conversion):
 
         if gene_id in sequence_dict.keys():
             new_probe = {"probe": probe,
-                         "gene_id": sequence_dict[gene_id].id,
+                         "sequence_id": sequence_dict[gene_id].id,
                          "profile": json.dumps(output)}
             new_probes.append(new_probe)
         else:
             new_probe = {"probe": probe,
-                         "gene_id": None,
+                         "sequence_id": None,
                          "profile": json.dumps(output)}
             new_probes.append(new_probe)
 

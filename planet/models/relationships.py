@@ -36,10 +36,6 @@ class SequenceCoexpressionClusterAssociation(db.Model):
     sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
     coexpression_cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
 
-    sequence = db.relationship('Sequence', backref=db.backref('coexpression_cluster_associations', lazy='dynamic'),
-                               lazy='select')
-    cluster = db.relationship('CoexpressionCluster', backref=db.backref('members', lazy='dynamic'), lazy='select')
-
 
 class SequenceFamilyAssociation(db.Model):
     __tablename__ = 'sequence_family'
@@ -63,7 +59,6 @@ class SequenceInterproAssociation(db.Model):
     start = db.Column(db.Integer, default=None)
     stop = db.Column(db.Integer, default=None)
 
-    sequence = db.relationship('Sequence', backref=db.backref('interpro_associations', lazy='dynamic'), lazy='select')
     domain = db.relationship('Interpro', lazy='select')
 
 
@@ -80,5 +75,4 @@ class SequenceGOAssociation(db.Model):
                                  'TAS', 'NAS', 'IC', 'ND', 'IEA', name='evidence'))
     source = db.Column(db.Text)
 
-    sequence = db.relationship('Sequence', backref=db.backref('go_associations', lazy='dynamic'), lazy='select')
-    go = db.relationship('GO', lazy='select')
+
