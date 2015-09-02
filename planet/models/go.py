@@ -1,5 +1,5 @@
 from planet import db
-
+from planet.models.relationships import sequence_go
 
 class GO(db.Model):
     __tablename__ = 'go'
@@ -11,6 +11,8 @@ class GO(db.Model):
     obsolete = db.Column(db.Boolean)
     is_a = db.Column(db.Text)
     extended_go = db.Column(db.Text)
+
+    sequences = db.relationship('Sequence', secondary=sequence_go, lazy='dynamic')
 
     def __init__(self, label, name, go_type, description, obsolete, is_a, extended_go):
         self.label = label

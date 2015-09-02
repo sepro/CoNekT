@@ -1,5 +1,6 @@
 from planet import db
 from planet.models.expression_networks import ExpressionNetwork
+from planet.models.relationships import sequence_coexpression_cluster
 
 import json
 
@@ -18,6 +19,8 @@ class CoexpressionCluster(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     method_id = db.Column(db.Integer, db.ForeignKey('coexpression_clustering_methods.id'))
     name = db.Column(db.String(50), unique=True, index=True)
+
+    sequences = db.relationship('Sequence', secondary=sequence_coexpression_cluster, lazy='dynamic')
 
     @staticmethod
     def get_cluster(cluster_id):

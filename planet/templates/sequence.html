@@ -177,7 +177,7 @@
                         <tbody>
                             {% for network in sequence.network_nodes %}
                             <tr>
-                                <td>{{ network.method.description }}: <a href="{{ url_for('expression_network.expression_network_graph', node_id=network.id, depth=1) }}">{{ network.probe }}</a></td>
+                                <td>{{ network.method.description }}: <a href="{{ url_for('expression_network.expression_network_graph', node_id=network.id) }}">{{ network.probe }}</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -206,7 +206,7 @@
                         <tbody>
                             {% for cluster in sequence.coexpression_clusters %}
                             <tr>
-                                <td>{{ cluster.method.method }}: {{ cluster.name }}</td>
+                                <td>{{ cluster.method.method }}: <a href="{{ url_for('expression_cluster.expression_cluster_graph', cluster_id=cluster.id) }}">{{ cluster.name }}</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>
