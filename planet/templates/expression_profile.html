@@ -41,7 +41,8 @@
 			});
 			$.getJSON( "{{ url_for('expression_profile.expression_profile_plot_json', profile_id=profile.id) }}", function( data ) {
 				var ctx = document.getElementById("chart-area2").getContext("2d");
-				window.myPie = new Chart(ctx).Line(data, { animation: false });
+				window.myPie = new Chart(ctx).Line(data, { animation: false,
+				multiTooltipTemplate: "<%if (datasetLabel){{ '{%' }}><%=datasetLabel%>: <{{ '%}' }}%><%= value.toFixed(2) %>"});
 			});
 	</script>
 {% endblock %}
