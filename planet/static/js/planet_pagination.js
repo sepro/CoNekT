@@ -1,11 +1,10 @@
 $( document ).ready(function() {
     var current_page = 1;
     var base_url = $('#planet-pagination').attr( "base-url" );
-    var loader_url = $('#planet-pagination').attr( "loader-url" );
     var page_count = $('#planet-pagination').attr( "page-count" );
 
     function update(page){
-        $( "#planet-pagination" ).html('<br/><br><div class="text-center"><img src="'+loader_url+'" /> Loading...</div>');
+        $( "#planet-pagination" ).html('<br /><br /><div class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i><br /><br />Loading...</div>');
         $( "#planet-pagination" ).load( base_url + page );
 
         if (page == 1)

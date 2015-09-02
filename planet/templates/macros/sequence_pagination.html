@@ -5,7 +5,6 @@
                 <div class="panel-heading">Sequences ({{ count }})</div>
                 <div style="height:300px;overflow-y:auto;" id="planet-pagination"
                      base-url="{{ url }}"
-                     loader-url="{{ url_for('static', filename='img/ajax_loading.gif')}}"
                      page-count="{{ (count / g.page_items)|round(0, 'ceil')|int }}"></div>
                 <div class="panel-body">
                     <button class="btn btn-primary" id="planet-pagination-first"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span></button>
