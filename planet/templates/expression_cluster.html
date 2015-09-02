@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block container %}
+{% import 'macros/sequence_pagination.html' as macro %}
 <div class="top-pad">
 
     {% if cluster_methods %}
@@ -29,10 +30,18 @@
             </tbody>
         </table>
         </div>
+    {% elif cluster %}
+        <h1>Cluster: {{ cluster.name }} <small>({{ cluster.method.method }})</small></h1>
+
+        {{ macro.sequence_pagination(url_for('expression_cluster.expression_cluster_sequences', cluster_id=cluster.id), sequence_count) }}
+
     {% endif %}
 
 </div>
 {% endblock %}
 
 {% block extrajs %}
+    {% if cluster %}
+        <script src="{{ url_for('static', filename='js/planet_pagination.js') }}"></script>
+    {% endif %}
 {% endblock %}

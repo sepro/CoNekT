@@ -1,0 +1,16 @@
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tbody>
+            {% for sequence_association in sequence_associations %}
+                <tr>
+                    <td>{{ sequence_association.probe }}</td>
+                    {% if sequence_association.sequence %}
+                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=sequence_association.sequence.id) }}">{{ sequence_association.sequence.name }}</a></td>
+                    {% else %}
+                    <td><em>No sequence associated with this probe</em></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

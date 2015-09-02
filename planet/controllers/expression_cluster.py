@@ -1,4 +1,4 @@
-from flask import Blueprint, url_for, render_template, flash, redirect
+from flask import Blueprint, url_for, render_template, flash, redirect, g
 
 from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
 from planet.helpers.cytoscape import CytoscapeHelper
@@ -17,6 +17,23 @@ def expression_cluster_overview():
     cluster_methods = CoexpressionClusteringMethod.query.all()
 
     return render_template("expression_cluster.html", cluster_methods=cluster_methods)
+
+
+@expression_cluster.route('/view/<cluster_id>')
+def expression_cluster_view(cluster_id):
+    cluster = CoexpressionCluster.query.get_or_404(cluster_id)
+    sequence_count = cluster.sequences.count()
+
+    return render_template("expression_cluster.html", cluster=cluster, sequence_count=sequence_count)
+
+
+@expression_cluster.route('/sequences/<cluster_id>/')
+@expression_cluster.route('/sequences/<cluster_id>/<int:page>')
+def expression_cluster_sequences(cluster_id, page=1):
+    sequence_associations = CoexpressionCluster.query.get(cluster_id)\
+        .sequence_associations.order_by('probe').paginate(page, g.page_items, False).items
+
+    return render_template('pages/cluster_probes.html', sequence_associations=sequence_associations)
 
 
 @expression_cluster.route('/graph/<cluster_id>')
