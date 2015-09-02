@@ -4,16 +4,20 @@
 <div class="top-pad">
     <br />
     <div class="row">
-        <div class="col-md-4 col-md-offset-4 col-xs-12">
+        <div class="col-md-4 col-md-offset-4 col-xs-8 col-xs-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading"><strong>Sign up</strong></div>
                 <div class="panel-body">
                     <form method="POST" action="{{ url_for('auth.register') }}" role="form">
                         {{ form.csrf_token }}
-                        <div class="form-group">{{ form.username.label }}: {{ form.username(class_="form-control") }}</div>
-                        <div class="form-group">{{ form.password.label }}: {{ form.password(class_="form-control") }}</div>
-                        <div class="form-group">{{ form.confirm.label }}: {{ form.confirm(class_="form-control") }}</div>
-                        <div class="form-group">{{ form.email.label }}: {{ form.email(class_="form-control") }}</div>
+                        {{ form.username.label }}:
+                        <div class="input-group"><span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span> {{ form.username(class_="form-control") }}</div><br />
+                        {{ form.password.label }}:
+                        <div class="input-group"><span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span> {{ form.password(class_="form-control") }}</div><br />
+                        {{ form.confirm.label }}:
+                        <div class="input-group"><span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span> {{ form.confirm(class_="form-control") }}</div><br />
+                        {{ form.email.label }}:
+                        <div class="input-group"><span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span> {{ form.email(class_="form-control") }}</div><br />
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
