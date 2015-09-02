@@ -21,7 +21,6 @@ class Sequence(db.Model):
     coexpression_cluster_associations = db.relationship('SequenceCoexpressionClusterAssociation', backref='sequence',
                                                         lazy='dynamic')
 
-
     go_labels = db.relationship('GO', secondary=sequence_go, lazy='dynamic')
     interpro_domains = db.relationship('Interpro', secondary=sequence_interpro, lazy='dynamic')
     families = db.relationship('GeneFamily', secondary=sequence_family, lazy='dynamic')
