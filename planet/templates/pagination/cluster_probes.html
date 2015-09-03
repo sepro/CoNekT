@@ -7,7 +7,7 @@
                     {% if sequence_association.sequence %}
                     <td><a href="{{ url_for('sequence.sequence_view', sequence_id=sequence_association.sequence.id) }}">{{ sequence_association.sequence.name }}</a></td>
                     {% else %}
-                    <td><em>No sequence associated with this probe</em></td>
+                    <td><em class="text-muted">No sequence associated with this probe</em></td>
                     {% endif %}
                 </tr>
             {% endfor %}

@@ -83,9 +83,11 @@ from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, Expr
 
 admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'))
 admin.add_view(SpeciesAdminView(Species, db.session, url='species/'))
-admin.add_view(GeneFamilyMethodAdminView(GeneFamilyMethod, db.session, url='families/'))
-admin.add_view(ExpressionNetworkMethodAdminView(ExpressionNetworkMethod, db.session, url='networks/'))
-admin.add_view(CoexpressionClusteringMethodAdminView(CoexpressionClusteringMethod, db.session, url='clusters/'))
+admin.add_view(GeneFamilyMethodAdminView(GeneFamilyMethod, db.session, url='families/', category="Methods"))
+admin.add_view(ExpressionNetworkMethodAdminView(ExpressionNetworkMethod, db.session, url='networks/',
+                                                category="Methods"))
+admin.add_view(CoexpressionClusteringMethodAdminView(CoexpressionClusteringMethod, db.session, url='clusters/',
+                                                     category="Methods"))
 
 #  ______________________________
 # < Beware, code overrides below >

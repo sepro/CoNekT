@@ -22,7 +22,7 @@ def about():
 
 
 @main.route('/contact')
-def about():
+def contact():
     """
     Shows the about contact
     """
@@ -30,7 +30,7 @@ def about():
 
 
 @main.route('/licence')
-def about():
+def licence():
     """
     Shows the licence
     """
