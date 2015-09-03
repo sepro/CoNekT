@@ -32,8 +32,14 @@ def species_view(species_id):
 @species.route('/sequences/<species_id>/')
 @species.route('/sequences/<species_id>/<int:page>')
 def species_sequences(species_id, page=1):
+    """
+    Returns a table with sequences from the selected species
+
+    :param species_id: Internal ID of the species
+    :param page: Page number
+    """
     sequences = Species.query.get(species_id).sequences.order_by('name').paginate(page,
                                                                                   g.page_items,
                                                                                   False).items
 
-    return render_template('pages/sequences.html', sequences=sequences)
+    return render_template('pagination/sequences.html', sequences=sequences)

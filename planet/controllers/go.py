@@ -42,11 +42,17 @@ def go_view(go_id):
 @go.route('/sequences/<go_id>/')
 @go.route('/sequences/<go_id>/<int:page>')
 def go_sequences(go_id, page=1):
+    """
+    Returns a table with sequences with the selected go
+
+    :param go_id: Internal ID of the GO term
+    :param page: Page number
+    """
     sequences = GO.query.get(go_id).sequences.order_by('name').paginate(page,
                                                                         g.page_items,
                                                                         False).items
 
-    return render_template('pages/sequences.html', sequences=sequences)
+    return render_template('pagination/sequences.html', sequences=sequences)
 
 
 @go.route('/json/species/<go_id>')

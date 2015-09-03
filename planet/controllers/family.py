@@ -42,11 +42,17 @@ def family_view(family_id):
 @family.route('/sequences/<family_id>/')
 @family.route('/sequences/<family_id>/<int:page>')
 def family_sequences(family_id, page=1):
+    """
+    Returns a table with sequences in the selected family
+
+    :param family_id: Internal ID of the family
+    :param page: Page number
+    """
     sequences = GeneFamily.query.get(family_id).sequences.order_by('name').paginate(page,
                                                                                     g.page_items,
                                                                                     False).items
 
-    return render_template('pages/sequences.html', sequences=sequences)
+    return render_template('pagination/sequences.html', sequences=sequences)
 
 
 @family.route('/json/species/<family_id>')

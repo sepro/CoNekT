@@ -41,11 +41,17 @@ def interpro_view(interpro_id):
 @interpro.route('/sequences/<interpro_id>/')
 @interpro.route('/sequences/<interpro_id>/<int:page>')
 def interpro_sequences(interpro_id, page=1):
+    """
+    Returns a table with sequences with the selected interpro domain
+
+    :param interpro_id: Internal ID of the interpro domain
+    :param page: Page number
+    """
     sequences = Interpro.query.get(interpro_id).sequences.order_by('name').paginate(page,
                                                                                     g.page_items,
                                                                                     False).items
 
-    return render_template('pages/sequences.html', sequences=sequences)
+    return render_template('pagination/sequences.html', sequences=sequences)
 
 
 @interpro.route('/json/species/<interpro_id>')

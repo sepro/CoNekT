@@ -50,6 +50,7 @@ def expression_profile_find(probe, species_id=None):
     Gets expression profile data from the database and renders it.
 
     :param profile_id: ID of the profile to show
+    :param species_id: Species ID is required to ensure a unique hit
     """
     current_profile = ExpressionProfile.query.filter_by(probe=probe)
 
@@ -141,7 +142,7 @@ def expression_profile_plot_json(profile_id):
 @expression_profile.route('/json/compare_plot/<first_profile_id>/<second_profile_id>')
 def expression_profile_compare_plot_json(first_profile_id, second_profile_id):
     """
-    Generates a JSON object that can be rendered using Chart.js line plots
+    Generates a JSON object with two profiles that can be rendered using Chart.js line plots
 
     :param profile_id: ID of the profile to render
     """

@@ -10,5 +10,28 @@ def screen():
     """
     Shows the main screen
     """
-    return render_template('main.html')
+    return render_template('static_pages/main.html')
 
+
+@main.route('/about')
+def about():
+    """
+    Shows the about page
+    """
+    return render_template('static_pages/about.html')
+
+
+@main.route('/contact')
+def about():
+    """
+    Shows the about contact
+    """
+    return render_template('static_pages/contact.html')
+
+
+@main.route('/licence')
+def about():
+    """
+    Shows the licence
+    """
+    return render_template('static_pages/licence.html')

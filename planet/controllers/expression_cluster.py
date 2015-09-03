@@ -21,6 +21,11 @@ def expression_cluster_overview():
 
 @expression_cluster.route('/view/<cluster_id>')
 def expression_cluster_view(cluster_id):
+    """
+    Tablular view of the contents of a single cluster
+
+    :param cluster_id: Internal ID of the cluster
+    """
     cluster = CoexpressionCluster.query.get_or_404(cluster_id)
     sequence_count = cluster.sequences.count()
 
@@ -30,10 +35,16 @@ def expression_cluster_view(cluster_id):
 @expression_cluster.route('/sequences/<cluster_id>/')
 @expression_cluster.route('/sequences/<cluster_id>/<int:page>')
 def expression_cluster_sequences(cluster_id, page=1):
+    """
+    Paginated view of the probes (and linked sequences)
+
+    :param cluster_id: Internal ID of the cluster
+    :param page: page number
+    """
     cluster = CoexpressionCluster.query.get_or_404(cluster_id)
     sequence_associations = cluster.sequence_associations.order_by('probe').paginate(page, g.page_items, False).items
 
-    return render_template('pages/cluster_probes.html', sequence_associations=sequence_associations,
+    return render_template('pagination/cluster_probes.html', sequence_associations=sequence_associations,
                            species_id=cluster.method.network_method.species.id)
 
 
