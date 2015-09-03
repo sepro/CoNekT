@@ -141,6 +141,10 @@ input[readonly] {
   background-color: #428bca;
 }
 
+.sidebar {
+   margin-bottom: 40px; /* make room for the footer */
+}
+
 .sidebar .dropdown-menu {
   min-width: 120px;
   width: 120px;
@@ -163,6 +167,9 @@ body {
   /* Set the fixed height of the footer here */
   height: 40px;
   background-color: #f5f5f5;
+  border-top-color: rgb(238, 238, 238);
+  border-top-style: solid;
+  border-top-width: 1px;
   padding-top:10px;
 }
 
