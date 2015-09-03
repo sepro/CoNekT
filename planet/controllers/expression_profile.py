@@ -29,20 +29,6 @@ def expression_profile_view(profile_id):
     return render_template("expression_profile.html", profile=current_profile)
 
 
-@expression_profile.route('/compare/<first_profile_id>/<second_profile_id>')
-def expression_profile_compare(first_profile_id, second_profile_id):
-    """
-    Gets expression profile data from the database and renders it.
-
-    :param profile_id: ID of the profile to show
-    """
-    first_profile = ExpressionProfile.query.get_or_404(first_profile_id)
-    second_profile = ExpressionProfile.query.get_or_404(second_profile_id)
-
-    return render_template("compare_profiles.html", first_profile=first_profile,
-                           second_profile=second_profile)
-
-
 @expression_profile.route('/find/<probe>')
 @expression_profile.route('/find/<probe>/<species_id>')
 def expression_profile_find(probe, species_id=None):
@@ -58,6 +44,34 @@ def expression_profile_find(probe, species_id=None):
         current_profile = current_profile.filter_by(species_id=species_id)
 
     return render_template("expression_profile.html", profile=current_profile.first_or_404())
+
+
+@expression_profile.route('/compare/<first_profile_id>/<second_profile_id>')
+def expression_profile_compare(first_profile_id, second_profile_id):
+    """
+    Gets expression profile data from the database and renders it.
+
+    :param profile_id: ID of the profile to show
+    """
+    first_profile = ExpressionProfile.query.get_or_404(first_profile_id)
+    second_profile = ExpressionProfile.query.get_or_404(second_profile_id)
+
+    return render_template("compare_profiles.html", first_profile=first_profile,
+                           second_profile=second_profile)
+
+
+@expression_profile.route('/compare_probes/<probe_a>/<probe_b>/<species_id>')
+def expression_profile_compare_probes(probe_a, probe_b, species_id):
+    """
+    Gets expression profile data from the database and renders it.
+
+    :param profile_id: ID of the profile to show
+    """
+    first_profile = ExpressionProfile.query.filter_by(probe=probe_a).filter_by(species_id=species_id).first_or_404()
+    second_profile = ExpressionProfile.query.filter_by(probe=probe_b).filter_by(species_id=species_id).first_or_404()
+
+    return render_template("compare_profiles.html", first_profile=first_profile,
+                           second_profile=second_profile)
 
 
 @expression_profile.route('/json/radar/<profile_id>')

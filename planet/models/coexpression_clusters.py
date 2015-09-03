@@ -1,3 +1,5 @@
+from flask import url_for
+
 from planet import db
 from planet.models.expression_networks import ExpressionNetwork
 from planet.models.relationships import sequence_coexpression_cluster
@@ -51,6 +53,11 @@ class CoexpressionCluster(db.Model):
                 if link["probe_name"] in probes and [node.probe, link["probe_name"]] not in existing_edges:
                     edges.append({"source": node.probe,
                                   "target": link["probe_name"],
+                                  "profile_comparison":
+                                      url_for('expression_profile.expression_profile_compare_probes',
+                                              probe_a=node.probe,
+                                              probe_b=link["probe_name"],
+                                              species_id=node.method.species.id),
                                   "depth": 0,
                                   "link_score": link["link_score"],
                                   "edge_type": cluster.method.network_method.edge_type})

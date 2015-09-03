@@ -83,20 +83,21 @@ cy = cytoscape({
 
     cy.edges().forEach(function(e){
     // code to add tooltips to the selected node
-    var content = [
-        {
-          name: 'Link Score',
-          value: e.data('link_score')
+    var content = [{
+          value: 'Edge: ' + e.data('source') + ' and ' + e.data('target'),
         }, {
-          name: 'Depth',
-          value: e.data('depth')
+          value: '<a href="' + e.data('profile_comparison') + '">Compare profiles</a>'
+        }, {
+          value: 'Link Score: ' + e.data('link_score')
+        }, {
+          value: 'Depth: ' + e.data('depth')
         }
       ]
 
 
     e.qtip({
-      content: content.map(function( link ){
-        return link.name + ":" + link.value;
+      content: content.map(function( item ){
+        return item.value;
       }).join('<br />\n'),
       position: {
         my: 'bottom center',

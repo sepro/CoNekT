@@ -1,3 +1,4 @@
+from flask import url_for
 from sqlalchemy import and_
 
 from planet import db
@@ -65,6 +66,11 @@ class ExpressionNetwork(db.Model):
             nodes.append(ExpressionNetwork.__process_link(link, depth=0))
             edges.append({"source": node.probe,
                           "target": link["probe_name"],
+                          "profile_comparison":
+                              url_for('expression_profile.expression_profile_compare_probes',
+                                      probe_a=node.probe,
+                                      probe_b=link["probe_name"],
+                                      species_id=node.method.species.id),
                           "depth": 0,
                           "link_score": link["link_score"],
                           "edge_type": edge_type})
@@ -93,6 +99,11 @@ class ExpressionNetwork(db.Model):
                     if [new_node.probe, link["probe_name"]] not in existing_edges:
                         edges.append({"source": new_node.probe,
                                       "target": link["probe_name"],
+                                      "profile_comparison":
+                                          url_for('expression_profile.expression_profile_compare_probes',
+                                                  probe_a=new_node.probe,
+                                                  probe_b=link["probe_name"],
+                                                  species_id=node.method.species.id),
                                       "depth": i,
                                       "link_score": link["link_score"],
                                       "edge_type": edge_type})
@@ -111,6 +122,11 @@ class ExpressionNetwork(db.Model):
                     if [new_node.probe, link["probe_name"]] not in existing_edges:
                         edges.append({"source": new_node.probe,
                                       "target": link["probe_name"],
+                                      "profile_comparison":
+                                          url_for('expression_profile.expression_profile_compare_probes',
+                                                  probe_a=new_node.probe,
+                                                  probe_b=link["probe_name"],
+                                                  species_id=node.method.species.id),
                                       "depth": depth+1,
                                       "link_score": link["link_score"],
                                       "edge_type": edge_type})
