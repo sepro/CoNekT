@@ -47,6 +47,7 @@ class ExpressionNetwork(db.Model):
         # add the initial node
         nodes = [{"id": node.probe,
                   "name": node.probe,
+                  "probe_id": node.id,
                   "gene_id": int(node.sequence_id) if node.sequence_id is not None else None,
                   "gene_name": node.sequence.name if node.sequence_id is not None else node.probe,
                   "node_type": "query",

@@ -32,6 +32,7 @@
                     <th>Code</th>
                     <th>Name</th>
                     <th>Transcripts</th>
+                    <th>Profiles</th>
                     <th>Networks</th>
                 </tr>
             </thead>
@@ -42,6 +43,7 @@
                     <td>{{ s.code }}</td>
                     <td><em><a href="{{ url_for('species.species_view', species_id=s.id) }}">{{ s.name }}</a></em></td>
                     <td>{{ s.sequences.count() }}</td>
+                    <td>{{ s.profiles.count() }}</td>
                     <td><a href="{{url_for('expression_network.expression_network_species', species_id=s.id)}}">{{ s.networks.count() }}</a></td>
                 </tr>
             {% endfor %}

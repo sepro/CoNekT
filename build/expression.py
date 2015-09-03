@@ -10,11 +10,18 @@ from planet.models.expression_profiles import ExpressionProfile
 from planet.models.expression_networks import ExpressionNetwork, ExpressionNetworkMethod
 
 
-def parse_expression_plot(plotfile, conversion):
+def parse_expression_plot(plotfile, conversion, species_code):
+
+    species = Species.query.filter_by(code=species_code).first()
+
+    # species is not in the DB yet, add it
+    if species is None:
+        print("Error: species not found")
+
     plot = ExpressionPlotParser()
     plot.read_plot(plotfile, conversion)
 
-    sequences = Sequence.query.all()
+    sequences = Sequence.query.filter_by(species_id=species.id).all()
 
     sequence_dict = {}
     for s in sequences:
@@ -30,12 +37,14 @@ def parse_expression_plot(plotfile, conversion):
                   "data": profile}
 
         if gene_id in sequence_dict.keys():
-            new_probe = {"probe": probe,
+            new_probe = {"species_id": species.id,
+                         "probe": probe,
                          "sequence_id": sequence_dict[gene_id].id,
                          "profile": json.dumps(output)}
             new_probes.append(new_probe)
         else:
-            new_probe = {"probe": probe,
+            new_probe = {"species_id": species.id,
+                         "probe": probe,
                          "sequence_id": None,
                          "profile": json.dumps(output)}
             new_probes.append(new_probe)
@@ -44,17 +53,6 @@ def parse_expression_plot(plotfile, conversion):
 
 
 def parse_expression_network(network_file, species, description, score_type="rank"):
-    # load network from hrr file
-    network_parser = NetworkParser()
-    network_parser.read_expression_network(network_file)
-
-    # get all sequences from the database and create a dictionary
-    sequences = Sequence.query.all()
-
-    sequence_dict = {}
-    for s in sequences:
-        sequence_dict[s.name.upper()] = s
-
     # check if species exists
 
     species = Species.query.filter_by(code=species).first()
@@ -62,6 +60,18 @@ def parse_expression_network(network_file, species, description, score_type="ran
     if species is None:
         print("ERROR: species", species, "not found.")
         quit()
+
+    # load network from hrr file
+    network_parser = NetworkParser()
+    network_parser.read_expression_network(network_file)
+
+    # get all sequences for the selected organism from the database and create a dictionary
+    sequences = Sequence.query.filter_by(species_id=species.id).all()
+
+    sequence_dict = {}
+    for s in sequences:
+        sequence_dict[s.name.upper()] = s
+
 
     # Add network method first
     network_method = ExpressionNetworkMethod(species.id, description, score_type)

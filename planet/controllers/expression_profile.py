@@ -36,21 +36,27 @@ def expression_profile_compare(first_profile_id, second_profile_id):
 
     :param profile_id: ID of the profile to show
     """
+    first_profile = ExpressionProfile.query.get_or_404(first_profile_id)
+    second_profile = ExpressionProfile.query.get_or_404(second_profile_id)
 
-    return render_template("compare_profiles.html", first_profile_id=first_profile_id,
-                           second_profile_id=second_profile_id)
+    return render_template("compare_profiles.html", first_profile=first_profile,
+                           second_profile=second_profile)
 
 
 @expression_profile.route('/find/<probe>')
-def expression_profile_find(probe):
+@expression_profile.route('/find/<probe>/<species_id>')
+def expression_profile_find(probe, species_id=None):
     """
     Gets expression profile data from the database and renders it.
 
     :param profile_id: ID of the profile to show
     """
-    current_profile = ExpressionProfile.query.filter_by(probe=probe).first()
+    current_profile = ExpressionProfile.query.filter_by(probe=probe)
 
-    return render_template("expression_profile.html", profile=current_profile)
+    if species_id is not None:
+        current_profile = current_profile.filter_by(species_id=species_id)
+
+    return render_template("expression_profile.html", profile=current_profile.first_or_404())
 
 
 @expression_profile.route('/json/radar/<profile_id>')

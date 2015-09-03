@@ -121,15 +121,16 @@ def add_plaza_families(filename, description):
 
 
 @manager.command
-def add_expression_plot(plot, conversion):
+def add_expression_plot(plot, conversion, species_code):
     """
     Function to add expression plots (plot.txt files from PlaNet 1 pipeline). Requires a conversion table to link probes
     to sequences (e.g. .hrr file from PlaNet 1)
 
     :param plot: path to plot file
     :param conversion: path to conversion table
+    :param species_code: short code for the species the profile belongs to
     """
-    parse_expression_plot(plot, conversion)
+    parse_expression_plot(plot, conversion, species_code)
 
 
 @manager.command
