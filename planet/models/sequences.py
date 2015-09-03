@@ -8,7 +8,7 @@ class Sequence(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     species_id = db.Column(db.Integer, db.ForeignKey('species.id'))
     name = db.Column(db.String(50), index=True)
-    transcript = db.Column(db.Text)
+    description = db.Column(db.Text)
     coding_sequence = db.Column(db.Text)
     type = db.Column(db.Enum('protein_coding', 'TE', 'RNA', name='sequence_type'), default='protein_coding')
     is_mitochondrial = db.Column(db.Boolean, default=False)
