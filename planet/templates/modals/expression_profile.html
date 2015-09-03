@@ -1,0 +1,20 @@
+{% if profile %}
+<div class="modal-header">
+<h4 class="modal-title" id="myModalLabel">Expression profile for: <strong>{{ profile.probe }}</strong></h4>
+</div>
+<div class="modal-body" syle="width:700px;height:800px">
+    <canvas id="profile-chart" class="center-block" width="700" height="800"/>
+</div>
+<div class="modal-footer">
+</div>
+<script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+<script>
+        $( document ).ready(function() {
+            $.getJSON( "{{ url_for('expression_profile.expression_profile_plot_json', profile_id=profile.id) }}", function( data ) {
+                var ctx = document.getElementById("profile-chart").getContext("2d");
+                window.myPie = new Chart(ctx).Line(data, { animation: false,
+                multiTooltipTemplate: "<%if (datasetLabel){{ '{%' }}><%=datasetLabel%>: <{{ '%}' }}%><%= value.toFixed(2) %>"});
+            });
+        });
+</script>
+{% endif %}

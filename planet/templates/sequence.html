@@ -142,6 +142,7 @@
                             {% for profile in sequence.expression_profiles %}
                             <tr>
                                 <td><a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">{{ profile.probe }}</a></td>
+                                <td><a href="{{ url_for('expression_profile.expression_profile_modal', profile_id=profile.id) }}" data-target="#profileModal">Show profile</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -211,6 +212,18 @@
             </div>
         </div>
     </div>
+
+<div class="modal" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel">
+  <div class="modal-dialog" role="document" style="width:1000px;height:800px;">
+    <div class="modal-content">
+
+    </div>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+  </div>
+</div>
+
+
+
     {% endif %}
 </div>
 
@@ -221,7 +234,17 @@
 {% block extrajs %}
 <script>
 $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
+  $('[data-toggle="tooltip"]').tooltip();
+  $('a[data-target=#profileModal]').click(function(ev) {
+    ev.preventDefault();
+    var target = $(this).attr("href");
+
+    // load the url and show modal on success
+    $("#profileModal .modal-content").load(target, function() {
+         $("#profileModal").modal("show");
+    });
+});
 })
+
 </script>
 {% endblock %}

@@ -29,6 +29,18 @@ def expression_profile_view(profile_id):
     return render_template("expression_profile.html", profile=current_profile)
 
 
+@expression_profile.route('/modal/<profile_id>')
+def expression_profile_modal(profile_id):
+    """
+    Gets expression profile data from the database and renders it.
+
+    :param profile_id: ID of the profile to show
+    """
+    current_profile = ExpressionProfile.query.get_or_404(profile_id)
+
+    return render_template("modals/expression_profile.html", profile=current_profile)
+
+
 @expression_profile.route('/find/<probe>')
 @expression_profile.route('/find/<probe>/<species_id>')
 def expression_profile_find(probe, species_id=None):
