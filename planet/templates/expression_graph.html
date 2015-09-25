@@ -88,6 +88,12 @@
                 </div>
                 </div>
             </li>
+            <li>
+                <div>
+                <br /><p><strong>Score</strong> <span id="cy-edge-score-value" class="text-muted">30</span></p>
+                <input id="cy-edge-score" data-slider-id='cy-edge-score-slider' type="text" data-slider-min="0" data-slider-max="150" data-slider-step="1" data-slider-value="30" data-slider-tooltip="hide"/>
+                </div>
+            </li>
             <li><hr /></li>
             <li><p>Layout</p></li>
             <li>
@@ -132,6 +138,17 @@
 {% endblock %}
 
 {% block extrajs %}
+<script src="{{ url_for('static', filename='js/bootstrap-slider.min.js') }}"></script>
+<script>
+$('#cy-edge-score').slider({
+	formatter: function(value) {
+		return 'Cut-off: ' + value;
+	}
+});
+$('#cy-edge-score').on("slide", function(slideEvt) {
+	$("#cy-edge-score-value").text(slideEvt.value);
+});
+</script>
 <script src="{{ url_for('static', filename='js/cytoscape.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/jquery.qtip.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/cytoscape-qtip.js') }}"></script>

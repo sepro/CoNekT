@@ -158,6 +158,13 @@ $('.cy-edge-width').click(function() {
 
 })
 
+$('#cy-edge-score').on("slideStop", function(slideEvt) {
+    var cutoff = slideEvt.value;
+
+    cy.edges("[link_score>" + cutoff + "]").style('display', 'none');
+    cy.edges("[link_score<=" + cutoff + "]").style('display', 'element');
+})
+
 $('.cy-depth-filter').click(function() {
     $( '.cy-depth-filter' ).removeClass( 'active' );
     $( this ).addClass( 'active' );
