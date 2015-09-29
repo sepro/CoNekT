@@ -86,6 +86,33 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id):
                            second_profile=second_profile)
 
 
+@expression_profile.route('/heatmap/')
+def expression_profile_heatmap():
+    probes = ["261141_at", "251378_at", "263653_at"]
+
+    profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(probes)).all()
+
+    order = []
+
+    output = []
+
+    for profile in profiles:
+        name = profile.probe
+        data = json.loads(profile.profile)
+        order = data['order']
+        experiments = data['data']
+
+        values = {}
+
+        for o in order:
+            values[o] = mean(experiments[o])
+
+        output.append({"name": name, "values": values})
+
+    print(output)
+    return render_template("expression_heatmap.html", order=order, profiles=output)
+
+
 @expression_profile.route('/json/radar/<profile_id>')
 def expression_profile_radar_json(profile_id):
     """

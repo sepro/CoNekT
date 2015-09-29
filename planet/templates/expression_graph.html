@@ -116,7 +116,12 @@
                 </div></div>
 
             </li>
-              <!--<li><hr /></li>-->
+            <li><hr /></li>
+            {% if node %}
+            <li><div><a href="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}" type="button" class="btn btn-default" id="cy-download-json" download="cytoscape.json">Download JSON</a></div></li>
+            {% elif cluster %}
+            <li><div><a href="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id) }}" type="button" class="btn btn-default" id="cy-download-json" download="cytoscape.json">Download JSON</a></div></li>
+            {% endif %}
               <!--<li><div><a href="#" type="button" class="btn btn-default" id="cy-download-img" download="Canvas.png">Download image</a></div></li>-->
           </ul>
           <!--<canvas id="png-eg" width="500" height="500"></canvas>-->

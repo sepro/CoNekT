@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<div class="top-pad">
+
+    <h1>Heatmap</h1>
+     <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>probe</th>
+                    {% for o in order %}
+                    <th>{{ o }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for p in profiles  %}
+                <tr>
+                    <td>{{ p.name }}</td>
+                    {% for key, value in p.values %}
+                    <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+
+
+</div>
+{% endblock %}
+
+{% block extrajs %}
+{% endblock %}
