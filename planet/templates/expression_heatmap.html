@@ -10,16 +10,16 @@
                 <tr>
                     <th>probe</th>
                     {% for o in order %}
-                    <th>{{ o }}</th>
+                    <th class="rotated">{{ o }}</th>
                     {% endfor %}
                 </tr>
             </thead>
             <tbody>
             {% for p in profiles  %}
-                <tr>
+                <tr class="heatmap">
                     <td>{{ p.name }}</td>
-                    {% for key, value in p.values %}
-                    <td>{{ value }}</td>
+                    {% for o in order %}
+                    <td class="value">{{ p['values'][o]|round(2) }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
@@ -32,4 +32,14 @@
 {% endblock %}
 
 {% block extrajs %}
+<script src="{{ url_for('static', filename='js/jquery.hottie-sym.js') }}"></script>
+<script>
+    $('td.value').hottie({
+    colorArray : [
+        "#0000FF",
+        "#FFFFFF",
+        "#FF0000"
+    ]
+});
+</script>
 {% endblock %}

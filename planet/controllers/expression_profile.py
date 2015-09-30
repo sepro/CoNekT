@@ -4,6 +4,7 @@ from planet.models.expression_profiles import ExpressionProfile
 
 import json
 from statistics import mean
+from math import log
 
 
 expression_profile = Blueprint('expression_profile', __name__)
@@ -106,6 +107,11 @@ def expression_profile_heatmap():
 
         for o in order:
             values[o] = mean(experiments[o])
+
+        row_mean = mean(values.values())
+
+        for o in order:
+            values[o] = log(values[o]/row_mean, 2)
 
         output.append({"name": name, "values": values})
 

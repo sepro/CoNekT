@@ -190,3 +190,13 @@ body {
 .main .page-header {
   margin-top: 0;
 }
+
+/*
+ * Rotated table header
+ */
+
+.rotated {
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  white-space:nowrap;
+}
