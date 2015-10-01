@@ -115,7 +115,6 @@ def expression_profile_heatmap():
 
         output.append({"name": name, "values": values})
 
-    print(output)
     return render_template("expression_heatmap.html", order=order, profiles=output)
 
 

@@ -32,14 +32,14 @@
 {% endblock %}
 
 {% block extrajs %}
-<script src="{{ url_for('static', filename='js/jquery.hottie-sym.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.hottie.js') }}"></script>
 <script>
     $('td.value').hottie({
     colorArray : [
         "#0000FF",
         "#FFFFFF",
         "#FF0000"
-    ]
+    ], symmetrical : true
 });
 </script>
 {% endblock %}
