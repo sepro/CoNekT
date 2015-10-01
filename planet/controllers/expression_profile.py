@@ -1,6 +1,7 @@
-from flask import Blueprint, redirect, url_for, render_template, Response
+from flask import Blueprint, redirect, url_for, render_template, Response, request
 
 from planet.models.expression_profiles import ExpressionProfile
+from planet.forms.heatmap import HeatmapForm
 
 import json
 from statistics import mean
@@ -87,35 +88,46 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id):
                            second_profile=second_profile)
 
 
-@expression_profile.route('/heatmap/')
+@expression_profile.route('/heatmap/', methods=['GET', 'POST'])
 def expression_profile_heatmap():
-    probes = ["261141_at", "251378_at", "263653_at"]
+    form = HeatmapForm(request.form)
+    form.populate_species()
 
-    profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(probes)).all()
+    if request.method == 'POST':
+        probes = request.form.get('probes').split()
+        species_id = request.form.get('species_id')
 
-    order = []
+        profiles = ExpressionProfile.query.filter_by(species_id=species_id).\
+            filter(ExpressionProfile.probe.in_(probes)).all()
 
-    output = []
+        order = []
 
-    for profile in profiles:
-        name = profile.probe
-        data = json.loads(profile.profile)
-        order = data['order']
-        experiments = data['data']
+        output = []
 
-        values = {}
+        for profile in profiles:
+            name = profile.probe
+            data = json.loads(profile.profile)
+            order = data['order']
+            experiments = data['data']
 
-        for o in order:
-            values[o] = mean(experiments[o])
+            values = {}
 
-        row_mean = mean(values.values())
+            for o in order:
+                values[o] = mean(experiments[o])
 
-        for o in order:
-            values[o] = log(values[o]/row_mean, 2)
+            row_mean = mean(values.values())
 
-        output.append({"name": name, "values": values})
+            for o in order:
+                if row_mean == 0 or values[o] == 0:
+                    values[o] = 0
+                else:
+                    values[o] = log(values[o]/row_mean, 2)
 
-    return render_template("expression_heatmap.html", order=order, profiles=output)
+            output.append({"name": name, "values": values})
+
+        return render_template("expression_heatmap.html", order=order, profiles=output, form=form)
+    else:
+        return render_template("expression_heatmap.html", form=form)
 
 
 @expression_profile.route('/json/radar/<profile_id>')
