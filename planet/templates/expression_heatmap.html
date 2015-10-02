@@ -34,7 +34,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><strong>Select genes</strong></div>
                     <div class="panel-body">
-                        <form method="POST"  action="{{ url_for('expression_profile.expression_profile_heatmap') }}"  role="form">
+                        <form method="POST"  action="{{ url_for('heatmap.heatmap_main') }}"  role="form">
                             {{ form.csrf_token }}
                             {{form.species_id(class_="form-control") }}<br />
                             {{form.probes(class_="form-control") }}<br />

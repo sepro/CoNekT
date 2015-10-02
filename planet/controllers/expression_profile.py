@@ -1,8 +1,7 @@
-from flask import Blueprint, redirect, url_for, render_template, Response, request
+from flask import Blueprint, redirect, url_for, render_template, Response
 
 from planet.models.expression_profiles import ExpressionProfile
-from planet.models.relationships import SequenceCoexpressionClusterAssociation
-from planet.forms.heatmap import HeatmapForm
+
 
 import json
 from statistics import mean
@@ -86,34 +85,6 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id):
 
     return render_template("compare_profiles.html", first_profile=first_profile,
                            second_profile=second_profile)
-
-
-@expression_profile.route('/heatmap/cluster/<cluster_id>/<species_id>')
-def expression_profile_heatmap_cluster(cluster_id, species_id):
-    associations = SequenceCoexpressionClusterAssociation.query.filter_by(coexpression_cluster_id=cluster_id).all()
-
-    probes = [a.probe for a in associations]
-
-    heatmap = ExpressionProfile.get_heatmap(species_id, probes)
-
-    return render_template("expression_heatmap.html", order=heatmap['order'], profiles=heatmap['heatmap_data'])
-
-
-@expression_profile.route('/heatmap/', methods=['GET', 'POST'])
-def expression_profile_heatmap():
-    form = HeatmapForm(request.form)
-    form.populate_species()
-
-    if request.method == 'POST':
-        probes = request.form.get('probes').split()
-        species_id = request.form.get('species_id')
-
-        heatmap = ExpressionProfile.get_heatmap(species_id, probes)
-
-        return render_template("expression_heatmap.html", order=heatmap['order'], profiles=heatmap['heatmap_data'], form=form)
-    else:
-        return render_template("expression_heatmap.html", form=form)
-
 
 @expression_profile.route('/json/radar/<profile_id>')
 def expression_profile_radar_json(profile_id):
