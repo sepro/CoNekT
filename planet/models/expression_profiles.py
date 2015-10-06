@@ -8,7 +8,7 @@ class ExpressionProfile(db.Model):
     __tablename__ = 'expression_profiles'
     id = db.Column(db.Integer, primary_key=True)
     species_id = db.Column(db.Integer, db.ForeignKey('species.id'))
-    probe = db.Column(db.String(50))
+    probe = db.Column(db.String(50), index=True)
     sequence_id = db.Column(db.String(50), db.ForeignKey('sequences.id'))
     profile = db.Column(db.Text)
 

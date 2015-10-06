@@ -26,7 +26,7 @@ class ExpressionNetworkMethod(db.Model):
 class ExpressionNetwork(db.Model):
     __tablename__ = 'expression_networks'
     id = db.Column(db.Integer, primary_key=True)
-    probe = db.Column(db.String(50))
+    probe = db.Column(db.String(50), index=True)
     sequence_id = db.Column(db.String(50), db.ForeignKey('sequences.id'))
     network = db.Column(db.Text)
     method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'))
