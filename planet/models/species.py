@@ -12,6 +12,9 @@ class Species(db.Model):
     project_page = db.Column(db.Text)
     color = db.Column(db.String(7), default="#C7C7C7")
     highlight = db.Column(db.String(7), default="#DEDEDE")
+    sequence_count = db.Column(db.Integer)
+    network_count = db.Column(db.Integer)
+    profile_count = db.Column(db.Integer)
 
     sequences = db.relationship('Sequence', backref='species', lazy='dynamic')
     networks = db.relationship('ExpressionNetworkMethod', backref='species', lazy='dynamic')
@@ -30,3 +33,7 @@ class Species(db.Model):
 
     def __repr__(self):
         return str(self.id) + ". " + self.name
+
+    @staticmethod
+    def update_counts():
+        pass

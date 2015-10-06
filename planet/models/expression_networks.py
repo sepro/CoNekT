@@ -12,6 +12,7 @@ class ExpressionNetworkMethod(db.Model):
     species_id = db.Column(db.Integer, db.ForeignKey('species.id'))
     description = db.Column(db.Text)
     edge_type = db.Column(db.Enum("rank", "weight", name='edge_type'))
+    probe_count = db.Column(db.Integer)
 
     probes = db.relationship('ExpressionNetwork', backref='method', lazy='dynamic')
 
@@ -22,6 +23,9 @@ class ExpressionNetworkMethod(db.Model):
         self.description = description
         self.edge_type = edge_type
 
+    @staticmethod
+    def update_count():
+        pass
 
 class ExpressionNetwork(db.Model):
     __tablename__ = 'expression_networks'

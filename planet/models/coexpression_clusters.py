@@ -12,9 +12,13 @@ class CoexpressionClusteringMethod(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'))
     method = db.Column(db.Text)
+    cluster_count = db.Column(db.Integer)
 
     clusters = db.relationship('CoexpressionCluster', backref='method', lazy='dynamic')
 
+    @staticmethod
+    def update_counts():
+        pass
 
 class CoexpressionCluster(db.Model):
     __tablename__ = 'coexpression_clusters'
