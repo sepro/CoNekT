@@ -22,7 +22,7 @@
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">GO annotation</div>
-                {% if sequence.go_associations.count() > 0 %}
+                {% if go_associations|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table  table-striped">
@@ -34,7 +34,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for go_association in sequence.go_associations %}
+                            {% for go_association in go_associations %}
                             <tr>
                                 <td><a href="{{ url_for('go.go_view', go_id=go_association.go.id) }}" data-toggle="tooltip"
                                        data-placement="top" title="{{ go_association.go.description }}">{{ go_association.go.label }}</a></td>
@@ -57,7 +57,7 @@
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">InterPro domains</div>
-                {% if sequence.interpro_associations.count() > 0 %}
+                {% if interpro_associations|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -70,7 +70,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for association in sequence.interpro_associations %}
+                            {% for association in interpro_associations %}
                             <tr>
                                 <td><a href="{{ url_for('interpro.interpro_view', interpro_id=association.domain.id) }}">{{ association.domain.label }}</a></td>
                                 <td>{{ association.domain.description }}</td>
@@ -103,7 +103,7 @@
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Gene Families</div>
-                {% if sequence.families.count() > 0 %}
+                {% if families|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -114,7 +114,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for family in sequence.families %}
+                            {% for family in families %}
                             <tr>
                                 <td><a href="{{ url_for('family.family_view', family_id=family.id) }}">{{ family.name }}</a></td>
                                 <td>{{ family.method.method }}</td>
@@ -134,12 +134,12 @@
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Expression Profiles</div>
-                {% if sequence.expression_profiles.count() > 0 %}
+                {% if expression_profiles|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <tbody>
-                            {% for profile in sequence.expression_profiles %}
+                            {% for profile in expression_profiles %}
                             <tr>
                                 <td><a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">{{ profile.probe }}</a></td>
                                 <td><a href="{{ url_for('expression_profile.expression_profile_modal', profile_id=profile.id) }}" data-target="#profileModal">Show profile</a></td>
@@ -159,12 +159,12 @@
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Networks</div>
-                {% if sequence.network_nodes.count() > 0 %}
+                {% if network_nodes|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <tbody>
-                            {% for network in sequence.network_nodes %}
+                            {% for network in network_nodes %}
                             <tr>
                                 <td>{{ network.method.description }}: <a href="{{ url_for('expression_network.expression_network_graph', node_id=network.id) }}">{{ network.probe }}</a></td>
                             </tr>
@@ -183,12 +183,12 @@
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Coexpression Clusters</div>
-                {% if sequence.coexpression_clusters.count() > 0 %}
+                {% if coexpression_clusters|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <tbody>
-                            {% for cluster in sequence.coexpression_clusters %}
+                            {% for cluster in coexpression_clusters %}
                             <tr>
                                 <td><strong data-toggle="tooltip"
                                        data-placement="top" title="{{ cluster.method.method }}">{{ cluster.name }}</strong></td>

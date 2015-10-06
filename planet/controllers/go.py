@@ -1,6 +1,7 @@
 from flask import Blueprint, redirect, url_for, render_template, Response, g
 
 from planet.models.go import GO
+from planet.models.sequences import Sequence
 import json
 
 
@@ -23,8 +24,9 @@ def go_find(go_label):
     :param go_label: Label of the GO term
     """
     current_go = GO.query.filter_by(label=go_label).first_or_404()
+    sequence_count = len(list(set(current_go.sequences.with_entities(Sequence.id).all())))
 
-    return render_template('go.html', go=current_go, count=current_go.sequences.group_by('sequences.id').count())
+    return render_template('go.html', go=current_go, count=sequence_count)
 
 
 @go.route('/view/<go_id>')
@@ -35,8 +37,9 @@ def go_view(go_id):
     :param go_id: ID of the go term
     """
     current_go = GO.query.get_or_404(go_id)
+    sequence_count = len(list(set(current_go.sequences.with_entities(Sequence.id).all())))
 
-    return render_template('go.html', go=current_go, count=current_go.sequences.group_by('sequences.id').count())
+    return render_template('go.html', go=current_go, count=sequence_count)
 
 
 @go.route('/sequences/<go_id>/')
@@ -48,9 +51,9 @@ def go_sequences(go_id, page=1):
     :param go_id: Internal ID of the GO term
     :param page: Page number
     """
-    sequences = GO.query.get(go_id).sequences.group_by('sequences.id').order_by('name').paginate(page,
-                                                                                                 g.page_items,
-                                                                                                 False).items
+    sequences = GO.query.get(go_id).sequences.group_by(Sequence.id).order_by(Sequence.name).paginate(page,
+                                                                                                     g.page_items,
+                                                                                                     False).items
 
     return render_template('pagination/sequences.html', sequences=sequences)
 

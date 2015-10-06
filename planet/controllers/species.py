@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, g, current_app
 
 from planet.models.species import Species
+from planet.models.sequences import Sequence
 
 
 species = Blueprint('species', __name__)
@@ -24,7 +25,9 @@ def species_view(species_id):
     :param species_id: ID of the species to show
     """
     current_species = Species.query.get_or_404(species_id)
-    sequence_count = current_species.sequences.count()
+
+    # A faster way to do the count !
+    sequence_count = len(current_species.sequences.with_entities('id').all())
 
     return render_template('species.html', species=current_species, sequence_count=sequence_count)
 

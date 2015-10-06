@@ -1,6 +1,7 @@
 from flask import Blueprint, redirect, url_for, render_template, Response, g
 
 from planet.models.interpro import Interpro
+from planet.models.sequences import Sequence
 import json
 
 interpro = Blueprint('interpro', __name__)
@@ -22,9 +23,9 @@ def interpro_find(interpro_domain):
     :param interpro_domain: Name of the interpro domain
     """
     current_interpro = Interpro.query.filter_by(label=interpro_domain).first_or_404()
+    sequence_count = len(list(set(current_interpro.sequences.with_entities(Sequence.id).all())))
 
-    return render_template('interpro.html', interpro=current_interpro,
-                           count=current_interpro.sequences.group_by('sequences.id').count())
+    return render_template('interpro.html', interpro=current_interpro, count=sequence_count)
 
 
 @interpro.route('/view/<interpro_id>')
@@ -35,9 +36,9 @@ def interpro_view(interpro_id):
     :param interpro_id: ID of the interpro domain
     """
     current_interpro = Interpro.query.get_or_404(interpro_id)
+    sequence_count = len(list(set(current_interpro.sequences.with_entities(Sequence.id).all())))
 
-    return render_template('interpro.html', interpro=current_interpro,
-                           count=current_interpro.sequences.group_by('sequences.id').count())
+    return render_template('interpro.html', interpro=current_interpro, count=sequence_count)
 
 
 @interpro.route('/sequences/<interpro_id>/')
@@ -49,7 +50,7 @@ def interpro_sequences(interpro_id, page=1):
     :param interpro_id: Internal ID of the interpro domain
     :param page: Page number
     """
-    sequences = Interpro.query.get(interpro_id).sequences.group_by('sequences.id').order_by('name')\
+    sequences = Interpro.query.get(interpro_id).sequences.group_by(Sequence.id).order_by(Sequence.name)\
         .paginate(page, g.page_items, False).items
 
     return render_template('pagination/sequences.html', sequences=sequences)

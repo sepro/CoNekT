@@ -1,6 +1,7 @@
 from flask import Blueprint, redirect, url_for, render_template, Response, g
 
 from planet.models.gene_families import GeneFamily
+from planet.models.sequences import Sequence
 import json
 
 
@@ -23,8 +24,9 @@ def family_find(family_name):
     :param family_name: Name of the gene family
     """
     current_family = GeneFamily.query.filter_by(name=family_name).first_or_404()
+    sequence_count = len(current_family.sequences.with_entities(Sequence.id).all())
 
-    return render_template('family.html', family=current_family, count=current_family.sequences.count())
+    return render_template('family.html', family=current_family, count=sequence_count)
 
 
 @family.route('/view/<family_id>')
@@ -35,8 +37,9 @@ def family_view(family_id):
     :param family_id: ID of the gene family
     """
     current_family = GeneFamily.query.get_or_404(family_id)
+    sequence_count = len(current_family.sequences.with_entities(Sequence.id).all())
 
-    return render_template('family.html', family=current_family, count=current_family.sequences.count())
+    return render_template('family.html', family=current_family, count=sequence_count)
 
 
 @family.route('/sequences/<family_id>/')

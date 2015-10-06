@@ -3,6 +3,8 @@ from flask import Blueprint, url_for, render_template, flash, redirect, g, Respo
 from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
 from planet.helpers.cytoscape import CytoscapeHelper
 
+from planet.models.sequences import Sequence
+
 import json
 
 
@@ -27,7 +29,8 @@ def expression_cluster_view(cluster_id):
     :param cluster_id: Internal ID of the cluster
     """
     cluster = CoexpressionCluster.query.get_or_404(cluster_id)
-    sequence_count = cluster.sequences.count()
+
+    sequence_count = len(cluster.sequences.with_entities(Sequence.id).all())
 
     return render_template("expression_cluster.html", cluster=cluster, sequence_count=sequence_count)
 
