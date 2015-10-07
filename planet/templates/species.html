@@ -7,7 +7,7 @@
     {% if species %}
     <h1>Species: <strong>{{ species.name }}</strong> <small>({{ species.code }})</small></h1>
 
-    Transcripts: {{ sequence_count }}
+    Transcripts: {{ species.sequence_count }}
     <br />
 
         {% if species.ncbi_tax_id %}
@@ -20,7 +20,7 @@
             Website : <a href="{{ species.project_page }}">{{ species.project_page }}</a><br />
         {% endif %}
 
-        {{ macro.sequence_pagination(url_for('species.species_sequences', species_id=species.id), sequence_count) }}
+        {{ macro.sequence_pagination(url_for('species.species_sequences', species_id=species.id), species.sequence_count) }}
 
     {% elif all_species %}
     <h1>Species Overview</h1>
@@ -42,9 +42,9 @@
                     <td>{{ s.id }}</td>
                     <td>{{ s.code }}</td>
                     <td><em><a href="{{ url_for('species.species_view', species_id=s.id) }}">{{ s.name }}</a></em></td>
-                    <td>{{ s.sequences.count() }}</td>
-                    <td>{{ s.profiles.count() }}</td>
-                    <td><a href="{{url_for('expression_network.expression_network_species', species_id=s.id)}}">{{ s.networks.count() }}</a></td>
+                    <td>{{ s.sequence_count }}</td>
+                    <td>{{ s.profiles_count }}</td>
+                    <td><a href="{{url_for('expression_network.expression_network_species', species_id=s.id)}}">{{ s.network_count }}</a></td>
                 </tr>
             {% endfor %}
             </tbody>

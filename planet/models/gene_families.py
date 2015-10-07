@@ -14,7 +14,15 @@ class GeneFamilyMethod(db.Model):
 
     @staticmethod
     def update_count():
-        pass
+        methods = GeneFamilyMethod.query.all()
+
+        for m in methods:
+            m.family_count = m.families.count()
+
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
 
 class GeneFamily(db.Model):
     __tablename__ = 'gene_families'

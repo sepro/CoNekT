@@ -23,7 +23,7 @@
                     <td><em><a href="{{ url_for('species.species_view', species_id=n.species.id) }}">{{ n.species.name }}</a></em></td>
                     <td>{{ n.description }}</td>
                     <td>{{ n.edge_type }}</td>
-                    <td>{{ n.probes.count() }}</td>
+                    <td>{{ n.probe_count }}</td>
                 </tr>
             {% endfor %}
             </tbody>

@@ -36,4 +36,14 @@ class Species(db.Model):
 
     @staticmethod
     def update_counts():
-        pass
+        species = Species.query.all()
+
+        for s in species:
+            s.sequence_count = s.sequences.count()
+            s.profile_count = s.profiles.count()
+            s.network_count = s.networks.count()
+
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()

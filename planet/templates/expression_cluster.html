@@ -24,7 +24,7 @@
                     <td><em><a href="{{ url_for('species.species_view', species_id=c.network_method.species.id) }}">{{ c.network_method.species.name }}</a></em></td>
                     <td>{{ c.method }}</td>
                     <td>{{ c.network_method.description }}</td>
-                    <td>{{ c.clusters.count() }}</td>
+                    <td>{{ c.cluster_count }}</td>
                 </tr>
             {% endfor %}
             </tbody>

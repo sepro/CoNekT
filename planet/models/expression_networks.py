@@ -25,7 +25,15 @@ class ExpressionNetworkMethod(db.Model):
 
     @staticmethod
     def update_count():
-        pass
+        methods = ExpressionNetworkMethod.query.all()
+
+        for m in methods:
+            m.probe_count = m.probes.count()
+
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
 
 class ExpressionNetwork(db.Model):
     __tablename__ = 'expression_networks'

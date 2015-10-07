@@ -18,7 +18,15 @@ class CoexpressionClusteringMethod(db.Model):
 
     @staticmethod
     def update_counts():
-        pass
+        methods = CoexpressionClusteringMethod.query.all()
+
+        for m in methods:
+            m.cluster_count = m.clusters.count()
+
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
 
 class CoexpressionCluster(db.Model):
     __tablename__ = 'coexpression_clusters'

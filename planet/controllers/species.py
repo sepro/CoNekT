@@ -26,10 +26,7 @@ def species_view(species_id):
     """
     current_species = Species.query.get_or_404(species_id)
 
-    # A faster way to do the count !
-    sequence_count = len(current_species.sequences.with_entities('id').all())
-
-    return render_template('species.html', species=current_species, sequence_count=sequence_count)
+    return render_template('species.html', species=current_species)
 
 
 @species.route('/sequences/<species_id>/')

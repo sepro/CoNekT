@@ -7,6 +7,12 @@ from config import ADMIN_EMAIL
 
 from planet import app, db
 from planet.models.users import User
+
+from planet.models.coexpression_clusters import CoexpressionClusteringMethod
+from planet.models.expression_networks import ExpressionNetworkMethod
+from planet.models.gene_families import GeneFamilyMethod
+from planet.models.species import Species
+
 import imp
 
 from flask.ext.script import Manager
@@ -60,6 +66,13 @@ def update():
     v = api.db_version(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
     print('Current database version: ' + str(v))
 
+
+@manager.command
+def update_counts():
+    CoexpressionClusteringMethod.update_counts()
+    ExpressionNetworkMethod.update_count()
+    GeneFamilyMethod.update_count()
+    Species.update_counts()
 
 if __name__ == "__main__":
 
