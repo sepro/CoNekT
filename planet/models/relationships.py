@@ -3,27 +3,27 @@ from planet import db
 
 sequence_go = db.Table('sequence_go',
                        db.Column('id', db.Integer, primary_key=True),
-                       db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id')),
-                       db.Column('go_id', db.Integer, db.ForeignKey('go.id'))
+                       db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id'), index=True),
+                       db.Column('go_id', db.Integer, db.ForeignKey('go.id'), index=True)
                        )
 
 sequence_interpro = db.Table('sequence_interpro',
                              db.Column('id', db.Integer, primary_key=True),
-                             db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id')),
-                             db.Column('interpro_id', db.Integer, db.ForeignKey('interpro.id')),
+                             db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id'), index=True),
+                             db.Column('interpro_id', db.Integer, db.ForeignKey('interpro.id'), index=True),
                              )
 
 sequence_family = db.Table('sequence_family',
                            db.Column('id', db.Integer, primary_key=True),
-                           db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id')),
-                           db.Column('gene_family_id', db.Integer, db.ForeignKey('gene_families.id'))
+                           db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id'), index=True),
+                           db.Column('gene_family_id', db.Integer, db.ForeignKey('gene_families.id'), index=True)
                            )
 
 sequence_coexpression_cluster = db.Table('sequence_coexpression_cluster',
                                          db.Column('id', db.Integer, primary_key=True),
-                                         db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id')),
+                                         db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id'), index=True),
                                          db.Column('coexpression_cluster_id', db.Integer,
-                                                   db.ForeignKey('coexpression_clusters.id'))
+                                                   db.ForeignKey('coexpression_clusters.id'), index=True)
                                          )
 
 
@@ -32,7 +32,7 @@ class SequenceCoexpressionClusterAssociation(db.Model):
     __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
-    probe = db.Column(db.String(50))
+    probe = db.Column(db.String(50), index=True)
     sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
     coexpression_cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
 

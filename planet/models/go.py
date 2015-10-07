@@ -13,7 +13,7 @@ class GO(db.Model):
     extended_go = db.Column(db.Text)
 
     sequences = db.relationship('Sequence', secondary=sequence_go, lazy='dynamic')
-    sequence_associations = db.relationship('SequenceGOAssociation', backref='go', lazy='dynamic')
+    sequence_associations = db.relationship('SequenceGOAssociation', backref=db.backref('go', lazy='joined'), lazy='dynamic')
 
     def __init__(self, label, name, go_type, description, obsolete, is_a, extended_go):
         self.label = label

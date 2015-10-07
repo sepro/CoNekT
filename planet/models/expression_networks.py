@@ -9,12 +9,12 @@ import json
 class ExpressionNetworkMethod(db.Model):
     __tablename__ = 'expression_network_methods'
     id = db.Column(db.Integer, primary_key=True)
-    species_id = db.Column(db.Integer, db.ForeignKey('species.id'))
+    species_id = db.Column(db.Integer, db.ForeignKey('species.id'), index=True)
     description = db.Column(db.Text)
     edge_type = db.Column(db.Enum("rank", "weight", name='edge_type'))
     probe_count = db.Column(db.Integer)
 
-    probes = db.relationship('ExpressionNetwork', backref='method', lazy='dynamic')
+    probes = db.relationship('ExpressionNetwork', backref=db.backref('method', lazy='joined'), lazy='dynamic')
 
     clustering_methods = db.relationship('CoexpressionClusteringMethod', backref='network_method', lazy='dynamic')
 
@@ -39,9 +39,9 @@ class ExpressionNetwork(db.Model):
     __tablename__ = 'expression_networks'
     id = db.Column(db.Integer, primary_key=True)
     probe = db.Column(db.String(50), index=True)
-    sequence_id = db.Column(db.String(50), db.ForeignKey('sequences.id'))
+    sequence_id = db.Column(db.String(50), db.ForeignKey('sequences.id'), index=True)
     network = db.Column(db.Text)
-    method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'))
+    method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'), index=True)
 
     def __init__(self, probe, sequence_id, network, method_id):
         self.probe = probe

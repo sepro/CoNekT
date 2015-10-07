@@ -7,7 +7,7 @@ class GeneFamilyMethod(db.Model):
     method = db.Column(db.Text)
     family_count = db.Column(db.Integer)
 
-    families = db.relationship('GeneFamily', backref='method', lazy='dynamic')
+    families = db.relationship('GeneFamily', backref=db.backref('method', lazy='joined'), lazy='dynamic')
 
     def __init__(self, method):
         self.method = method
@@ -27,7 +27,7 @@ class GeneFamilyMethod(db.Model):
 class GeneFamily(db.Model):
     __tablename__ = 'gene_families'
     id = db.Column(db.Integer, primary_key=True)
-    method_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id'))
+    method_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id'), index=True)
     name = db.Column(db.String(50), unique=True, index=True)
 
     sequences = db.relationship('Sequence', secondary=sequence_family, lazy='dynamic')

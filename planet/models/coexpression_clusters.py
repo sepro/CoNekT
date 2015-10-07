@@ -10,11 +10,11 @@ import json
 class CoexpressionClusteringMethod(db.Model):
     __tablename__ = 'coexpression_clustering_methods'
     id = db.Column(db.Integer, primary_key=True)
-    network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'))
+    network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'), index=True)
     method = db.Column(db.Text)
     cluster_count = db.Column(db.Integer)
 
-    clusters = db.relationship('CoexpressionCluster', backref='method', lazy='dynamic')
+    clusters = db.relationship('CoexpressionCluster', backref=db.backref('method', lazy='joined'), lazy='dynamic')
 
     @staticmethod
     def update_counts():

@@ -6,7 +6,7 @@ from planet.models.relationships import sequence_go, sequence_interpro, sequence
 class Sequence(db.Model):
     __tablename__ = 'sequences'
     id = db.Column(db.Integer, primary_key=True)
-    species_id = db.Column(db.Integer, db.ForeignKey('species.id'))
+    species_id = db.Column(db.Integer, db.ForeignKey('species.id'), index=True)
     name = db.Column(db.String(50), index=True)
     description = db.Column(db.Text)
     coding_sequence = db.Column(db.Text)

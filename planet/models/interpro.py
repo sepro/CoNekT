@@ -9,7 +9,9 @@ class Interpro(db.Model):
     description = db.Column(db.Text)
 
     sequences = db.relationship('Sequence', secondary=sequence_interpro, lazy='dynamic')
-    sequence_associations = db.relationship('SequenceInterproAssociation', backref='interpro', lazy='dynamic')
+    sequence_associations = db.relationship('SequenceInterproAssociation',
+                                            backref=db.backref('interpro', lazy='joined'),
+                                            lazy='dynamic')
 
     def __init__(self, label, description):
         self.label = label
