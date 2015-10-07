@@ -4,7 +4,7 @@ $( document ).ready(function() {
     var page_count = $('#planet-pagination').attr( "page-count" );
 
     function update(page){
-        $( "#planet-pagination" ).html('<br /><br /><div class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i><br /><br />Loading...</div>');
+        $( "#planet-pagination" ).html('<br /><br /><div id="loading" class="pagination"><i class="fa fa-refresh fa-spin"></i></div>');
         $( "#planet-pagination" ).load( base_url + page );
 
         if (page == 1)

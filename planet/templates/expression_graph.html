@@ -135,6 +135,7 @@
              <a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.id) }}">View table</a>
             <div id="cy" json="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id) }}"></div>
             {% endif %}
+            <div id="loading"><span class="fa fa-refresh fa-spin"></span></div>
         </div>
     </div>
 </div>

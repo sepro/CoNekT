@@ -79,8 +79,29 @@ input[readonly] {
 
 .panel-scroll { height:250px; max-height: 250px; width: 100%; margin: 0; overflow-y: auto; }
 
+/*
+ * Loader
+ */
 
+#loading {
+  text-align: center;
+  margin-top: 5em;
+  font-size: 3em;
+  color: #000;
+  width:100%;
+}
 
+#loading.pagination {
+  text-align: center;
+  margin-top: 2em;
+  font-size: 3em;
+  color: #000;
+  width:100%;
+}
+
+#loading.loaded {
+  display: none;
+}
 
 /*
  * Global add-ons

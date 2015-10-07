@@ -46,6 +46,8 @@ cy = cytoscape({
   
 
   ready: function(){
+    var loading = document.getElementById('loading');
+    loading.classList.add('loaded');
     window.cy = this;
 
     cy.nodes().forEach(function(n){
