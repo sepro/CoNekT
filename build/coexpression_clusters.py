@@ -32,6 +32,7 @@ def add_planet_coexpression_clusters(hrr_file, hcca_file, description, network):
         db.session.commit()
     except:
         db.session.rollback()
+        print("ERROR: could not add clustering_method")
         quit()
 
     cluster_parser = Parser()
@@ -40,7 +41,7 @@ def add_planet_coexpression_clusters(hrr_file, hcca_file, description, network):
     added_clusters = {}
 
     for cluster_id, cluster in cluster_parser.clusters.items():
-        if not id == "sNA":
+        if not cluster_id == "sNA":
             new_cluster = CoexpressionCluster()
             new_cluster.method_id = clustering_method.id
             new_cluster.name = cluster_id
@@ -49,12 +50,14 @@ def add_planet_coexpression_clusters(hrr_file, hcca_file, description, network):
 
     try:
         db.session.commit()
-    except:
+    except Exception as e:
         db.session.rollback()
+        print("ERROR: could not add clusters")
+        print(e)
         quit()
 
     for cluster_id, cluster in cluster_parser.clusters.items():
-        if not id == "sNA":
+        if not cluster_id == "sNA":
             current_cluster = added_clusters[cluster_id]
 
             for member in cluster:

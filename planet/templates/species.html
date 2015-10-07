@@ -43,7 +43,7 @@
                     <td>{{ s.code }}</td>
                     <td><em><a href="{{ url_for('species.species_view', species_id=s.id) }}">{{ s.name }}</a></em></td>
                     <td>{{ s.sequence_count }}</td>
-                    <td>{{ s.profiles_count }}</td>
+                    <td>{{ s.profile_count }}</td>
                     <td><a href="{{url_for('expression_network.expression_network_species', species_id=s.id)}}">{{ s.network_count }}</a></td>
                 </tr>
             {% endfor %}
