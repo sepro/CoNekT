@@ -1,6 +1,7 @@
 from planet import db
 from planet.models.relationships import sequence_go
 
+
 class GO(db.Model):
     __tablename__ = 'go'
     id = db.Column(db.Integer, primary_key=True)

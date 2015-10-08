@@ -14,6 +14,10 @@ class GeneFamilyMethod(db.Model):
 
     @staticmethod
     def update_count():
+        """
+        To avoid long count queries, the number of families for a given method can be precalculated and stored in
+        the database using this function.
+        """
         methods = GeneFamilyMethod.query.all()
 
         for m in methods:
@@ -21,8 +25,10 @@ class GeneFamilyMethod(db.Model):
 
         try:
             db.session.commit()
-        except:
+        except Exception as e:
             db.session.rollback()
+            print(e)
+
 
 class GeneFamily(db.Model):
     __tablename__ = 'gene_families'

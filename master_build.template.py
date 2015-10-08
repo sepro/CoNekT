@@ -52,7 +52,6 @@ parse_expression_network("data/AthPfamPlazaGO.hrr", "ath", "Arabidopsis thaliana
 print("Adding Coexpression Clusters")
 print("============================")
 add_planet_coexpression_clusters("data/GmaPfamPlazaGO.hrr", "data/Gma.S=3R=30.hcca", "Glycine max clusters PlaNet 1", 1)
-print("Adding Arabidopsis")
 add_planet_coexpression_clusters("data/AthPfamPlazaGO.hrr", "data/Ath.S=3R=30.hcca", "Arabidopsis thaliana clusters PlaNet 1", 2)
 
 print("Precalculating big counts")

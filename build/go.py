@@ -18,8 +18,9 @@ def populate_go(filename, empty=True):
         try:
             db.session.query(GO).delete()
             db.session.commit()
-        except:
+        except Exception as e:
             db.session.rollback()
+            print(e)
 
     obo_parser = OBOParser()
     obo_parser.readfile(filename)
@@ -35,8 +36,9 @@ def populate_go(filename, empty=True):
 
     try:
         db.session.commit()
-    except:
+    except Exception as e:
         db.session.rollback()
+        print(e)
 
 
 def add_go_from_plaza(filename):

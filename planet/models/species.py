@@ -36,6 +36,10 @@ class Species(db.Model):
 
     @staticmethod
     def update_counts():
+        """
+        To avoid long counts the number of sequences, profiles and networks can be precalculated and stored in the
+        database using this function.
+        """
         species = Species.query.all()
 
         for s in species:
@@ -45,5 +49,6 @@ class Species(db.Model):
 
         try:
             db.session.commit()
-        except:
+        except Exception as e:
             db.session.rollback()
+            print(e)

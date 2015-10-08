@@ -19,12 +19,12 @@ sequence_family = db.Table('sequence_family',
                            db.Column('gene_family_id', db.Integer, db.ForeignKey('gene_families.id'), index=True)
                            )
 
-sequence_coexpression_cluster = db.Table('sequence_coexpression_cluster',
-                                         db.Column('id', db.Integer, primary_key=True),
-                                         db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id'), index=True),
-                                         db.Column('coexpression_cluster_id', db.Integer,
-                                                   db.ForeignKey('coexpression_clusters.id'), index=True)
-                                         )
+sequence_coexpression_cluster = \
+    db.Table('sequence_coexpression_cluster',
+             db.Column('id', db.Integer, primary_key=True),
+             db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id'), index=True),
+             db.Column('coexpression_cluster_id', db.Integer, db.ForeignKey('coexpression_clusters.id'), index=True)
+             )
 
 
 class SequenceCoexpressionClusterAssociation(db.Model):

@@ -31,5 +31,6 @@ def add_families_from_plaza(filename, description):
 
     try:
         db.session.commit()
-    except:
+    except Exception as e:
         db.session.rollback()
+        print(e)

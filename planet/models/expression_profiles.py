@@ -19,6 +19,13 @@ class ExpressionProfile(db.Model):
 
     @staticmethod
     def get_heatmap(species_id, probes):
+        """
+        Returns a heatmap for a given species (species_id) and a list of probes. It returns a dict with 'order'
+        the order of the experiments and 'heatmap' another dict with the actual data. Data is zlog transformed
+
+        :param species_id: species id (internal database id)
+        :param probes: a list of probes to include in the heatmap
+        """
         profiles = ExpressionProfile.query.filter_by(species_id=species_id).\
             filter(ExpressionProfile.probe.in_(probes)).all()
 
@@ -47,4 +54,4 @@ class ExpressionProfile(db.Model):
 
             output.append({"name": name, "values": values})
 
-        return({'order': order, 'heatmap_data': output})
+        return {'order': order, 'heatmap_data': output}

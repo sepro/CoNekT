@@ -80,8 +80,9 @@ def parse_expression_network(network_file, species, description, score_type="ran
 
     try:
         db.session.commit()
-    except:
+    except Exception as e:
         db.session.rollback()
+        print(e)
 
     # go over nodes, do sanity checks and add them to the db
     new_nodes = []

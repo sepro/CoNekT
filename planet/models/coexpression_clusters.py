@@ -18,6 +18,10 @@ class CoexpressionClusteringMethod(db.Model):
 
     @staticmethod
     def update_counts():
+        """
+        To avoid long counts the number of clusters per method can be precalculated and stored in the database
+        using this function
+        """
         methods = CoexpressionClusteringMethod.query.all()
 
         for m in methods:
@@ -25,8 +29,10 @@ class CoexpressionClusteringMethod(db.Model):
 
         try:
             db.session.commit()
-        except:
+        except Exception as e:
             db.session.rollback()
+            print(e)
+
 
 class CoexpressionCluster(db.Model):
     __tablename__ = 'coexpression_clusters'

@@ -30,9 +30,9 @@ def add_planet_coexpression_clusters(hrr_file, hcca_file, description, network):
     try:
         db.session.add(clustering_method)
         db.session.commit()
-    except:
+    except Exception as e:
         db.session.rollback()
-        print("ERROR: could not add clustering_method")
+        print(e)
         quit()
 
     cluster_parser = Parser()
@@ -52,7 +52,6 @@ def add_planet_coexpression_clusters(hrr_file, hcca_file, description, network):
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        print("ERROR: could not add clusters")
         print(e)
         quit()
 
@@ -71,5 +70,6 @@ def add_planet_coexpression_clusters(hrr_file, hcca_file, description, network):
 
     try:
         db.session.commit()
-    except:
+    except Exception as e:
         db.session.rollback()
+        print(e)

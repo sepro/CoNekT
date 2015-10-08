@@ -9,8 +9,9 @@ def populate_interpro(filename, empty=True):
         try:
             db.session.query(Interpro).delete()
             db.session.commit()
-        except:
+        except Exception as e:
             db.session.rollback()
+            print(e)
 
     interpro_parser = InterproParser()
 
@@ -20,5 +21,8 @@ def populate_interpro(filename, empty=True):
         interpro = Interpro(domain.label, domain.description)
 
         db.session.add(interpro)
-
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(e)

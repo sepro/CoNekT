@@ -25,6 +25,11 @@ class ExpressionNetworkMethod(db.Model):
 
     @staticmethod
     def update_count():
+        """
+        To avoid long count queries the number of networks for each method can be precalculated and stored in the
+        database using this function
+        :return:
+        """
         methods = ExpressionNetworkMethod.query.all()
 
         for m in methods:
@@ -32,8 +37,10 @@ class ExpressionNetworkMethod(db.Model):
 
         try:
             db.session.commit()
-        except:
+        except Exception as e:
             db.session.rollback()
+            print(e)
+
 
 class ExpressionNetwork(db.Model):
     __tablename__ = 'expression_networks'
@@ -51,6 +58,13 @@ class ExpressionNetwork(db.Model):
 
     @staticmethod
     def get_neighborhood(probe, depth=0):
+        """
+        Get the coexpression neighborhood for a specific probe
+
+        :param probe: internal ID of the probe
+        :param depth: how many steps away from the query you wish to expand the network
+        :return:
+        """
         node = ExpressionNetwork.query.get(probe)
         links = json.loads(node.network)
 

@@ -48,8 +48,9 @@ def register():
         try:
             db.session.add(user)
             db.session.commit()
-        except:
+        except Exception as e:
             db.session.rollback()
+            print(e)
 
         flash('You are now registered. Please login.', 'success')
 
