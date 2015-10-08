@@ -46,6 +46,11 @@ class CoexpressionCluster(db.Model):
 
     @staticmethod
     def get_cluster(cluster_id):
+        """
+        Returns the network for a whole cluster (reporting edges only between members of the cluster !)
+
+        :param cluster_id: internal ID of the cluster
+        """
         cluster = CoexpressionCluster.query.get(cluster_id)
 
         probes = [member.probe for member in cluster.sequence_associations.all()]
