@@ -83,4 +83,32 @@ def add_go_from_plaza(filename):
         else:
             print("Gene", gene, "not found in the database.")
 
+    # Add extended GOs
+    for gene, terms in go_parser.annotation.items():
+        if gene in gene_hash.keys():
+            current_sequence = gene_hash[gene]
+            new_terms = []
+            current_terms = []
+
+            for term in terms:
+                if term["id"] not in current_terms:
+                    current_terms.append(term["id"])
+
+            for term in terms:
+                if term["id"] in go_hash.keys():
+                    extended_terms = go_hash[term["id"]].extended_go.split(";")
+                    for extended_term in extended_terms:
+                        if extended_term not in current_terms and extended_term not in new_terms:
+                            new_terms.append(extended_term)
+
+            for new_term in new_terms:
+                if new_term in go_hash.keys():
+                    current_term = go_hash[new_term]
+                    association = {
+                        "sequence_id": current_sequence.id,
+                        "go_id": current_term.id,
+                        "evidence": None,
+                        "source": "Extended"}
+                    associations.append(association)
+
     db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
