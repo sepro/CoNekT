@@ -30,7 +30,7 @@ def go_find(go_label):
     for s in sequences:
         seqIDs[s.id] = ""
 
-    sequence_count = len(seqIDs.keys())
+    sequence_count = len(seqIDs)
 
     return render_template('go.html', go=current_go, count=sequence_count)
 
@@ -49,7 +49,7 @@ def go_view(go_id):
     for s in sequences:
         seqIDs[s.id] = ""
 
-    sequence_count = len(seqIDs.keys())
+    sequence_count = len(seqIDs)
 
     return render_template('go.html', go=current_go, count=sequence_count)
 

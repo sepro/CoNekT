@@ -29,7 +29,7 @@ def interpro_find(interpro_domain):
     for s in sequences:
         seqIDs[s.id] = ""
 
-    sequence_count = len(seqIDs.keys())
+    sequence_count = len(seqIDs)
 
     return render_template('interpro.html', interpro=current_interpro, count=sequence_count)
 
@@ -48,7 +48,7 @@ def interpro_view(interpro_id):
     for s in sequences:
         seqIDs[s.id] = ""
 
-    sequence_count = len(seqIDs.keys())
+    sequence_count = len(seqIDs)
 
     return render_template('interpro.html', interpro=current_interpro, count=sequence_count)
 
