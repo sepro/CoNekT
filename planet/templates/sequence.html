@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
-                <div class="panel-heading">GO annotation</div>
+                <div class="panel-heading">GO annotation <span class="text-muted">(<a href="#" id="go_toggle">Toggle parental</a>)</span></div>
                 {% if go_associations|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
@@ -35,7 +35,11 @@
                         </thead>
                         <tbody>
                             {% for go_association in go_associations %}
+                            {% if go_association.evidence == None %}
+                            <tr class="parent_term" style="display: none">
+                            {% else %}
                             <tr>
+                            {% endif %}
                                 <td><a href="{{ url_for('go.go_view', go_id=go_association.go.id) }}" data-toggle="tooltip"
                                        data-placement="top" title="{{ go_association.go.description }}">{{ go_association.go.label }}</a></td>
                                 <td>{{ go_association.go.name }}</td>
@@ -243,6 +247,10 @@ $(function () {
     $("#profileModal .modal-content").load(target, function() {
          $("#profileModal").modal("show");
     });
+});
+$("#go_toggle").click(function(ev) {
+    ev.preventDefault();
+    $(".parent_term").toggle();
 });
 })
 

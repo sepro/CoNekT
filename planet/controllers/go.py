@@ -3,7 +3,7 @@ from flask import Blueprint, redirect, url_for, render_template, Response, g
 from planet.models.go import GO
 from planet.models.sequences import Sequence
 import json
-
+from utils.benchmark import benchmark
 
 go = Blueprint('go', __name__)
 
@@ -24,7 +24,13 @@ def go_find(go_label):
     :param go_label: Label of the GO term
     """
     current_go = GO.query.filter_by(label=go_label).first_or_404()
-    sequence_count = len(list(set(current_go.sequences.with_entities(Sequence.id).all())))
+    seqIDs = {}
+    sequences = current_go.sequences.with_entities(Sequence.id).all()
+
+    for s in sequences:
+        seqIDs[s.id] = ""
+
+    sequence_count = len(seqIDs.keys())
 
     return render_template('go.html', go=current_go, count=sequence_count)
 
@@ -37,13 +43,20 @@ def go_view(go_id):
     :param go_id: ID of the go term
     """
     current_go = GO.query.get_or_404(go_id)
-    sequence_count = len(list(set(current_go.sequences.with_entities(Sequence.id).all())))
+    seqIDs = {}
+    sequences = current_go.sequences.with_entities(Sequence.id).all()
+
+    for s in sequences:
+        seqIDs[s.id] = ""
+
+    sequence_count = len(seqIDs.keys())
 
     return render_template('go.html', go=current_go, count=sequence_count)
 
 
 @go.route('/sequences/<go_id>/')
 @go.route('/sequences/<go_id>/<int:page>')
+@benchmark
 def go_sequences(go_id, page=1):
     """
     Returns a table with sequences with the selected go
@@ -59,6 +72,7 @@ def go_sequences(go_id, page=1):
 
 
 @go.route('/json/species/<go_id>')
+@benchmark
 def go_json_species(go_id):
     """
     Generates a JSON object with the species composition that can be rendered using Chart.js pie charts or doughnut

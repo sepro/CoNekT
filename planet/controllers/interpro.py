@@ -23,7 +23,13 @@ def interpro_find(interpro_domain):
     :param interpro_domain: Name of the interpro domain
     """
     current_interpro = Interpro.query.filter_by(label=interpro_domain).first_or_404()
-    sequence_count = len(list(set(current_interpro.sequences.with_entities(Sequence.id).all())))
+    seqIDs = {}
+    sequences = current_interpro.sequences.with_entities(Sequence.id).all()
+
+    for s in sequences:
+        seqIDs[s.id] = ""
+
+    sequence_count = len(seqIDs.keys())
 
     return render_template('interpro.html', interpro=current_interpro, count=sequence_count)
 
@@ -36,7 +42,13 @@ def interpro_view(interpro_id):
     :param interpro_id: ID of the interpro domain
     """
     current_interpro = Interpro.query.get_or_404(interpro_id)
-    sequence_count = len(list(set(current_interpro.sequences.with_entities(Sequence.id).all())))
+    seqIDs = {}
+    sequences = current_interpro.sequences.with_entities(Sequence.id).all()
+
+    for s in sequences:
+        seqIDs[s.id] = ""
+
+    sequence_count = len(seqIDs.keys())
 
     return render_template('interpro.html', interpro=current_interpro, count=sequence_count)
 

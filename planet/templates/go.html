@@ -37,10 +37,12 @@
     {% if count > 0 %}
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 	<script>
+	$( document ).ready(function() {
 			$.getJSON( "{{ url_for('go.go_json_species', go_id=go.id) }}", function( data ) {
 				var ctx = document.getElementById("chart-area").getContext("2d");
 				window.myPie = new Chart(ctx).Doughnut(data, {animateRotate : false});
 			});
+	});
 	</script>
     {% endif %}
 {% endblock %}
