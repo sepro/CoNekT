@@ -69,3 +69,19 @@ def sequence_fasta_coding(sequence_id):
     response.headers["Content-Disposition"] = "attachment; filename=" + current_sequence.name + ".coding.fasta"
 
     return response
+
+
+@sequence.route('/fasta/protein/<sequence_id>')
+def sequence_fasta_protein(sequence_id):
+    """
+    Returns the coding sequence as a downloadable fasta file
+
+    :param sequence_id: ID of the sequence
+    """
+    current_sequence = Sequence.query.get_or_404(sequence_id)
+
+    fasta = ">" + current_sequence.name + "\n" + current_sequence.protein_sequence + "\n"
+    response = make_response(fasta)
+    response.headers["Content-Disposition"] = "attachment; filename=" + current_sequence.name + ".protein.fasta"
+
+    return response

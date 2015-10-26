@@ -18,7 +18,10 @@
 
     <br />
     {% if sequence.type == 'protein_coding' %}
-    <h3>Protein Sequence <small>(length: {{ sequence.protein_sequence|length }} aa)</small></h3>
+    <h3>Protein Sequence <small>(length: {{ sequence.protein_sequence|length }} aa)
+            <a href="{{ url_for('sequence.sequence_fasta_protein', sequence_id=sequence.id) }}" data-toggle="tooltip" data-placement="top" title="Download protein sequence">
+            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+        </a></small></h3>
     <div class="well sequence">{{ sequence.protein_sequence }}</div>
 
     <br />
