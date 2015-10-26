@@ -1,7 +1,7 @@
 from planet import db
 
 from planet.models.relationships import sequence_go, sequence_interpro, sequence_family, sequence_coexpression_cluster
-
+from utils.sequence import translate
 
 class Sequence(db.Model):
     __tablename__ = 'sequences'
@@ -35,3 +35,13 @@ class Sequence(db.Model):
         self.type = type
         self.is_chloroplast = is_chloroplast
         self.is_mitochondrial = is_mitochondrial
+
+    @property
+    def protein_sequence(self):
+        """
+        Function to translate the coding sequence to the amino acid sequence. Will start at the first start codon and
+        break after adding a stop codon (indicated by '*')
+
+        :return: The amino acid sequence based on the coding sequence
+        """
+        return translate(self.coding_sequence)
