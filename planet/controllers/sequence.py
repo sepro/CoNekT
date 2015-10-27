@@ -74,7 +74,7 @@ def sequence_fasta_coding(sequence_id):
 @sequence.route('/fasta/protein/<sequence_id>')
 def sequence_fasta_protein(sequence_id):
     """
-    Returns the coding sequence as a downloadable fasta file
+    Returns the protein sequence as a downloadable fasta file
 
     :param sequence_id: ID of the sequence
     """

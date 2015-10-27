@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, g, current_app
+from flask import Blueprint, render_template, g, current_app, make_response
 
 from planet.models.species import Species
 from planet.models.sequences import Sequence
@@ -43,3 +43,38 @@ def species_sequences(species_id, page=1):
                                                                                   False).items
 
     return render_template('pagination/sequences.html', sequences=sequences)
+
+
+@species.route('/download/coding/<species_id>')
+def species_download_coding(species_id):
+    output = []
+
+    current_species = Species.query.get(species_id)
+    sequences = current_species.sequences.all()
+
+    for s in sequences:
+        output.append(">" + s.name)
+        output.append(s.coding_sequence)
+
+    response = make_response("\n".join(output))
+    response.headers["Content-Disposition"] = "attachment; filename=" + current_species.code + ".cds.fasta"
+
+    return response
+
+
+@species.route('/download/protein/<species_id>')
+def species_download_protein(species_id):
+    output = []
+
+    current_species = Species.query.get(species_id)
+    sequences = current_species.sequences.all()
+
+    for s in sequences:
+        if s.type == "protein_coding":
+            output.append(">" + s.name)
+            output.append(s.protein_sequence)
+
+    response = make_response("\n".join(output))
+    response.headers["Content-Disposition"] = "attachment; filename=" + current_species.code + ".aa.fasta"
+
+    return response
