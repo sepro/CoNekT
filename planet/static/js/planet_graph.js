@@ -191,6 +191,18 @@ $(".dropdown-menu li a").click(function(){
   $(this).parents(".btn-group").find('.btn').val($(this).data('value'));
 });
 
+$('#cy-download-img').click(function() {
+
+  var png64 = cy.png({scale: 4, bg: "#FFFFFF"});
+
+  console.log( png64 );
+
+  var download = document.createElement('a');
+  download.href = png64;
+  download.download = 'cytoscape.png';
+  download.click();
+})
+
 function valueToColor(value)
 {
   value = value > 15 ? 15 : value;
@@ -204,21 +216,3 @@ function valueToColor(value)
 
 }); // end on dom ready
 
-$('#cy-download-img').click(function() {
-
-  var png64 = cy.png();
-  var canvas = document.getElementById("png-eg");
-
-  var ctx = canvas.getContext("2d");
-
-  var image = new Image();
-
-  image.onload = function() {
-    ctx.drawImage(image, 0, 0);
-    setTimeout(image.onload,5000);
-  };
-  image.src = png64;
-
-  var dt = canvas.toDataURL('image/png');
-  this.href = dt.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
-})

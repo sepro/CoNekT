@@ -117,14 +117,23 @@
 
             </li>
             <li><hr /></li>
-            {% if node %}
-            <li><div><a href="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}" type="button" class="btn btn-default" id="cy-download-json" download="cytoscape.json">Download JSON</a></div></li>
-            {% elif cluster %}
-            <li><div><a href="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id) }}" type="button" class="btn btn-default" id="cy-download-json" download="cytoscape.json">Download JSON</a></div></li>
-            {% endif %}
-              <!--<li><div><a href="#" type="button" class="btn btn-default" id="cy-download-img" download="Canvas.png">Download image</a></div></li>-->
+
+            <li>
+            <div class="row">
+                <div class="col-lg-6 col-md-12">
+                {% if node %}
+                <div><a href="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}" type="button" class="btn btn-default" id="cy-download-json" download="cytoscape.json">Download JSON</a></div>
+                {% elif cluster %}
+                <div><a href="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id) }}" type="button" class="btn btn-default" id="cy-download-json" download="cytoscape.json">Download JSON</a></div>
+                {% endif %}
+                </div>
+                <div class="col-lg-6 col-md-12">
+                    <div><a href="#" type="button" class="btn btn-default" id="cy-download-img">Download image</a></div>
+                </div>
+            </div>
+            </li>
+
           </ul>
-          <!--<canvas id="png-eg" width="500" height="500"></canvas>-->
         </div>
         <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
             {% if node %}
