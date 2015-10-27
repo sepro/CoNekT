@@ -27,7 +27,7 @@
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Default <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu  cy-option-menu">
                         <li><a href="#" class="cy-node-color" attr="color">Default</a></li>
                         {% if node %}
                         <li><a href="#" class="cy-node-color" attr="depth_color">Depth</a></li>
@@ -45,7 +45,7 @@
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Default <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu  cy-option-menu">
                         <li><a href="#" class="cy-node-shape" attr="shape">Default</a></li>
                         <li><a href="#" class="cy-node-shape" attr="family_shape">Family</a></li>
                     </ul>
@@ -63,7 +63,7 @@
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Default <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu  cy-option-menu">
                         <li><a href="#" class="cy-edge-color" attr="color">Default</a></li>
                         {% if node %}
                         <li><a href="#" class="cy-edge-color" attr="depth_color">Depth</a></li>
@@ -78,7 +78,7 @@
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Default <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu  cy-option-menu">
                         <li><a href="#" class="cy-edge-width" attr="default">Default</a></li>
                         {% if node %}
                         <li><a href="#" class="cy-edge-width" attr="depth">Depth</a></li>
@@ -103,7 +103,7 @@
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Concentric <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu cy-option-menu">
                         <li><a href="#" class="cy-layout" layout="breadthfirst">Breadthfirst</a></li>
                         <li><a href="#" class="cy-layout" layout="circle">Circle</a></li>
                         <li><a href="#" class="cy-layout" layout="concentric">Concentric</a></li>
@@ -121,14 +121,23 @@
             <li>
             <div class="row">
                 <div class="col-lg-6 col-md-12">
-                {% if node %}
-                <div><a href="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}" type="button" class="btn btn-default" id="cy-download-json" download="cytoscape.json">Download JSON</a></div>
-                {% elif cluster %}
-                <div><a href="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id) }}" type="button" class="btn btn-default" id="cy-download-json" download="cytoscape.json">Download JSON</a></div>
-                {% endif %}
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Download <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="nav-header"><p class="text-muted">data</p></li>
+                        {% if node %}
+                        <li><a href="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}" id="cy-download-json" download="cytoscape.json">JSON</a></li>
+                        {% elif cluster %}
+                        <li><a href="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id) }}" id="cy-download-json" download="cytoscape.json">JSON</a></li>
+                        {% endif %}
+                        <li class="divider"></li>
+                        <li class="nav-header"><p class="text-muted">image</p></li>
+                        <li><a href="#" id="cy-download-img-hires">PNG, hi-res</a></li>
+                        <li><a href="#" id="cy-download-img-lowres">PNG, low-res</a></li>
+                    </ul>
                 </div>
-                <div class="col-lg-6 col-md-12">
-                    <div><a href="#" type="button" class="btn btn-default" id="cy-download-img">Download image</a></div>
                 </div>
             </div>
             </li>

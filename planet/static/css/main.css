@@ -166,9 +166,14 @@ input[readonly] {
    margin-bottom: 40px; /* make room for the footer */
 }
 
-.sidebar .dropdown-menu {
+.sidebar .cy-option-menu {
   min-width: 120px;
   width: 120px;
+}
+
+.dropdown-menu>li>p {
+   padding: 3px 20px;
+   margin: 0px;
 }
 
 /* Sticky footer styles

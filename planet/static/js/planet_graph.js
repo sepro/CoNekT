@@ -186,20 +186,28 @@ $('.cy-layout').click(function() {
     cy.layout({ name: layout });
 })
 
-$(".dropdown-menu li a").click(function(){
+$(".cy-option-menu li a").click(function(){
   $(this).parents(".btn-group").find('.btn').html($(this).text() + ' <span class="caret"></span>');
   $(this).parents(".btn-group").find('.btn').val($(this).data('value'));
 });
 
-$('#cy-download-img').click(function() {
+$('#cy-download-img-hires').click(function() {
 
   var png64 = cy.png({scale: 4, bg: "#FFFFFF"});
 
-  console.log( png64 );
+  var download = document.createElement('a');
+  download.href = png64;
+  download.download = 'cytoscape-hires.png';
+  download.click();
+})
+
+$('#cy-download-img-lowres').click(function() {
+
+  var png64 = cy.png({scale: 1, bg: "#FFFFFF"});
 
   var download = document.createElement('a');
   download.href = png64;
-  download.download = 'cytoscape.png';
+  download.download = 'cytoscape-lowres.png';
   download.click();
 })
 
