@@ -5,10 +5,10 @@
 <div class="top-pad">
 
     {% if species %}
-    <h1>Species: <strong>{{ species.name }}</strong> <small>({{ species.code }})</small></h1>
+        <h1>Species: <strong>{{ species.name }}</strong> <small>({{ species.code }})</small></h1>
 
-    Transcripts: {{ species.sequence_count }}
-    <br />
+        Transcripts: {{ species.sequence_count }}
+        <br />
 
         {% if species.ncbi_tax_id %}
             NCBI taxonomy: <a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ species.ncbi_tax_id }}">{{ species.ncbi_tax_id }}</a><br />
@@ -20,41 +20,60 @@
             Website : <a href="{{ species.project_page }}">{{ species.project_page }}</a><br />
         {% endif %}
 
+        <div class="row">
+            <div class="col-lg-12">
+                <br />
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download  <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{url_for('species.species_download_coding', species_id=species.id)}}">Coding Sequences</a></li>
+                        <li><a href="{{url_for('species.species_download_protein', species_id=species.id)}}">Protein Sequences</a></li>
+                    </ul>
+                </div>
+                <br /><br />
+            </div>
+        </div>
+
         {{ macro.sequence_pagination(url_for('species.species_sequences', species_id=species.id), species.sequence_count) }}
 
     {% elif all_species %}
-    <h1>Species Overview</h1>
-     <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th>Transcripts</th>
-                    <th>Profiles</th>
-                    <th>Networks</th>
-                    <th>Download</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for s in all_species  %}
-                <tr>
-                    <td>{{ s.id }}</td>
-                    <td>{{ s.code }}</td>
-                    <td><em><a href="{{ url_for('species.species_view', species_id=s.id) }}">{{ s.name }}</a></em></td>
-                    <td>{{ s.sequence_count }}</td>
-                    <td>{{ s.profile_count }}</td>
-                    <td><a href="{{url_for('expression_network.expression_network_species', species_id=s.id)}}">{{ s.network_count }}</a></td>
-                    <td>
-                        <a href="{{url_for('species.species_download_coding', species_id=s.id)}}">cds</a>
-                        <a href="{{url_for('species.species_download_protein', species_id=s.id)}}">aa</a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        </div>
+         <h1>Species Overview</h1>
+         <div class="table-responsive">
+            <table class="table" style="margin-bottom:100px;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Transcripts</th>
+                        <th>Profiles</th>
+                        <th>Networks</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for s in all_species  %}
+                    <tr>
+                        <td>{{ s.id }}</td>
+                        <td>{{ s.code }}</td>
+                        <td><em><a href="{{ url_for('species.species_view', species_id=s.id) }}">{{ s.name }}</a></em></td>
+                        <td>{{ s.sequence_count }}</td>
+                        <td>{{ s.profile_count }}</td>
+                        <td><a href="{{url_for('expression_network.expression_network_species', species_id=s.id)}}">{{ s.network_count }}</a></td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download  <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{url_for('species.species_download_coding', species_id=s.id)}}">Coding Sequences</a></li>
+                                    <li><a href="{{url_for('species.species_download_protein', species_id=s.id)}}">Protein Sequences</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+         </div>
     {% endif %}
 </div>
 
