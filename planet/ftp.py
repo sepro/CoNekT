@@ -6,7 +6,7 @@ import gzip
 import csv
 
 from planet.models.species import Species
-from planet.models.relationships import SequenceGOAssociation
+from planet.models.relationships import SequenceGOAssociation, SequenceInterproAssociation
 from planet.models.sequences import Sequence
 from planet.models.go import GO
 
@@ -16,6 +16,8 @@ from config import PLANET_FTP_DATA
 
 SEQUENCE_PATH = os.path.join(PLANET_FTP_DATA, 'sequences')
 ANNOTATION_PATH = os.path.join(PLANET_FTP_DATA, 'annotation')
+FAMILIES_PATH = os.path.join(PLANET_FTP_DATA, 'families')
+EXPRESSION_PATH = os.path.join(PLANET_FTP_DATA, 'expression')
 
 
 def export_coding_sequences():
@@ -69,7 +71,7 @@ def export_go_annotation():
         sequences = s.sequences.all()
 
         with gzip.open(filename, 'wt') as f:
-            csv_out = csv.writer(f)
+            csv_out = csv.writer(f, lineterminator='\n')
             for count, sequence in enumerate(sequences):
                 # print(count, sequence.name)
                 go_associations = sequence.go_associations.filter(SequenceGOAssociation.source is not None).all()
@@ -80,6 +82,31 @@ def export_go_annotation():
                                       go_association.go.name,
                                       go_association.go.type,
                                       go_association.source])
+
+@benchmark
+def export_interpro_annotation():
+    if not os.path.exists(ANNOTATION_PATH):
+        os.makedirs(ANNOTATION_PATH)
+
+    species = Species.query.all()
+
+    for s in species:
+        filename = s.code + ".interpro.csv.gz"
+        filename = os.path.join(ANNOTATION_PATH, filename)
+
+        sequences = s.sequences.all()
+
+        with gzip.open(filename, 'wt') as f:
+            csv_out = csv.writer(f, lineterminator='\n')
+            for count, sequence in enumerate(sequences):
+                interpo_associations = sequence.interpro_associations.all()
+                for interpro_association in interpo_associations:
+                     csv_out.writerow([sequence.name,
+                                      sequence.species.code,
+                                      interpro_association.domain.label,
+                                      interpro_association.domain.description,
+                                      interpro_association.start,
+                                      interpro_association.stop])
 
 
 def export_sequences():
