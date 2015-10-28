@@ -19,3 +19,5 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db', 'planet.db'
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'migration')
 
 
+# Settings for the FTP/bulk data
+PLANET_FTP_DATA = os.path.join(basedir, 'ftp')
