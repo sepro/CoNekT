@@ -3,11 +3,19 @@ Set of functions to export the database to the ftp directory
 """
 import os
 import gzip
+import csv
 
 from planet.models.species import Species
+from planet.models.relationships import SequenceGOAssociation
+from planet.models.sequences import Sequence
+from planet.models.go import GO
+
+from utils.benchmark import benchmark
+
 from config import PLANET_FTP_DATA
 
 SEQUENCE_PATH = os.path.join(PLANET_FTP_DATA, 'sequences')
+ANNOTATION_PATH = os.path.join(PLANET_FTP_DATA, 'annotation')
 
 
 def export_coding_sequences():
@@ -45,6 +53,33 @@ def export_protein_sequences():
             for sequence in s.sequences:
                 if sequence.type == "protein_coding":
                     f.write(bytes(">" + sequence.name + '\n' + sequence.protein_sequence + '\n', 'UTF-8'))
+
+
+@benchmark
+def export_go_annotation():
+    if not os.path.exists(ANNOTATION_PATH):
+        os.makedirs(ANNOTATION_PATH)
+
+    species = Species.query.all()
+
+    for s in species:
+        filename = s.code + ".go.csv.gz"
+        filename = os.path.join(ANNOTATION_PATH, filename)
+
+        sequences = s.sequences.all()
+
+        with gzip.open(filename, 'wt') as f:
+            csv_out = csv.writer(f)
+            for count, sequence in enumerate(sequences):
+                # print(count, sequence.name)
+                go_associations = sequence.go_associations.filter(SequenceGOAssociation.source is not None).all()
+                for go_association in go_associations:
+                     csv_out.writerow([sequence.name,
+                                      sequence.species.code,
+                                      go_association.go.label,
+                                      go_association.go.name,
+                                      go_association.go.type,
+                                      go_association.source])
 
 
 def export_sequences():
