@@ -7,13 +7,8 @@ import csv
 
 from planet.models.species import Species
 from planet.models.relationships import SequenceGOAssociation, SequenceFamilyAssociation
-from planet.models.sequences import Sequence
-from planet.models.go import GO
-from planet.models.gene_families import GeneFamilyMethod, GeneFamily
-
-from planet import db
-
-from utils.benchmark import benchmark
+from planet.models.coexpression_clusters import CoexpressionCluster,CoexpressionClusteringMethod
+from planet.models.gene_families import GeneFamilyMethod
 
 from config import PLANET_FTP_DATA
 
@@ -60,7 +55,6 @@ def export_protein_sequences():
                     f.write(bytes(">" + sequence.name + '\n' + sequence.protein_sequence + '\n', 'UTF-8'))
 
 
-@benchmark
 def export_go_annotation():
     if not os.path.exists(ANNOTATION_PATH):
         os.makedirs(ANNOTATION_PATH)
@@ -87,7 +81,6 @@ def export_go_annotation():
                                       go_association.source])
 
 
-@benchmark
 def export_interpro_annotation():
     if not os.path.exists(ANNOTATION_PATH):
         os.makedirs(ANNOTATION_PATH)
@@ -143,6 +136,19 @@ def export_families():
         with open(familyfile, "w") as f:
             for family, members in sorted(families.items()):
                 print(method, family, ";".join(members), file=f, sep='\t')
+
+
+def export_coexpression_clusters():
+    if not os.path.exists(EXPRESSION_PATH):
+        os.makedirs(EXPRESSION_PATH)
+
+    methods = CoexpressionClusteringMethod.query.all()
+
+    methodsfile = os.path.join(EXPRESSION_PATH, 'clustering_methods_overview.txt')
+
+    with open(methodsfile, "w") as f:
+        for m in methods:
+            print(m.id, m.network_method.species.code, m.method, m.cluster_count, file=f, sep='\t')
 
 
 def export_sequences():
