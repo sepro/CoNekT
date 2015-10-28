@@ -6,9 +6,12 @@ import gzip
 import csv
 
 from planet.models.species import Species
-from planet.models.relationships import SequenceGOAssociation, SequenceInterproAssociation
+from planet.models.relationships import SequenceGOAssociation, SequenceFamilyAssociation
 from planet.models.sequences import Sequence
 from planet.models.go import GO
+from planet.models.gene_families import GeneFamilyMethod, GeneFamily
+
+from planet import db
 
 from utils.benchmark import benchmark
 
@@ -83,6 +86,7 @@ def export_go_annotation():
                                       go_association.go.type,
                                       go_association.source])
 
+
 @benchmark
 def export_interpro_annotation():
     if not os.path.exists(ANNOTATION_PATH):
@@ -107,6 +111,38 @@ def export_interpro_annotation():
                                       interpro_association.domain.description,
                                       interpro_association.start,
                                       interpro_association.stop])
+
+
+def export_families():
+    if not os.path.exists(FAMILIES_PATH):
+        os.makedirs(FAMILIES_PATH)
+
+    methods = GeneFamilyMethod.query.all()
+
+    methodsfile = os.path.join(FAMILIES_PATH, 'methods_overview.txt')
+
+    with open(methodsfile, "w") as f:
+        for m in methods:
+            print(m.id, m.method, m.family_count, file=f, sep='\t')
+
+    associations = SequenceFamilyAssociation.query.all()
+
+    output = {}
+
+    for a in associations:
+        if a.family.method_id not in output.keys():
+            output[a.family.method_id] = {}
+
+        if a.family.name not in output[a.family.method_id].keys():
+            output[a.family.method_id][a.family.name] = []
+
+        output[a.family.method_id][a.family.name].append(a.sequence.name)
+
+    for method, families in sorted(output.items()):
+        familyfile = os.path.join(FAMILIES_PATH, 'families_method_'+str(method)+'.tab')
+        with open(familyfile, "w") as f:
+            for family, members in sorted(families.items()):
+                print(method, family, ";".join(members), file=f, sep='\t')
 
 
 def export_sequences():

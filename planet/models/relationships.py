@@ -45,8 +45,8 @@ class SequenceFamilyAssociation(db.Model):
     sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
     gene_family_id = db.Column(db.Integer, db.ForeignKey('gene_families.id'))
 
-    sequence = db.relationship('Sequence', lazy='select')
-    family = db.relationship('GeneFamily', lazy='select')
+    sequence = db.relationship('Sequence', lazy='joined')
+    family = db.relationship('GeneFamily', lazy='joined')
 
 
 class SequenceInterproAssociation(db.Model):
