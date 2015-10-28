@@ -47,6 +47,12 @@ def species_sequences(species_id, page=1):
 
 @species.route('/download/coding/<species_id>')
 def species_download_coding(species_id):
+    """
+    Generates a fasta file with all coding sequences for a given species
+
+    :param species_id: Internal ID of the species
+    :return: Response with the fasta file
+    """
     output = []
 
     current_species = Species.query.get(species_id)
@@ -64,6 +70,12 @@ def species_download_coding(species_id):
 
 @species.route('/download/protein/<species_id>')
 def species_download_protein(species_id):
+    """
+    Generates a fasta file with all amino acid sequences for a given species
+
+    :param species_id: Internal ID of the species
+    :return: Response with the fasta file
+    """
     output = []
 
     current_species = Species.query.get(species_id)
@@ -82,6 +94,13 @@ def species_download_protein(species_id):
 
 @species.route('/stream/coding/<species_id>')
 def species_stream_coding(species_id):
+    """
+    Generates a fasta file with all coding sequences for a given species. However this is send as a streaming
+    response (and seems to bring up the download dialog a few seconds faster)
+
+    :param species_id: Internal ID of the species
+    :return: Streamed response with the fasta file
+    """
     def generate(selected_species):
         current_species = Species.query.get(selected_species)
 
@@ -93,6 +112,13 @@ def species_stream_coding(species_id):
 
 @species.route('/stream/protein/<species_id>')
 def species_stream_protein(species_id):
+    """
+    Generates a fasta file with all amino acid sequences for a given species. However this is send as a streaming
+    response (and seems to bring up the download dialog a few seconds faster)
+
+    :param species_id: Internal ID of the species
+    :return: Streamed response with the fasta file
+    """
     def generate(selected_species):
         current_species = Species.query.get(selected_species)
 
