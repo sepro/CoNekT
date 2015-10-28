@@ -26,8 +26,8 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download  <span class="caret"></span></button>
                     <ul class="dropdown-menu">
-                        <li><a href="{{url_for('species.species_download_coding', species_id=species.id)}}">Coding Sequences</a></li>
-                        <li><a href="{{url_for('species.species_download_protein', species_id=species.id)}}">Protein Sequences</a></li>
+                        <li><a href="{{url_for('species.species_stream_coding', species_id=species.id)}}"  download="{{s.code}}.cds.fasta">Coding Sequences</a></li>
+                        <li><a href="{{url_for('species.species_stream_protein', species_id=species.id)}}"  download="{{s.code}}.aa.fasta">Protein Sequences</a></li>
                     </ul>
                 </div>
                 <br /><br />
@@ -64,8 +64,8 @@
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download  <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{{url_for('species.species_download_coding', species_id=s.id)}}">Coding Sequences</a></li>
-                                    <li><a href="{{url_for('species.species_download_protein', species_id=s.id)}}">Protein Sequences</a></li>
+                                    <li><a href="{{url_for('species.species_stream_coding', species_id=s.id)}}" download="{{s.code}}.cds.fasta">Coding Sequences</a></li>
+                                    <li><a href="{{url_for('species.species_stream_protein', species_id=s.id)}}" download="{{s.code}}.aa.fasta">Protein Sequences</a></li>
                                 </ul>
                             </div>
                         </td>
