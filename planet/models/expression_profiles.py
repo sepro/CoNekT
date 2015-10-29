@@ -4,7 +4,7 @@ import json
 from statistics import mean
 from math import log
 
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, undefer
 
 class ExpressionProfile(db.Model):
     __tablename__ = 'expression_profiles'
@@ -12,7 +12,7 @@ class ExpressionProfile(db.Model):
     species_id = db.Column(db.Integer, db.ForeignKey('species.id'), index=True)
     probe = db.Column(db.String(50), index=True)
     sequence_id = db.Column(db.String(50), db.ForeignKey('sequences.id'), index=True)
-    profile = db.Column(db.Text)
+    profile = db.deferred(db.Column(db.Text))
 
     def __init__(self, probe, sequence_id, profile):
         self.probe = probe
@@ -28,7 +28,7 @@ class ExpressionProfile(db.Model):
         :param species_id: species id (internal database id)
         :param probes: a list of probes to include in the heatmap
         """
-        profiles = ExpressionProfile.query.filter_by(species_id=species_id).\
+        profiles = ExpressionProfile.query.options(undefer('profile')).filter_by(species_id=species_id).\
             filter(ExpressionProfile.probe.in_(probes)).all()
 
         order = []
@@ -61,6 +61,7 @@ class ExpressionProfile(db.Model):
     @staticmethod
     def get_profiles(species_id, probes):
         profiles = ExpressionProfile.query.\
+            options(undefer('profile')).\
             filter(ExpressionProfile.probe.in_(probes)).\
             filter_by(species_id=species_id).\
             options(joinedload('sequence').load_only('name')).\

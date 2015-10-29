@@ -5,6 +5,7 @@ from planet.models.expression_profiles import ExpressionProfile
 
 import json
 from statistics import mean
+from sqlalchemy.orm import undefer
 
 
 expression_profile = Blueprint('expression_profile', __name__)
@@ -93,7 +94,7 @@ def expression_profile_radar_json(profile_id):
 
     :param profile_id: ID of the profile to render
     """
-    current_profile = ExpressionProfile.query.get_or_404(profile_id)
+    current_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(profile_id)
     data = json.loads(current_profile.profile)
 
     processed_data = {}
@@ -121,7 +122,7 @@ def expression_profile_plot_json(profile_id):
 
     :param profile_id: ID of the profile to render
     """
-    current_profile = ExpressionProfile.query.get_or_404(profile_id)
+    current_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(profile_id)
     data = json.loads(current_profile.profile)
 
     processed_means = {}
@@ -172,8 +173,8 @@ def expression_profile_compare_plot_json(first_profile_id, second_profile_id):
 
     :param profile_id: ID of the profile to render
     """
-    first_profile = ExpressionProfile.query.get_or_404(first_profile_id)
-    second_profile = ExpressionProfile.query.get_or_404(second_profile_id)
+    first_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(first_profile_id)
+    second_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(second_profile_id)
     data_first = json.loads(first_profile.profile)
     data_second = json.loads(second_profile.profile)
 
