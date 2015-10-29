@@ -18,7 +18,8 @@ class Sequence(db.Model):
     network_nodes = db.relationship('ExpressionNetwork', backref='sequence', lazy='dynamic')
     interpro_associations = db.relationship('SequenceInterproAssociation', backref='sequence', lazy='dynamic')
     go_associations = db.relationship('SequenceGOAssociation', backref='sequence', lazy='dynamic')
-    coexpression_cluster_associations = db.relationship('SequenceCoexpressionClusterAssociation', backref='sequence',
+    coexpression_cluster_associations = db.relationship('SequenceCoexpressionClusterAssociation',
+                                                        backref=db.backref('sequence', lazy='joined'),
                                                         lazy='dynamic')
 
     go_labels = db.relationship('GO', secondary=sequence_go, lazy='dynamic')

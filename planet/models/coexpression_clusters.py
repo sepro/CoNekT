@@ -41,7 +41,8 @@ class CoexpressionCluster(db.Model):
     name = db.Column(db.String(50), index=True)
 
     sequences = db.relationship('Sequence', secondary=sequence_coexpression_cluster, lazy='dynamic')
-    sequence_associations = db.relationship('SequenceCoexpressionClusterAssociation', backref='coexpression_cluster',
+    sequence_associations = db.relationship('SequenceCoexpressionClusterAssociation',
+                                            backref=db.backref('coexpression_cluster', lazy='joined'),
                                             lazy='dynamic')
 
     @staticmethod

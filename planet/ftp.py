@@ -6,7 +6,7 @@ import gzip
 import csv
 
 from planet.models.species import Species
-from planet.models.relationships import SequenceGOAssociation, SequenceFamilyAssociation
+from planet.models.relationships import SequenceGOAssociation, SequenceFamilyAssociation, SequenceCoexpressionClusterAssociation
 from planet.models.coexpression_clusters import CoexpressionCluster,CoexpressionClusteringMethod
 from planet.models.gene_families import GeneFamilyMethod
 
@@ -149,6 +149,30 @@ def export_coexpression_clusters():
     with open(methodsfile, "w") as f:
         for m in methods:
             print(m.id, m.network_method.species.code, m.method, m.cluster_count, file=f, sep='\t')
+
+    associations = SequenceCoexpressionClusterAssociation.query.all()
+
+    output = {}
+
+    for a in associations:
+        if a.coexpression_cluster.method_id not in output.keys():
+            output[a.coexpression_cluster.method_id] = {}
+
+        if a.coexpression_cluster.name not in output[a.coexpression_cluster.method_id].keys():
+            output[a.coexpression_cluster.method_id][a.coexpression_cluster.name] = []
+
+        if a.sequence is not None:
+            output[a.coexpression_cluster.method_id][a.coexpression_cluster.name].\
+                append(a.sequence.name + "(" + a.probe + ")")
+        else:
+            output[a.coexpression_cluster.method_id][a.coexpression_cluster.name].\
+                append("None(" + a.probe + ")")
+
+    for method, clusters in sorted(output.items()):
+        clusterfile = os.path.join(EXPRESSION_PATH, 'clustering_method_'+str(method)+'.tab')
+        with open(clusterfile, "w") as f:
+            for cluster, members in sorted(clusters.items()):
+                print(method, cluster, ";".join(members), file=f, sep='\t')
 
 
 def export_sequences():
