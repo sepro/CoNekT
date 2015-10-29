@@ -4,6 +4,8 @@ import json
 from statistics import mean
 from math import log
 
+from sqlalchemy.orm import joinedload
+
 class ExpressionProfile(db.Model):
     __tablename__ = 'expression_profiles'
     id = db.Column(db.Integer, primary_key=True)
@@ -55,3 +57,13 @@ class ExpressionProfile(db.Model):
             output.append({"name": name, "values": values})
 
         return {'order': order, 'heatmap_data': output}
+
+    @staticmethod
+    def get_profiles(species_id, probes):
+        profiles = ExpressionProfile.query.\
+            filter(ExpressionProfile.probe.in_(probes)).\
+            filter_by(species_id=species_id).\
+            options(joinedload('sequence').load_only('name')).\
+            all()
+
+        return profiles

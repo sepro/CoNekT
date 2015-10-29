@@ -210,7 +210,7 @@ def export_expression_networks():
         with gzip.open(networkfile, "wb") as f:
             # Get all probes for the network (using a joined load to avoid hammering the database)
             probes = ExpressionNetwork.query.filter(ExpressionNetwork.method_id == n.id).\
-                options(joinedload('sequence')).all()
+                options(joinedload('sequence').load_only('name')).all()
             for probe in probes:
                 if probe.sequence_id is not None:
                     out = '\t'.join([n.species.code, probe.probe, probe.sequence.name, probe.network]) + '\n'

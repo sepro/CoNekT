@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<div class="top-pad">
+
+    <h1>Profile comparison</h1>
+    {% if profiles %}
+    <div id="canvas-holder" class="center-block">
+        <canvas id="chart-line" class="center-block" width="800" height="600"/>
+    </div>
+    {% else %}
+
+
+    {% endif %}
+
+
+</div>
+{% endblock %}
+
+{% block extrajs %}
+    <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+	<script>
+	$(function () {
+        var data = {{ profiles|safe }};
+        var ctx = document.getElementById("chart-line").getContext("2d");
+        window.myPie = new Chart(ctx).Line(data, { animation: false, pointDot : false,
+        multiTooltipTemplate: "<%if (datasetLabel){{ '{%' }}><%=datasetLabel%>: <{{ '%}' }}%><%= value.toFixed(2) %>"});
+    });
+	</script>
+{% endblock %}

@@ -65,6 +65,7 @@ from planet.controllers.expression_network import expression_network
 from planet.controllers.search import search
 from planet.controllers.help import help
 from planet.controllers.heatmap import heatmap
+from planet.controllers.profile_comparison import profile_comparison
 
 app.register_blueprint(main)
 app.register_blueprint(auth, url_prefix='/auth')
@@ -79,6 +80,7 @@ app.register_blueprint(expression_network, url_prefix='/network')
 app.register_blueprint(search, url_prefix='/search')
 app.register_blueprint(help, url_prefix='/help')
 app.register_blueprint(heatmap, url_prefix='/heatmap')
+app.register_blueprint(profile_comparison, url_prefix='/profile_comparison')
 
 # Admin panel
 from planet.admin.views import MyAdminIndexView
