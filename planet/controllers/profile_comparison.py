@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template
+from flask import Blueprint, request, render_template,flash
 
 from planet.models.expression_profiles import ExpressionProfile
 from planet.models.relationships import SequenceCoexpressionClusterAssociation
@@ -26,7 +26,12 @@ def profile_comparison_cluster(cluster_id):
         data = json.loads(profiles[0].profile)
         labels = data['order']
 
-    for p in profiles:
+    if len(profiles) > 50:
+        flash("To many profiles in this cluster only showing the first 50", 'warning')
+
+    for count,p in enumerate(profiles):
+        if count > 50:
+            break
         data = json.loads(p.profile)
         datasets.append({
             'label': p.probe if p.sequence_id is None else p.sequence.name + " (" + p.probe + ")",
