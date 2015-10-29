@@ -6,9 +6,13 @@ import gzip
 import csv
 
 from planet.models.species import Species
-from planet.models.relationships import SequenceGOAssociation, SequenceFamilyAssociation, SequenceCoexpressionClusterAssociation
-from planet.models.coexpression_clusters import CoexpressionCluster,CoexpressionClusteringMethod
+from planet.models.relationships import SequenceGOAssociation, SequenceFamilyAssociation
+from planet.models.relationships import SequenceCoexpressionClusterAssociation
+from planet.models.coexpression_clusters import CoexpressionClusteringMethod
+from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
 from planet.models.gene_families import GeneFamilyMethod
+
+from sqlalchemy.orm import joinedload
 
 from config import PLANET_FTP_DATA
 
@@ -56,6 +60,9 @@ def export_protein_sequences():
 
 
 def export_go_annotation():
+    """
+    Export GO annotation for each sequence
+    """
     if not os.path.exists(ANNOTATION_PATH):
         os.makedirs(ANNOTATION_PATH)
 
@@ -82,6 +89,9 @@ def export_go_annotation():
 
 
 def export_interpro_annotation():
+    """
+    Export interpro annotation for each sequence
+    """
     if not os.path.exists(ANNOTATION_PATH):
         os.makedirs(ANNOTATION_PATH)
 
@@ -107,6 +117,9 @@ def export_interpro_annotation():
 
 
 def export_families():
+    """
+    Export gene families and an overview of the methods to generate them
+    """
     if not os.path.exists(FAMILIES_PATH):
         os.makedirs(FAMILIES_PATH)
 
@@ -139,6 +152,9 @@ def export_families():
 
 
 def export_coexpression_clusters():
+    """
+    Export coexpression clusters and an overview of the methods to generate them
+    """
     if not os.path.exists(EXPRESSION_PATH):
         os.makedirs(EXPRESSION_PATH)
 
@@ -175,9 +191,45 @@ def export_coexpression_clusters():
                 print(method, cluster, ";".join(members), file=f, sep='\t')
 
 
-def export_sequences():
+def export_expression_networks():
     """
-    Export all sequences (transcript and coding) to fasta files
+    Export expression networks and an overview of the methods to generate them
+    """
+    if not os.path.exists(EXPRESSION_PATH):
+        os.makedirs(EXPRESSION_PATH)
+
+    networks = ExpressionNetworkMethod.query.all()
+
+    methodsfile = os.path.join(EXPRESSION_PATH, 'network_methods_overview.txt')
+    with open(methodsfile, "w") as f:
+        for n in networks:
+            print(n.id, n.species.code, n.description, n.probe_count, file=f, sep='\t')
+
+    for n in networks:
+        networkfile = os.path.join(EXPRESSION_PATH, 'network_method_'+str(n.id)+'.tab.gz')
+        with gzip.open(networkfile, "wb") as f:
+            # Get all probes for the network (using a joined load to avoid hammering the database)
+            probes = ExpressionNetwork.query.filter(ExpressionNetwork.method_id == n.id).\
+                options(joinedload('sequence')).all()
+            for probe in probes:
+                if probe.sequence_id is not None:
+                    out = '\t'.join([n.species.code, probe.probe, probe.sequence.name, probe.network]) + '\n'
+                    f.write(bytes(out, 'UTF-8'))
+                else:
+                    out = '\t'.join([n.species.code, probe.probe, "None", probe.network]) + '\n'
+                    f.write(bytes(out, 'UTF-8'))
+
+
+def export_ftp_data():
+    """
+    Export all data
     """
     export_coding_sequences()
     export_protein_sequences()
+
+    export_go_annotation()
+    export_interpro_annotation()
+
+    export_families()
+    export_coexpression_clusters()
+    export_expression_networks()
