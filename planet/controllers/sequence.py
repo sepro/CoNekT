@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, url_for, render_template, make_response
 
 from planet.models.sequences import Sequence
-
+from sqlalchemy.orm import undefer
 
 sequence = Blueprint('sequence', __name__)
 
@@ -42,7 +42,7 @@ def sequence_view(sequence_id):
 
     :param sequence_id: ID of the sequence
     """
-    current_sequence = Sequence.query.get_or_404(sequence_id)
+    current_sequence = Sequence.query.options(undefer('coding_sequence')).get_or_404(sequence_id)
 
     return render_template('sequence.html',
                            sequence=current_sequence,
@@ -62,7 +62,7 @@ def sequence_fasta_coding(sequence_id):
 
     :param sequence_id: ID of the sequence
     """
-    current_sequence = Sequence.query.get_or_404(sequence_id)
+    current_sequence = Sequence.query.options(undefer('coding_sequence')).get_or_404(sequence_id)
 
     fasta = ">" + current_sequence.name + "\n" + current_sequence.coding_sequence + "\n"
     response = make_response(fasta)
@@ -78,7 +78,7 @@ def sequence_fasta_protein(sequence_id):
 
     :param sequence_id: ID of the sequence
     """
-    current_sequence = Sequence.query.get_or_404(sequence_id)
+    current_sequence = Sequence.query.options(undefer('coding_sequence')).get_or_404(sequence_id)
 
     fasta = ">" + current_sequence.name + "\n" + current_sequence.protein_sequence + "\n"
     response = make_response(fasta)

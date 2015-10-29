@@ -5,6 +5,8 @@ from planet.models.sequences import Sequence
 import json
 from utils.benchmark import benchmark
 
+from sqlalchemy.orm import joinedload, defer
+
 go = Blueprint('go', __name__)
 
 
@@ -64,9 +66,10 @@ def go_sequences(go_id, page=1):
     :param go_id: Internal ID of the GO term
     :param page: Page number
     """
-    sequences = GO.query.get(go_id).sequences.group_by(Sequence.id).order_by(Sequence.name).paginate(page,
-                                                                                                     g.page_items,
-                                                                                                     False).items
+    sequences = GO.query.get(go_id).sequences.options(defer('coding_sequence')).\
+        group_by(Sequence.id).order_by(Sequence.name).paginate(page,
+                                                               g.page_items,
+                                                               False).items
 
     return render_template('pagination/sequences.html', sequences=sequences)
 
@@ -81,7 +84,7 @@ def go_json_species(go_id):
     :param go_id: ID of the go term to render
     """
     current_go = GO.query.get_or_404(go_id)
-    sequences = current_go.sequences.all()
+    sequences = current_go.sequences.options(defer('coding_sequence')).options(joinedload('species')).all()
 
     counts = {}
 

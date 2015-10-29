@@ -65,7 +65,10 @@ def expression_cluster_download(cluster_id):
     output = ["probe\tsequence"]
 
     for sequence_association in sequence_associations:
-        output.append(sequence_association.probe + "\t" + sequence_association.sequence.name)
+        if sequence_association.sequence is not None:
+            output.append(sequence_association.probe + "\t" + sequence_association.sequence.name)
+        else:
+            output.append(sequence_association.probe + "\tNone")
 
     return Response("\n".join(output), mimetype='text/plain')
 

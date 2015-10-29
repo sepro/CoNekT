@@ -4,6 +4,8 @@ from planet import db
 from planet.models.expression_networks import ExpressionNetwork
 from planet.models.relationships import sequence_coexpression_cluster
 
+from sqlalchemy.orm import joinedload
+
 import json
 
 
@@ -56,7 +58,9 @@ class CoexpressionCluster(db.Model):
 
         probes = [member.probe for member in cluster.sequence_associations.all()]
 
-        network = cluster.method.network_method.probes.filter(ExpressionNetwork.probe.in_(probes)).all()
+        network = cluster.method.network_method.probes.\
+            options(joinedload('sequence').load_only('name')).\
+            filter(ExpressionNetwork.probe.in_(probes)).all()
 
         nodes = []
         edges = []

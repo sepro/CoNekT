@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, g, make_response, Response
 from planet.models.species import Species
 from planet.models.sequences import Sequence
 
+from sqlalchemy.orm import undefer
 from utils.benchmark import benchmark
 
 species = Blueprint('species', __name__)
@@ -57,7 +58,7 @@ def species_download_coding(species_id):
     output = []
 
     current_species = Species.query.get(species_id)
-    sequences = current_species.sequences.all()
+    sequences = current_species.sequences.options(undefer('coding_sequence')).all()
 
     for s in sequences:
         output.append(">" + s.name)
@@ -80,7 +81,7 @@ def species_download_protein(species_id):
     output = []
 
     current_species = Species.query.get(species_id)
-    sequences = current_species.sequences.all()
+    sequences = current_species.sequences.options(undefer('coding_sequence')).all()
 
     for s in sequences:
         if s.type == "protein_coding":
@@ -103,7 +104,7 @@ def species_stream_coding(species_id):
     :return: Streamed response with the fasta file
     """
     def generate(selected_species):
-        sequences = Sequence.query.filter_by(species_id=selected_species).all()
+        sequences = Sequence.query.options(undefer('coding_sequence')).filter_by(species_id=selected_species).all()
 
         for s in sequences:
             yield ">" + s.name + '\n' + s.coding_sequence + '\n'
@@ -121,7 +122,7 @@ def species_stream_protein(species_id):
     :return: Streamed response with the fasta file
     """
     def generate(selected_species):
-        sequences = Sequence.query.filter_by(species_id=selected_species).all()
+        sequences = Sequence.query.options(undefer('coding_sequence')).filter_by(species_id=selected_species).all()
 
         for s in sequences:
             if s.type == "protein_coding":
