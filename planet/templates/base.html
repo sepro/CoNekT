@@ -97,9 +97,40 @@
               </div>
           </div>
         </footer>
+        <div class="modal" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel">
+            <div class="modal-dialog" role="document" style="width:1000px;height:800px;">
+            <div class="modal-content">
+
+            </div>
+
+        </div>
+</div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<!-- code to reload model on each click -->
+<script>
+    $(function () {
+      $('a[data-target=#helpModal]').click(function(ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+
+        // load the url and show modal on success
+        $("#helpModal .modal-content").load(target, function() {
+             $("#helpModal").modal("show");
+        });
+      });
+      $('abbr[data-target=#helpModal]').click(function(ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+
+        // load the url and show modal on success
+        $("#helpModal .modal-content").load(target, function() {
+             $("#helpModal").modal("show");
+        });
+      });
+    });
+</script>
 {% block extrajs %}{% endblock %}
 </body>
 </html>

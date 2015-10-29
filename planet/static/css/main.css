@@ -226,3 +226,7 @@ body {
   transform: rotate(-90deg);
   white-space:nowrap;
 }
+
+.fa-small {
+  font-size:0.5em;
+}

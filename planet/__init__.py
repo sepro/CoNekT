@@ -63,6 +63,7 @@ from planet.controllers.expression_cluster import expression_cluster
 from planet.controllers.expression_profile import expression_profile
 from planet.controllers.expression_network import expression_network
 from planet.controllers.search import search
+from planet.controllers.help import help
 from planet.controllers.heatmap import heatmap
 
 app.register_blueprint(main)
@@ -76,6 +77,7 @@ app.register_blueprint(expression_cluster, url_prefix='/cluster')
 app.register_blueprint(expression_profile, url_prefix='/profile')
 app.register_blueprint(expression_network, url_prefix='/network')
 app.register_blueprint(search, url_prefix='/search')
+app.register_blueprint(help, url_prefix='/help')
 app.register_blueprint(heatmap, url_prefix='/heatmap')
 
 # Admin panel

@@ -30,7 +30,7 @@
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
-                <div class="panel-heading">GO annotation <span class="text-muted">(<a href="#" id="go_toggle">Toggle parental</a>)</span></div>
+                <div class="panel-heading"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr> annotation <span class="text-muted">(<a href="#" id="go_toggle">Toggle parental</a>)</span></div>
                 {% if go_associations|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
@@ -69,7 +69,7 @@
 
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
-                <div class="panel-heading">InterPro domains</div>
+                <div class="panel-heading"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='interpro_domain') }}" data-target="#helpModal">InterPro domains</abbr></a></sup></div>
                 {% if interpro_associations|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
@@ -115,7 +115,7 @@
 
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Gene Families</div>
+                <div class="panel-heading"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='gene_family') }}" data-target="#helpModal">Gene Families</abbr></div>
                 {% if families|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
@@ -231,7 +231,7 @@
     <div class="modal-content">
 
     </div>
-    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
   </div>
 </div>
 

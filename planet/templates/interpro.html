@@ -5,7 +5,7 @@
 <div class="top-pad">
 
     {% if interpro %}
-    <h1>{{ interpro.label }}: <strong>{{ interpro.description }}</strong></h1>
+    <h1><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='interpro_domain') }}" data-target="#helpModal">InterPro</abbr>:{{ interpro.label }}: <strong>{{ interpro.description }}</strong></h1>
     <br/>
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">

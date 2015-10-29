@@ -5,7 +5,7 @@
 <div class="top-pad">
 
     {% if family %}
-    <h1>{{ family.name }}</h1>
+    <h1><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='gene_family') }}" data-target="#helpModal">Gene Family</abbr>: <strong>{{ family.name }}</strong></h1>
 
     <p>{{ family.method.method }}</p>
     <br />
