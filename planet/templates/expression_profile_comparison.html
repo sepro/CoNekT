@@ -3,13 +3,29 @@
 {% block container %}
 <div class="top-pad">
 
-    <h1>Profile comparison</h1>
+
     {% if profiles %}
+    <h1>Profile comparison</h1>
     <div id="canvas-holder" class="center-block">
         <canvas id="chart-line" class="center-block" width="800" height="600"/>
     </div>
     {% else %}
-
+     <h1>Compare profiles</h1>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4 col-xs-8 col-xs-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><strong>Select genes</strong></div>
+                    <div class="panel-body">
+                        <form method="POST"  action="{{ url_for('profile_comparison.profile_comparison_main') }}"  role="form">
+                            {{ form.csrf_token }}
+                            {{form.species_id(class_="form-control") }}<br />
+                            {{form.probes(class_="form-control") }}<br />
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     {% endif %}
 

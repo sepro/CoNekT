@@ -4,6 +4,8 @@ from planet.models.expression_profiles import ExpressionProfile
 from planet.models.relationships import SequenceCoexpressionClusterAssociation
 from planet.models.coexpression_clusters import CoexpressionCluster
 
+from planet.forms.profile_comparison import ProfileComparisonForm
+
 import json
 from statistics import mean
 
@@ -49,24 +51,44 @@ def profile_comparison_cluster(cluster_id):
                            profiles=json.dumps({'labels': labels, 'datasets': datasets}))
 
 
-# @profile_comparison.route('/', methods=['GET', 'POST'])
-# def profile_comparison_main():
-#     """
-#     Renders a heatmap based on a set of probes passed using a POST request
-#
-#     :return:
-#     """
-#     form = HeatmapForm(request.form)
-#     form.populate_species()
-#
-#     if request.method == 'POST':
-#         probes = request.form.get('probes').split()
-#         species_id = request.form.get('species_id')
-#
-#         current_heatmap = ExpressionProfile.get_heatmap(species_id, probes)
-#
-#         return render_template("expression_heatmap.html", order=current_heatmap['order'],
-#                                profiles=current_heatmap['heatmap_data'],
-#                                form=form)
-#     else:
-#         return render_template("expression_heatmap.html", form=form)
+@profile_comparison.route('/', methods=['GET', 'POST'])
+def profile_comparison_main():
+    form = ProfileComparisonForm(request.form)
+    form.populate_species()
+
+    if request.method == 'POST':
+        probes = request.form.get('probes').split()
+        species_id = request.form.get('species_id')
+
+        # get max 51 profiles, only show the first 50 (the extra one is fetched to throw the warning)
+        profiles = ExpressionProfile.get_profiles(species_id, probes, limit=51)
+
+        labels = []
+        datasets = []
+
+        if len(profiles) > 0:
+            data = json.loads(profiles[0].profile)
+            labels = data['order']
+
+        if len(profiles) > 50:
+            flash("To many profiles in this cluster only showing the first 50", 'warning')
+
+        for count, p in enumerate(profiles):
+            if count > 50:
+                break
+            data = json.loads(p.profile)
+            datasets.append({
+                'label': p.probe if p.sequence_id is None else p.sequence.name + " (" + p.probe + ")",
+                'strokeColor': 'rgba(175,175,175,0.2)',
+                'pointStrokeColor': 'rgba(220,220,220,0)',
+                'fillColor': 'rgba(220,220,220,0.1)',
+                'pointHighlightStroke': 'rgba(220,220,220,0)',
+                'pointColor': 'rgba(220,220,220,0)',
+                'pointHighlightFill': 'rgba(220,220,220,0)',
+                'data': [mean(data['data'][label]) for label in labels]
+            })
+
+        return render_template("expression_profile_comparison.html",
+                               profiles=json.dumps({'labels': labels, 'datasets': datasets}), form=form)
+    else:
+        return render_template("expression_profile_comparison.html", form=form)
