@@ -7,7 +7,6 @@ def prepare_profiles(profiles):
     Function to convert a list of NetworkProfiles to a dict compatible with chart.js
 
     :param profiles:
-    :return:
     """
     labels = []
     datasets = []
