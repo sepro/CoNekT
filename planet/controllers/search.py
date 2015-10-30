@@ -20,17 +20,17 @@ def search_single_keyword(keyword):
     :param keyword: Keyword to look for
     """
     sequences = Sequence.query.with_entities(Sequence.id, Sequence.name)\
-        .filter(func.upper(Sequence.name) == keyword.upper()).all()
+        .filter(Sequence.name == keyword).all()
 
     go = GO.query.filter(or_(GO.description.ilike("%"+keyword+"%"),
                              GO.name.ilike("%"+keyword+"%"),
-                             func.upper(GO.label) == keyword.upper())).all()
+                             GO.label == keyword)).all()
 
     interpro = Interpro.query.filter(or_(Interpro.description.ilike("%"+keyword+"%"),
-                                         func.upper(Interpro.label) == keyword.upper())).all()
+                                         Interpro.label == keyword)).all()
 
-    families = GeneFamily.query.filter(func.upper(GeneFamily.name) == keyword.upper()).all()
-    profiles = ExpressionProfile.query.filter(func.upper(ExpressionProfile.probe) == keyword.upper()).all()
+    families = GeneFamily.query.filter(GeneFamily.name == keyword).all()
+    profiles = ExpressionProfile.query.filter(ExpressionProfile.probe == keyword).all()
 
     # If the result is unique redirect to the corresponding page
     if len(sequences) + len(go) + len(interpro) + len(families) + len(profiles) == 1:
@@ -64,17 +64,17 @@ def __search_string(term_string):
     """
     terms = term_string.upper().split()
 
-    sequences = Sequence.query.filter(func.upper(Sequence.name).in_(terms)).all()
+    sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
 
     go = GO.query.filter(or_(and_(*[GO.description.ilike("%"+term+"%") for term in terms]),
                              and_(*[GO.name.ilike("%"+term+"%") for term in terms]),
-                             func.upper(GO.label).in_(terms))).all()
+                             GO.label.in_(terms))).all()
 
     interpro = Interpro.query.filter(or_(and_(*[Interpro.description.ilike("%"+term+"%") for term in terms]),
-                                         func.upper(Interpro.label).in_(terms))).all()
+                                         Interpro.label.in_(terms))).all()
 
     families = GeneFamily.query.filter(func.upper(GeneFamily.name).in_(terms)).all()
-    profiles = ExpressionProfile.query.filter(func.upper(ExpressionProfile.probe).in_(terms)).all()
+    profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(terms)).all()
 
     return {"go": go,
             "interpro": interpro,

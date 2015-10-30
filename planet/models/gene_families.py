@@ -34,7 +34,7 @@ class GeneFamily(db.Model):
     __tablename__ = 'gene_families'
     id = db.Column(db.Integer, primary_key=True)
     method_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id'), index=True)
-    name = db.Column(db.String(50), unique=True, index=True)
+    name = db.Column(db.String(50, collation='NOCASE'), unique=True, index=True)
 
     sequences = db.relationship('Sequence', secondary=sequence_family, lazy='dynamic')
 

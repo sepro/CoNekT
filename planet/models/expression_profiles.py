@@ -10,7 +10,7 @@ class ExpressionProfile(db.Model):
     __tablename__ = 'expression_profiles'
     id = db.Column(db.Integer, primary_key=True)
     species_id = db.Column(db.Integer, db.ForeignKey('species.id'), index=True)
-    probe = db.Column(db.String(50), index=True)
+    probe = db.Column(db.String(50, collation='NOCASE'), index=True)
     sequence_id = db.Column(db.String(50), db.ForeignKey('sequences.id'), index=True)
     profile = db.deferred(db.Column(db.Text))
 
@@ -59,12 +59,12 @@ class ExpressionProfile(db.Model):
         return {'order': order, 'heatmap_data': output}
 
     @staticmethod
-    def get_profiles(species_id, probes):
+    def get_profiles(species_id, probes, limit=1000):
         profiles = ExpressionProfile.query.\
             options(undefer('profile')).\
             filter(ExpressionProfile.probe.in_(probes)).\
             filter_by(species_id=species_id).\
             options(joinedload('sequence').load_only('name')).\
-            all()
+            limit(limit).all()
 
         return profiles

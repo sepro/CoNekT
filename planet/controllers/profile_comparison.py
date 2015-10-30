@@ -17,7 +17,8 @@ def profile_comparison_cluster(cluster_id):
 
     probes = [a.probe for a in associations]
 
-    profiles = ExpressionProfile.get_profiles(cluster.method.network_method.species_id, probes)
+    # get max 51 profiles, only show the first 50 (the extra one is fetched to throw the warning)
+    profiles = ExpressionProfile.get_profiles(cluster.method.network_method.species_id, probes, limit=51)
 
     labels = []
     datasets = []
@@ -29,7 +30,7 @@ def profile_comparison_cluster(cluster_id):
     if len(profiles) > 50:
         flash("To many profiles in this cluster only showing the first 50", 'warning')
 
-    for count,p in enumerate(profiles):
+    for count, p in enumerate(profiles):
         if count > 50:
             break
         data = json.loads(p.profile)
