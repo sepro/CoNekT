@@ -12,6 +12,7 @@ scripts
 config.cfg
 config.py
 
+ftp
 data/*
 db/*
 uploads/*
