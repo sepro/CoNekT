@@ -14,7 +14,8 @@ profile_comparison = Blueprint('profile_comparison', __name__)
 
 
 @profile_comparison.route('/cluster/<cluster_id>')
-def profile_comparison_cluster(cluster_id):
+@profile_comparison.route('/cluster/<cluster_id>/<int:normalize>')
+def profile_comparison_cluster(cluster_id, normalize=0):
     """
     This will get all the expression profiles for members of given cluster and plot them
 
@@ -31,7 +32,7 @@ def profile_comparison_cluster(cluster_id):
     if len(profiles) > 50:
         flash("To many profiles in this cluster only showing the first 50", 'warning')
 
-    profile_chart = prepare_profiles(profiles[:50])
+    profile_chart = prepare_profiles(profiles[:50], True if normalize == 1 else False)
 
     return render_template("expression_profile_comparison.html",
                            profiles=json.dumps(profile_chart))
@@ -48,6 +49,7 @@ def profile_comparison_main():
     if request.method == 'POST':
         probes = request.form.get('probes').split()
         species_id = request.form.get('species_id')
+        normalize = True if request.form.get('normalize') == 'y' else False
 
         # get max 51 profiles, only show the first 50 (the extra one is fetched to throw the warning)
         profiles = ExpressionProfile.get_profiles(species_id, probes, limit=51)
@@ -55,7 +57,7 @@ def profile_comparison_main():
         if len(profiles) > 50:
             flash("To many profiles in this cluster only showing the first 50", 'warning')
 
-        profile_chart = prepare_profiles(profiles[:50])
+        profile_chart = prepare_profiles(profiles[:50], normalize)
 
         return render_template("expression_profile_comparison.html",
                                profiles=json.dumps(profile_chart), form=form)

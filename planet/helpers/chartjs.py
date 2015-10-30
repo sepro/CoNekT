@@ -2,7 +2,7 @@ import json
 from statistics import mean
 
 
-def prepare_profiles(profiles):
+def prepare_profiles(profiles, normalize=False):
     """
     Function to convert a list of NetworkProfiles to a dict compatible with chart.js
 
@@ -17,6 +17,12 @@ def prepare_profiles(profiles):
 
     for count, p in enumerate(profiles):
         data = json.loads(p.profile)
+        expression_values = [mean(data['data'][label]) for label in labels]
+
+        if normalize:
+            max_expression = max(expression_values)
+            expression_values = [value/max_expression for value in expression_values]
+
         datasets.append({
             'label': p.probe if p.sequence_id is None else p.sequence.name + " (" + p.probe + ")",
             'strokeColor': 'rgba(175,175,175,0.2)',
@@ -25,7 +31,7 @@ def prepare_profiles(profiles):
             'pointHighlightStroke': 'rgba(220,220,220,0)',
             'pointColor': 'rgba(220,220,220,0)',
             'pointHighlightFill': 'rgba(220,220,220,0)',
-            'data': [mean(data['data'][label]) for label in labels]
+            'data': expression_values
         })
 
     return {'labels': labels, 'datasets': datasets}
