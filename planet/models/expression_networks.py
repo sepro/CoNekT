@@ -23,6 +23,10 @@ class ExpressionNetworkMethod(db.Model):
         self.description = description
         self.edge_type = edge_type
 
+    def __repr__(self):
+        return str(self.id) + ". " + self.description
+
+
     @staticmethod
     def update_count():
         """

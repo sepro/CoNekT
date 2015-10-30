@@ -60,6 +60,15 @@ class ExpressionProfile(db.Model):
 
     @staticmethod
     def get_profiles(species_id, probes, limit=1000):
+        """
+        Gets the data for a set of probes (includeding the full profiles), a limit can be provided to avoid overly
+        long queries
+
+        :param species_id: internal id of the species
+        :param probes: probe names to fetch
+        :param limit: maximum number of probes to get
+        :return: List of ExpressionProfile objects including the full profiles
+        """
         profiles = ExpressionProfile.query.\
             options(undefer('profile')).\
             filter(ExpressionProfile.probe.in_(probes)).\
