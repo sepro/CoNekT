@@ -26,6 +26,17 @@ sequence_coexpression_cluster = \
              db.Column('coexpression_cluster_id', db.Integer, db.ForeignKey('coexpression_clusters.id'), index=True)
              )
 
+sequence_xref = db.Table('sequence_xref',
+                         db.Column('id', db.Integer, primary_key=True),
+                         db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id'), index=True),
+                         db.Column('xref_id', db.Integer, db.ForeignKey('xrefs.id'), index=True)
+                         )
+
+family_xref = db.Table('family_xref',
+                       db.Column('id', db.Integer, primary_key=True),
+                       db.Column('gene_family_id', db.Integer, db.ForeignKey('gene_families.id'), index=True),
+                       db.Column('xref_id', db.Integer, db.ForeignKey('xrefs.id'), index=True)
+                       )
 
 class SequenceCoexpressionClusterAssociation(db.Model):
     __tablename__ = 'sequence_coexpression_cluster'

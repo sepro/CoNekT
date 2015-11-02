@@ -1,5 +1,5 @@
 from planet import db
-from planet.models.relationships import sequence_family
+from planet.models.relationships import sequence_family, family_xref
 
 class GeneFamilyMethod(db.Model):
     __tablename__ = 'gene_family_methods'
@@ -37,6 +37,8 @@ class GeneFamily(db.Model):
     name = db.Column(db.String(50, collation='NOCASE'), unique=True, index=True)
 
     sequences = db.relationship('Sequence', secondary=sequence_family, lazy='dynamic')
+
+    xrefs = db.relationship('XRef', secondary=family_xref, lazy='dynamic')
 
     def __init__(self, name):
         self.name = name

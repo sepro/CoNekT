@@ -1,6 +1,7 @@
 from planet import db
 
 from planet.models.relationships import sequence_go, sequence_interpro, sequence_family, sequence_coexpression_cluster
+from planet.models.relationships import sequence_xref
 from utils.sequence import translate
 
 
@@ -28,6 +29,8 @@ class Sequence(db.Model):
     families = db.relationship('GeneFamily', secondary=sequence_family, lazy='dynamic')
     coexpression_clusters = db.relationship('CoexpressionCluster', secondary=sequence_coexpression_cluster,
                                             lazy='dynamic')
+
+    xrefs = db.relationship('XRef', secondary=sequence_xref, lazy='dynamic')
 
     def __init__(self, species_id, name, coding_sequence, type='protein_coding', is_chloroplast=False,
                  is_mitochondrial=False):
