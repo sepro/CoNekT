@@ -26,7 +26,7 @@ def family_find(family_name):
     current_family = GeneFamily.query.filter_by(name=family_name).first_or_404()
     sequence_count = len(current_family.sequences.with_entities(Sequence.id).all())
 
-    return render_template('family.html', family=current_family, count=sequence_count)
+    return render_template('family.html', family=current_family, count=sequence_count, xrefs=current_family.xrefs.all())
 
 
 @family.route('/view/<family_id>')
@@ -39,7 +39,7 @@ def family_view(family_id):
     current_family = GeneFamily.query.get_or_404(family_id)
     sequence_count = len(current_family.sequences.with_entities(Sequence.id).all())
 
-    return render_template('family.html', family=current_family, count=sequence_count)
+    return render_template('family.html', family=current_family, count=sequence_count, xrefs=current_family.xrefs.all())
 
 
 @family.route('/sequences/<family_id>/')

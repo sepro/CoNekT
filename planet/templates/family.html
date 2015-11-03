@@ -22,6 +22,33 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">External Links</div>
+                {% if xrefs|count > 0 %}
+                <div class="panel-scroll">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <tbody>
+                            {% for xref in xrefs %}
+                            <tr>
+                                <td><strong>{{ xref.platform }}</strong></td>
+                                <td>
+                                    <a href="{{ xref.url }}">{{ xref.name }}</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+                {% else %}
+                <div class="panel-body panel-scroll">
+                    <p>No external references for this sequences in the database.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 
     {{ macro.sequence_pagination(url_for('family.family_sequences', family_id=family.id), count) }}
