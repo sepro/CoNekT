@@ -35,6 +35,7 @@ class GeneFamily(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     method_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id'), index=True)
     name = db.Column(db.String(50, collation='NOCASE'), unique=True, index=True)
+    clade_id = db.Column(db.Integer, index=True)
 
     sequences = db.relationship('Sequence', secondary=sequence_family, lazy='dynamic')
 
@@ -42,3 +43,11 @@ class GeneFamily(db.Model):
 
     def __init__(self, name):
         self.name = name
+
+    @property
+    def species_codes(self):
+        """
+        Finds all species the family has genes from
+        :return: a list of all species (codes)
+        """
+        pass

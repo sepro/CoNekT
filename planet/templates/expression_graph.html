@@ -3,7 +3,7 @@
 {% block container %}
 <div class=container-fluid">
     <div class="row">
-        <div class="col-sm-4 col-md-3 sidebar">
+        <div class="col-sm-4 col-md-3 sidebar" id="sidebar">
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#"><strong>Options</strong></a></li>
             <li><br/></li>
@@ -144,7 +144,7 @@
 
           </ul>
         </div>
-        <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
+        <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main" id="main">
             {% if node %}
             <h1>Expression Graph: <strong>{{ node.probe }}</strong> <small>({{ node.method.description }})</small></h1>
             <div id="cy" json="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}"></div>
