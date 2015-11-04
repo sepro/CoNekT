@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, url_for, render_template, Response, g
+from sqlalchemy.orm import joinedload
 
 from planet.models.gene_families import GeneFamily
 from planet.models.sequences import Sequence
@@ -51,9 +52,10 @@ def family_sequences(family_id, page=1):
     :param family_id: Internal ID of the family
     :param page: Page number
     """
-    sequences = GeneFamily.query.get(family_id).sequences.order_by('name').paginate(page,
-                                                                                    g.page_items,
-                                                                                    False).items
+    sequences = GeneFamily.query.get(family_id).sequences.options(joinedload('species')).\
+        order_by('name').paginate(page,
+                                  g.page_items,
+                                  False).items
 
     return render_template('pagination/sequences.html', sequences=sequences)
 
@@ -67,7 +69,7 @@ def family_json_species(family_id):
     :param family_id: ID of the family to render
     """
     current_family = GeneFamily.query.get_or_404(family_id)
-    sequences = current_family.sequences.all()
+    sequences = current_family.sequences.options(joinedload('species')).all()
 
     counts = {}
 

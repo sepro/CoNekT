@@ -66,7 +66,7 @@ def go_sequences(go_id, page=1):
     :param go_id: Internal ID of the GO term
     :param page: Page number
     """
-    sequences = GO.query.get(go_id).sequences.options(defer('coding_sequence')).\
+    sequences = GO.query.get(go_id).sequences.\
         group_by(Sequence.id).order_by(Sequence.name).paginate(page,
                                                                g.page_items,
                                                                False).items
@@ -84,7 +84,7 @@ def go_json_species(go_id):
     :param go_id: ID of the go term to render
     """
     current_go = GO.query.get_or_404(go_id)
-    sequences = current_go.sequences.options(defer('coding_sequence')).options(joinedload('species')).all()
+    sequences = current_go.sequences.options(joinedload('species')).all()
 
     counts = {}
 
