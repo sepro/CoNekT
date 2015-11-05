@@ -16,9 +16,20 @@ class Clade(db.Model):
     def __init__(self, name, species):
         self.name = name
         self.species = json.dumps(species)
+        self.species_count = len(species)
 
     def __repr__(self):
         return str(self.id) + ". " + self.name
+
+    @staticmethod
+    def add_clade(name, species):
+        new_clade = Clade(name, species)
+        db.session.add(new_clade)
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(e)
 
     @staticmethod
     def update_clades():
@@ -29,7 +40,31 @@ class Clade(db.Model):
         families = GeneFamily.query.all()
 
         for f in families:
-            pass
+            family_species = f.species_codes
+
+            # skip for families without members
+            if len(family_species) == 0:
+                f.clade_id = None
+                continue
+
+            # find the clade with the fewest species that contains all the codes
+            selected_clade = None
+            for c in clades:
+                clade_species = json.loads(c.species)
+
+                overlap = set(family_species).intersection(clade_species)
+
+                if len(overlap) == len(family_species):
+                    if selected_clade is None:
+                        selected_clade = c
+                    else:
+                        if selected_clade.species_count > c.species_count:
+                            selected_clade = c
+            else:
+                if selected_clade is None:
+                    print("An error occurred, no clade found, check the clades in the database!")
+                else:
+                    f.clade_id = selected_clade.id
 
         try:
             db.session.commit()
