@@ -12,6 +12,7 @@ from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 from planet.models.expression_networks import ExpressionNetworkMethod
 from planet.models.gene_families import GeneFamilyMethod
 from planet.models.species import Species
+from planet.models.clades import Clade
 
 print("Adding species")
 print("==============")
@@ -60,3 +61,13 @@ CoexpressionClusteringMethod.update_counts()
 ExpressionNetworkMethod.update_count()
 GeneFamilyMethod.update_count()
 Species.update_counts()
+
+print("Add Clades and assign them to gene families")
+print("===========================================")
+Clade.add_clade('Arabidopsis', ['ath'])
+Clade.add_clade('Poplar', ['ptr'])
+Clade.add_clade('Soy', ['gma'])
+Clade.add_clade('Fabids', ['ptr', 'gma'])
+Clade.add_clade('Dicots', ['ath', 'ptr', 'gma'])
+
+Clade.update_clades()
