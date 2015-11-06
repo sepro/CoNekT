@@ -54,20 +54,18 @@ cy = cytoscape({
     // code to add tooltips to the selected node
     var content = [
         {
-          platform: 'Planet',
-          name: n.data('gene_name'),
-          url: n.data('gene_link')
+          value: 'Planet : <a href="' + n.data('gene_link') + '">' + n.data('gene_name') + '</a>'
         }, {
-          platform: 'Profile',
-          name: n.data('id'),
-          url: n.data('profile_link')
+          value: 'Profile : <a href="' + n.data('profile_link') + '">' + n.data('id') + '</a>'
+        }, {
+          value: 'Clade : <strong>' + n.data('family_clade') + '</strong>'
         }
       ]
 
 
     n.qtip({
-      content: content.map(function( link ){
-        return link.platform + ': <a href="' + link.url + '">' + link.name + '</a>';
+      content: content.map(function( item ){
+        return item.value;
       }).join('<br />\n'),
       position: {
         my: 'bottom center',
@@ -121,10 +119,19 @@ cy = cytoscape({
 
 $('.cy-node-color').click(function() {
  var attr = $( this ).attr( 'attr' );
- if (attr === "neighbors") {
+ if (attr === "neighbors" || attr === "family_clade_count") {
     cy.nodes().style('background-color', function( ele ){
-        return valueToColor(ele.data(attr));
-      });
+        if(attr === "family_clade_count") {
+          if (ele.data("family_clade") === "None") {
+            return "#CCC";
+          } else {
+            return valueToColor(15 - (ele.data(attr)*3));
+          }
+
+        } else {
+          return valueToColor(ele.data(attr));
+        }
+    });
   } else {
     cy.nodes().style('background-color', function( ele ){ return ele.data(attr)});
   }
@@ -214,6 +221,7 @@ $('#cy-download-img-lowres').click(function() {
 function valueToColor(value)
 {
   value = value > 15 ? 15 : value;
+  value = value < 1 ? 1 : value;
   if (value === null)  {
     return "#FFF";
   } else {

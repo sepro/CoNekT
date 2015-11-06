@@ -2,6 +2,8 @@ from flask import url_for
 
 from planet.models.relationships import SequenceFamilyAssociation
 
+from sqlalchemy.orm import joinedload
+
 from utils.color import string_to_hex_color, string_to_shape
 from utils.benchmark import benchmark
 
@@ -60,7 +62,8 @@ class CytoscapeHelper:
                 sequence_ids.append(node["data"]["gene_id"])
 
         sequence_families = SequenceFamilyAssociation.query.\
-            filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids)).all()
+            filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids)).\
+            options(joinedload('family.clade')).all()
 
         families = {}
 
@@ -69,15 +72,21 @@ class CytoscapeHelper:
                 families[s.sequence_id] = {}
                 families[s.sequence_id]["name"] = s.family.name
                 families[s.sequence_id]["id"] = s.gene_family_id
+                families[s.sequence_id]["clade"] = s.family.clade.name
+                families[s.sequence_id]["clade_count"] = s.family.clade.species_count
 
         for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys() \
                     and node["data"]["gene_id"] in families.keys():
                 node["data"]["family_color"] = string_to_hex_color(families[node["data"]["gene_id"]]["name"])
                 node["data"]["family_shape"] = string_to_shape(families[node["data"]["gene_id"]]["name"])
+                node["data"]["family_clade"] = families[node["data"]["gene_id"]]["clade"]
+                node["data"]["family_clade_count"] = families[node["data"]["gene_id"]]["clade_count"]
             else:
                 node["data"]["family_color"] = "#CCC"
                 node["data"]["family_shape"] = "rectangle"
+                node["data"]["family_clade"] = "None"
+                node["data"]["family_clade_count"] = 1
 
         return completed_network
 
