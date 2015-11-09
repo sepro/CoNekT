@@ -218,17 +218,40 @@ $('#cy-download-img-lowres').click(function() {
   download.click();
 })
 
+$('#cy-download-json').click(function() {
+  json = JSON.stringify(cy.json());
+
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(json));
+  element.setAttribute('download', "cytoscape.json");
+
+  element.click();
+})
+
 $('#cy-download-jsoncy').click(function() {
+  var eles = cy.elements()
+
+  eles.each( function(i, ele) {
+    if (ele.isNode()) {
+      ele.data('current_color', ele.style('background-color'));
+      ele.data('current_shape', ele.style('shape'));
+    } else if (ele.isEdge()) {
+      ele.data('current_color', ele.style('line-color'));
+      ele.data('current_width', ele.style('width'));
+    }
+  });
+
 
   json = JSON.stringify(cy.json());
 
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(json));
-  element.setAttribute('download', "cytoscape_to_json.json");
+  element.setAttribute('download', "cytoscape_full.json");
 
   element.click();
 
 })
+
 
 function valueToColor(value)
 {
