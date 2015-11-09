@@ -129,14 +129,17 @@
                     <ul class="dropdown-menu">
                         <li class="nav-header"><p class="text-muted">data</p></li>
                         {% if node %}
-                        <li><a href="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}" id="cy-download-json" download="cytoscape.json">JSON</a></li>
+                        <li><a href="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}" id="cy-download-json" download="cytoscape.json">JSON (data only)</a></li>
                         {% elif cluster %}
-                        <li><a href="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id) }}" id="cy-download-json" download="cytoscape.json">JSON</a></li>
+                        <li><a href="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id) }}" id="cy-download-json" download="cytoscape.json">JSON (data only)</a></li>
                         {% endif %}
+                        <li><a href="#" id="cy-download-jsoncy">JSON (data + layout)</a></li>
                         <li class="divider"></li>
                         <li class="nav-header"><p class="text-muted">image</p></li>
                         <li><a href="#" id="cy-download-img-hires">PNG, hi-res</a></li>
                         <li><a href="#" id="cy-download-img-lowres">PNG, low-res</a></li>
+                        <!--<li class="nav-header"><p class="text-muted">experimental</p></li>-->
+
                     </ul>
                 </div>
                 </div>

@@ -218,6 +218,18 @@ $('#cy-download-img-lowres').click(function() {
   download.click();
 })
 
+$('#cy-download-jsoncy').click(function() {
+
+  json = JSON.stringify(cy.json());
+
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(json));
+  element.setAttribute('download', "cytoscape_to_json.json");
+
+  element.click();
+
+})
+
 function valueToColor(value)
 {
   value = value > 15 ? 15 : value;
