@@ -219,7 +219,7 @@ $('#cy-download-img-lowres').click(function() {
 })
 
 $('#cy-download-json').click(function() {
-  json = JSON.stringify(cy.json());
+  json = JSON.stringify(cy.json(), null, '\t');
 
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(json));
@@ -242,7 +242,7 @@ $('#cy-download-jsoncy').click(function() {
   });
 
 
-  json = JSON.stringify(cy.json());
+  json = JSON.stringify(cy.json(), null, '\t');
 
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(json));
