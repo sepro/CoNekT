@@ -95,6 +95,22 @@ function writeXGMML(data) {
           xw.writeEndElement();
         });
 
+        data.elements.edges.forEach( function(edge) {
+          xw.writeStartElement( 'edge' );
+          xw.writeAttributeString( 'id', edge.data.id );
+          xw.writeAttributeString( 'label', edge.data.id );
+          xw.writeAttributeString( 'source', edge.data.source );
+          xw.writeAttributeString( 'target', edge.data.target );
+
+            xw.writeStartElement( 'graphics' );
+            xw.writeAttributeString( 'width', edge.data.current_width.replace('px', '') );
+            xw.writeAttributeString( 'fill', __convertColor(edge.data.current_color) );
+            xw.writeEndElement();
+
+          xw.writeEndElement();
+
+        });
+
     xw.writeEndElement();
     xw.writeEndDocument();
 
