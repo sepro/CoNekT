@@ -42,7 +42,8 @@ cy = cytoscape({
   elements: $.getJSON(url),
   layout: {
     name: 'concentric',
-    padding: 20
+    padding: 5,
+    minNodeSpacing: 5
   },
   
 
@@ -193,7 +194,9 @@ $('.cy-depth-filter').click(function() {
 $('.cy-layout').click(function() {
     var layout = $( this ).attr( 'layout' );
 
-    cy.layout({ name: layout });
+    cy.layout({name: layout,
+               padding: 1,
+               minNodeSpacing: 1 });
 })
 
 $(".cy-option-menu li a").click(function(){
