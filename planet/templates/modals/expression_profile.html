@@ -8,7 +8,6 @@
 <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 </div>
-<script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 <script>
         $( document ).ready(function() {
             $.getJSON( "{{ url_for('expression_profile.expression_profile_plot_json', profile_id=profile.id) }}", function( data ) {
