@@ -5,8 +5,7 @@ import hashlib
 
 
 __SHAPES = ['rectangle', 'roundrectangle', 'ellipse', 'triangle',
-            'pentagon', 'hexagon', 'heptagon', 'octagon', 'star',
-            'diamond', 'vee', 'rhomboid']
+            'hexagon', 'octagon', 'diamond', 'vee', 'rhomboid']
 
 
 def string_to_hex_color(input_string):

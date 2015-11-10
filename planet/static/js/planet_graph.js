@@ -256,6 +256,30 @@ $('#cy-download-jsoncy').click(function() {
 
 })
 
+$('#cy-download-xgmml').click(function() {
+  var eles = cy.elements();
+
+  eles.each( function(i, ele) {
+    if (ele.isNode()) {
+      ele.data('current_color', ele.style('background-color'));
+      ele.data('current_shape', ele.style('shape'));
+    } else if (ele.isEdge()) {
+      ele.data('current_color', ele.style('line-color'));
+      ele.data('current_width', ele.style('width'));
+    }
+  });
+
+  xgmml = writeXGMML(cy.json());
+
+  console.log(cy.json());
+  console.log(xgmml);
+
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(xgmml));
+  element.setAttribute('download', "cytoscape.xgmml");
+
+  element.click();
+})
 
 function valueToColor(value)
 {
