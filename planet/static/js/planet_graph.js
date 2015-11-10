@@ -1,4 +1,5 @@
 var cy;
+var initial_json;
 
 $(function(){ // on dom ready
 
@@ -49,6 +50,8 @@ cy = cytoscape({
     var loading = document.getElementById('loading');
     loading.classList.add('loaded');
     window.cy = this;
+
+    initial_json = JSON.stringify(cy.json(), null, '\t');
 
     cy.nodes().forEach(function(n){
     // code to add tooltips to the selected node
@@ -219,10 +222,8 @@ $('#cy-download-img-lowres').click(function() {
 })
 
 $('#cy-download-json').click(function() {
-  json = JSON.stringify(cy.json(), null, '\t');
-
   var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(json));
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(initial_json));
   element.setAttribute('download', "cytoscape.json");
 
   element.click();
