@@ -51,5 +51,9 @@ def add_interpro_from_plaza(filename):
         else:
             print("Gene", gene, "not found in the database.")
 
+        if len(new_domains) > 400:
+            db.engine.execute(SequenceInterproAssociation.__table__.insert(), new_domains)
+            new_domains = []
+
     db.engine.execute(SequenceInterproAssociation.__table__.insert(), new_domains)
 
