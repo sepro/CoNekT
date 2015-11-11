@@ -83,6 +83,10 @@ def add_go_from_plaza(filename):
         else:
             print("Gene", gene, "not found in the database.")
 
+        if len(associations) > 400:
+            db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
+            associations = []
+
     # Add extended GOs
     for gene, terms in go_parser.annotation.items():
         if gene in gene_hash.keys():
@@ -110,5 +114,9 @@ def add_go_from_plaza(filename):
                         "evidence": None,
                         "source": "Extended"}
                     associations.append(association)
+
+                if len(associations) > 400:
+                    db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
+                    associations = []
 
     db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
