@@ -1,11 +1,11 @@
 from planet import db
-
+from config import SQL_COLLATION
 
 class Species(db.Model):
     __tablename__ = 'species'
     id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.String(50, collation='NOCASE'), unique=True)
-    name = db.Column(db.String(200, collation='NOCASE'))
+    code = db.Column(db.String(50, collation=SQL_COLLATION), unique=True)
+    name = db.Column(db.String(200, collation=SQL_COLLATION))
     data_type = db.Column(db.Enum('genome', 'transcriptome', name='data_type'))
     ncbi_tax_id = db.Column(db.Integer)
     pubmed_id = db.Column(db.Integer)

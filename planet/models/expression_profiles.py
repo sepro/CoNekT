@@ -1,5 +1,7 @@
 from planet import db
 
+from config import SQL_COLLATION
+
 import json
 from statistics import mean
 from math import log
@@ -11,7 +13,7 @@ class ExpressionProfile(db.Model):
     __tablename__ = 'expression_profiles'
     id = db.Column(db.Integer, primary_key=True)
     species_id = db.Column(db.Integer, db.ForeignKey('species.id'), index=True)
-    probe = db.Column(db.String(50, collation='NOCASE'), index=True)
+    probe = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
     sequence_id = db.Column(db.String(50), db.ForeignKey('sequences.id'), index=True)
     profile = db.deferred(db.Column(db.Text))
 

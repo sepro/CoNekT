@@ -3,13 +3,13 @@ from planet import db
 from planet.models.relationships import sequence_go, sequence_interpro, sequence_family, sequence_coexpression_cluster
 from planet.models.relationships import sequence_xref
 from utils.sequence import translate
-
+from config import SQL_COLLATION
 
 class Sequence(db.Model):
     __tablename__ = 'sequences'
     id = db.Column(db.Integer, primary_key=True)
     species_id = db.Column(db.Integer, db.ForeignKey('species.id'), index=True)
-    name = db.Column(db.String(50, collation='NOCASE'), index=True)
+    name = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
     description = db.Column(db.Text)
     coding_sequence = db.deferred(db.Column(db.Text))
     type = db.Column(db.Enum('protein_coding', 'TE', 'RNA', name='sequence_type'), default='protein_coding')

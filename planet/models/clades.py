@@ -1,5 +1,6 @@
 from planet import db
 from planet.models.gene_families import GeneFamily
+from config import SQL_COLLATION
 
 import json
 
@@ -7,8 +8,8 @@ import json
 class Clade(db.Model):
     __tablename__ = 'clades'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50, collation='NOCASE'), unique=True, index=True)
-    species = db.Column(db.Text(collation='NOCASE'))
+    name = db.Column(db.String(50, collation=SQL_COLLATION), unique=True, index=True)
+    species = db.Column(db.Text(collation=SQL_COLLATION))
     species_count = db.Column(db.Integer)
 
     families = db.relationship('GeneFamily', backref='clade', lazy='dynamic')

@@ -1,6 +1,6 @@
 from flask import url_for
 from sqlalchemy import and_
-
+from config import SQL_COLLATION
 from planet import db
 
 import json
@@ -47,7 +47,7 @@ class ExpressionNetworkMethod(db.Model):
 class ExpressionNetwork(db.Model):
     __tablename__ = 'expression_networks'
     id = db.Column(db.Integer, primary_key=True)
-    probe = db.Column(db.String(50, collation='NOCASE'), index=True)
+    probe = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
     sequence_id = db.Column(db.String(50), db.ForeignKey('sequences.id'), index=True)
     network = db.Column(db.Text)
     method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'), index=True)

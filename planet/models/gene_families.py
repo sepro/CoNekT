@@ -1,5 +1,6 @@
 from planet import db
 from planet.models.relationships import sequence_family, family_xref
+from config import SQL_COLLATION
 
 from sqlalchemy.orm import joinedload
 
@@ -37,7 +38,7 @@ class GeneFamily(db.Model):
     __tablename__ = 'gene_families'
     id = db.Column(db.Integer, primary_key=True)
     method_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id'), index=True)
-    name = db.Column(db.String(50, collation='NOCASE'), unique=True, index=True)
+    name = db.Column(db.String(50, collation=SQL_COLLATION), unique=True, index=True)
     clade_id = db.Column(db.Integer, db.ForeignKey('clades.id'), index=True)
 
     sequences = db.relationship('Sequence', secondary=sequence_family, lazy='dynamic')

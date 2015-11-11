@@ -1,11 +1,11 @@
 from planet import db
 from planet.models.relationships import sequence_go
-
+from config import SQL_COLLATION
 
 class GO(db.Model):
     __tablename__ = 'go'
     id = db.Column(db.Integer, primary_key=True)
-    label = db.Column(db.String(50, collation='NOCASE'), unique=True, index=True)
+    label = db.Column(db.String(50, collation=SQL_COLLATION), unique=True, index=True)
     name = db.Column(db.Text)
     type = db.Column(db.Enum('biological_process', 'molecular_function', 'cellular_component', name='go_type'))
     description = db.Column(db.Text)

@@ -18,6 +18,8 @@ ADMIN_EMAIL = 'admin@web.com'
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db', 'planet.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'migration')
 
+# Collation type, NOCASE for sqlite
+SQL_COLLATION = 'NOCASE'
 
 # Settings for the FTP/bulk data
 PLANET_FTP_DATA = os.path.join(basedir, 'ftp')
