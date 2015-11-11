@@ -14,7 +14,7 @@ class ExpressionProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     species_id = db.Column(db.Integer, db.ForeignKey('species.id'), index=True)
     probe = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
-    sequence_id = db.Column(db.String(50), db.ForeignKey('sequences.id'), index=True)
+    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'), index=True)
     profile = db.deferred(db.Column(db.Text))
 
     def __init__(self, probe, sequence_id, profile):
