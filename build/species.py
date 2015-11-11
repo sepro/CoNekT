@@ -38,6 +38,9 @@ def add_species_from_fasta(filename, species_code, species_name):
                         "is_chloroplast": False}
         new_sequences.append(new_sequence)
 
+        if len(new_sequences) > 400:
+            new_sequences = []
+            db.engine.execute(Sequence.__table__.insert(), new_sequences)
+            
     db.engine.execute(Sequence.__table__.insert(), new_sequences)
-
     return species.id
