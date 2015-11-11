@@ -50,6 +50,10 @@ def parse_expression_plot(plotfile, conversion, species_code):
                          "profile": json.dumps(output)}
             new_probes.append(new_probe)
 
+        if len(new_probes) > 400:
+            db.engine.execute(ExpressionProfile.__table__.insert(), new_probes)
+            new_probes = []
+
     db.engine.execute(ExpressionProfile.__table__.insert(), new_probes)
 
 
@@ -106,6 +110,11 @@ def parse_expression_network(network_file, species, description, score_type="ran
                     "method_id": network_method.id}
 
         new_nodes.append(new_node)
+
+        # add nodes in sets of 400 to avoid sending to much in a single query
+        if len(new_nodes) > 400:
+            db.engine.execute(ExpressionNetwork.__table__.insert(), new_nodes)
+            new_nodes = []
 
     db.engine.execute(ExpressionNetwork.__table__.insert(), new_nodes)
 
