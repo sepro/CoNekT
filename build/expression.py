@@ -14,9 +14,10 @@ def parse_expression_plot(plotfile, conversion, species_code):
 
     species = Species.query.filter_by(code=species_code).first()
 
-    # species is not in the DB yet, add it
+    # species is not in the DB yet, quit
     if species is None:
         print("Error: species not found")
+        quit()
 
     plot = ExpressionPlotParser()
     plot.read_plot(plotfile, conversion)
@@ -72,7 +73,6 @@ def parse_expression_network(network_file, species, description, score_type="ran
     for s in sequences:
         sequence_dict[s.name.upper()] = s
 
-
     # Add network method first
     network_method = ExpressionNetworkMethod(species.id, description, score_type)
 
@@ -108,3 +108,5 @@ def parse_expression_network(network_file, species, description, score_type="ran
         new_nodes.append(new_node)
 
     db.engine.execute(ExpressionNetwork.__table__.insert(), new_nodes)
+
+    return network_method.id

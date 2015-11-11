@@ -7,6 +7,14 @@ from planet.models.species import Species
 
 
 def add_species_from_fasta(filename, species_code, species_name):
+    """
+    Adds a species based on a single fasta file with the coding (!) sequences
+
+    :param filename: path to fasta file
+    :param species_code: abbreviation for species (should be unique)
+    :param species_name: full name of the species
+    :return species_id
+    """
     fasta_data = Fasta()
 
     fasta_data.readfile(filename)
@@ -32,3 +40,4 @@ def add_species_from_fasta(filename, species_code, species_name):
 
     db.engine.execute(Sequence.__table__.insert(), new_sequences)
 
+    return species.id

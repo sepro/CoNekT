@@ -23,6 +23,12 @@ class Clade(db.Model):
 
     @staticmethod
     def add_clade(name, species):
+        """
+        Add a clade to the database
+
+        :param name: name of the clade
+        :param species: list with codes (!) of the species in the clade
+        """
         new_clade = Clade(name, species)
         db.session.add(new_clade)
         try:

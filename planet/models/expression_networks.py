@@ -26,13 +26,11 @@ class ExpressionNetworkMethod(db.Model):
     def __repr__(self):
         return str(self.id) + ". " + self.description
 
-
     @staticmethod
     def update_count():
         """
         To avoid long count queries the number of networks for each method can be precalculated and stored in the
         database using this function
-        :return:
         """
         methods = ExpressionNetworkMethod.query.all()
 
@@ -67,7 +65,7 @@ class ExpressionNetwork(db.Model):
 
         :param probe: internal ID of the probe
         :param depth: how many steps away from the query you wish to expand the network
-        :return:
+        :return: dict with nodes and edges
         """
         node = ExpressionNetwork.query.get(probe)
         links = json.loads(node.network)

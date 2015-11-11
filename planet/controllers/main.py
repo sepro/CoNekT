@@ -29,9 +29,9 @@ def contact():
     return render_template('static_pages/contact.html')
 
 
-@main.route('/license')
-def license():
+@main.route('/licence')
+def licence():
     """
     Shows the license
     """
-    return render_template('static_pages/license.html')
+    return render_template('static_pages/licence.html')

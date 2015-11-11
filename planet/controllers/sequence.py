@@ -63,6 +63,7 @@ def sequence_fasta_coding(sequence_id):
     Returns the coding sequence as a downloadable fasta file
 
     :param sequence_id: ID of the sequence
+    :return: Response with the fasta file
     """
     current_sequence = Sequence.query.options(undefer('coding_sequence')).get_or_404(sequence_id)
 
@@ -79,6 +80,7 @@ def sequence_fasta_protein(sequence_id):
     Returns the protein sequence as a downloadable fasta file
 
     :param sequence_id: ID of the sequence
+    :return: Response with the fasta file
     """
     current_sequence = Sequence.query.options(undefer('coding_sequence')).get_or_404(sequence_id)
 

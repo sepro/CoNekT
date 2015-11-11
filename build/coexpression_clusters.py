@@ -7,7 +7,6 @@ from planet.models.relationships import SequenceCoexpressionClusterAssociation
 
 
 def add_planet_coexpression_clusters(hrr_file, hcca_file, description, network):
-
     # check if network exists
     network_method = ExpressionNetworkMethod.query.get(network)
     if network_method is None:
@@ -73,3 +72,5 @@ def add_planet_coexpression_clusters(hrr_file, hcca_file, description, network):
     except Exception as e:
         db.session.rollback()
         print(e)
+
+    return clustering_method.id

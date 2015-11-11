@@ -16,7 +16,6 @@ def heatmap_cluster(cluster_id):
 
     :param cluster_id: Internal ID of the cluster
     :param species_id: Species ID
-    :return:
     """
     cluster = CoexpressionCluster.query.get(cluster_id)
     associations = SequenceCoexpressionClusterAssociation.query.filter_by(coexpression_cluster_id=cluster_id).all()
@@ -34,8 +33,6 @@ def heatmap_cluster(cluster_id):
 def heatmap_main():
     """
     Renders a heatmap based on a set of probes passed using a POST request
-
-    :return:
     """
     form = HeatmapForm(request.form)
     form.populate_species()

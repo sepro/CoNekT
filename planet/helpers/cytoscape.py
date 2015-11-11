@@ -20,7 +20,7 @@ class CytoscapeHelper:
         and exporting the whole thing to a cytoscape.js compatible
 
         :param network: internal id of the network
-        :return:
+        :return: Network fully compatible with Cytoscape.js
         """
         output = {"nodes": [], "edges": []}
 
@@ -53,6 +53,8 @@ class CytoscapeHelper:
 
         :param network: dict containing the network
         :param family_method_id: desired type/method used to construct the families
+
+        :return: Cytoscape.js compatible network with colors and shapes based on gene families included
         """
         completed_network = deepcopy(network)
 
@@ -95,6 +97,9 @@ class CytoscapeHelper:
     def add_depth_data_nodes(network):
         """
         Colors a cytoscape compatible network (dict) based on edge depth
+
+        :param network: dict containing the network
+        :return: Cytoscape.js compatible network with depth information for nodes added
         """
         colored_network = deepcopy(network)
 
@@ -111,6 +116,9 @@ class CytoscapeHelper:
     def add_connection_data_nodes(network):
         """
         A data to cytoscape compatible network's nodes based on the number of edges that node possesses
+
+        :param network: dict containing the network
+        :return: Cytoscape.js compatible network with connectivity information for nodes added
         """
         colored_network = deepcopy(network)
 
@@ -132,6 +140,9 @@ class CytoscapeHelper:
     def add_depth_data_edges(network):
         """
         Colors a cytoscape compatible network (dict) based on edge depth
+
+        :param network: dict containing the network
+        :return: Cytoscape.js compatible network with depth information for edges added
         """
         colored_network = deepcopy(network)
 

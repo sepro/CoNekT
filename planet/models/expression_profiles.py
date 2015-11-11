@@ -6,6 +6,7 @@ from math import log
 
 from sqlalchemy.orm import joinedload, undefer
 
+
 class ExpressionProfile(db.Model):
     __tablename__ = 'expression_profiles'
     id = db.Column(db.Integer, primary_key=True)

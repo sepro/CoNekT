@@ -6,7 +6,10 @@ def prepare_profiles(profiles, normalize=False):
     """
     Function to convert a list of NetworkProfiles to a dict compatible with chart.js
 
-    :param profiles:
+    :param profiles: list of profiles to include in the plot
+    :param normalize: normalize the profiles (the max value of each profile is scaled to 1)
+
+    :return dict with plot compatible with Chart.js
     """
     labels = []
     datasets = []

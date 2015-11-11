@@ -34,3 +34,5 @@ def add_families_from_plaza(filename, description):
     except Exception as e:
         db.session.rollback()
         print(e)
+
+    return method.id

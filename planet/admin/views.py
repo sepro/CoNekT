@@ -6,11 +6,17 @@ from flask.ext.login import current_user
 
 class MyAdminIndexView(AdminIndexView):
     def is_accessible(self):
+        """
+        Override to ensure the current user is an admin
+        """
         return current_user.is_authenticated() and current_user.is_administrator()
 
 
 class MyModelView(ModelView):
     def is_accessible(self):
+        """
+        Override to ensure the current user is an admin
+        """
         return current_user.is_authenticated() and current_user.is_administrator()
 
     def _get_endpoint(self, endpoint):
@@ -24,6 +30,9 @@ class MyModelView(ModelView):
 
 
 class SpeciesAdminView(MyModelView):
+    """
+    Species view in admin page, specifies what is available in CRUD
+    """
     form_columns = ('code', 'name', 'data_type', 'ncbi_tax_id',
                     'pubmed_id', 'project_page', 'color', 'highlight', )
     form_create_rules = form_columns
@@ -48,6 +57,9 @@ class SpeciesAdminView(MyModelView):
 
 
 class GeneFamilyMethodAdminView(MyModelView):
+    """
+    GeneFamilyMethod view for admins, specifies what is available in CRUD
+    """
     form_columns = ('method', )
     form_edit_rules = form_columns
 
@@ -57,6 +69,9 @@ class GeneFamilyMethodAdminView(MyModelView):
 
 
 class ExpressionNetworkMethodAdminView(MyModelView):
+    """
+    ExpressionNetworkMethod view for admins, specifies what is available in CRUD
+    """
     form_columns = ('description', 'edge_type', 'species')
 
     column_display_pk = True
@@ -65,6 +80,9 @@ class ExpressionNetworkMethodAdminView(MyModelView):
 
 
 class CoexpressionClusteringMethodAdminView(MyModelView):
+    """
+    CoexpressionClusteringMethod view for admins, specifies what is available in CRUD
+    """
     form_columns = ('method', 'network_method')
 
     column_display_pk = True

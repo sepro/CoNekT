@@ -2,6 +2,7 @@
 A set of functions to work with biological sequences
 """
 
+# Simple codon table, without degeneration
 __CODONTABLE = {'ATA': 'I', 'ATC': 'I', 'ATT': 'I', 'ATG': 'M',
                 'ACA': 'T', 'ACC': 'T', 'ACG': 'T', 'ACT': 'T',
                 'AAC': 'N', 'AAT': 'N', 'AAA': 'K', 'AAG': 'K',
@@ -21,6 +22,14 @@ __CODONTABLE = {'ATA': 'I', 'ATC': 'I', 'ATT': 'I', 'ATG': 'M',
 
 
 def translate(sequence, trim=True, return_on_stop=True):
+    """
+    Translates a nucleotide (dna) sequence and returns the amino acid sequence
+
+    :param sequence: nucleotide sequence to translate
+    :param trim: Start translation at the first start codon (ATG)
+    :param return_on_stop: Stops translation at the first stop codon
+    :return: translated sequence
+    """
     output = ""
     sequence = sequence.upper()
     trimmed_sequence = sequence

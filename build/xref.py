@@ -5,7 +5,7 @@ from planet.models.gene_families import GeneFamilyMethod
 from planet.models.xrefs import XRef
 
 
-def create_xref_genes(species_id):
+def create_plaza_xref_genes(species_id):
     """
     Creates xrefs to PLAZA 3.0 Dicots
 
@@ -28,7 +28,7 @@ def create_xref_genes(species_id):
         db.session.rollback()
 
 
-def create_xref_families(method_id):
+def create_plaza_xref_families(method_id):
     """
     Creates xrefs to PLAZA 3.0 Dicots
 

@@ -16,6 +16,7 @@ from sqlalchemy.orm import joinedload
 
 from config import PLANET_FTP_DATA
 
+# Constants for the sub-folders
 SEQUENCE_PATH = os.path.join(PLANET_FTP_DATA, 'sequences')
 ANNOTATION_PATH = os.path.join(PLANET_FTP_DATA, 'annotation')
 FAMILIES_PATH = os.path.join(PLANET_FTP_DATA, 'families')

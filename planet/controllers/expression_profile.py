@@ -87,6 +87,7 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id):
     return render_template("compare_profiles.html", first_profile=first_profile,
                            second_profile=second_profile)
 
+
 @expression_profile.route('/json/radar/<profile_id>')
 def expression_profile_radar_json(profile_id):
     """

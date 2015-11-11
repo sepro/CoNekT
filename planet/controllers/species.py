@@ -4,7 +4,6 @@ from planet.models.species import Species
 from planet.models.sequences import Sequence
 
 from sqlalchemy.orm import undefer
-from utils.benchmark import benchmark
 
 species = Blueprint('species', __name__)
 
