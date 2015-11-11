@@ -40,8 +40,8 @@ def add_species_from_fasta(filename, species_code, species_name):
 
         # add 400 sequences at the time, more can cause problems with some database engines
         if len(new_sequences) > 400:
-            new_sequences = []
             db.engine.execute(Sequence.__table__.insert(), new_sequences)
+            new_sequences = []
 
     # add the last set of sequences
     db.engine.execute(Sequence.__table__.insert(), new_sequences)
