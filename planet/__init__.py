@@ -90,17 +90,18 @@ app.register_blueprint(heatmap, url_prefix='/heatmap')
 app.register_blueprint(profile_comparison, url_prefix='/profile_comparison')
 
 # Admin panel
-from planet.admin.views import MyAdminIndexView
-from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
-    CoexpressionClusteringMethodAdminView
+if LOGIN_ENABLED:
+    from planet.admin.views import MyAdminIndexView
+    from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
+        CoexpressionClusteringMethodAdminView
 
-admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'))
-admin.add_view(SpeciesAdminView(Species, db.session, url='species/'))
-admin.add_view(GeneFamilyMethodAdminView(GeneFamilyMethod, db.session, url='families/', category="Methods"))
-admin.add_view(ExpressionNetworkMethodAdminView(ExpressionNetworkMethod, db.session, url='networks/',
-                                                category="Methods"))
-admin.add_view(CoexpressionClusteringMethodAdminView(CoexpressionClusteringMethod, db.session, url='clusters/',
-                                                     category="Methods"))
+    admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'))
+    admin.add_view(SpeciesAdminView(Species, db.session, url='species/'))
+    admin.add_view(GeneFamilyMethodAdminView(GeneFamilyMethod, db.session, url='families/', category="Methods"))
+    admin.add_view(ExpressionNetworkMethodAdminView(ExpressionNetworkMethod, db.session, url='networks/',
+                                                    category="Methods"))
+    admin.add_view(CoexpressionClusteringMethodAdminView(CoexpressionClusteringMethod, db.session, url='clusters/',
+                                                         category="Methods"))
 
 #  ______________________________
 # < Beware, code overrides below >
