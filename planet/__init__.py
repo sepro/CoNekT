@@ -19,6 +19,8 @@ from flask_admin import Admin
 
 from flask_debugtoolbar import DebugToolbarExtension
 
+from config import LOGIN_ENABLED
+
 # Set up app, database and login manager before importing models and controllers
 # Important for db_create script
 
@@ -55,7 +57,7 @@ import planet.models.relationships
 # Import controllers and register as blueprint
 
 from planet.controllers.main import main
-from planet.controllers.auth import auth
+from planet.controllers.auth import auth, no_login
 from planet.controllers.sequence import sequence
 from planet.controllers.species import species
 from planet.controllers.go import go
@@ -70,7 +72,10 @@ from planet.controllers.heatmap import heatmap
 from planet.controllers.profile_comparison import profile_comparison
 
 app.register_blueprint(main)
-app.register_blueprint(auth, url_prefix='/auth')
+if LOGIN_ENABLED:
+    app.register_blueprint(auth, url_prefix='/auth')
+else:
+    app.register_blueprint(no_login, url_prefix='/auth')
 app.register_blueprint(sequence, url_prefix='/sequence')
 app.register_blueprint(species, url_prefix='/species')
 app.register_blueprint(go, url_prefix='/go')
@@ -138,5 +143,6 @@ from planet.forms.search import BasicSearchForm
 
 @app.before_request
 def before_request():
+    g.login_enabled = LOGIN_ENABLED
     g.search_form = BasicSearchForm()
     g.page_items = 7

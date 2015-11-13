@@ -11,6 +11,7 @@ from datetime import datetime
 
 
 auth = Blueprint('auth', __name__)
+no_login = Blueprint('no_login', __name__)
 
 
 @login_manager.user_loader
@@ -100,4 +101,11 @@ def logout():
     """
     flash('You have successfully logged out.', 'success')
     logout_user()
+    return redirect(url_for('main.screen'))
+
+
+@no_login.route('/', defaults={'path': ''})
+@no_login.route('/<path:path>')
+def catch_all():
+    flash('Logins are disabled', 'danger')
     return redirect(url_for('main.screen'))

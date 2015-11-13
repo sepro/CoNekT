@@ -12,7 +12,7 @@ from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
 from planet.models.gene_families import GeneFamilyMethod
 
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, undefer
 
 from config import PLANET_FTP_DATA
 
@@ -30,7 +30,7 @@ def export_coding_sequences():
     if not os.path.exists(SEQUENCE_PATH):
         os.makedirs(SEQUENCE_PATH)
 
-    species = Species.query.all()
+    species = Species.query.options(undefer('coding_sequence')).all()
 
     for s in species:
         filename = s.code + ".cds.fasta.gz"
@@ -48,7 +48,7 @@ def export_protein_sequences():
     if not os.path.exists(SEQUENCE_PATH):
         os.makedirs(SEQUENCE_PATH)
 
-    species = Species.query.all()
+    species = Species.query.options(undefer('coding_sequence')).all()
 
     for s in species:
         filename = s.code + ".aa.fasta.gz"

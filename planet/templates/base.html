@@ -51,21 +51,23 @@
                             </form>
                         </li>
                         <li class="dropdown">
-                            {% if current_user.is_authenticated() %}
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> <strong>{{ current_user.username }}</strong></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out"></i> Log out</a></li>
-                                {% if current_user.is_administrator() %}
-                                <li role="separator" class="divider"></li>
-                                <li><a href="/admin"><i class="fa fa-cogs"></i> Admin panel</a></li>
+                            {% if g.login_enabled %}
+                                {% if current_user.is_authenticated() %}
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> <strong>{{ current_user.username }}</strong></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out"></i> Log out</a></li>
+                                    {% if current_user.is_administrator() %}
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="/admin"><i class="fa fa-cogs"></i> Admin panel</a></li>
+                                    {% endif %}
+                                </ul>
+                                {% else %}
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Not logged in!</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url_for('auth.login') }}"><i class="fa fa-sign-in"></i> Log in</a></li>
+                                    <li><a href="{{ url_for('auth.register') }}"><i class="fa fa-user-plus"></i> Register</a></li>
+                                </ul>
                                 {% endif %}
-                            </ul>
-                            {% else %}
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Not logged in!</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{ url_for('auth.login') }}"><i class="fa fa-sign-in"></i> Log in</a></li>
-                                <li><a href="{{ url_for('auth.register') }}"><i class="fa fa-user-plus"></i> Register</a></li>
-                            </ul>
                             {% endif %}
                         </li>
                     </ul>
