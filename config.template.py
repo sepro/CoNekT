@@ -32,3 +32,10 @@ PLANET_FTP_DATA = os.path.join(basedir, 'ftp')
 # Debug settings
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 SQLALCHEMY_ECHO = DEBUG
+
+# WSGI configuration
+#
+# WSGI_PATH = location of the app, should be the same as the base directory of the config file
+# WSGI_ENV  = location of the activate_this.py script in the desired virtual environment
+WSGI_PATH = basedir
+WSGI_ENV = os.path.join(basedir, 'virtualenv')
