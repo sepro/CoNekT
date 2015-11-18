@@ -9,6 +9,7 @@ Below are the instructions to set up a new PlaNet version.
 [Windows Installation instructions](docs/install_windows.md)
 
 [Connecting with MySQL/MariaDB](docs/connect_mysql.md)
+[Setting up planet with apache and mod_wsgi](docs/apache_wsgi.md)
 
 [Build PlaNet](docs/building_planet.md)
 
