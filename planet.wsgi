@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
-
-from config import WSGI_PATH, WSGI_ENV
-
 import sys
+
+# WSGI configuration
+#
+# WSGI_PATH = location of the app, should be the same as the base directory of the config file
+# WSGI_ENV  = location of the activate_this.py script in the desired virtual environment
+WSGI_PATH = 'enter path'
+WSGI_ENV = 'enter path to activate_this.py'
+
+
 sys.path.insert(0, WSGI_PATH)
 
 activator = WSGI_ENV
