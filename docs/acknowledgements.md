@@ -11,3 +11,4 @@
   * [Cytoscape.js] (http://js.cytoscape.org/)
   * [Chart.js](http://www.chartjs.org/)
   * [XMLWriter for javascript](http://flesler.blogspot.de/2008/03/xmlwriter-for-javascript.html) by Ariel Flesler
+  * [Pablo.js](http://pablojs.com/)
