@@ -130,12 +130,13 @@
                         <li class="nav-header"><p class="text-muted">data</p></li>
                         <li><a href="#" id="cy-download-json">JSON (network)</a></li>
                         <li><a href="#" id="cy-download-jsoncy">JSON (network + colors/shapes)</a></li>
+                        <li><a href="#" id="cy-download-xgmml">xgmml</a></li>
                         <li class="divider"></li>
                         <li class="nav-header"><p class="text-muted">image</p></li>
                         <li><a href="#" id="cy-download-img-hires">PNG, hi-res</a></li>
                         <li><a href="#" id="cy-download-img-lowres">PNG, low-res</a></li>
                         <li class="nav-header"><p class="text-muted">experimental</p></li>
-                        <li><a href="#" id="cy-download-xgmml">xgmml</a></li>
+                        <li><a href="#" id="cy-download-svg">SVG</a></li>
                     </ul>
                 </div>
                 </div>
@@ -174,7 +175,9 @@ $('#cy-edge-score').on("slide", function(slideEvt) {
 });
 </script>
 <script src="{{ url_for('static', filename='js/XMLWriter-1.0.0-min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pablo.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/planet_xgmml.js') }}"></script>
+<script src="{{ url_for('static', filename='js/planet_svg.js') }}"></script>
 <script src="{{ url_for('static', filename='js/cytoscape.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/jquery.qtip.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/cytoscape-qtip.js') }}"></script>
