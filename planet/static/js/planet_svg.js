@@ -14,15 +14,37 @@ function __convertColor( color ) {
 
 function writeSVG(data) {
 
+    var width = 200;
+    var height = 200;
+
+    var node_positions = new Array();
+    data.elements.nodes.forEach( function(node) {
+
+        node_positions[node.data.id] = new Array();
+        node_positions[node.data.id]["x"] = node.position.x;
+        node_positions[node.data.id]["y"] = node.position.y;
+
+        if (node.position.x > width) { width = node.position.x}
+        if (node.position.y > height) { height = node.position.y}
+    });
+
     var element = document.createElement('div');
     element.className = "svgDiv";
 
     var svg = Pablo(element).svg({
-        width: 800,
-        height: 800
+        width: width + 30,
+        height: height + 30
     });
 
+    data.elements.edges.forEach( function(edge) {
+        svg.line({  x1:node_positions[edge.data.source]["x"],
+                    y1:node_positions[edge.data.source]["y"],
+                    x2:node_positions[edge.data.target]["x"],
+                    y2:node_positions[edge.data.target]["y"],
+                    stroke: __convertColor(edge.data.current_color),
+                    'stroke-width': edge.data.current_width.replace('px', '')})
 
+    });
 
     data.elements.nodes.forEach( function(node) {
         var group = svg.g();
@@ -63,12 +85,6 @@ function writeSVG(data) {
             .attr('font-family', 'sans-serif');
 
     });
-
-    data.elements.edges.forEach( function(edge) {
-
-    });
-
-
 
     return(element.innerHTML)
 
