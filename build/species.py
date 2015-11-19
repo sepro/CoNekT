@@ -6,7 +6,9 @@ from planet.models.sequences import Sequence
 from planet.models.species import Species
 
 
-def add_species_from_fasta(filename, species_code, species_name):
+def add_species_from_fasta(filename, species_code, species_name, contains_description=False,
+                           is_mitochondrial=False,
+                           is_chloroplast=False):
     """
     Adds a species based on a single fasta file with the coding (!) sequences
 
@@ -30,12 +32,19 @@ def add_species_from_fasta(filename, species_code, species_name):
 
     new_sequences = []
     for name, sequence in fasta_data.sequences.items():
+        description = ''
+        if contains_description:
+            parts = name.split('|', 1)
+            name = parts[0].strip()
+            description = parts[1].strip()
+
         new_sequence = {"species_id": species.id,
                         "name": name,
+                        "description": description,
                         "coding_sequence": sequence,
                         "type": "protein_coding",
-                        "is_mitochondrial": False,
-                        "is_chloroplast": False}
+                        "is_mitochondrial": is_mitochondrial,
+                        "is_chloroplast": is_chloroplast}
         new_sequences.append(new_sequence)
 
         # add 400 sequences at the time, more can cause problems with some database engines

@@ -30,6 +30,9 @@ class Species(db.Model):
         self.project_page = project_page
         self.color = color
         self.highlight = highlight
+        self.sequence_count = 0
+        self.profile_count = 0
+        self.network_count = 0
 
     def __repr__(self):
         return str(self.id) + ". " + self.name

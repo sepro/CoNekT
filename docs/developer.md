@@ -18,8 +18,8 @@ the project they need to be included here!**
 
 Flask packages like Flask-Login, Flask-Admin and Flask-DebugToolbar are initialized here.
 
-## Database Maintenance
 
+## Database Maintenance
 
 In case there are changes to the Models a migration script can and should be generated using **db_action.py migrate**.
 This will create a file in **migration/versions/** which should be committed to the repository (after manual inspection).
