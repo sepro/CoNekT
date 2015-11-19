@@ -6,19 +6,24 @@ Setting up PlaNet
 Below are the instructions to set up a new PlaNet version.
 
 [Linux Installation instructions](docs/install_linux.md)
+
 [Windows Installation instructions](docs/install_windows.md)
 
+
 [Connecting with MySQL/MariaDB](docs/connect_mysql.md)
+
 [Setting up planet with apache and mod_wsgi](docs/apache_wsgi.md)
 
+
 [Build PlaNet](docs/building_planet.md)
+
 
 [Run website](docs/run_website.md)
 
 Instructions for Developers
 ---------------------------
 
-Basic information on how PlaNet 2.0 is designed can be found [Linux Installation instructions](docs/developer.md)
+Basic information on how PlaNet 2.0 is designed can be found [Instructions for developers](docs/developer.md)
 
 Acknowledgements
 ----------------
