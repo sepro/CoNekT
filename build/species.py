@@ -1,4 +1,4 @@
-from build.parser.fasta import Fasta
+from utils.parser.fasta import Fasta
 
 from planet import db
 

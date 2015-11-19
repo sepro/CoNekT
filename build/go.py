@@ -2,8 +2,8 @@ from planet import db
 from planet.models.go import GO
 from planet.models.sequences import Sequence
 from planet.models.relationships import SequenceGOAssociation
-from build.parser.obo import Parser as OBOParser
-from build.parser.plaza.go import Parser as GOParser
+from utils.parser.obo import Parser as OBOParser
+from utils.parser.plaza.go import Parser as GOParser
 
 
 def populate_go(filename, empty=True):

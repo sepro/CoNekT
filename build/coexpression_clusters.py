@@ -1,4 +1,4 @@
-from build.parser.planet.expression_clusters import Parser
+from utils.parser.planet.expression_clusters import Parser
 from planet import db
 from planet.models.expression_networks import ExpressionNetworkMethod
 from planet.models.sequences import Sequence

@@ -2,7 +2,7 @@ from planet import db
 from planet.models.sequences import Sequence
 from planet.models.gene_families import GeneFamily, GeneFamilyMethod
 
-from build.parser.plaza.families import Parser as FamilyParser
+from utils.parser.plaza.families import Parser as FamilyParser
 
 
 def add_families_from_plaza(filename, description):

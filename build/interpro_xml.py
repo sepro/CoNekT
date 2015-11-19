@@ -1,6 +1,6 @@
 from planet import app,db
 from planet.models.interpro import Interpro
-from build.parser.interpro import Parser as InterproParser
+from utils.parser.interpro import Parser as InterproParser
 
 
 def populate_interpro(filename, empty=True):

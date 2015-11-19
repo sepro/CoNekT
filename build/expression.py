@@ -1,7 +1,7 @@
 import json
 
-from build.parser.planet.expression_plot import Parser as ExpressionPlotParser
-from build.parser.planet.expression_network import Parser as NetworkParser
+from utils.parser.planet.expression_plot import Parser as ExpressionPlotParser
+from utils.parser.planet.expression_network import Parser as NetworkParser
 from planet import db
 
 from planet.models.sequences import Sequence

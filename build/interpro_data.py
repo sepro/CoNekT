@@ -1,4 +1,4 @@
-from build.parser.plaza.interpro import Parser as IPDParser
+from utils.parser.plaza.interpro import Parser as IPDParser
 
 from planet.models.sequences import Sequence
 from planet.models.interpro import Interpro
