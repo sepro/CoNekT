@@ -293,9 +293,6 @@ $('#cy-download-svg').click(function() {
 
   svg = writeSVG(cy.json());
 
-  console.log(cy.json());
-  console.log(svg);
-
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(svg));
   element.setAttribute('download', "cytoscape.svg");

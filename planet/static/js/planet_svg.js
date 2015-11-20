@@ -13,9 +13,11 @@ function __convertColor( color ) {
 }
 
 function writeSVG(data) {
-
-    var width = 200;
-    var height = 200;
+    var min_x = null;
+    var min_y = null;
+    var max_x = 200;
+    var max_y = 200;
+    var margin = 100;
 
     var node_positions = new Array();
     data.elements.nodes.forEach( function(node) {
@@ -24,20 +26,32 @@ function writeSVG(data) {
         node_positions[node.data.id]["x"] = node.position.x;
         node_positions[node.data.id]["y"] = node.position.y;
 
-        if (node.position.x > width) { width = node.position.x}
-        if (node.position.y > height) { height = node.position.y}
+        if (node.position.x > max_x) { max_x = node.position.x}
+        if (node.position.y > max_y) { max_y = node.position.y}
+        
+        if (min_x === null) {min_x =  node.position.x;}
+        if (min_y === null) {min_y =  node.position.y;}
+        
+        if (node.position.x < min_x) { min_x = node.position.x}
+        if (node.position.y < min_y) { min_y = node.position.y}
+        
     });
+
+    var width = (max_x - min_x) + margin*2;
+    var height = (max_y - min_y) + margin*2;
 
     var element = document.createElement('div');
     element.className = "svgDiv";
 
     var svg = Pablo(element).svg({
-        width: width + 30,
-        height: height + 30
+        width: width,
+        height: height
     });
 
+    var network = svg.g().transform('translate', (-min_x)+margin, (-min_y)+margin);
+
     data.elements.edges.forEach( function(edge) {
-        svg.line({  x1:node_positions[edge.data.source]["x"],
+        network.line({  x1:node_positions[edge.data.source]["x"],
                     y1:node_positions[edge.data.source]["y"],
                     x2:node_positions[edge.data.target]["x"],
                     y2:node_positions[edge.data.target]["y"],
@@ -47,7 +61,7 @@ function writeSVG(data) {
     });
 
     data.elements.nodes.forEach( function(node) {
-        var group = svg.g();
+        var group = network.g();
         group.transform('translate', node.position.x, node.position.y)
 
         if (node.data.current_shape === 'ellipse') {
