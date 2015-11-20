@@ -4,6 +4,8 @@ from planet import db
 from planet.models.expression_networks import ExpressionNetwork
 from planet.models.relationships import sequence_coexpression_cluster
 
+from utils.enrichment import hypergeo_sf, fdr_correction
+
 from sqlalchemy.orm import joinedload
 
 import json
@@ -46,6 +48,10 @@ class CoexpressionCluster(db.Model):
     sequence_associations = db.relationship('SequenceCoexpressionClusterAssociation',
                                             backref=db.backref('coexpression_cluster', lazy='joined'),
                                             lazy='dynamic')
+
+    go_enrichment = db.relationship('ClusterGOEnrichment',
+                                    backref=db.backref('cluster', lazy='joined'),
+                                    lazy='dynamic')
 
     @staticmethod
     def get_cluster(cluster_id):
@@ -93,3 +99,44 @@ class CoexpressionCluster(db.Model):
                     existing_edges.append([link["probe_name"], node.probe])
 
         return {"nodes": nodes, "edges": edges}
+
+    def calculate_enrichment(self):
+
+        gene_count = self.method.network_method.species.sequence_count
+        species_id = self.method.network_method.species_id
+
+        sequences = self.sequences.all()
+
+        found_go = []
+        go_counts = {}
+
+        for s in sequences:
+            go_labels = s.go_labels.all()
+            unique_labels = list(set([go for go in go_labels]))
+
+            for go in unique_labels:
+                if go not in found_go:
+                    found_go.append(go)
+                if go.label in go_counts.keys():
+                    go_counts[go.label] += 1
+                else:
+                    go_counts[go.label] = 1
+
+        output = {}
+
+        for go in found_go:
+            output[go.label] = {'set_count': go_counts[go.label],
+                                'set_size': len(sequences),
+                                'total_count': go.species_occurrence(species_id),
+                                'total_size': gene_count}
+            output[go.label]['p_value'] = hypergeo_sf(output[go.label]['set_count'],
+                                                      output[go.label]['set_size'],
+                                                      output[go.label]['total_count'],
+                                                      output[go.label]['total_size'])
+
+        corrected_p_values = fdr_correction([data['p_value'] for go, data in output.items()])
+
+        for i, (go, data) in enumerate(output.items()):
+            data['corrected_p_value'] = corrected_p_values[i]
+            print(go, data)
+

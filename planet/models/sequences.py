@@ -5,6 +5,7 @@ from planet.models.relationships import sequence_xref
 from utils.sequence import translate
 from config import SQL_COLLATION
 
+
 class Sequence(db.Model):
     __tablename__ = 'sequences'
     id = db.Column(db.Integer, primary_key=True)
