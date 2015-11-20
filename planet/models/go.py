@@ -1,7 +1,9 @@
 from planet import db
 from planet.models.relationships import sequence_go
+from planet.models.sequences import Sequence
 from config import SQL_COLLATION
 
+from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
 class GO(db.Model):
@@ -39,8 +41,6 @@ class GO(db.Model):
         self.extended_go = extended_go
 
     def species_occurrence(self, species_id):
-        sequences = self.sequences.filter_by(species_id=species_id).all()
+        sequences = self.sequences.filter_by(species_id=species_id).count()
 
-        return len(sequences)
-
-
+        return sequences

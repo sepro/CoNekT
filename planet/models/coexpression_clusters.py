@@ -2,11 +2,12 @@ from flask import url_for
 
 from planet import db
 from planet.models.expression_networks import ExpressionNetwork
-from planet.models.relationships import sequence_coexpression_cluster
+from planet.models.relationships import sequence_coexpression_cluster, SequenceGOAssociation
 
 from utils.enrichment import hypergeo_sf, fdr_correction
+from utils.benchmark import benchmark
 
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, load_only
 
 import json
 
@@ -19,6 +20,16 @@ class CoexpressionClusteringMethod(db.Model):
     cluster_count = db.Column(db.Integer)
 
     clusters = db.relationship('CoexpressionCluster', backref=db.backref('method', lazy='joined'), lazy='dynamic')
+
+    def calculate_enrichment(self):
+        gene_count = self.network_method.species.sequence_count
+        species_id = self.network_method.species_id
+
+        clusters = self.clusters.all()
+
+        for cluster in clusters:
+            print(gene_count, species_id, cluster.id)
+            pass
 
     @staticmethod
     def update_counts():
@@ -36,6 +47,7 @@ class CoexpressionClusteringMethod(db.Model):
         except Exception as e:
             db.session.rollback()
             print(e)
+
 
 
 class CoexpressionCluster(db.Model):
@@ -101,7 +113,11 @@ class CoexpressionCluster(db.Model):
         return {"nodes": nodes, "edges": edges}
 
     def calculate_enrichment(self):
+        """
+        Initial implementation to calculate GO enrichment for a cluster
 
+        Still under development, but probably this approach is too slow
+        """
         gene_count = self.method.network_method.species.sequence_count
         species_id = self.method.network_method.species_id
 
@@ -140,3 +156,30 @@ class CoexpressionCluster(db.Model):
             data['corrected_p_value'] = corrected_p_values[i]
             print(go, data)
 
+    @benchmark
+    def calculate_enrichment2(self, background=None):
+        """
+        Initial implementation to calculate GO enrichment for a cluster
+
+        Still under development, but probably this approach is too slow
+        """
+        gene_count = self.method.network_method.species.sequence_count
+        species_id = self.method.network_method.species_id
+
+        sequences = self.sequences.options(load_only("id")).all()
+
+        associations = SequenceGOAssociation.query\
+            .filter(SequenceGOAssociation.sequence_id.in_([s.id for s in sequences]))\
+            .options(load_only("sequence_id", "go_id"))\
+            .group_by(SequenceGOAssociation.sequence_id, SequenceGOAssociation.go_id)
+
+        go_data = {}
+
+        for a in associations:
+            if a.go_id not in go_data.keys():
+                go_data[a.go_id] = a.go.species_occurrence(species_id)
+
+        for a in associations:
+            print(a.sequence_id, a.go_id)
+
+        print(go_data)
