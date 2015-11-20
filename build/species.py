@@ -32,7 +32,7 @@ def add_species_from_fasta(filename, species_code, species_name, contains_descri
 
     new_sequences = []
     for name, sequence in fasta_data.sequences.items():
-        description = ''
+        description = None
         if contains_description:
             parts = name.split('|', 1)
             name = parts[0].strip()

@@ -5,6 +5,7 @@
                 <tr>
                     <td><a href="{{ url_for('sequence.sequence_view', sequence_id=sequence.id) }}">{{ sequence.name }}</a></td>
                     <td><a href="{{ url_for('species.species_view', species_id=sequence.species_id) }}"><em>{{ sequence.species.name }}</em></a></td>
+                    <td>{% if sequence.description %}{{ sequence.description|truncate(60) }}{% else %}<span class="text-muted">No description available</span>{% endif %}</td>
                     <td>{{ sequence.type }}</td>
                 </tr>
             {% endfor %}

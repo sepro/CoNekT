@@ -33,9 +33,10 @@ class Sequence(db.Model):
     xrefs = db.relationship('XRef', secondary=sequence_xref, lazy='dynamic')
 
     def __init__(self, species_id, name, coding_sequence, type='protein_coding', is_chloroplast=False,
-                 is_mitochondrial=False):
+                 is_mitochondrial=False, description=None):
         self.species_id = species_id
         self.name = name
+        self.description = description
         self.coding_sequence = coding_sequence
         self.type = type
         self.is_chloroplast = is_chloroplast
