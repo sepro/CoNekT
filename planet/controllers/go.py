@@ -26,15 +26,8 @@ def go_find(go_label):
     :param go_label: Label of the GO term
     """
     current_go = GO.query.filter_by(label=go_label).first_or_404()
-    seqIDs = {}
-    sequences = current_go.sequences.with_entities(Sequence.id).all()
 
-    for s in sequences:
-        seqIDs[s.id] = ""
-
-    sequence_count = len(seqIDs)
-
-    return render_template('go.html', go=current_go, count=sequence_count)
+    return redirect(url_for('go.go_view', go_id=current_go.id))
 
 
 @go.route('/view/<go_id>')
@@ -45,15 +38,13 @@ def go_view(go_id):
     :param go_id: ID of the go term
     """
     current_go = GO.query.get_or_404(go_id)
-    seqIDs = {}
-    sequences = current_go.sequences.with_entities(Sequence.id).all()
+    sequences = current_go.sequences.with_entities(Sequence.id).group_by(Sequence.id).all()
 
-    for s in sequences:
-        seqIDs[s.id] = ""
+    sequence_count = len(sequences)
 
-    sequence_count = len(seqIDs)
+    enriched_clusters = current_go.enriched_clusters.all()
 
-    return render_template('go.html', go=current_go, count=sequence_count)
+    return render_template('go.html', go=current_go, count=sequence_count, clusters=enriched_clusters)
 
 
 @go.route('/sequences/<go_id>/')

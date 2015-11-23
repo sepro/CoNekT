@@ -22,6 +22,46 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Enriched clusters</div>
+                <div class="panel-scroll">
+                <div class="table-responsive">
+                    <table class="table  table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Species</th>
+                                <th>p-value</th>
+                                <th>corrected p-value</th>
+                                <th>action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cluster in clusters %}
+                                {% if cluster.corrected_p_value <= 0.05 %}
+                                <tr>
+                                    <td>{{ cluster.cluster.name }}</td>
+                                    <td><em>{{ cluster.cluster.method.network_method.species.name }}</em></td>
+                                    <td>{{ cluster.p_value|round(6) }}</td>
+                                    <td>{{ cluster.corrected_p_value|round(6) }}</td>
+                                    <td><a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.cluster.id) }}" data-toggle="tooltip"
+                                           data-placement="top" title="View cluster as table"><i class="fa fa-list"></i></a>
+                                        <a href="{{ url_for('expression_cluster.expression_cluster_graph', cluster_id=cluster.cluster.id) }}" data-toggle="tooltip"
+                                           data-placement="top" title="View cluster as graph"><i class="fa fa-share-alt"></i></a>
+                                        <a href="{{ url_for('profile_comparison.profile_comparison_cluster', cluster_id=cluster.cluster.id) }}" data-toggle="tooltip"
+                                           data-placement="top" title="Compare profiles in this cluster"><i class="fa fa-area-chart"></i></a>
+                                        <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster.cluster.id) }}" data-toggle="tooltip"
+                                           data-placement="top" title="Heatmap of profiles in this cluster"><i class="fa fa-table"></i></a>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{ macro.sequence_pagination(url_for('go.go_sequences', go_id=go.id), count) }}
@@ -38,6 +78,7 @@
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 	<script>
 	$( document ).ready(function() {
+	        $('[data-toggle="tooltip"]').tooltip();
 			$.getJSON( "{{ url_for('go.go_json_species', go_id=go.id) }}", function( data ) {
 				var ctx = document.getElementById("chart-area").getContext("2d");
 				window.myPie = new Chart(ctx).Doughnut(data, {animateRotate : false});
