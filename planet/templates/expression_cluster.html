@@ -42,13 +42,13 @@
                 <div class="panel-heading">Enriched GO Terms</div>
                 <div class="panel-scroll">
                 <div class="table-responsive">
-                    <table class="table  table-striped">
+                    <table class="table  table-striped" id="EnrichedGO">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>label</th>
-                                <th>p-value</th>
-                                <th>corrected p-value</th>
+                                <th data-sort="string-ins">ID</th>
+                                <th data-sort="string-ins">label</th>
+                                <th data-sort="float">p-value</th>
+                                <th data-sort="float">corrected p-value</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -80,11 +80,12 @@
 
 {% block extrajs %}
     {% if cluster %}
+        <script src="{{ url_for('static', filename='js/stupidtable.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/planet_pagination.js') }}"></script>
         <script>
         $( document ).ready(function() {
                 $('[data-toggle="tooltip"]').tooltip();
-
+                $("#EnrichedGO").stupidtable();
         });
         </script>
 
