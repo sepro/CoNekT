@@ -3,9 +3,8 @@ from planet.models.relationships import sequence_go, SequenceGOAssociation
 from config import SQL_COLLATION
 from planet.models.sequences import Sequence
 
-from sqlalchemy.orm import joinedload
-
 import json
+
 
 class GO(db.Model):
     __tablename__ = 'go'
@@ -61,7 +60,7 @@ class GO(db.Model):
 
         sequence_to_species = {}
         for seq_id, species_id in sequences:
-            sequence_to_species[seq_id] = species_id
+            sequence_to_species[seq_id] = int(species_id)
 
         # get go for all genes
         associations = db.engine.execute(

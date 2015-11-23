@@ -2,7 +2,7 @@ from flask import url_for
 
 from planet import db
 from planet.models.expression_networks import ExpressionNetwork
-from planet.models.relationships import sequence_coexpression_cluster, SequenceGOAssociation
+from planet.models.relationships import sequence_coexpression_cluster, SequenceGOAssociation, ClusterGOEnrichment
 
 from utils.enrichment import hypergeo_sf, fdr_correction
 from utils.benchmark import benchmark
@@ -10,6 +10,7 @@ from utils.benchmark import benchmark
 from sqlalchemy.orm import joinedload, load_only
 
 import json
+from math import log2
 
 
 class CoexpressionClusteringMethod(db.Model):
@@ -47,7 +48,6 @@ class CoexpressionClusteringMethod(db.Model):
         except Exception as e:
             db.session.rollback()
             print(e)
-
 
 
 class CoexpressionCluster(db.Model):
@@ -112,52 +112,8 @@ class CoexpressionCluster(db.Model):
 
         return {"nodes": nodes, "edges": edges}
 
-    def calculate_enrichment(self):
-        """
-        Initial implementation to calculate GO enrichment for a cluster
-
-        Still under development, but probably this approach is too slow
-        """
-        gene_count = self.method.network_method.species.sequence_count
-        species_id = self.method.network_method.species_id
-
-        sequences = self.sequences.all()
-
-        found_go = []
-        go_counts = {}
-
-        for s in sequences:
-            go_labels = s.go_labels.all()
-            unique_labels = list(set([go for go in go_labels]))
-
-            for go in unique_labels:
-                if go not in found_go:
-                    found_go.append(go)
-                if go.label in go_counts.keys():
-                    go_counts[go.label] += 1
-                else:
-                    go_counts[go.label] = 1
-
-        output = {}
-
-        for go in found_go:
-            output[go.label] = {'set_count': go_counts[go.label],
-                                'set_size': len(sequences),
-                                'total_count': go.species_occurrence(species_id),
-                                'total_size': gene_count}
-            output[go.label]['p_value'] = hypergeo_sf(output[go.label]['set_count'],
-                                                      output[go.label]['set_size'],
-                                                      output[go.label]['total_count'],
-                                                      output[go.label]['total_size'])
-
-        corrected_p_values = fdr_correction([data['p_value'] for go, data in output.items()])
-
-        for i, (go, data) in enumerate(output.items()):
-            data['corrected_p_value'] = corrected_p_values[i]
-            print(go, data)
-
     @benchmark
-    def calculate_enrichment2(self, background=None):
+    def calculate_enrichment(self):
         """
         Initial implementation to calculate GO enrichment for a cluster
 
@@ -177,9 +133,39 @@ class CoexpressionCluster(db.Model):
 
         for a in associations:
             if a.go_id not in go_data.keys():
-                go_data[a.go_id] = a.go.species_occurrence(species_id)
+                go_data[a.go_id] = {}
+                go_data[a.go_id]["total_count"] = json.loads(a.go.species_counts)[str(species_id)]
+                go_data[a.go_id]["cluster_count"] = 1
+            else:
+                go_data[a.go_id]["cluster_count"] += 1
 
-        for a in associations:
-            print(a.sequence_id, a.go_id)
+        p_values = []
+        for go_id in go_data:
+            p_values.append(hypergeo_sf(go_data[go_id]['cluster_count'],
+                                        len(sequences),
+                                        go_data[go_id]['total_count'],
+                                        gene_count))
 
-        print(go_data)
+        corrected_p_values = fdr_correction(p_values)
+
+        for i, go_id in enumerate(go_data):
+            enrichment = ClusterGOEnrichment()
+            enrichment.cluster_id = self.id
+            enrichment.go_id = go_id
+
+            enrichment.cluster_count = go_data[go_id]['cluster_count']
+            enrichment.cluster_size = len(sequences)
+            enrichment.go_count = go_data[go_id]['total_count']
+            enrichment.go_size = gene_count
+
+            enrichment.enrichment = log2((go_data[go_id]['cluster_count']/len(sequences))/(go_data[go_id]['total_count']/gene_count))
+            enrichment.p_value = p_values[i]
+            enrichment.corrected_p_value = corrected_p_values[i]
+
+            db.session.add(enrichment)
+
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(e)
