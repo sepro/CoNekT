@@ -1,10 +1,11 @@
 from planet import db
-from planet.models.relationships import sequence_go
-from planet.models.sequences import Sequence
+from planet.models.relationships import sequence_go, SequenceGOAssociation
 from config import SQL_COLLATION
+from planet.models.sequences import Sequence
 
-from sqlalchemy import func
 from sqlalchemy.orm import joinedload
+
+import json
 
 class GO(db.Model):
     __tablename__ = 'go'
@@ -16,6 +17,7 @@ class GO(db.Model):
     obsolete = db.Column(db.Boolean)
     is_a = db.Column(db.Text)
     extended_go = db.Column(db.Text)
+    species_counts = db.Column(db.Text)
 
     sequences = db.relationship('Sequence', secondary=sequence_go, lazy='dynamic')
     sequence_associations = db.relationship('SequenceGOAssociation', backref=db.backref('go', lazy='joined'), lazy='dynamic')
@@ -32,6 +34,7 @@ class GO(db.Model):
         self.obsolete = obsolete
         self.is_a = is_a
         self.extended_go = extended_go
+        self.species_counts = ""
 
     def set_all(self, label, name, go_type, description, extended_go):
         self.label = label
@@ -39,8 +42,47 @@ class GO(db.Model):
         self.type = go_type
         self.description = description
         self.extended_go = extended_go
+        self.species_counts = ""
 
     def species_occurrence(self, species_id):
-        sequences = self.sequences.filter_by(species_id=species_id).count()
+        count = 0
+        sequences = self.sequences.all()
 
-        return sequences
+        for s in sequences:
+            if s.species_id == species_id:
+                count += 1
+
+        return count
+
+    @staticmethod
+    def update_species_counts():
+        # link species to sequences
+        sequences = db.engine.execute(db.select([Sequence.__table__.c.id, Sequence.__table__.c.species_id])).fetchall()
+
+        sequence_to_species = {}
+        for seq_id, species_id in sequences:
+            sequence_to_species[seq_id] = species_id
+
+        # get go for all genes
+        associations = db.engine.execute(
+            db.select([SequenceGOAssociation.__table__.c.sequence_id,
+                       SequenceGOAssociation.__table__.c.go_id], distinct=True))\
+            .fetchall()
+
+        count = {}
+        for seq_id, go_id in associations:
+            species_id = sequence_to_species[seq_id]
+
+            if go_id not in count.keys():
+                count[go_id] = {}
+
+            if species_id not in count[go_id]:
+                count[go_id][species_id] = 1
+            else:
+                count[go_id][species_id] += 1
+
+        # update counts
+        for go_id, data in count.items():
+            db.engine.execute(db.update(GO.__table__)
+                              .where(GO.__table__.c.id == go_id)
+                              .values(species_counts=json.dumps(data)))

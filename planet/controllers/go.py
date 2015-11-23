@@ -83,6 +83,8 @@ def go_json_species(go_id):
 
     :param go_id: ID of the go term to render
     """
+    # TODO: This function can be improved with the precalculated counts !
+
     current_go = GO.query.get_or_404(go_id)
     sequences = current_go.sequences.options(joinedload('species')).all()
 

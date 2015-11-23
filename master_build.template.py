@@ -14,6 +14,7 @@ from planet.models.expression_networks import ExpressionNetworkMethod
 from planet.models.gene_families import GeneFamilyMethod
 from planet.models.species import Species
 from planet.models.clades import Clade
+from planet.models.go import GO
 
 from planet.ftp import export_ftp_data
 
@@ -66,6 +67,7 @@ CoexpressionClusteringMethod.update_counts()
 ExpressionNetworkMethod.update_count()
 GeneFamilyMethod.update_count()
 Species.update_counts()
+GO.update_species_counts()
 
 print("Adding clades and assigning them to gene families")
 print("=================================================")
