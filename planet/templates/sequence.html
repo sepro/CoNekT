@@ -39,12 +39,12 @@
                 {% if go_associations|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
-                    <table class="table  table-striped">
+                    <table class="table  table-striped" id="go_table">
                         <thead>
                             <tr>
-                                <th>Label</th>
-                                <th>Name</th>
-                                <th>Evidence</th>
+                                <th data-sort="string-ins">Label</th>
+                                <th data-sort="string-ins">Name</th>
+                                <th data-sort="string-ins">Evidence</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -78,13 +78,13 @@
                 {% if interpro_associations|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="interpro_table">
                         <thead>
                             <tr>
-                                <th>Label</th>
-                                <th>Description</th>
-                                <th>Start</th>
-                                <th>Stop</th>
+                                <th data-sort="string-ins">Label</th>
+                                <th data-sort="string-ins">Description</th>
+                                <th data-sort="int">Start</th>
+                                <th data-sort="int">Stop</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -124,11 +124,11 @@
                 {% if families|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="family_table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Method</th>
+                                <th data-sort="string-ins">Name</th>
+                                <th data-sort="string-ins">Method</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -282,7 +282,12 @@
 </div>
 {% block extrajs %}
 <script>
+
 $(function () {
+  $("#go_table").stupidtable();
+  $("#interpro_table").stupidtable();
+  $("#family_table").stupidtable();
+
   $('[data-toggle="tooltip"]').tooltip();
   $('a[data-target=#profileModal]').click(function(ev) {
     ev.preventDefault();

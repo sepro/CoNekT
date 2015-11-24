@@ -23,6 +23,7 @@ FAMILIES_PATH = os.path.join(PLANET_FTP_DATA, 'families')
 EXPRESSION_PATH = os.path.join(PLANET_FTP_DATA, 'expression')
 
 
+# TODO: rewrite some of these methods using ORM free database interactions
 def export_coding_sequences():
     """
     Exports sequences for transcripts as gzipped fasta files to the desired path
