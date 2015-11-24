@@ -112,12 +112,9 @@ class CoexpressionCluster(db.Model):
 
         return {"nodes": nodes, "edges": edges}
 
-    @benchmark
-    def calculate_enrichment(self):
+    def __calculate_enrichment(self):
         """
-        Initial implementation to calculate GO enrichment for a cluster
-
-        Still under development, but probably this approach is too slow
+        Initial implementation to calculate GO enrichment for a single cluster
         """
         gene_count = self.method.network_method.species.sequence_count
         species_id = self.method.network_method.species_id
@@ -169,3 +166,26 @@ class CoexpressionCluster(db.Model):
         except Exception as e:
             db.session.rollback()
             print(e)
+
+    @staticmethod
+    def calculate_enrichment(empty=True):
+        """
+        Static method to calculate the enrichment for all cluster in the database
+
+        :param empty: empty table cluster_go_enrichment first
+        :return:
+        """
+        # If required empty the table first
+        if empty:
+            try:
+                db.session.query(ClusterGOEnrichment).delete()
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+            else:
+                clusters = CoexpressionCluster.query.all()
+
+                for i, cluster in enumerate(clusters):
+                    print(i, "\t cluster: ", cluster.method_id, cluster.name)
+                    cluster.__calculate_enrichment()
