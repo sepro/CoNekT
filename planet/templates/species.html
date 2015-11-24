@@ -39,15 +39,15 @@
     {% elif all_species %}
          <h1>Species Overview</h1>
          <div class="table-responsive">
-            <table class="table" style="margin-bottom:100px;">
+            <table class="table" style="margin-bottom:100px;" id="species_table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>Transcripts</th>
-                        <th>Profiles</th>
-                        <th>Networks</th>
+                        <th data-sort="int">ID</th>
+                        <th data-sort="string-ins">Code</th>
+                        <th data-sort="string-ins">Name</th>
+                        <th data-sort="int">Transcripts</th>
+                        <th data-sort="int">Profiles</th>
+                        <th data-sort="int">Networks</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -83,5 +83,11 @@
 {% block extrajs %}
     {% if species %}
         <script src="{{ url_for('static', filename='js/planet_pagination.js') }}"></script>
+    {% elif all_species %}
+        <script>
+            $(function () {
+                $("#species_table").stupidtable();
+            });
+        </script>
     {% endif %}
 {% endblock %}
