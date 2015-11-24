@@ -186,3 +186,9 @@ class ExpressionNetwork(db.Model):
                     "gene_name": linked_probe["probe_name"],
                     "node_type": "linked",
                     "depth": depth}
+
+    @staticmethod
+    def calculate_enrichment():
+        # first get all GO info
+        # for each probe get neighborhood and calculate
+        pass
