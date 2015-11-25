@@ -33,8 +33,6 @@
     {% elif cluster %}
         <h1>Cluster: {{ cluster.name }}<br /><small>{{ cluster.method.method }}</small></h1>
         <a href="{{ url_for('expression_cluster.expression_cluster_graph', cluster_id=cluster.id) }}">View graph</a> <i class="fa fa-share-alt"></i>
- <span class="text-muted">|</span> <a href="{{ url_for('expression_cluster.expression_cluster_download', cluster_id=cluster.id) }}" download="table.txt">Download table</a> <i class="fa fa-download"></i>
-
         <br /><br />
         <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -74,7 +72,8 @@
 
 
         {{ macro.sequence_pagination(url_for('expression_cluster.expression_cluster_sequences', cluster_id=cluster.id), sequence_count) }}
-
+        <a href="{{ url_for('expression_cluster.expression_cluster_download', cluster_id=cluster.id) }}" download="table.txt">Download table</a> <i class="fa fa-download"></i>
+        <br /><br />
     {% endif %}
 
 </div>

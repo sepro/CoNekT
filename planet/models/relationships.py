@@ -38,6 +38,13 @@ family_xref = db.Table('family_xref',
                        db.Column('xref_id', db.Integer, db.ForeignKey('xrefs.id'), index=True)
                        )
 
+cluster_go_enrichment = db.Table('cluster_go_enrichment',
+                                 db.Column('id', db.Integer, primary_key=True),
+                                 db.Column('cluster_id', db.Integer, db.ForeignKey('coexpression_clusters.id'), index=True),
+                                 db.Column('go_id', db.Integer, db.ForeignKey('go.id'), index=True)
+                                 )
+
+
 class SequenceCoexpressionClusterAssociation(db.Model):
     __tablename__ = 'sequence_coexpression_cluster'
     __table_args__ = {'extend_existing': True}
@@ -89,10 +96,11 @@ class SequenceGOAssociation(db.Model):
 
 class ClusterGOEnrichment(db.Model):
     __tablename__ = 'cluster_go_enrichment'
+    __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
-    cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'), index=True)
-    go_id = db.Column(db.Integer, db.ForeignKey('go.id'), index=True)
+    cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
+    go_id = db.Column(db.Integer, db.ForeignKey('go.id'))
 
     """
     Counts required to calculate the enrichment,
