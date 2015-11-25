@@ -49,7 +49,6 @@ def go_view(go_id):
 
 @go.route('/sequences/<go_id>/')
 @go.route('/sequences/<go_id>/<int:page>')
-@benchmark
 def go_sequences(go_id, page=1):
     """
     Returns a table with sequences with the selected go
@@ -66,7 +65,6 @@ def go_sequences(go_id, page=1):
 
 
 @go.route('/json/species/<go_id>')
-@benchmark
 def go_json_species(go_id):
     """
     Generates a JSON object with the species composition that can be rendered using Chart.js pie charts or doughnut
@@ -93,3 +91,12 @@ def go_json_species(go_id):
 
     return Response(json.dumps([counts[s] for s in counts.keys()]), mimetype='application/json')
 
+
+@go.route('/json/genes/<go_label>')
+def go_genes_find(go_label):
+    current_go = GO.query.filter_by(label=go_label).first()
+
+    if current_go is not None:
+        return json.dumps([association.sequence_id for association in current_go.sequence_associations])
+    else:
+        return json.dumps([])

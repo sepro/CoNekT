@@ -8,6 +8,7 @@ from planet.models.interpro import Interpro
 from planet.models.gene_families import GeneFamily
 from planet.models.expression_profiles import ExpressionProfile
 
+import json
 
 search = Blueprint('search', __name__)
 
@@ -118,3 +119,20 @@ def simple():
                                sequences=results["sequences"],
                                families=results["families"],
                                profiles=results["profiles"])
+
+
+@search.route('/json/genes/<label>')
+def search_json_genes(label):
+    output = []
+    current_go = GO.query.filter_by(label=label).first()
+
+    if current_go is not None:
+        for association in current_go.sequence_associations:
+            output.append(association.sequence_id)
+
+    current_interpro = Interpro.query.filter_by(label=label).first()
+    if current_interpro is not None:
+        for association in current_interpro.sequence_associations:
+            output.append(association.sequence_id)
+
+    return json.dumps(output)

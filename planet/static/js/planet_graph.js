@@ -156,12 +156,25 @@ $("#cy-search").click(function(){
   var term = $("#cy-search-term").val().trim().toLowerCase();
 
   cy.nodes().toggleClass('found', false);
+  var valid_genes = []
+  $.getJSON('/search/json/genes/'+term, function(data){
+         var i=0;
+         for(i=0;i<data.length;i++){
+            valid_genes.push(data[i])
+        }
+        })
+  .done(function(){
+    cy.nodes().each( function(i, node) {
+      if(node.data('gene_name').toLowerCase() === term ||
+         node.data('name').toLowerCase() === term ||
+         valid_genes.indexOf(node.data('gene_id')) > -1) {
+        node.toggleClass('found');
+      }
+    });
 
-  cy.nodes().each( function(i, node) {
-    if(node.data('gene_name').toLowerCase() === term || node.data('name').toLowerCase() === term) {
-      node.toggleClass('found');
-    }
   });
+
+
 });
 
 $('#cy-download-img-hires').click(function() {
