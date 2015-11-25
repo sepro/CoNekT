@@ -152,6 +152,18 @@ $(".cy-option-menu li a").click(function(){
   $(this).parents(".btn-group").find('.btn').val($(this).data('value'));
 });
 
+$("#cy-search").click(function(){
+  var term = $("#cy-search-term").val().trim().toLowerCase();
+
+  cy.nodes().toggleClass('found', false);
+
+  cy.nodes().each( function(i, node) {
+    if(node.data('gene_name').toLowerCase() === term || node.data('name').toLowerCase() === term) {
+      node.toggleClass('found');
+    }
+  });
+});
+
 $('#cy-download-img-hires').click(function() {
 
   var png64 = cy.png({scale: 4, bg: "#FFFFFF"});
@@ -247,18 +259,6 @@ $('#cy-download-svg').click(function() {
 
   element.click();
 })
-
-function valueToColor(value)
-{
-  value = value > 15 ? 15 : value;
-  value = value < 1 ? 1 : value;
-  if (value === null)  {
-    return "#FFF";
-  } else {
-    var color = "#" + (15-value).toString(16) + "" + value.toString(16) + "0";
-    return color;
-  }
-}
 
 }); // end on dom ready
 

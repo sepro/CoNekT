@@ -28,6 +28,14 @@ node:selected {
         line-color: black;
 }
 
+node.found {
+        width: 60px;
+        height: 60px;
+        text-outline-width: 2;
+        text-outline-color: #EEE;
+        color: #33F;
+}
+
 node.color {
         background-color: data(color);
 }
