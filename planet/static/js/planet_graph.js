@@ -4,41 +4,11 @@ var initial_json;
 $(function(){ // on dom ready
 
 var url = $('#cy').attr( "json" );
+var cycss_url = $('#cy').attr( "cycss" );
 
 cy = cytoscape({
   container: document.getElementById('cy'),
-  style: cytoscape.stylesheet()
-    .selector('node')
-      .css({
-        'content': 'data(gene_name)',
-        'text-valign': 'center',
-        'color': '#FFF',
-        'background-color': 'data(color)',
-        'text-outline-width': 1,
-        'text-outline-color': '#888'
-      })
-    .selector('node[node_type = "query"]')
-      .css({
-        'color': 'black',
-        'text-outline-width': 2,
-        'text-outline-color': '#EEE'
-      })
-    .selector('edge')
-      .css({
-        'curve-style': 'haystack',
-        'opacity': 0.7,
-        'width': 1,
-        'line-color': 'data(color)'
-      })
-    .selector(':selected')
-      .css({
-        'border-width':'6px',
-        'border-color':'#AAD8FF',
-        'border-opacity':'0.5',
-        'background-color':'#77828C',
-        'line-color': 'black',
-      }),
-  
+  style: $.get(cycss_url),
   elements: $.getJSON(url),
   layout: {
     name: 'concentric',
@@ -122,53 +92,31 @@ cy = cytoscape({
 
 
 $('.cy-node-color').click(function() {
- var attr = $( this ).attr( 'attr' );
- if (attr === "neighbors" || attr === "family_clade_count") {
-    cy.nodes().style('background-color', function( ele ){
-        if(attr === "family_clade_count") {
-          if (ele.data("family_clade") === "None") {
-            return "#CCC";
-          } else {
-            return valueToColor(15 - (ele.data(attr)*3));
-          }
-
-        } else {
-          return valueToColor(ele.data(attr));
-        }
-    });
-  } else {
-    cy.nodes().style('background-color', function( ele ){ return ele.data(attr)});
-  }
+  $( this ).closest('.cy-option-menu').find('.cy-node-color').each(function () {
+    cy.nodes().removeClass( $( this ).attr( 'attr' ) );
+  });
+ cy.nodes().addClass( $( this ).attr( 'attr' ) );
 })
 
 $('.cy-node-shape').click(function() {
-  var attr = $( this ).attr( 'attr' );
-  cy.nodes().style('shape', function( ele ){ return ele.data(attr)});
+  $( this ).closest('.cy-option-menu').find('.cy-node-shape').each(function () {
+    cy.nodes().removeClass( $( this ).attr( 'attr' ) );
+  });
+ cy.nodes().addClass( $( this ).attr( 'attr' ) );
 })
 
 $('.cy-edge-color').click(function() {
-  var attr = $( this ).attr( 'attr' );
-  if (attr === "link_score") {
-    cy.edges().style('line-color', function( ele ){
-        var value = Math.floor(((31 - ele.data(attr))/30)*16);
-        return valueToColor(value);
-      });
-  }
-  else{
-    cy.edges().style('line-color', function( ele ){ return ele.data(attr)});
-  }
-
+  $( this ).closest('.cy-option-menu').find('.cy-edge-color').each(function () {
+    cy.edges().removeClass( $( this ).attr( 'attr' ) );
+  });
+ cy.edges().addClass( $( this ).attr( 'attr' ) );
 })
 
 $('.cy-edge-width').click(function() {
-  var attr = $( this ).attr( 'attr' );
-  if (attr === "default") {
-    cy.edges().style('width', 1);
-  } else if (attr === "depth")
-  {
-    cy.edges().style('width', function( ele ){ return (3 - ele.data('depth'))/2});
-  }
-
+  $( this ).closest('.cy-option-menu').find('.cy-edge-width').each(function () {
+    cy.edges().removeClass( $( this ).attr( 'attr' ) );
+  });
+ cy.edges().addClass( $( this ).attr( 'attr' ) );
 })
 
 $('#cy-edge-score').on("slideStop", function(slideEvt) {

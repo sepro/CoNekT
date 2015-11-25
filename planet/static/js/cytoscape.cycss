@@ -1,0 +1,83 @@
+node {
+        content: data(gene_name);
+        text-valign: center;
+        color: #FFF;
+        background-color: data(color);
+        text-outline-width: 1;
+        text-outline-color: #888;
+}
+
+node[node_type = "query"] {
+        color: black;
+        text-outline-width: 2;
+        text-outline-color: #EEE;
+}
+
+edge {
+        curve-style: haystack;
+        opacity: 0.7;
+        width: 1;
+        line-color: data(color);
+}
+
+node:selected {
+        border-width:6px;
+        border-color:#AAD8FF;
+        border-opacity:0.5;
+        background-color:#77828C;
+        line-color: black;
+}
+
+node.color {
+        background-color: data(color);
+}
+
+node.family_color {
+        background-color: data(family_color);
+}
+
+node.depth_color {
+        background-color: data(family_color);
+}
+
+node.neighbors {
+        background-color: mapData(neighbors, 0, 15, red, green);
+}
+
+node.depth_color {
+        background-color: mapData(depth, 0, 2, green, orange);
+}
+
+node.family_clade_count {
+        background-color: mapData(family_clade_count, 1, 15, green, blue);
+}
+
+node.family_shape {
+        shape: data(family_shape);
+}
+
+node.shape {
+        shape: data(shape);
+}
+
+edge.color {
+        line-color: data(color);
+}
+
+edge.depth_color {
+        line-color: data(depth_color);
+}
+
+edge.link_score {
+        line-color: mapData(link_score, 0, 30, green, red);
+}
+
+edge.default {
+        opacity: 0.7;
+        width: 1;
+        line-color: data(color);
+}
+
+edge.depth {
+        width: mapData(depth, 0, 3, 3, 1);
+}
