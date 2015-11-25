@@ -2,6 +2,10 @@ body {
 padding-top: 50px;
 }
 
+.container {
+  min-height: 100%;
+  }
+
 .btn-file {
   position: relative;
   overflow: hidden;
@@ -63,8 +67,8 @@ input[readonly] {
 
 
 #cy {
-  height: 500px;
-  width: 100%;
+  min-height: 800px;
+  min-width: 100%;
   position: absolute;
 }
 
@@ -187,7 +191,7 @@ body {
   margin-bottom: 40px;
 }
 .footer {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
