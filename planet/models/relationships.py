@@ -119,6 +119,14 @@ class ClusterGOEnrichment(db.Model):
     p_value = db.Column(db.Float)
     corrected_p_value = db.Column(db.Float)
 
+    @property
+    def cluster_percentage(self):
+        return self.cluster_count*100/self.cluster_size
+
+    @property
+    def genome_percentage(self):
+        return self.go_count*100/self.go_size
+
 
 class ProbeGOEnrichment(db.Model):
     __tablename__ = 'probe_go_enrichment'

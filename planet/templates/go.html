@@ -27,13 +27,14 @@
                 <div class="panel-heading">Enriched clusters</div>
                 <div class="panel-scroll">
                 <div class="table-responsive">
-                    <table class="table  table-striped">
+                    <table class="table  table-striped" id="enriched_clusters">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Species</th>
-                                <th>p-value</th>
-                                <th>corrected p-value</th>
+                                <th data-sort="string-ins">Name</th>
+                                <th data-sort="string-ins">Species</th>
+                                <th data-sort="float">% in cluster</th>
+                                <th data-sort="float">p-value</th>
+                                <th data-sort="float">corrected p-value</th>
                                 <th>action</th>
                             </tr>
                         </thead>
@@ -43,6 +44,7 @@
                                 <tr>
                                     <td>{{ cluster.cluster.name }}</td>
                                     <td><em>{{ cluster.cluster.method.network_method.species.name }}</em></td>
+                                    <td>{{ cluster.cluster_percentage|round(2) }} %</td>
                                     <td>{{ cluster.p_value|round(6) }}</td>
                                     <td>{{ cluster.corrected_p_value|round(6) }}</td>
                                     <td><a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.cluster.id) }}" data-toggle="tooltip"
@@ -78,6 +80,7 @@
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 	<script>
 	$( document ).ready(function() {
+	        $("#enriched_clusters").stupidtable();
 	        $('[data-toggle="tooltip"]').tooltip();
 			$.getJSON( "{{ url_for('go.go_json_species', go_id=go.id) }}", function( data ) {
 				var ctx = document.getElementById("chart-area").getContext("2d");
