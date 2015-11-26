@@ -1,4 +1,4 @@
-from flask import g, Blueprint, flash, redirect, url_for, render_template
+from flask import g, Blueprint, flash, request, redirect, url_for, render_template
 from sqlalchemy.sql import or_, and_
 from sqlalchemy import func
 
@@ -7,6 +7,7 @@ from planet.models.go import GO
 from planet.models.interpro import Interpro
 from planet.models.gene_families import GeneFamily
 from planet.models.expression_profiles import ExpressionProfile
+from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
 
 import json
 
@@ -136,3 +137,25 @@ def search_json_genes(label):
             output.append(association.sequence_id)
 
     return json.dumps(output)
+
+
+@search.route('/enriched/clusters', methods=['GET', 'POST'])
+def search_enriched_clusters():
+    form = SearchEnrichedClustersForm(request.form)
+    form.populate_species()
+
+    if request.method == 'POST':
+        term = request.form.get('go_term')
+        species = request.form.get('species_id')
+
+        check_enrichment = request.form.get('check_enrichment') == 'y'
+        check_p = request.form.get('check_p') == 'y'
+        check_corrected_p = request.form.get('check_corrected_p') == 'y'
+
+        min_enrichment = request.form.get('min_enrichment')
+        max_p = request.form.get('max_p')
+        max_corrected_p = request.form.get('max_corrected_p')
+
+        return json.dumps([term, "species " + str(species), check_enrichment, check_p, check_corrected_p, min_enrichment, max_p, max_corrected_p])
+    else:
+        return render_template("search_enriched_clusters.html", form=form)

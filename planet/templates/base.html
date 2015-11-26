@@ -30,10 +30,24 @@
                     <ul class="nav navbar-nav navbar-left">
                         <li><a href="{{ url_for('species.species_overview') }}">Species</a></li>
                         <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Expression <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ url_for('heatmap.heatmap_main') }}">Heatmap</a></li>
-                                <li><a href="{{ url_for('profile_comparison.profile_comparison_main') }}">Compare profiles</a></li>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Expression</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{{ url_for('heatmap.heatmap_main') }}">Heatmap</a></li>
+                                        <li><a href="{{ url_for('profile_comparison.profile_comparison_main') }}">Compare profiles</a></li>
+                                    </ul>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Search</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Search <span class="text-muted">(advanced)</span></a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="{{ url_for('search.search_enriched_clusters') }}">Enriched clusters</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
                     </ul>
