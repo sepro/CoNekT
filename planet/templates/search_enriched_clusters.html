@@ -3,12 +3,56 @@
 {% block container %}
 <div class="top-pad">
 
-    <h1>Search: Enriched Clusters</h1>
-    {% if clusters%}
-    {% for c in clusters %}
-        <p>{{ c.cluster_id }}</p>
-    {% endfor %}
+
+    {% if results%}
+    <h1>Search results</h1>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Species</th>
+                <th>Method</th>
+                <th>Name</th>
+                <th>Enrichment</th>
+                <th>p-value</th>
+                <th>corrected p-value</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for r in results %}
+            <tr>
+                <td colspan="3"><strong>{{ r.go.name }}</strong> ({{ r.go.label}})</td>
+            </tr>
+                    {% for c in r.clusters %}
+                    <tr>
+                        <td>{{ c.cluster_id }}</td>
+                        <td><em>{{ c.cluster.method.network_method.species.name }}</em></td>
+                        <td>{{ c.cluster.method.method }}</td>
+                        <td>{{ c.cluster.name }}</td>
+                        <td>{{ c.enrichment }}</td>
+                        <td>{{ c.p_value }}</td>
+                        <td>{{ c.corrected_p_value }}</td>
+                        <td>
+                            <a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=c.cluster_id) }}" data-toggle="tooltip"
+                                       data-placement="top" title="View cluster as table"><i class="fa fa-list"></i></a>
+                                    <a href="{{ url_for('expression_cluster.expression_cluster_graph', cluster_id=c.cluster_id) }}" data-toggle="tooltip"
+                                       data-placement="top" title="View cluster as graph"><i class="fa fa-share-alt"></i></a>
+                                    <a href="{{ url_for('profile_comparison.profile_comparison_cluster', cluster_id=c.cluster_id) }}" data-toggle="tooltip"
+                                       data-placement="top" title="Compare profiles in this cluster"><i class="fa fa-area-chart"></i></a>
+                                    <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=c.cluster_id) }}" data-toggle="tooltip"
+                                       data-placement="top" title="Heatmap of profiles in this cluster"><i class="fa fa-table"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </p>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
     {% elif form %}
+    <h1>Search: Enriched Clusters</h1>
         <div class="row">
             <div class="col-md-4 col-md-offset-4 col-xs-8 col-xs-offset-2">
                 <div class="panel panel-default">
@@ -17,7 +61,7 @@
                         <form method="POST"  action="{{ url_for('search.search_enriched_clusters') }}"  role="form">
                             {{ form.csrf_token }}
                             <label>GO</label>
-                            {{form.go_term(class_="form-control") }}<br />
+                            {{form.go_term(class_="form-control typeahead") }}<br />
                             <label>Species</label>
                             {{form.species_id(class_="form-control") }}<br />
                             <div class="checkbox-group">
@@ -43,6 +87,7 @@
 {% endblock %}
 
 {% block extrajs %}
+<script src="{{ url_for('static', filename='js/typeahead.bundle.min.js') }}"></script>
 <script>
 $(function () {
 
@@ -61,6 +106,27 @@ $(function () {
     });
     $( ":checkbox" ).click( function() {
         update_checks( $( this) );
+    });
+
+    var go = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.whitespace,
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      prefetch: '{{url_for('search.search_typeahead_prefetch')}}',
+      remote: {
+            url: '/search/typeahead/go/%QUERY.json',
+            wildcard: '%QUERY'
+        }
+    });
+
+
+    $('.typeahead').typeahead({
+        minLength: 3,
+        highlight: true
+    },
+    {
+      name: 'go',
+      display: 'value',
+      source: go
     });
 });
 </script>

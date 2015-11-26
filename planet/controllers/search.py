@@ -1,4 +1,4 @@
-from flask import g, Blueprint, flash, request, redirect, url_for, render_template
+from flask import g, Blueprint, flash, request, redirect, url_for, render_template, Response
 from sqlalchemy.sql import or_, and_
 from sqlalchemy import func
 
@@ -9,6 +9,8 @@ from planet.models.gene_families import GeneFamily
 from planet.models.expression_profiles import ExpressionProfile
 from planet.models.search import enriched_clusters_search
 from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
+
+from utils.benchmark import benchmark
 
 import json
 
@@ -157,21 +159,32 @@ def search_enriched_clusters():
         max_p = request.form.get('max_p') if check_p else None
         max_corrected_p = request.form.get('max_corrected_p') if check_corrected_p else None
 
-        clusters = enriched_clusters_search(31744,
-                                            min_enrichment=min_enrichment,
-                                            max_p=max_p,
-                                            max_corrected_p=max_corrected_p)
+        go = GO.query.filter(or_(GO.name == term,
+                                      GO.label == term)).all()
 
-        return render_template("search_enriched_clusters.html", clusters=clusters)
+        results = []
+
+        for g in go:
+            clusters = enriched_clusters_search(g.id,
+                                                min_enrichment=min_enrichment,
+                                                max_p=max_p,
+                                                max_corrected_p=max_corrected_p)
+            results.append({'go': g, 'clusters': clusters})
+
+        return render_template("search_enriched_clusters.html", results=results)
     else:
         return render_template("search_enriched_clusters.html", form=form)
 
 
-@search.route('/typeahead/go/<term>')
+@search.route('/typeahead/go/<term>.json')
+@benchmark
 def search_typeahead_go(term):
-    if len(term) > 2:
-        go = GO.query.filter(GO.name.ilike(term+"%")).order_by(func.length(GO.name)).all()
+        go = GO.query.filter(GO.obsolete == 0).filter(GO.name.ilike("%"+term+"%")).order_by(func.length(GO.name)).all()
 
-        return json.dumps([g.name for g in go])
-    else:
-        return json.dumps([])
+        return Response(json.dumps([{'value': g.name, 'tokens': g.name.split()} for g in go]), mimetype='application/json')
+
+@search.route('/typeahead/go/prefetch')
+def search_typeahead_prefetch():
+        go = GO.query.filter(GO.obsolete == 0).filter(func.length(GO.name)<7).order_by(func.length(GO.name)).all()
+
+        return Response(json.dumps([{'value': g.name, 'tokens': g.name.split()} for g in go]), mimetype='application/json')
