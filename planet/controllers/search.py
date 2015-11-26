@@ -7,6 +7,7 @@ from planet.models.go import GO
 from planet.models.interpro import Interpro
 from planet.models.gene_families import GeneFamily
 from planet.models.expression_profiles import ExpressionProfile
+from planet.models.search import enriched_clusters_search
 from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
 
 import json
@@ -152,10 +153,25 @@ def search_enriched_clusters():
         check_p = request.form.get('check_p') == 'y'
         check_corrected_p = request.form.get('check_corrected_p') == 'y'
 
-        min_enrichment = request.form.get('min_enrichment')
-        max_p = request.form.get('max_p')
-        max_corrected_p = request.form.get('max_corrected_p')
+        min_enrichment = request.form.get('min_enrichment') if check_enrichment else None
+        max_p = request.form.get('max_p') if check_p else None
+        max_corrected_p = request.form.get('max_corrected_p') if check_corrected_p else None
 
-        return json.dumps([term, "species " + str(species), check_enrichment, check_p, check_corrected_p, min_enrichment, max_p, max_corrected_p])
+        clusters = enriched_clusters_search(31744,
+                                            min_enrichment=min_enrichment,
+                                            max_p=max_p,
+                                            max_corrected_p=max_corrected_p)
+
+        return render_template("search_enriched_clusters.html", clusters=clusters)
     else:
         return render_template("search_enriched_clusters.html", form=form)
+
+
+@search.route('/typeahead/go/<term>')
+def search_typeahead_go(term):
+    if len(term) > 2:
+        go = GO.query.filter(GO.name.ilike(term+"%")).order_by(func.length(GO.name)).all()
+
+        return json.dumps([g.name for g in go])
+    else:
+        return json.dumps([])

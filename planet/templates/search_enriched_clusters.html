@@ -4,6 +4,11 @@
 <div class="top-pad">
 
     <h1>Search: Enriched Clusters</h1>
+    {% if clusters%}
+    {% for c in clusters %}
+        <p>{{ c.cluster_id }}</p>
+    {% endfor %}
+    {% elif form %}
         <div class="row">
             <div class="col-md-4 col-md-offset-4 col-xs-8 col-xs-offset-2">
                 <div class="panel panel-default">
@@ -33,6 +38,7 @@
                 </div>
             </div>
         </div>
+    {% endif %}
 </div>
 {% endblock %}
 
