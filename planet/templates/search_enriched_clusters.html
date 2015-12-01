@@ -113,8 +113,8 @@ $(function () {
       queryTokenizer: Bloodhound.tokenizers.whitespace,
       prefetch: '{{url_for('search.search_typeahead_prefetch')}}',
       remote: {
-            url: '/search/typeahead/go/%QUERY.json',
-            wildcard: '%QUERY'
+            url:'{{url_for('search.search_typeahead_go', term='%QUERY')}}',
+            wildcard: '%25QUERY'
         }
     });
 

@@ -1,8 +1,18 @@
 from planet.models.relationships import ClusterGOEnrichment
-from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 
 
-def enriched_clusters_search(go_id, method=-1, min_enrichment=1, max_p=0.05, max_corrected_p=0.00005):
+def enriched_clusters_search(go_id, method=-1, min_enrichment=None, max_p=None, max_corrected_p=None):
+    """
+    Function to get enriched clusters for a specific GO term
+
+
+    :param go_id: Internal GO id
+    :param method: Internal ID of the clustering method (ignored if -1)
+    :param min_enrichment: minimal (log2) enrichment score (ignored if None)
+    :param max_p: maximum (uncorrected) p-value (ignored if None)
+    :param max_corrected_p: maximum corrected p-value (ignored if None)
+    :return: all clusters with the desired properties (ignored if None)
+    """
     clusters = ClusterGOEnrichment.query.filter(ClusterGOEnrichment.go_id == go_id)\
 
     if method != -1:
