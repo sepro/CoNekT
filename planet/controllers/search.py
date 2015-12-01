@@ -145,11 +145,11 @@ def search_json_genes(label):
 @search.route('/enriched/clusters', methods=['GET', 'POST'])
 def search_enriched_clusters():
     form = SearchEnrichedClustersForm(request.form)
-    form.populate_species()
+    form.populate_method()
 
     if request.method == 'POST':
         term = request.form.get('go_term')
-        species = request.form.get('species_id')
+        method = request.form.get('method')
 
         check_enrichment = request.form.get('check_enrichment') == 'y'
         check_p = request.form.get('check_p') == 'y'
@@ -160,12 +160,13 @@ def search_enriched_clusters():
         max_corrected_p = request.form.get('max_corrected_p') if check_corrected_p else None
 
         go = GO.query.filter(or_(GO.name == term,
-                                      GO.label == term)).all()
+                                 GO.label == term)).all()
 
         results = []
 
         for g in go:
             clusters = enriched_clusters_search(g.id,
+                                                method=method,
                                                 min_enrichment=min_enrichment,
                                                 max_p=max_p,
                                                 max_corrected_p=max_corrected_p)
@@ -182,6 +183,7 @@ def search_typeahead_go(term):
         go = GO.query.filter(GO.obsolete == 0).filter(GO.name.ilike("%"+term+"%")).order_by(func.length(GO.name)).all()
 
         return Response(json.dumps([{'value': g.name, 'tokens': g.name.split()} for g in go]), mimetype='application/json')
+
 
 @search.route('/typeahead/go/prefetch')
 def search_typeahead_prefetch():

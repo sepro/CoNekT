@@ -62,8 +62,8 @@
                             {{ form.csrf_token }}
                             <label>GO</label>
                             {{form.go_term(class_="form-control typeahead") }}<br />
-                            <label>Species</label>
-                            {{form.species_id(class_="form-control") }}<br />
+                            <label>Cluster Method</label>
+                            {{form.method(class_="form-control") }}<br />
                             <div class="checkbox-group">
                             <label>{{form.check_enrichment(checked=False) }} <span class="title">Enrichment</span> </label><br />
                             {{form.min_enrichment(class_="form-control") }}<br />
