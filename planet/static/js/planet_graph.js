@@ -154,10 +154,12 @@ $(".cy-option-menu li a").click(function(){
 
 $("#cy-search").click(function(){
   var term = $("#cy-search-term").val().trim().toLowerCase();
+  var url = $( this ).attr( 'search-url' );
+
 
   cy.nodes().toggleClass('found', false);
   var valid_genes = []
-  $.getJSON('/search/json/genes/'+term, function(data){
+  $.getJSON(url+term, function(data){
          var i=0;
          for(i=0;i<data.length;i++){
             valid_genes.push(data[i])
