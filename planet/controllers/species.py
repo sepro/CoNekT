@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, g, make_response, Response
 
+from planet import db
 from planet.models.species import Species
 from planet.models.sequences import Sequence
 
@@ -57,11 +58,13 @@ def species_download_coding(species_id):
     output = []
 
     current_species = Species.query.get(species_id)
-    sequences = current_species.sequences.options(undefer('coding_sequence')).all()
+    sequences = db.engine.execute(db.select([Sequence.__table__.c.name, Sequence.__table__.c.coding_sequence]).
+                                  where(Sequence.__table__.c.c.species_id == current_species.id)).\
+        fetchall()
 
-    for s in sequences:
-        output.append(">" + s.name)
-        output.append(s.coding_sequence)
+    for (name, coding_sequence) in sequences:
+        output.append(">" + name)
+        output.append(coding_sequence)
 
     response = make_response("\n".join(output))
     response.headers["Content-Disposition"] = "attachment; filename=" + current_species.code + ".cds.fasta"
@@ -103,10 +106,12 @@ def species_stream_coding(species_id):
     :return: Streamed response with the fasta file
     """
     def generate(selected_species):
-        sequences = Sequence.query.options(undefer('coding_sequence')).filter_by(species_id=selected_species).all()
+        sequences = db.engine.execute(db.select([Sequence.__table__.c.name, Sequence.__table__.c.coding_sequence]).
+                                      where(Sequence.__table__.c.c.species_id == selected_species)).\
+            fetchall()
 
-        for s in sequences:
-            yield ">" + s.name + '\n' + s.coding_sequence + '\n'
+        for name, coding_sequence in sequences:
+            yield ">" + name + '\n' + coding_sequence + '\n'
 
     return Response(generate(species_id), mimetype='text/plain')
 
