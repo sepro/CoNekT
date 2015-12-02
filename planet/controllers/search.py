@@ -7,7 +7,7 @@ from planet.models.go import GO
 from planet.models.interpro import Interpro
 from planet.models.gene_families import GeneFamily
 from planet.models.expression_profiles import ExpressionProfile
-from planet.models.search import enriched_clusters_search
+from planet.models.search import Search
 from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
 
 from utils.benchmark import benchmark
@@ -58,36 +58,6 @@ def search_single_keyword(keyword):
                            profiles=profiles)
 
 
-def __search_string(term_string):
-    """
-    Private function to be used internally by the simple search. Performs an intuitive search on various fields.
-
-    all terms are converted into uppercase to make searches case insensitive
-
-    :param term_string: space-separated strings to search for
-    :return: dict with results per type
-    """
-    terms = term_string.upper().split()
-
-    sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
-
-    go = GO.query.filter(or_(and_(*[GO.description.ilike("%"+term+"%") for term in terms]),
-                             and_(*[GO.name.ilike("%"+term+"%") for term in terms]),
-                             GO.label.in_(terms))).all()
-
-    interpro = Interpro.query.filter(or_(and_(*[Interpro.description.ilike("%"+term+"%") for term in terms]),
-                                         Interpro.label.in_(terms))).all()
-
-    families = GeneFamily.query.filter(func.upper(GeneFamily.name).in_(terms)).all()
-    profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(terms)).all()
-
-    return {"go": go,
-            "interpro": interpro,
-            "sequences": sequences,
-            "families": families,
-            "profiles": profiles}
-
-
 @search.route('/', methods=['GET', 'POST'])
 def simple():
     """
@@ -99,7 +69,7 @@ def simple():
         flash("Empty search term", "warning")
         return redirect(url_for('main.screen'))
     else:
-        results = __search_string(g.search_form.terms.data)
+        results = Search.simple(g.search_form.terms.data)
 
         # If the result is unique redirect to the corresponding page
         if len(results["sequences"]) + len(results["go"]) + \
@@ -168,7 +138,7 @@ def search_enriched_clusters():
         results = []
 
         for g in go:
-            clusters = enriched_clusters_search(g.id,
+            clusters = Search.enriched_clusters(g.id,
                                                 method=method,
                                                 min_enrichment=min_enrichment,
                                                 max_p=max_p,
@@ -200,6 +170,6 @@ def search_typeahead_prefetch():
 
     :return: JSON object compatible with typeahead.js
     """
-    go = GO.query.filter(GO.obsolete == 0).filter(func.length(GO.name)<7).order_by(func.length(GO.name)).all()
+    go = GO.query.filter(GO.obsolete == 0).filter(func.length(GO.name) < 7).order_by(func.length(GO.name)).all()
 
     return Response(json.dumps([{'value': g.name, 'tokens': g.name.split()} for g in go]), mimetype='application/json')
