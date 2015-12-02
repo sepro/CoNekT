@@ -24,38 +24,27 @@ def search_single_keyword(keyword):
 
     :param keyword: Keyword to look for
     """
-    sequences = Sequence.query.with_entities(Sequence.id, Sequence.name)\
-        .filter(Sequence.name == keyword).all()
-
-    go = GO.query.filter(or_(GO.description.ilike("%"+keyword+"%"),
-                             GO.name.ilike("%"+keyword+"%"),
-                             GO.label == keyword)).all()
-
-    interpro = Interpro.query.filter(or_(Interpro.description.ilike("%"+keyword+"%"),
-                                         Interpro.label == keyword)).all()
-
-    families = GeneFamily.query.filter(GeneFamily.name == keyword).all()
-    profiles = ExpressionProfile.query.filter(ExpressionProfile.probe == keyword).all()
+    results = Search.keyword(keyword)
 
     # If the result is unique redirect to the corresponding page
-    if len(sequences) + len(go) + len(interpro) + len(families) + len(profiles) == 1:
-        if len(sequences) == 1:
-            return redirect(url_for('sequence.sequence_view', sequence_id=sequences[0].id))
-        elif len(go) == 1:
-            return redirect(url_for('go.go_view', go_id=go[0].id))
-        elif len(interpro) == 1:
-            return redirect(url_for('interpro.interpro_view', interpro_id=interpro[0].id))
-        elif len(families) == 1:
-            return redirect(url_for('family.family_view', family_id=families[0].id))
-        elif len(profiles) == 1:
-            return redirect(url_for('expression_profile.expression_profile_view', profile_id=profiles[0].id))
+    if len(results["sequences"]) + len(results["go"]) + len(results["interpro"]) + len(results["families"]) + len(results["profiles"]) == 1:
+        if len(results["sequences"]) == 1:
+            return redirect(url_for('sequence.sequence_view', sequence_id=results["sequences"][0].id))
+        elif len(results["go"]) == 1:
+            return redirect(url_for('go.go_view', go_id=results["go"][0].id))
+        elif len(results["interpro"]) == 1:
+            return redirect(url_for('interpro.interpro_view', interpro_id=results["interpro"][0].id))
+        elif len(results["families"]) == 1:
+            return redirect(url_for('family.family_view', family_id=results["families"][0].id))
+        elif len(results["profiles"]) == 1:
+            return redirect(url_for('expression_profile.expression_profile_view', profile_id=results["profiles"][0].id))
 
     return render_template("search_results.html", keyword=keyword,
-                           sequences=sequences,
-                           go=go,
-                           interpro=interpro,
-                           families=families,
-                           profiles=profiles)
+                           go=results["go"],
+                           interpro=results["interpro"],
+                           sequences=results["sequences"],
+                           families=results["families"],
+                           profiles=results["profiles"])
 
 
 @search.route('/', methods=['GET', 'POST'])

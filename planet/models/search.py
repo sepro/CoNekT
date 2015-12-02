@@ -8,6 +8,7 @@ from planet.models.expression_profiles import ExpressionProfile
 from sqlalchemy.sql import or_, and_
 from sqlalchemy import func
 
+
 class Search:
     @staticmethod
     def simple(term_string):
@@ -32,6 +33,27 @@ class Search:
 
         families = GeneFamily.query.filter(func.upper(GeneFamily.name).in_(terms)).all()
         profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(terms)).all()
+
+        return {"go": go,
+                "interpro": interpro,
+                "sequences": sequences,
+                "families": families,
+                "profiles": profiles}
+
+    @staticmethod
+    def keyword(keyword):
+        sequences = Sequence.query.with_entities(Sequence.id, Sequence.name)\
+            .filter(Sequence.name == keyword).all()
+
+        go = GO.query.filter(or_(GO.description.ilike("%"+keyword+"%"),
+                                 GO.name.ilike("%"+keyword+"%"),
+                                 GO.label == keyword)).all()
+
+        interpro = Interpro.query.filter(or_(Interpro.description.ilike("%"+keyword+"%"),
+                                             Interpro.label == keyword)).all()
+
+        families = GeneFamily.query.filter(GeneFamily.name == keyword).all()
+        profiles = ExpressionProfile.query.filter(ExpressionProfile.probe == keyword).all()
 
         return {"go": go,
                 "interpro": interpro,
