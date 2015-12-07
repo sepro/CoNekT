@@ -2,6 +2,7 @@
 
 {% block container %}
 {% import 'macros/sequence_pagination.html' as macro %}
+{% import 'macros/cluster_actions.html' as ca %}
 <div class="top-pad">
 
     {% if go %}
@@ -47,14 +48,7 @@
                                     <td>{{ cluster.cluster_percentage|round(2) }} %</td>
                                     <td>{{ cluster.p_value|round(6) }}</td>
                                     <td>{{ cluster.corrected_p_value|round(6) }}</td>
-                                    <td><a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.cluster.id) }}" data-toggle="tooltip"
-                                           data-placement="top" title="View cluster as table"><i class="fa fa-list"></i></a>
-                                        <a href="{{ url_for('expression_cluster.expression_cluster_graph', cluster_id=cluster.cluster.id) }}" data-toggle="tooltip"
-                                           data-placement="top" title="View cluster as graph"><i class="fa fa-share-alt"></i></a>
-                                        <a href="{{ url_for('profile_comparison.profile_comparison_cluster', cluster_id=cluster.cluster.id) }}" data-toggle="tooltip"
-                                           data-placement="top" title="Compare profiles in this cluster"><i class="fa fa-area-chart"></i></a>
-                                        <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster.cluster.id) }}" data-toggle="tooltip"
-                                           data-placement="top" title="Heatmap of profiles in this cluster"><i class="fa fa-table"></i></a>
+                                    <td>{{ ca.cluster_actions(cluster.cluster.id) }}
                                     </td>
                                 </tr>
                                 {% endif %}
