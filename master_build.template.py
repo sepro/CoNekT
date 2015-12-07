@@ -1,13 +1,13 @@
-from build.species import add_species_from_fasta
-from build.go import add_go_from_plaza
-from build.go import populate_go
-from build.interpro_xml import populate_interpro
-from build.interpro_data import add_interpro_from_plaza
-from build.families import add_families_from_plaza
-from build.expression import parse_expression_plot
-from build.expression import parse_expression_network
-from build.coexpression_clusters import add_planet_coexpression_clusters
-from build.xref import create_plaza_xref_families, create_plaza_xref_genes
+from build.db.species import add_species_from_fasta
+from build.db.go import add_go_from_plaza
+from build.db.go import populate_go
+from build.db.interpro_xml import populate_interpro
+from build.db.interpro_data import add_interpro_from_plaza
+from build.db.families import add_families_from_plaza
+from build.db.expression import parse_expression_plot
+from build.db.expression import parse_expression_network
+from build.db.coexpression_clusters import add_planet_coexpression_clusters
+from build.db.xref import create_plaza_xref_families, create_plaza_xref_genes
 
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 from planet.models.expression_networks import ExpressionNetworkMethod

@@ -39,18 +39,18 @@ for species (from .hrr file)
 from flask.ext.script import Manager
 from planet import app
 
-from build.go import populate_go as pg
-from build.interpro_xml import populate_interpro as pi
+from build.db.go import populate_go as pg
+from build.db.interpro_xml import populate_interpro as pi
 
-from build.species import add_species_from_fasta
-from build.go import add_go_from_plaza
-from build.interpro_data import add_interpro_from_plaza
-from build.families import add_families_from_plaza
+from build.db.species import add_species_from_fasta
+from build.db.go import add_go_from_plaza
+from build.db.interpro_data import add_interpro_from_plaza
+from build.db.families import add_families_from_plaza
 
-from build.expression import parse_expression_plot
-from build.expression import parse_expression_network
+from build.db.expression import parse_expression_plot
+from build.db.expression import parse_expression_network
 
-from build.coexpression_clusters import add_planet_coexpression_clusters
+from build.db.coexpression_clusters import add_planet_coexpression_clusters
 
 
 manager = Manager(app)
