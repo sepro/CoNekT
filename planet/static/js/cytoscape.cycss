@@ -14,7 +14,6 @@ node[node_type = "query"] {
 }
 
 edge {
-        curve-style: haystack;
         opacity: 0.7;
         width: 1;
         line-color: data(color);
