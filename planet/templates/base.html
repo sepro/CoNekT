@@ -6,9 +6,9 @@
         <meta name="viewport" content="width=device-width">
         <title>PlaNet 2.0</title>
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-        <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/bootstrap-slider.min.css') }}" rel="stylesheet">
-        <link href="{{ url_for('static',filename='css/jquery.qtip.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/jquery.qtip.min.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/typeahead.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
@@ -123,23 +123,13 @@
 
         </div>
 </div>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/stupidtable.min.js') }}"></script>
-<!-- code to reload model on each click -->
+<!-- code to reload modal on each click -->
 <script>
     $(function () {
-      $('a[data-target=#helpModal]').click(function(ev) {
-        ev.preventDefault();
-        var target = $(this).attr("href");
-
-        // load the url and show modal on success
-        $("#helpModal .modal-content").load(target, function() {
-             $("#helpModal").modal("show");
-        });
-      });
-      $('abbr[data-target=#helpModal]').click(function(ev) {
+      $('a[data-target=#helpModal], abbr[data-target=#helpModal]').click(function(ev) {
         ev.preventDefault();
         var target = $(this).attr("href");
 
