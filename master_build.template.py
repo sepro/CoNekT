@@ -26,6 +26,8 @@ print("\tPopulus trichocarpa")
 ptr_id = add_species_from_fasta("data/ptr/cds.ptr.tfa", "ptr", "Populus trichocarpa")
 print("\tGlycine max")
 gma_id = add_species_from_fasta("data/gmax.jgi.cds.fasta", "gma", "Glycine max")
+print("\tMedicago")
+mtr_id = add_species_from_fasta("data/mtr/mtr.transcripts.clean.fasta", "mtr", "Medicago truncatula")
 
 print("Populating GO and InterPro")
 print("==========================")
@@ -48,11 +50,13 @@ print("Adding Expression Plots")
 print("=======================")
 parse_expression_plot("data/Ath.plot.txt", "data/AthPfamPlazaGO.hrr", "ath")
 parse_expression_plot("data/Gma.plot.txt", "data/GmaPfamPlazaGO.hrr", "gma")
+parse_expression_plot("data/mtr/Mtr.plot.txt", "data/mtr/MtrPfamPlazaGO.hrr", "mtr")
 
 print("Adding Expression Networks")
 print("==========================")
 soy_network_id = parse_expression_network("data/GmaPfamPlazaGO.hrr", "gma", "Glycine max network from PlaNet 1")
 ath_network_id = parse_expression_network("data/AthPfamPlazaGO.hrr", "ath", "Arabidopsis thaliana network from PlaNet 1")
+mtr_network_id = parse_expression_network("data/mtr/MtrPfamPlazaGO.clean.hrr", "mtr", "Medicago truncatula network from PlaNet 1")
 
 print("Adding Coexpression Clusters")
 print("============================")
@@ -60,6 +64,9 @@ add_planet_coexpression_clusters("data/GmaPfamPlazaGO.hrr", "data/Gma.S=3R=30.hc
                                  "Glycine max clusters PlaNet 1", soy_network_id)
 add_planet_coexpression_clusters("data/AthPfamPlazaGO.hrr", "data/Ath.S=3R=30.hcca",
                                  "Arabidopsis thaliana clusters PlaNet 1", ath_network_id)
+add_planet_coexpression_clusters("data/mtr/MtrPfamPlazaGO.clean.hrr", "data/mtr/Mtr.S=3R=30.hcca",
+                                 "Medicago truncatula clusters PlaNet 1", mtr_network_id)
+
 
 print("Precalculating big counts")
 print("=========================")

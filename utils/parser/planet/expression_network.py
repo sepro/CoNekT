@@ -5,13 +5,14 @@ class Parser:
     def __init__(self, ):
         self.network = {}
 
-    def read_expression_network(self, network_file):
+    def read_expression_network(self, network_file, score_cutoff=30):
         """
         Reads hrr file from the original PlaNet pipeline
 
         ids are based on line number starting with 0 !
 
         :param network_file: path to the file with the network (hrr)
+        :param score_cutoff: only links with a score equal or better than this value will be included
         :return:
         """
         id_to_probe = {}
@@ -38,11 +39,12 @@ class Parser:
                 # the file hasn't been read completely
                 for link in links:
                     linked_id, link_score = link.split('+')
-                    new_link = {"link_id": int(linked_id),
-                                "probe_name": "",
-                                "gene_name": "",
-                                "link_score": int(link_score)}
-                    self.network[probe]["linked_probes"].append(new_link)
+                    if int(link_score) <= score_cutoff:
+                        new_link = {"link_id": int(linked_id),
+                                    "probe_name": "",
+                                    "gene_name": "",
+                                    "link_score": int(link_score)}
+                        self.network[probe]["linked_probes"].append(new_link)
 
         # Now the id_to_probe table is competed, add missing information and remove line number identifiers
         for probe in self.network.values():
