@@ -75,6 +75,7 @@ def expression_cluster_download(cluster_id):
 
     return Response("\n".join(output), mimetype='text/plain')
 
+
 @expression_cluster.route('/graph/<cluster_id>')
 def expression_cluster_graph(cluster_id):
     """
@@ -88,7 +89,7 @@ def expression_cluster_graph(cluster_id):
 
 
 @expression_cluster.route('/json/<cluster_id>')
-def expression_cluster_json(cluster_id):
+def expression_cluster_json(cluster_id, family_method_id=2):
     """
     Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)
 
@@ -97,7 +98,7 @@ def expression_cluster_json(cluster_id):
     network = CoexpressionCluster.get_cluster(cluster_id)
 
     network_cytoscape = CytoscapeHelper.parse_network(network)
-    network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, 1)
+    network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, family_method_id)
     network_cytoscape = CytoscapeHelper.add_connection_data_nodes(network_cytoscape)
 
     return json.dumps(network_cytoscape)
