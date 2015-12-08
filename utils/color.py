@@ -8,7 +8,10 @@ import hashlib
 __SHAPES = ['rectangle', 'roundrectangle', 'ellipse', 'triangle',
             'hexagon', 'octagon', 'diamond', 'vee', 'rhomboid']
 
-
+# Nice colors
+__COLORS = ["#993399", "#FFFF00", "#FF3300", "#7FFFD4", "#FFE4C4",
+            "#D2691E", "#A9A9A9", "#00BFFF", "#FFD700", "#008000",
+            "#ADFF2F", "#FF00FF"]
 def string_to_hex_color(input_string):
     """
     Takes any string, generates a pseudo-random color from it. Used to generate colors for e.g. families.
@@ -36,3 +39,14 @@ def string_to_shape(input_string):
 
     return __SHAPES[remapped_value]
 
+def family_to_shapeAndColor(input_dictionary):
+    """
+    Takes a dictionary, where key:gene ID, value: ["fam1", "fam2",...]
+
+    :param dictionary: dictionary of genes:families
+    :return: genes: [color,shape]
+    """
+
+
+
+    return __SHAPES[remapped_value]

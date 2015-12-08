@@ -94,6 +94,33 @@ class CytoscapeHelper:
 
     @staticmethod
     @benchmark
+    def add_family_data_nodes_v2(network, family_method_id):
+        """
+        Colors a cytoscape compatible network (dict) based on gene family
+
+        :param network: dict containing the network
+        :param family_method_id: desired type/method used to construct the families
+
+        :return: Cytoscape.js compatible network with colors and shapes based on gene families included
+        """
+        completed_network = deepcopy(network)
+
+        sequence_ids = []
+        for node in completed_network["nodes"]:
+            if "data" in node.keys() and "gene_id" in node["data"].keys():
+                sequence_ids.append(node["data"]["gene_id"])
+
+        print("aha",len(sequence_ids))
+
+        sequence_families = SequenceFamilyAssociation.query.\
+            filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids)).\
+            options(joinedload('family.clade')).all()
+
+        print("ZONK", len(sequence_families), sequence_families)
+
+
+    @staticmethod
+    @benchmark
     def add_depth_data_nodes(network):
         """
         Colors a cytoscape compatible network (dict) based on edge depth
