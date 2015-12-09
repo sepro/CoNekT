@@ -137,10 +137,10 @@ class CytoscapeHelper:
 
         for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys():
-        #         node["data"]["lc_color"] = shapes_colors[families[node["data"]["gene_id"]]["name"]][1]
-        #         node["data"]["lc_shape"] = shapes_colors[families[node["data"]["gene_id"]]["name"]][0]
-
-        #return completed_network
+                if node["data"]["gene_id"] in shapes_colors:
+                    node["data"]["lc_color"] = shapes_colors[node["data"]["gene_id"]][1]
+                    node["data"]["lc_shape"] = shapes_colors[node["data"]["gene_id"]][0]
+        return completed_network
 
 
     @staticmethod

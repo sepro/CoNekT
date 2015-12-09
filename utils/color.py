@@ -60,7 +60,7 @@ def family_to_shape_and_color(input_dictionary):
             for color in __COLORS:
                 if counter<len(families):
                     fam_2_color_shape[families[counter]] = [shape, color]
-                    counter+=1
+                    counter += 1
 
     gene_2_color_shape = {}
     for gene in input_dictionary:
