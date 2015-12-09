@@ -1,7 +1,7 @@
 """
 A set of functions designed to work with colors and shapes for websites
 """
-import hashlib
+import hashlib, math
 
 
 # Shapes, only those in Cytoscape.js and Cytoscape desktop are included (XGMML export)
@@ -41,7 +41,6 @@ def string_to_shape(input_string):
 
 def family_to_shape_and_color(input_dictionary):
     """
-    Marek
     Takes a dictionary, where key:gene ID, value: ["fam1", "fam2",...]
 
     :param dictionary: dictionary of genes:families
@@ -55,11 +54,20 @@ def family_to_shape_and_color(input_dictionary):
     families = list(set(families))
 
     fam_2_color_shape, counter = {}, 0
-    if len(families)<(len(__SHAPES)*len(__COLORS)): ###pretty inefficient, will fix later
-        for shape in __SHAPES:
-            for color in __COLORS:
-                if counter<len(families):
-                    fam_2_color_shape[families[counter]] = [shape, color]
+
+
+    for i in __SHAPES:
+        if len(families) <= (len(__SHAPES)*len(__COLORS)):
+            for j in __COLORS:
+                if counter < len(families):
+                    fam_2_color_shape[families[counter]] = [i, j]
+                counter += 1
+        else:
+            for j in range(math.ceil(len(families)/float(len(__SHAPES)))):   ###determines how many colors per shape needs to be generated, rounded up
+                if counter < len(families):
+                    hashed_string = hashlib.sha1(str(families[counter]).encode('utf-8')).hexdigest()
+                    color = "#" + hashed_string[0:3].upper()
+                    fam_2_color_shape[families[counter]] = [i, color]
                     counter += 1
 
     gene_2_color_shape = {}
