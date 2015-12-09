@@ -24,7 +24,7 @@ cy = cytoscape({
 
     initial_json = JSON.stringify(cy.json(), null, '\t');
 
-    cy.nodes().forEach(function(n){
+    cy.nodes('[^compound]').forEach(function(n){
     // code to add tooltips to the selected node
     var content = [
         {
@@ -95,16 +95,16 @@ cy = cytoscape({
 
 $('.cy-node-color').click(function() {
   $( this ).closest('.cy-option-menu').find('.cy-node-color').each(function () {
-    cy.nodes().removeClass( $( this ).attr( 'attr' ) );
+    cy.nodes('[^compound]').removeClass( $( this ).attr( 'attr' ) );
   });
- cy.nodes().addClass( $( this ).attr( 'attr' ) );
+ cy.nodes('[^compound]').addClass( $( this ).attr( 'attr' ) );
 })
 
 $('.cy-node-shape').click(function() {
   $( this ).closest('.cy-option-menu').find('.cy-node-shape').each(function () {
-    cy.nodes().removeClass( $( this ).attr( 'attr' ) );
+    cy.nodes('[^compound]').removeClass( $( this ).attr( 'attr' ) );
   });
- cy.nodes().addClass( $( this ).attr( 'attr' ) );
+ cy.nodes('[^compound]').addClass( $( this ).attr( 'attr' ) );
 })
 
 $('.cy-edge-color').click(function() {
@@ -159,7 +159,7 @@ $("#cy-search").click(function(){
   var url = $( this ).attr( 'search-url' );
 
 
-  cy.nodes().toggleClass('found', false);
+  cy.nodes('[^compound]').toggleClass('found', false);
   var valid_genes = []
   $.getJSON(url+term, function(data){
          var i=0;
@@ -168,7 +168,7 @@ $("#cy-search").click(function(){
         }
         })
   .done(function(){
-    cy.nodes().each( function(i, node) {
+    cy.nodes('[^compound]').each( function(i, node) {
       if(node.data('gene_name').toLowerCase() === term ||
          node.data('name').toLowerCase() === term ||
          valid_genes.indexOf(node.data('gene_id')) > -1) {
