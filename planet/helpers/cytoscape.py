@@ -132,14 +132,14 @@ class CytoscapeHelper:
 
 
         ###shapes_colors: [family] = [shape.color]
-        shapes_colors = family_to_shape_and_color(gene2labels)
+        gene_to_shape_and_color = family_to_shape_and_color(gene2labels)
 
 
         for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys():
-                if node["data"]["gene_id"] in shapes_colors:
-                    node["data"]["lc_color"] = shapes_colors[node["data"]["gene_id"]][1]
-                    node["data"]["lc_shape"] = shapes_colors[node["data"]["gene_id"]][0]
+                if node["data"]["gene_id"] in gene_to_shape_and_color:
+                    node["data"]["lc_color"] = gene_to_shape_and_color[node["data"]["gene_id"]][1]
+                    node["data"]["lc_shape"] = gene_to_shape_and_color[node["data"]["gene_id"]][0]
         return completed_network
 
 
