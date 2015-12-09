@@ -82,11 +82,15 @@ class CytoscapeHelper:
         for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys() \
                     and node["data"]["gene_id"] in families.keys():
+                node["data"]["family_name"] = families[node["data"]["gene_id"]]["name"]
+                node["data"]["family_id"] = families[node["data"]["gene_id"]]["id"]
                 node["data"]["family_color"] = string_to_hex_color(families[node["data"]["gene_id"]]["name"])
                 node["data"]["family_shape"] = string_to_shape(families[node["data"]["gene_id"]]["name"])
                 node["data"]["family_clade"] = families[node["data"]["gene_id"]]["clade"]
                 node["data"]["family_clade_count"] = families[node["data"]["gene_id"]]["clade_count"]
             else:
+                node["data"]["family_name"] = None
+                node["data"]["family_id"] = None
                 node["data"]["family_color"] = "#CCC"
                 node["data"]["family_shape"] = "rectangle"
                 node["data"]["family_clade"] = "None"
