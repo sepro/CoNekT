@@ -41,9 +41,9 @@ def expression_network_graph(node_id, depth=1, family_method_id=1):
     Currently unused, filtering is done by javascript downstream
     :param family_method_id: family method to use for colors and shapes based on the family
     """
-    if depth > 1:
-        flash("Depth cannot be larger than 1. Showing the network with depth 1", "warning")
-        return redirect(url_for('expression_network.expression_network_graph', node_id=node_id, depth=1,
+    if depth > 2:
+        flash("Depth cannot be larger than 2. Showing the network with depth 2", "warning")
+        return redirect(url_for('expression_network.expression_network_graph', node_id=node_id, depth=2,
                                 family_method_id=family_method_id))
 
     node = ExpressionNetwork.query.get(node_id)
