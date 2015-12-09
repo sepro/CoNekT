@@ -108,7 +108,7 @@
             <li>
                 <div>
                 <br /><p><strong>Score</strong> <span id="cy-edge-score-value" class="text-muted">30</span></p>
-                <input id="cy-edge-score" data-slider-id='cy-edge-score-slider' type="text" data-slider-min="0" data-slider-max="150" data-slider-step="1" data-slider-value="30" data-slider-tooltip="hide"/>
+                <input id="cy-edge-score" data-slider-id='cy-edge-score-slider' type="text" data-slider-min="0" data-slider-max="30" data-slider-step="1" data-slider-value="30" data-slider-tooltip="hide"/>
                 </div>
             </li>
             <li><hr /></li>
@@ -172,6 +172,9 @@
 
             <a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.id) }}">View table</a>
             <div id="cy" json="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
+            {% elif cluster_one %}
+            <h1>Comparing clusters: <strong>{{ cluster_one.name }}</strong> vs <strong>{{ cluster_two.name }}</strong><br /><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            <div id="cy" json="{{ url_for('graph_comparison.graph_comparison_cluster_json', one=cluster_one.id, two=cluster_two.id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% endif %}
             <div id="loading"><span class="fa fa-refresh fa-spin"></span></div>
             </div>
