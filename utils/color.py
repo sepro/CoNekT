@@ -39,14 +39,31 @@ def string_to_shape(input_string):
 
     return __SHAPES[remapped_value]
 
-def family_to_shapeAndColor(input_dictionary):
+def family_to_shape_and_color(input_dictionary):
     """
+    Marek
     Takes a dictionary, where key:gene ID, value: ["fam1", "fam2",...]
 
     :param dictionary: dictionary of genes:families
     :return: genes: [color,shape]
     """
 
+    families = []
+    for gene in input_dictionary:
+        families+=[input_dictionary[gene][0][0]]
 
+    families = list(set(families))
 
-    return __SHAPES[remapped_value]
+    fam_2_color_shape, counter = {}, 0
+    if len(families)<(len(__SHAPES)*len(__COLORS)): ###pretty inefficient, will fix later
+        for shape in __SHAPES:
+            for color in __COLORS:
+                if counter<len(families):
+                    fam_2_color_shape[families[counter]] = [shape, color]
+                    counter+=1
+
+    gene_2_color_shape = {}
+    for gene in input_dictionary:
+        gene_2_color_shape[gene] = fam_2_color_shape[input_dictionary[gene][0][0]]
+
+    return gene_2_color_shape
