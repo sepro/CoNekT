@@ -63,21 +63,21 @@ class CytoscapeHelper:
 
         sequence_families = SequenceFamilyAssociation.query.\
             filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids)).\
-            options(joinedload('family.clade')).all()
+            options(joinedload('family.clade')).\
+            filter(SequenceFamilyAssociation.family.has(method_id=family_method_id)).all()
 
         families = {}
 
         for s in sequence_families:
-            if s.family.method_id == family_method_id:
-                families[s.sequence_id] = {}
-                families[s.sequence_id]["name"] = s.family.name
-                families[s.sequence_id]["id"] = s.gene_family_id
-                if s.family.clade is not None:
-                    families[s.sequence_id]["clade"] = s.family.clade.name
-                    families[s.sequence_id]["clade_count"] = s.family.clade.species_count
-                else:
-                    families[s.sequence_id]["clade"] = "None"
-                    families[s.sequence_id]["clade_count"] = 0
+            families[s.sequence_id] = {}
+            families[s.sequence_id]["name"] = s.family.name
+            families[s.sequence_id]["id"] = s.gene_family_id
+            if s.family.clade is not None:
+                families[s.sequence_id]["clade"] = s.family.clade.name
+                families[s.sequence_id]["clade_count"] = s.family.clade.species_count
+            else:
+                families[s.sequence_id]["clade"] = "None"
+                families[s.sequence_id]["clade_count"] = 0
 
         for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys() \

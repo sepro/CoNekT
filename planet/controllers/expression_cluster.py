@@ -77,7 +77,8 @@ def expression_cluster_download(cluster_id):
 
 
 @expression_cluster.route('/graph/<cluster_id>')
-def expression_cluster_graph(cluster_id):
+@expression_cluster.route('/graph/<cluster_id>/<int:family_method_id>')
+def expression_cluster_graph(cluster_id, family_method_id=1):
     """
     Creates the graph with all the members of the cluster
 
@@ -85,11 +86,12 @@ def expression_cluster_graph(cluster_id):
     """
     cluster = CoexpressionCluster.query.get(cluster_id)
 
-    return render_template("expression_graph.html", cluster=cluster)
+    return render_template("expression_graph.html", cluster=cluster, family_method_id=family_method_id)
 
 
 @expression_cluster.route('/json/<cluster_id>')
-def expression_cluster_json(cluster_id, family_method_id=2):
+@expression_cluster.route('/json/<cluster_id>/<int:family_method_id>')
+def expression_cluster_json(cluster_id, family_method_id=1):
     """
     Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)
 

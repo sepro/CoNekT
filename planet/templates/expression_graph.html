@@ -165,11 +165,11 @@
             {% if node %}
             <h1>Expression Graph: <strong>{{ node.probe }}</strong> <small>({{ node.method.description }})</small></h1>
             <div class="row">
-            <div id="cy" json="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
+            <div id="cy" json="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% elif cluster %}
-             <h1>Coexpression cluster: <strong>{{ cluster.name }}</strong><br /><small>{{ cluster.method.method }}</small></h1>
-             <a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.id) }}">View table</a>
-            <div id="cy" json="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
+            <h1>Coexpression cluster: <strong>{{ cluster.name }}</strong><br /><small>{{ cluster.method.method }}</small></h1>
+            <a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.id) }}">View table</a>
+            <div id="cy" json="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% endif %}
             <div id="loading"><span class="fa fa-refresh fa-spin"></span></div>
             </div>
