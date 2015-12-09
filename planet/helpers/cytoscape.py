@@ -72,6 +72,7 @@ class CytoscapeHelper:
             families[s.sequence_id] = {}
             families[s.sequence_id]["name"] = s.family.name
             families[s.sequence_id]["id"] = s.gene_family_id
+            families[s.sequence_id]["url"] = url_for('family.family_view', family_id=s.gene_family_id)
             if s.family.clade is not None:
                 families[s.sequence_id]["clade"] = s.family.clade.name
                 families[s.sequence_id]["clade_count"] = s.family.clade.species_count
@@ -84,6 +85,7 @@ class CytoscapeHelper:
                     and node["data"]["gene_id"] in families.keys():
                 node["data"]["family_name"] = families[node["data"]["gene_id"]]["name"]
                 node["data"]["family_id"] = families[node["data"]["gene_id"]]["id"]
+                node["data"]["family_url"] = families[node["data"]["gene_id"]]["url"]
                 node["data"]["family_color"] = string_to_hex_color(families[node["data"]["gene_id"]]["name"])
                 node["data"]["family_shape"] = string_to_shape(families[node["data"]["gene_id"]]["name"])
                 node["data"]["family_clade"] = families[node["data"]["gene_id"]]["clade"]
@@ -91,6 +93,7 @@ class CytoscapeHelper:
             else:
                 node["data"]["family_name"] = None
                 node["data"]["family_id"] = None
+                node["data"]["family_url"] = None
                 node["data"]["family_color"] = "#CCC"
                 node["data"]["family_shape"] = "rectangle"
                 node["data"]["family_clade"] = "None"
