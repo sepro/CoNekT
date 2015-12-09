@@ -41,7 +41,6 @@ def string_to_shape(input_string):
 
 def family_to_shape_and_color(input_dictionary):
     """
-    Marek
     Takes a dictionary, where key:gene ID, value: ["fam1", "fam2",...]
 
     :param dictionary: dictionary of genes:families
@@ -55,11 +54,11 @@ def family_to_shape_and_color(input_dictionary):
     families = list(set(families))
 
     fam_2_color_shape, counter = {}, 0
-    if len(families)<(len(__SHAPES)*len(__COLORS)): ###pretty inefficient, will fix later
-        for shape in __SHAPES:
-            for color in __COLORS:
-                if counter<len(families):
-                    fam_2_color_shape[families[counter]] = [shape, color]
+    if len(families) < (len(__SHAPES)*len(__COLORS)):
+        for i in __SHAPES:
+            for j in __COLORS:
+                if counter < len(families):
+                    fam_2_color_shape[families[counter]] = [i, j]
                     counter += 1
 
     gene_2_color_shape = {}
