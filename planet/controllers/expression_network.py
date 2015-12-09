@@ -34,7 +34,7 @@ def expression_network_species(species_id):
 def expression_network_graph(node_id, depth=1, family_method_id=1):
     """
     Page that displays the network graph for a specific network's probe, the depth indicates how many steps away from
-    the query gene the network is retrieved. For performance reasons depths > 2 are not allowed
+    the query gene the network is retrieved. For performance reasons depths > 1 are not allowed
 
     :param node_id: id of the network's probe (the query) to visualize
     :param depth: How many steps to include, 0 only the query and the direct neighborhood, 1 a step further, ...
@@ -42,8 +42,9 @@ def expression_network_graph(node_id, depth=1, family_method_id=1):
     :param family_method_id: family method to use for colors and shapes based on the family
     """
     if depth > 1:
-        flash("Depth cannot be larger than 2. Showing the network with depth 1", "warning")
-        return redirect(url_for('expression_network.expression_network_graph', node_id=node_id, depth=2))
+        flash("Depth cannot be larger than 1. Showing the network with depth 1", "warning")
+        return redirect(url_for('expression_network.expression_network_graph', node_id=node_id, depth=1,
+                                family_method_id=family_method_id))
 
     node = ExpressionNetwork.query.get(node_id)
 
