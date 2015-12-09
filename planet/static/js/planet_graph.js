@@ -28,7 +28,7 @@ cy = cytoscape({
     // code to add tooltips to the selected node
     var content = [
         {
-          value: 'Planet : <a href="' + n.data('gene_link') + '">' + n.data('gene_name') + '</a>'
+          value: n.data('gene_id') !== null ? 'Planet : <a href="' + n.data('gene_link') + '">' + n.data('gene_name') + '</a>' : '<span class="text-muted">No sequence linked to probe</span>'
         }, {
           value: 'Profile : <a href="' + n.data('profile_link') + '">' + n.data('id') + '</a>'
         }, {
