@@ -107,7 +107,9 @@ def family_to_shape_and_color(input_dictionary):
                 counter += 1
 
     gene_2_color_shape = {}
+
     for gene in input_dictionary:
-        gene_2_color_shape[gene] = label_to_shape_color[list(input_dictionary[gene])[0]]
+        if input_dictionary[gene]!=set([]):
+            gene_2_color_shape[gene] = label_to_shape_color[list(input_dictionary[gene])[0]]
 
     return gene_2_color_shape

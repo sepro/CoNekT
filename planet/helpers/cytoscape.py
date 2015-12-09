@@ -123,18 +123,18 @@ class CytoscapeHelper:
         """
         completed_network = deepcopy(network)
 
-        family_only_, both_= {}, {}
+        gene_family_only, gene_both= {}, {}
         for node in completed_network["nodes"]:
-            family_only, both = [], []
+            fam_only, both = [], []
             if "family_name" in node["data"]:
-                family_only+=[node["data"]["family_name"]]
+                fam_only+=[node["data"]["family_name"]]
             if "interpro" in node["data"]:
-                both+=node["data"]["interpro"]+family_only
-            family_only_[node["data"]["gene_id"]] = set(family_only)
-            both_[node["data"]["gene_id"]] = set(family_only)
+                both+=node["data"]["interpro"]+fam_only
+            gene_family_only[node["data"]["gene_id"]] = set(fam_only)
+            gene_both[node["data"]["gene_id"]] = set(both)
 
-        fam_to_shape_and_color = family_to_shape_and_color(family_only_)
-        both_to_shape_and_color = family_to_shape_and_color(both_)
+        fam_to_shape_and_color = family_to_shape_and_color(gene_family_only)
+        both_to_shape_and_color = family_to_shape_and_color(gene_both)
 
         for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys():
