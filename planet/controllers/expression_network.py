@@ -58,7 +58,7 @@ def expression_network_json(node_id, family_method_id=1):
     Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)
 
     :param node_id: id of the network's probe (the query) to visualize
-    :param depth: How many steps to include, 0 only the query and the direct neighborhood, 1 a step further, ...
+    :param family_method_id: Which gene families to use
     """
     network = ExpressionNetwork.get_neighborhood(node_id, 1)
 

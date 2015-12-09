@@ -34,7 +34,7 @@
                         <li><a href="#" class="cy-node-color" attr="depth_color">Depth</a></li>
                         {% endif %}
                         <li><a href="#" class="cy-node-color" attr="family_color">Family</a></li>
-                        <li><a href="#" class="cy-node-color" attr="lc_color">Label Co-occurrence</a></li>
+                        <li><a href="#" class="cy-node-color" attr="lc_color">Label Co-occ.</a></li>
                         {% if cluster %}
                         <li><a href="#" class="cy-node-color" attr="neighbors">Neighbors</a></li>
                         {% endif %}
@@ -50,7 +50,7 @@
                     <ul class="dropdown-menu  cy-option-menu">
                         <li><a href="#" class="cy-node-shape" attr="shape">Default</a></li>
                         <li><a href="#" class="cy-node-shape" attr="family_shape">Family</a></li>
-                        <li><a href="#" class="cy-node-shape" attr="lc_shape">Label Co-occurrence</a></li>
+                        <li><a href="#" class="cy-node-shape" attr="lc_shape">Label Co-occ.</a></li>
                     </ul>
                     </div>
                 </div>
@@ -163,11 +163,13 @@
         </div>
         <div class="col-lg-10 col-lg-offset-2 col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main" id="main">
             {% if node %}
-            <h1>Expression Graph: <strong>{{ node.probe }}</strong> <small>({{ node.method.description }})</small></h1>
+            <h1>Expression Graph: <strong>{{ node.probe }}</strong><br /><small>({{ node.method.description }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+
             <div class="row">
             <div id="cy" json="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% elif cluster %}
-            <h1>Coexpression cluster: <strong>{{ cluster.name }}</strong><br /><small>{{ cluster.method.method }}</small></h1>
+            <h1>Coexpression cluster: <strong>{{ cluster.name }}</strong><br /><small>{{ cluster.method.method }}</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+
             <a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.id) }}">View table</a>
             <div id="cy" json="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% endif %}

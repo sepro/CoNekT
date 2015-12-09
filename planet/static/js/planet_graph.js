@@ -277,5 +277,15 @@ $('#cy-download-svg').click(function() {
   element.click();
 })
 
+$('#cy-reset').on('click', function(){
+  cy.animate({
+    fit: {
+      eles: cy.elements(),
+      padding: 5
+    },
+    duration: 500
+  });
+});
+
 }); // end on dom ready
 
