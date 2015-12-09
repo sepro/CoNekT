@@ -8,7 +8,7 @@ from utils.color import string_to_hex_color, string_to_shape, family_to_shape_an
 from utils.benchmark import benchmark
 
 from copy import deepcopy
-
+import json
 
 class CytoscapeHelper:
 
@@ -207,3 +207,23 @@ class CytoscapeHelper:
                 edge["data"]["depth_color"] = colors[edge["data"]["depth"]]
 
         return colored_network
+
+    @staticmethod
+    def merge_networks(network_one, network_two):
+        nodes = []
+        edges = network_one['edges'] + network_two['edges']
+
+        nodes.append({"data": {"id": "compound_node_one", "compound": True, "color": "#888"}})
+        nodes.append({"data": {"id": "compound_node_two", "compound": True, "color": "#888"}})
+
+        for node in network_one["nodes"]:
+            node["data"]["parent"] = "compound_node_one"
+            nodes.append(node)
+
+        for node in network_two["nodes"]:
+            node["data"]["parent"] = "compound_node_two"
+            nodes.append(node)
+
+        # draw edges between nodes from different networks
+
+        return {'nodes': nodes, 'edges': edges}

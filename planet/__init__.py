@@ -70,6 +70,7 @@ from planet.controllers.search import search
 from planet.controllers.help import help
 from planet.controllers.heatmap import heatmap
 from planet.controllers.profile_comparison import profile_comparison
+from planet.controllers.graph_comparison import graph_comparison
 
 app.register_blueprint(main)
 if LOGIN_ENABLED:
@@ -88,6 +89,7 @@ app.register_blueprint(search, url_prefix='/search')
 app.register_blueprint(help, url_prefix='/help')
 app.register_blueprint(heatmap, url_prefix='/heatmap')
 app.register_blueprint(profile_comparison, url_prefix='/profile_comparison')
+app.register_blueprint(graph_comparison, url_prefix='/graph_comparison')
 
 # Admin panel
 if LOGIN_ENABLED:
