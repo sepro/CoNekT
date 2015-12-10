@@ -26,6 +26,13 @@ sequence_coexpression_cluster = \
              db.Column('coexpression_cluster_id', db.Integer, db.ForeignKey('coexpression_clusters.id'), index=True)
              )
 
+coexpression_cluster_similarity = \
+    db.Table('coexpression_cluster_similarity',
+             db.Column('id', db.Integer, primary_key=True),
+             db.Column('source_id', db.Integer, db.ForeignKey('coexpression_clusters.id'), index=True),
+             db.Column('target_id', db.Integer, db.ForeignKey('coexpression_clusters.id'), index=True)
+             )
+
 sequence_xref = db.Table('sequence_xref',
                          db.Column('id', db.Integer, primary_key=True),
                          db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id'), index=True),
@@ -53,6 +60,22 @@ class SequenceCoexpressionClusterAssociation(db.Model):
     probe = db.Column(db.String(50), index=True)
     sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
     coexpression_cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
+
+
+class CoexpressionClusterSimilarity(db.Model):
+    __tablename__ = 'coexpression_cluster_similarity'
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, primary_key=True)
+    source_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
+    target_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
+
+    gene_family_method_id = db.Column('gene_family_method_id', db.Integer, db.ForeignKey('gene_family_methods.id'),
+                                      index=True)
+
+    jaccard_index = db.Column(db.Float, index=True)
+    p_value = db.Column(db.Float, index=True)
+    corrected_p_value = db.Column(db.Float, index=True)
 
 
 class SequenceFamilyAssociation(db.Model):
@@ -128,26 +151,26 @@ class ClusterGOEnrichment(db.Model):
         return self.go_count*100/self.go_size
 
 
-class ProbeGOEnrichment(db.Model):
-    __tablename__ = 'probe_go_enrichment'
-
-    id = db.Column(db.Integer, primary_key=True)
-    probe_id = db.Column(db.Integer, db.ForeignKey('expression_network.id'), index=True)
-    go_id = db.Column(db.Integer, db.ForeignKey('go.id'), index=True)
-
-    """
-    Counts required to calculate the enrichment,
-    store here for quick access
-    """
-    cluster_count = db.Column(db.Integer)
-    cluster_size = db.Column(db.Integer)
-    go_count = db.Column(db.Integer)
-    go_size = db.Column(db.Integer)
-
-    """
-    Enrichment score (log-transformed), p-value and corrected p-value. Calculated using the hypergeometric
-    distribution and applying FDR correction (aka. BH)
-    """
-    enrichment = db.Column(db.Float)
-    p_value = db.Column(db.Float)
-    corrected_p_value = db.Column(db.Float)
+# class ProbeGOEnrichment(db.Model):
+#     __tablename__ = 'probe_go_enrichment'
+#
+#     id = db.Column(db.Integer, primary_key=True)
+#     probe_id = db.Column(db.Integer, db.ForeignKey('expression_network.id'), index=True)
+#     go_id = db.Column(db.Integer, db.ForeignKey('go.id'), index=True)
+#
+#     """
+#     Counts required to calculate the enrichment,
+#     store here for quick access
+#     """
+#     cluster_count = db.Column(db.Integer)
+#     cluster_size = db.Column(db.Integer)
+#     go_count = db.Column(db.Integer)
+#     go_size = db.Column(db.Integer)
+#
+#     """
+#     Enrichment score (log-transformed), p-value and corrected p-value. Calculated using the hypergeometric
+#     distribution and applying FDR correction (aka. BH)
+#     """
+#     enrichment = db.Column(db.Float)
+#     p_value = db.Column(db.Float)
+#     corrected_p_value = db.Column(db.Float)

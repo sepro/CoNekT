@@ -2,11 +2,14 @@ from flask import url_for
 
 from planet import db
 from planet.models.expression_networks import ExpressionNetwork
+from planet.models.gene_families import GeneFamily
 from planet.models.relationships import sequence_coexpression_cluster, SequenceGOAssociation, ClusterGOEnrichment
+from planet.models.relationships import CoexpressionClusterSimilarity, SequenceCoexpressionClusterAssociation, SequenceFamilyAssociation
 
 from utils.enrichment import hypergeo_sf, fdr_correction
 from utils.benchmark import benchmark
 
+from sqlalchemy import join
 from sqlalchemy.orm import joinedload, load_only
 
 import json
@@ -189,3 +192,38 @@ class CoexpressionCluster(db.Model):
                 for i, cluster in enumerate(clusters):
                     print(i, "\t cluster: ", cluster.method_id, cluster.name)
                     cluster.__calculate_enrichment()
+
+    @staticmethod
+    @benchmark
+    def calculate_similarities(gene_family_method_id=1):
+
+        # sqlalchemy to fetch cluster associations
+        fields = [SequenceCoexpressionClusterAssociation.__table__.c.sequence_id,
+                  SequenceCoexpressionClusterAssociation.__table__.c.coexpression_cluster_id]
+        condition = SequenceCoexpressionClusterAssociation.__table__.c.sequence_id is not None
+        cluster_associations = db.engine.execute(db.select(fields).where(condition)).fetchall()
+
+        # sqlalchemy to fetch sequence family associations
+        fields = [SequenceFamilyAssociation.__table__.c.sequence_id, SequenceFamilyAssociation.__table__.c.gene_family_id, GeneFamily.__table__.c.method_id]
+        condition = GeneFamily.__table__.c.method_id == gene_family_method_id
+        table = join(SequenceFamilyAssociation.__table__, GeneFamily.__table__, SequenceFamilyAssociation.__table__.c.gene_family_id == GeneFamily.__table__.c.id)
+        sequence_families = db.engine.execute(db.select(fields).select_from(table).where(condition)).fetchall()
+
+        # convert sqlachemy results into dictionary
+        sequence_to_family = {seq_id: fam_id for seq_id, fam_id, method_id in sequence_families}
+
+        cluster_to_sequences = {}
+        cluster_to_families = {}
+
+        for seq_id, cluster_id in cluster_associations:
+            if cluster_id not in cluster_to_sequences.keys():
+                cluster_to_sequences[cluster_id] = []
+            cluster_to_sequences[cluster_id].append(seq_id)
+
+        for cluster_id, sequences in cluster_to_sequences.items():
+            families = list(set([sequence_to_family[s] for s in sequences if s in sequence_to_family.keys()]))
+            if len(families) > 0:
+                cluster_to_families[cluster_id] = families
+
+        for c, f in cluster_to_families.items():
+            print(c,f)
