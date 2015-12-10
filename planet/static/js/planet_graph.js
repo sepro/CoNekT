@@ -57,7 +57,7 @@ cy = cytoscape({
     });
   });
 
-    cy.edges().forEach(function(e){
+    cy.edges('[^homology]').forEach(function(e){
     // code to add tooltips to the selected node
     var content = [{
           value: 'Edge: ' + e.data('source') + ' and ' + e.data('target'),
@@ -109,16 +109,16 @@ $('.cy-node-shape').click(function() {
 
 $('.cy-edge-color').click(function() {
   $( this ).closest('.cy-option-menu').find('.cy-edge-color').each(function () {
-    cy.edges().removeClass( $( this ).attr( 'attr' ) );
+    cy.edges('[^homology]').removeClass( $( this ).attr( 'attr' ) );
   });
- cy.edges().addClass( $( this ).attr( 'attr' ) );
+ cy.edges('[^homology]').addClass( $( this ).attr( 'attr' ) );
 })
 
 $('.cy-edge-width').click(function() {
   $( this ).closest('.cy-option-menu').find('.cy-edge-width').each(function () {
-    cy.edges().removeClass( $( this ).attr( 'attr' ) );
+    cy.edges('[^homology]').removeClass( $( this ).attr( 'attr' ) );
   });
- cy.edges().addClass( $( this ).attr( 'attr' ) );
+ cy.edges('[^homology]').addClass( $( this ).attr( 'attr' ) );
 })
 
 $('#cy-edge-score').on("slideStop", function(slideEvt) {

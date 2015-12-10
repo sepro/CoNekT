@@ -236,6 +236,13 @@ class CytoscapeHelper:
                         and node_one["data"]["family_id"] == node_two["data"]["family_id"]:
                     edges.append({'data': {'source': node_one["data"]["id"],
                                            'target': node_two["data"]["id"],
-                                           'color': "#D33"}})
+                                           'color': "#33D",
+                                           'homology': True}})
 
         return {'nodes': nodes, 'edges': edges}
+
+    @staticmethod
+    def get_families(network):
+        return [f["data"]["family_name"] for f in network["nodes"] if 'data' in f.keys() and
+                'family_name' in f["data"].keys() and
+                f["data"]["family_name"] is not None]

@@ -79,6 +79,10 @@ edge.color {
         line-color: data(color);
 }
 
+edge[homology] {
+        line-style: dashed;
+}
+
 edge.depth_color {
         line-color: data(depth_color);
 }
