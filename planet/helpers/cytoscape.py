@@ -4,7 +4,7 @@ from planet.models.relationships import SequenceFamilyAssociation, SequenceInter
 
 from sqlalchemy.orm import joinedload
 
-from utils.color import string_to_hex_color, string_to_shape, family_to_shape_and_color
+from utils.color import family_to_shape_and_color
 from utils.benchmark import benchmark
 
 from copy import deepcopy
@@ -225,5 +225,14 @@ class CytoscapeHelper:
             nodes.append(node)
 
         # draw edges between nodes from different networks
+        # TODO: optimize this to avoid nested loop
+        for node_one in network_one["nodes"]:
+            for node_two in network_two["nodes"]:
+                # if nodes are from the same family add an edge between them
+                if node_one["data"]["family_id"] is not None \
+                        and node_one["data"]["family_id"] == node_two["data"]["family_id"]:
+                    edges.append({'data': {'source': node_one["data"]["id"],
+                                           'target': node_two["data"]["id"],
+                                           'color': "#D33"}})
 
         return {'nodes': nodes, 'edges': edges}
