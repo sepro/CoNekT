@@ -39,6 +39,43 @@ def string_to_shape(input_string):
 
     return __SHAPES[remapped_value]
 
+def iterative_grouper(ListOfListOfLabels, seed):
+    """
+    Takes a list of lists containing labels, and seed label.
+    Returns label co-occurrences for the seed label
+    """
+    aList = []
+    for i in ListOfListOfLabels:
+        if len(set(i)&set(seed))>0:
+            aList+=i
+    if set(aList)==set(seed):
+        return set(aList)|set(seed)
+    else:
+        return iterative_grouper(ListOfListOfLabels, set(aList)|set(seed))
+
+def label_coocurrence(ListOfListOfLabels):
+    """
+    Takes a list of lists, which contains labels associated with a gene, e.g. [[domain 1, domain 2],[domain 2, domain 3],[domain 4],...]
+    Iteratively bins the labels into label co-occurrences
+
+    :param ListOfListOfLabels: List of lists
+    :return: list of label co-occurrenes: [[domain 1, domain 2, domain 3], [domain 4],...]
+    """
+    allFams = []
+    for i in ListOfListOfLabels:
+        allFams += i
+
+    allFams = list(set(allFams))
+
+    lc = []
+    while len(allFams)>0:
+        founds = iterative_grouper(ListOfListOfLabels, [allFams[0]])
+        lc.append(list(founds))
+        allFams = list(set(allFams)-set(founds))
+
+    return lc
+
+
 def family_to_shape_and_color(input_dictionary):
     """
     Takes a dictionary, where key:gene ID, value: ["fam1", "fam2",...]
@@ -46,32 +83,33 @@ def family_to_shape_and_color(input_dictionary):
     :param dictionary: dictionary of genes:families
     :return: genes: [color,shape]
     """
+    label_co_occurrences = label_coocurrence(input_dictionary.values())
 
-    families = []
-    for gene in input_dictionary:
-        families+=[input_dictionary[gene][0][0]]
+    label_to_shape_color, counter = {}, 0
 
-    families = list(set(families))
-
-    fam_2_color_shape, counter = {}, 0
-
-
-    for i in __SHAPES:
-        if len(families) <= (len(__SHAPES)*len(__COLORS)):
-            for j in __COLORS:
-                if counter < len(families):
-                    fam_2_color_shape[families[counter]] = [i, j]
+    if len(label_co_occurrences) <= (len(__SHAPES)*len(__COLORS)):
+        for shape in __SHAPES:
+            for color in __COLORS:
+                if counter < len(label_co_occurrences):
+                    for label in label_co_occurrences[counter]:
+                        label_to_shape_color[label] = [shape, color]
                 counter += 1
-        else:
-            for j in range(math.ceil(len(families)/float(len(__SHAPES)))):   ###determines how many colors per shape needs to be generated, rounded up
-                if counter < len(families):
-                    hashed_string = hashlib.sha1(str(families[counter]).encode('utf-8')).hexdigest()
+
+    else: #if number of lc's is larger than product of available shapes and distinguishable colors
+        for shape in __SHAPES:
+            for j in range(math.ceil(len(label_co_occurrences)/float(len(__SHAPES)))):   ###determines how many colors per shape needs to be generated, rounded up
+                if counter < len(label_co_occurrences):
+
+                    hashed_string = hashlib.sha1(str(label_co_occurrences[counter][0]).encode('utf-8')).hexdigest()
                     color = "#" + hashed_string[0:3].upper()
-                    fam_2_color_shape[families[counter]] = [i, color]
-                    counter += 1
+                    for label in label_co_occurrences[counter]:
+                        label_to_shape_color[label] = [shape, color]
+                counter += 1
 
     gene_2_color_shape = {}
+
     for gene in input_dictionary:
-        gene_2_color_shape[gene] = fam_2_color_shape[input_dictionary[gene][0][0]]
+        if input_dictionary[gene]!=set([]):
+            gene_2_color_shape[gene] = label_to_shape_color[list(input_dictionary[gene])[0]]
 
     return gene_2_color_shape

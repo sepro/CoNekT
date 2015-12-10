@@ -66,6 +66,9 @@ class CytoscapeHelper:
             options(joinedload('family.clade')).\
             filter(SequenceFamilyAssociation.family.has(method_id=family_method_id)).all()
 
+        sequence_interpro = SequenceInterproAssociation.query.\
+            filter(SequenceInterproAssociation.sequence_id.in_(sequence_ids)).all()
+
         families = {}
 
         for s in sequence_families:
@@ -80,14 +83,21 @@ class CytoscapeHelper:
                 families[s.sequence_id]["clade"] = "None"
                 families[s.sequence_id]["clade_count"] = 0
 
+        for i in sequence_interpro:
+            if "interpro" in families[i.sequence_id]:
+                families[i.sequence_id]["interpro"] += [i.domain.label]
+            else:
+                families[i.sequence_id]["interpro"] = [i.domain.label]
+
         for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys() \
                     and node["data"]["gene_id"] in families.keys():
+                if "interpro" in families[node["data"]["gene_id"]]:
+                    node["data"]["interpro"] = families[node["data"]["gene_id"]]["interpro"]
                 node["data"]["family_name"] = families[node["data"]["gene_id"]]["name"]
                 node["data"]["family_id"] = families[node["data"]["gene_id"]]["id"]
-                node["data"]["family_url"] = families[node["data"]["gene_id"]]["url"]
-                node["data"]["family_color"] = string_to_hex_color(families[node["data"]["gene_id"]]["name"])
-                node["data"]["family_shape"] = string_to_shape(families[node["data"]["gene_id"]]["name"])
+                # node["data"]["family_color"] = string_to_hex_color(families[node["data"]["gene_id"]]["name"])  disabled, as I will include this info below, in the label co-occurrence function
+                # node["data"]["family_shape"] = string_to_shape(families[node["data"]["gene_id"]]["name"])
                 node["data"]["family_clade"] = families[node["data"]["gene_id"]]["clade"]
                 node["data"]["family_clade_count"] = families[node["data"]["gene_id"]]["clade_count"]
             else:
@@ -113,39 +123,29 @@ class CytoscapeHelper:
         """
         completed_network = deepcopy(network)
 
-        sequence_ids = []
+        gene_family_only, gene_both= {}, {}
         for node in completed_network["nodes"]:
-            if "data" in node.keys() and "gene_id" in node["data"].keys():
-                sequence_ids.append(node["data"]["gene_id"])
+            fam_only, both = [], []
+            if "family_name" in node["data"]:
+                fam_only+=[node["data"]["family_name"]]
+            if "interpro" in node["data"]:
+                both+=node["data"]["interpro"]+fam_only
+            gene_family_only[node["data"]["gene_id"]] = set(fam_only)
+            gene_both[node["data"]["gene_id"]] = set(both)
 
-
-        sequence_families = SequenceFamilyAssociation.query.\
-            filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids)).\
-            options(joinedload('family.clade')).all()
-
-        sequence_interpro = SequenceInterproAssociation.query.\
-            filter(SequenceInterproAssociation.sequence_id.in_(sequence_ids)).all()
-
-        ###gene2labels: [sequenceID] = [[PLAZA].[interpro]]
-        gene2labels = {}
-        for s in sequence_families:
-            gene2labels[s.sequence_id] = [[s.family.name],[]]
-
-        for s in sequence_interpro:
-            if s.sequence_id in gene2labels:
-                gene2labels[s.sequence_id][1] += [s.domain.label]
-            else:
-                gene2labels[s.sequence_id][1] = [[], [s.domain.label]]
-
-
-        ###shapes_colors: [family] = [shape.color]
-        gene_to_shape_and_color = family_to_shape_and_color(gene2labels)
+        fam_to_shape_and_color = family_to_shape_and_color(gene_family_only)
+        both_to_shape_and_color = family_to_shape_and_color(gene_both)
 
         for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys():
-                if node["data"]["gene_id"] in gene_to_shape_and_color:
-                    node["data"]["lc_color"] = gene_to_shape_and_color[node["data"]["gene_id"]][1]
-                    node["data"]["lc_shape"] = gene_to_shape_and_color[node["data"]["gene_id"]][0]
+                if node["data"]["gene_id"] in fam_to_shape_and_color:
+                    node["data"]["family_color"] = fam_to_shape_and_color[node["data"]["gene_id"]][1]
+                    node["data"]["family_shape"] = fam_to_shape_and_color[node["data"]["gene_id"]][0]
+                if node["data"]["gene_id"] in both_to_shape_and_color:
+                    node["data"]["lc_color"] = both_to_shape_and_color[node["data"]["gene_id"]][1]
+                    node["data"]["lc_shape"] = both_to_shape_and_color[node["data"]["gene_id"]][0]
+
+        print(completed_network["nodes"])
         return completed_network
 
 
