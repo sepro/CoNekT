@@ -1,14 +1,11 @@
 from flask import url_for
+from sqlalchemy.orm import joinedload
 
 from planet.models.relationships import SequenceFamilyAssociation, SequenceInterproAssociation
 
-from sqlalchemy.orm import joinedload
-
 from utils.color import family_to_shape_and_color
-from utils.benchmark import benchmark
-
 from copy import deepcopy
-import json
+
 
 class CytoscapeHelper:
 
@@ -47,12 +44,12 @@ class CytoscapeHelper:
     @staticmethod
     def add_family_data_nodes(network, family_method_id):
         """
-        Colors a cytoscape compatible network (dict) based on gene family
+        Adds family, clade and interpro information to a a cytoscape compatible network (dict)
 
         :param network: dict containing the network
         :param family_method_id: desired type/method used to construct the families
 
-        :return: Cytoscape.js compatible network with colors and shapes based on gene families included
+        :return: Cytoscape.js compatible network with family, clade and interpro information included
         """
         completed_network = deepcopy(network)
 
@@ -69,35 +66,35 @@ class CytoscapeHelper:
         sequence_interpro = SequenceInterproAssociation.query.\
             filter(SequenceInterproAssociation.sequence_id.in_(sequence_ids)).all()
 
-        families = {}
+        data = {}
 
         for s in sequence_families:
-            families[s.sequence_id] = {}
-            families[s.sequence_id]["name"] = s.family.name
-            families[s.sequence_id]["id"] = s.gene_family_id
-            families[s.sequence_id]["url"] = url_for('family.family_view', family_id=s.gene_family_id)
+            data[s.sequence_id] = {}
+            data[s.sequence_id]["name"] = s.family.name
+            data[s.sequence_id]["id"] = s.gene_family_id
+            data[s.sequence_id]["url"] = url_for('family.family_view', family_id=s.gene_family_id)
             if s.family.clade is not None:
-                families[s.sequence_id]["clade"] = s.family.clade.name
-                families[s.sequence_id]["clade_count"] = s.family.clade.species_count
+                data[s.sequence_id]["clade"] = s.family.clade.name
+                data[s.sequence_id]["clade_count"] = s.family.clade.species_count
             else:
-                families[s.sequence_id]["clade"] = "None"
-                families[s.sequence_id]["clade_count"] = 0
+                data[s.sequence_id]["clade"] = "None"
+                data[s.sequence_id]["clade_count"] = 0
 
         for i in sequence_interpro:
-            if "interpro" in families[i.sequence_id]:
-                families[i.sequence_id]["interpro"] += [i.domain.label]
+            if "interpro" in data[i.sequence_id]:
+                data[i.sequence_id]["interpro"] += [i.domain.label]
             else:
-                families[i.sequence_id]["interpro"] = [i.domain.label]
+                data[i.sequence_id]["interpro"] = [i.domain.label]
 
         for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys() \
-                    and node["data"]["gene_id"] in families.keys():
-                if "interpro" in families[node["data"]["gene_id"]]:
-                    node["data"]["interpro"] = families[node["data"]["gene_id"]]["interpro"]
-                node["data"]["family_name"] = families[node["data"]["gene_id"]]["name"]
-                node["data"]["family_id"] = families[node["data"]["gene_id"]]["id"]
-                node["data"]["family_clade"] = families[node["data"]["gene_id"]]["clade"]
-                node["data"]["family_clade_count"] = families[node["data"]["gene_id"]]["clade_count"]
+                    and node["data"]["gene_id"] in data.keys():
+                if "interpro" in data[node["data"]["gene_id"]]:
+                    node["data"]["interpro"] = data[node["data"]["gene_id"]]["interpro"]
+                node["data"]["family_name"] = data[node["data"]["gene_id"]]["name"]
+                node["data"]["family_id"] = data[node["data"]["gene_id"]]["id"]
+                node["data"]["family_clade"] = data[node["data"]["gene_id"]]["clade"]
+                node["data"]["family_clade_count"] = data[node["data"]["gene_id"]]["clade_count"]
             else:
                 node["data"]["family_name"] = None
                 node["data"]["family_id"] = None
@@ -112,12 +109,10 @@ class CytoscapeHelper:
     @staticmethod
     def add_lc_data_nodes(network):
         """
-        Colors a cytoscape compatible network (dict) based on gene family
+        Colors a network based on family information and label co-occurrences.
 
         :param network: dict containing the network
-        :param family_method_id: desired type/method used to construct the families
-
-        :return: Cytoscape.js compatible network with colors and shapes based on gene families included
+        :return: Cytoscape.js compatible network with colors and shapes based on gene families and label co-occurrances
         """
         completed_network = deepcopy(network)
 
@@ -208,6 +203,16 @@ class CytoscapeHelper:
 
     @staticmethod
     def merge_networks(network_one, network_two):
+        """
+        Function to merge two networks. A compound/parent node is created for each network and based on the family_id,
+        edges between homologous/orthologous genes are added.
+
+        Note that label co-occurrences need to be (re-)calculated on the merged network
+
+        :param network_one: Dictionary (cytoscape.js structure) of the first network
+        :param network_two: Dictionary (cytoscape.js structure) of the second network
+        :return: Cytoscape.js compatible network with both networks merged and homologs/orthologs connected
+        """
         nodes = []
         edges = network_one['edges'] + network_two['edges']
 
