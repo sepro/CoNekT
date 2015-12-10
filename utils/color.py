@@ -99,7 +99,6 @@ def family_to_shape_and_color(input_dictionary):
         for shape in __SHAPES:
             for j in range(math.ceil(len(label_co_occurrences)/float(len(__SHAPES)))):   ###determines how many colors per shape needs to be generated, rounded up
                 if counter < len(label_co_occurrences):
-
                     hashed_string = hashlib.sha1(str(label_co_occurrences[counter][0]).encode('utf-8')).hexdigest()
                     color = "#" + hashed_string[0:3].upper()
                     for label in label_co_occurrences[counter]:
