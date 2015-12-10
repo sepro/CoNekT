@@ -96,8 +96,6 @@ class CytoscapeHelper:
                     node["data"]["interpro"] = families[node["data"]["gene_id"]]["interpro"]
                 node["data"]["family_name"] = families[node["data"]["gene_id"]]["name"]
                 node["data"]["family_id"] = families[node["data"]["gene_id"]]["id"]
-                # node["data"]["family_color"] = string_to_hex_color(families[node["data"]["gene_id"]]["name"])  disabled, as I will include this info below, in the label co-occurrence function
-                # node["data"]["family_shape"] = string_to_shape(families[node["data"]["gene_id"]]["name"])
                 node["data"]["family_clade"] = families[node["data"]["gene_id"]]["clade"]
                 node["data"]["family_clade_count"] = families[node["data"]["gene_id"]]["clade_count"]
             else:
@@ -112,7 +110,7 @@ class CytoscapeHelper:
         return completed_network
 
     @staticmethod
-    def add_lc_data_nodes(network, family_method_id):
+    def add_lc_data_nodes(network):
         """
         Colors a cytoscape compatible network (dict) based on gene family
 
@@ -145,7 +143,6 @@ class CytoscapeHelper:
                     node["data"]["lc_color"] = both_to_shape_and_color[node["data"]["gene_id"]][1]
                     node["data"]["lc_shape"] = both_to_shape_and_color[node["data"]["gene_id"]][0]
 
-        print(completed_network["nodes"])
         return completed_network
 
 
