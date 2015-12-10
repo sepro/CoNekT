@@ -123,13 +123,14 @@ class CytoscapeHelper:
 
         gene_family_only, gene_both= {}, {}
         for node in completed_network["nodes"]:
-            fam_only, both = [], []
-            if "family_name" in node["data"]:
-                fam_only+=[node["data"]["family_name"]]
-            if "interpro" in node["data"]:
-                both+=node["data"]["interpro"]+fam_only
-            gene_family_only[node["data"]["gene_id"]] = set(fam_only)
-            gene_both[node["data"]["gene_id"]] = set(both)
+            if "data" in node.keys() and "gene_id" in node["data"].keys():
+                fam_only, both = [], []
+                if "family_name" in node["data"]:
+                    fam_only+=[node["data"]["family_name"]]
+                if "interpro" in node["data"]:
+                    both+=node["data"]["interpro"]+fam_only
+                gene_family_only[node["data"]["gene_id"]] = set(fam_only)
+                gene_both[node["data"]["gene_id"]] = set(both)
 
         fam_to_shape_and_color = family_to_shape_and_color(gene_family_only)
         both_to_shape_and_color = family_to_shape_and_color(gene_both)
@@ -144,7 +145,6 @@ class CytoscapeHelper:
                     node["data"]["lc_shape"] = both_to_shape_and_color[node["data"]["gene_id"]][0]
 
         return completed_network
-
 
     @staticmethod
     def add_depth_data_nodes(network):
