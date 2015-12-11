@@ -2,8 +2,6 @@ from flask import Blueprint, render_template
 from planet.models.coexpression_clusters import CoexpressionCluster
 from planet.helpers.cytoscape import CytoscapeHelper
 
-from utils.jaccard import jaccard
-
 import json
 
 graph_comparison = Blueprint('graph_comparison', __name__)
@@ -54,13 +52,6 @@ def graph_comparison_cluster_json(one, two, family_method_id=1):
     network_two = CytoscapeHelper.parse_network(CoexpressionCluster.get_cluster(two))
     network_two = CytoscapeHelper.add_family_data_nodes(network_two, family_method_id)
     network_two = CytoscapeHelper.add_connection_data_nodes(network_two)
-
-    families_one = CytoscapeHelper.get_families(network_one)
-    families_two = CytoscapeHelper.get_families(network_two)
-
-    jaccard_index = jaccard(families_one, families_two)
-
-    print(families_one, families_two, jaccard_index)
 
     output = CytoscapeHelper.merge_networks(network_one, network_two)
     output = CytoscapeHelper.add_lc_data_nodes(output)
