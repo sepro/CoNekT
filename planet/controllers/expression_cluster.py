@@ -1,9 +1,12 @@
 from flask import Blueprint, url_for, render_template, flash, redirect, g, Response
 
 from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
+from planet.models.relationships import CoexpressionClusterSimilarity
 from planet.helpers.cytoscape import CytoscapeHelper
 
 from planet.models.sequences import Sequence
+
+from sqlalchemy import or_
 
 import json
 
@@ -32,10 +35,15 @@ def expression_cluster_view(cluster_id):
 
     sequence_count = len(cluster.sequences.with_entities(Sequence.id).all())
     go_enrichment = cluster.go_enrichment.order_by('corrected_p_value').all()
+    similar_clusters = CoexpressionClusterSimilarity.query.filter(or_(
+        CoexpressionClusterSimilarity.source_id == cluster_id,
+        CoexpressionClusterSimilarity.target_id == cluster_id
+    )).all()
 
     return render_template("expression_cluster.html", cluster=cluster,
                            sequence_count=sequence_count,
-                           go_enrichment=go_enrichment)
+                           go_enrichment=go_enrichment,
+                           similar_clusters=similar_clusters)
 
 
 @expression_cluster.route('/sequences/<cluster_id>/')

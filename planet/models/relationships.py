@@ -1,6 +1,5 @@
 from planet import db
 
-
 sequence_go = db.Table('sequence_go',
                        db.Column('id', db.Integer, primary_key=True),
                        db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id'), index=True),
@@ -77,6 +76,10 @@ class CoexpressionClusterSimilarity(db.Model):
     p_value = db.Column(db.Float, index=True)
     corrected_p_value = db.Column(db.Float, index=True)
 
+    source = db.relationship('CoexpressionCluster', lazy='joined', foreign_keys=[source_id])
+    target = db.relationship('CoexpressionCluster', lazy='joined', foreign_keys=[target_id])
+
+    gene_family_method = db.relationship('GeneFamilyMethod', lazy='joined')
 
 class SequenceFamilyAssociation(db.Model):
     __tablename__ = 'sequence_family'
