@@ -11,3 +11,4 @@ def jaccard(list_a, list_b):
     intersection_count = len(set(list_a).intersection(set(list_b)))
 
     return intersection_count/union_count
+
