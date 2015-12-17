@@ -41,7 +41,7 @@ def graph_comparison_cluster_json(one, two, family_method_id=1):
 
     :param one: internal id of the first cluster
     :param two: internal id of the second cluster
-    :param family_method_id: internal id of the gene family method (used down stream for
+    :param family_method_id: internal id of the gene family method (used down stream for coloring and connecting)
     :return: json object compatible with cytoscape.js and our UI elements
     """
     # test url http://127.0.0.1:5000/graph_comparison/cluster/1858/2408/2
