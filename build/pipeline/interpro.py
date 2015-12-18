@@ -15,8 +15,6 @@ def generate_script(filename, job_name, job_count, input_string, output_string, 
     output = """#!/bin/bash
 #
 
-#$ -q regular
-
 #$ -N %s
 #$ -cwd
 #$ -j y
