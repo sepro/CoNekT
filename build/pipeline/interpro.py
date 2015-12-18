@@ -63,11 +63,11 @@ def run_interpro(config):
     cp = configparser.ConfigParser()
     cp.read(config)
 
-    interpro_module = cp['GENERAL']['interpro_module']
-    interpro_cmd = cp['GENERAL']['interpro_cmd']
-    genomes = cp['GENERAL']['genomes'].split(';')
-    email = cp['GENERAL']['email']
-    jobs = cp['GENERAL']['jobs']
+    interpro_module = cp['DEFAULT']['interpro_module']
+    interpro_cmd = cp['DEFAULT']['interpro_cmd']
+    genomes = cp['DEFAULT']['genomes'].split(';')
+    email = cp['DEFAULT']['email']
+    jobs = int(cp['DEFAULT']['jobs'])
 
     for g in genomes:
         input = cp[g]['input']
