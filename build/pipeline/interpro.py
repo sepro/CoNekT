@@ -66,7 +66,7 @@ def run_interpro(config):
     interpro_module = cp['DEFAULT']['interpro_module']
     interpro_cmd = cp['DEFAULT']['interpro_cmd']
     genomes = cp['DEFAULT']['genomes'].split(';')
-    email = cp['DEFAULT']['email']
+    email = None if cp['DEFAULT']['email'] == 'None' else cp['DEFAULT']['email']
     jobs = int(cp['DEFAULT']['jobs'])
 
     for g in genomes:
