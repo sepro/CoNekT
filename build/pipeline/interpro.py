@@ -44,6 +44,9 @@ def split_fasta(file, chunks, output_directory, filenames="proteins_%d.fasta"):
     fasta = Fasta()
     fasta.readfile(file)
 
+    for k in fasta.sequences.keys():
+        fasta.sequences[k] = fasta.sequences[k].replace('*', '')
+
     seq_per_chunk = ceil(len(fasta.sequences.keys())/chunks)
 
     if not os.path.exists(output_directory):
