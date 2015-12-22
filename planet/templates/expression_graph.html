@@ -3,7 +3,7 @@
 {% block container %}
 <div class=container-fluid">
     <div class="row">
-        <div class="col-lg-2 col-sm-4 col-md-3 sidebar" id="sidebar">
+        <div class="col-lg-2 col-sm-4 col-md-4 sidebar" id="sidebar">
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#"><strong>Options</strong></a></li>
             <li><br/></li>
@@ -162,7 +162,7 @@
 
           </ul>
         </div>
-        <div class="col-lg-10 col-lg-offset-2 col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main" id="main">
+        <div class="col-lg-10 col-lg-offset-2 col-sm-8 col-sm-offset-4 col-md-8 col-md-offset-4 main" id="main">
             {% if node %}
             <h1>Expression Graph: <strong>{{ node.probe }}</strong><br /><small>({{ node.method.description }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
 
