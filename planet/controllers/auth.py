@@ -29,7 +29,7 @@ def register():
     """
     function to register a user
     """
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         flash('You are already logged in.', 'warning')
         return redirect(url_for('main.screen'))
 
@@ -68,7 +68,7 @@ def login():
     """
     function to check a user's credentials and log him in
     """
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         flash('You are already logged in.')
         return redirect(url_for('main.screen'))
 

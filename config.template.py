@@ -23,6 +23,8 @@ LOGIN_ENABLED = True
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db', 'planet.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'migration')
 
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
 # Collation type, NOCASE for sqlite, '' for MySQL
 SQL_COLLATION = 'NOCASE'
 
