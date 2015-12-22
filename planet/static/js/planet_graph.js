@@ -171,8 +171,12 @@ $("#cy-search").click(function(){
     cy.nodes('[^compound]').each( function(i, node) {
       if(node.data('gene_name').toLowerCase() === term ||
          node.data('name').toLowerCase() === term ||
-         valid_genes.indexOf(node.data('gene_id')) > -1) {
+         (node.data('family_name') !== null && node.data('family_name').toLowerCase() === term) ||
+         (typeof node.data('interpro') !== 'undefined' && node.data('interpro').indexOf(term.toUpperCase()) > -1) ||
+         valid_genes.indexOf(node.data('gene_id')) > -1
+         ) {
         node.toggleClass('found');
+
       }
     });
 

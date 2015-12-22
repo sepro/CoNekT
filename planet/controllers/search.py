@@ -93,10 +93,10 @@ def search_json_genes(label):
         for association in current_go.sequence_associations:
             output.append(association.sequence_id)
 
-    current_interpro = Interpro.query.filter_by(label=label).first()
-    if current_interpro is not None:
-        for association in current_interpro.sequence_associations:
-            output.append(association.sequence_id)
+    # current_interpro = Interpro.query.filter_by(label=label).first()
+    # if current_interpro is not None:
+    #     for association in current_interpro.sequence_associations:
+    #         output.append(association.sequence_id)
 
     return json.dumps(output)
 
