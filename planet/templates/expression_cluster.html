@@ -35,72 +35,73 @@
         <a href="{{ url_for('expression_cluster.expression_cluster_graph', cluster_id=cluster.id) }}">View graph</a> <i class="fa fa-share-alt"></i>
         <br /><br />
         <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Enriched GO Terms</div>
-                <div class="panel-scroll">
-                <div class="table-responsive">
-                    <table class="table  table-striped" id="EnrichedGO">
-                        <thead>
-                            <tr>
-                                <th data-sort="string-ins">ID</th>
-                                <th data-sort="string-ins">label</th>
-                                <th data-sort="float">% in cluster</th>
-                                <th data-sort="float">enrichment <span class="text-muted">log2-transformed</span></th>
-                                <th data-sort="float">p-value</th>
-                                <th data-sort="float">corrected p-value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for go in go_enrichment %}
-                                {% if go.corrected_p_value <= 0.05 %}
-                                <tr>
-                                    <td><a href="{{ url_for('go.go_view', go_id=go.go.id) }}" data-toggle="tooltip"
-                                       data-placement="top" title="{{ go.go.description }}">{{ go.go.label }}</td>
-                                    <td>{{ go.go.name }}</td>
-                                    <td>{{ go.cluster_percentage|round(2) }} %</td>
-                                    <td>{{ go.enrichment|round(2) }}</td>
-                                    <td>{{ go.p_value|round(6) }}</td>
-                                    <td>{{ go.corrected_p_value|round(6) }}</td>
-                                </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Enriched GO Terms</div>
+                    <div class="panel-scroll">
+                        <div class="table-responsive">
+                            <table class="table  table-striped" id="EnrichedGO">
+                                <thead>
+                                    <tr>
+                                        <th data-sort="string-ins">ID</th>
+                                        <th data-sort="string-ins">label</th>
+                                        <th data-sort="float">% in cluster</th>
+                                        <th data-sort="float">enrichment <span class="text-muted">log2-transformed</span></th>
+                                        <th data-sort="float">p-value</th>
+                                        <th data-sort="float">corrected p-value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for go in go_enrichment %}
+                                        {% if go.corrected_p_value <= 0.05 %}
+                                        <tr>
+                                            <td><a href="{{ url_for('go.go_view', go_id=go.go.id) }}" data-toggle="tooltip"
+                                               data-placement="top" title="{{ go.go.description }}">{{ go.go.label }}</td>
+                                            <td>{{ go.go.name }}</td>
+                                            <td>{{ go.cluster_percentage|round(2) }} %</td>
+                                            <td>{{ go.enrichment|round(2) }}</td>
+                                            <td>{{ go.p_value|round(6) }}</td>
+                                            <td>{{ go.corrected_p_value|round(6) }}</td>
+                                        </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">Similar Clusters</div>
-                <div class="panel-scroll">
-                <div class="table-responsive">
-                    <table class="table  table-striped" id="SimilarClusters">
-                        <thead>
-                            <tr>
-                                <th data-sort="string-ins">Source</th>
-                                <th data-sort="string-ins">Target</th>
-                                <th data-sort="float">jaccard index</th>
-                                <th data-sort="string-ins">Gene Family Method</th>
-                                <th>actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for sc in similar_clusters %}
-                                <tr>
-                                    <td>{{ sc.source.name }}</td>
-                                    <td>{{ sc.target.name }}</td>
-                                    <td>{{ sc.jaccard_index|round(3) }}</td>
-                                    <td>{{ sc.gene_family_method.method }}</td>
-                                    <td><a href="{{ url_for('graph_comparison.graph_comparison_cluster', one=sc.source_id, two=sc.target_id, family_method_id=sc.gene_family_method_id) }}">Compare</a></td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Similar Clusters</div>
+                    <div class="panel-scroll">
+                        <div class="table-responsive">
+                            <table class="table  table-striped" id="SimilarClusters">
+                                <thead>
+                                    <tr>
+                                        <th data-sort="string-ins">Source</th>
+                                        <th data-sort="string-ins">Target</th>
+                                        <th data-sort="float">jaccard index</th>
+                                        <th data-sort="string-ins">Gene Family Method</th>
+                                        <th>actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for sc in similar_clusters %}
+                                        <tr>
+                                            <td>{{ sc.source.name }}</td>
+                                            <td>{{ sc.target.name }}</td>
+                                            <td>{{ sc.jaccard_index|round(3) }}</td>
+                                            <td>{{ sc.gene_family_method.method }}</td>
+                                            <td><a href="{{ url_for('graph_comparison.graph_comparison_cluster', one=sc.source_id, two=sc.target_id, family_method_id=sc.gene_family_method_id) }}">Compare</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div></div>
 
 
         {{ macro.sequence_pagination(url_for('expression_cluster.expression_cluster_sequences', cluster_id=cluster.id), sequence_count) }}

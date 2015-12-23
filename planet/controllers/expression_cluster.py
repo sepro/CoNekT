@@ -73,15 +73,23 @@ def expression_cluster_download(cluster_id):
     cluster = CoexpressionCluster.query.get_or_404(cluster_id)
     sequence_associations = cluster.sequence_associations.order_by('probe')
 
-    output = ["probe\tsequence"]
+    output = ["probe\tsequence\tdescription"]
 
     for sequence_association in sequence_associations:
+        line = [sequence_association.probe]
         if sequence_association.sequence is not None:
-            output.append(sequence_association.probe + "\t" + sequence_association.sequence.name)
+            line.append(sequence_association.sequence.name)
+            if sequence_association.sequence.description is not None:
+                line.append(sequence_association.sequence.description)
+            else:
+                line.append("No description available")
         else:
-            output.append(sequence_association.probe + "\tNone")
+            line.append("None sequence associated with this probe")
+            line.append("No description available")
 
-    return Response("\n".join(output), mimetype='text/plain')
+        output.append("\t".join(line))
+
+    return Response("\r\n".join(output), mimetype='text/plain')
 
 
 @expression_cluster.route('/graph/<cluster_id>')
