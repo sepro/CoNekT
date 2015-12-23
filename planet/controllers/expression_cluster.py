@@ -1,7 +1,7 @@
 from flask import Blueprint, url_for, render_template, flash, redirect, g, Response
 
 from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
-from planet.models.relationships import CoexpressionClusterSimilarity
+from planet.models.relationships import CoexpressionClusterSimilarity, SequenceCoexpressionClusterAssociation
 from planet.helpers.cytoscape import CytoscapeHelper
 
 from planet.models.sequences import Sequence
@@ -56,7 +56,7 @@ def expression_cluster_sequences(cluster_id, page=1):
     :param page: page number
     """
     cluster = CoexpressionCluster.query.get_or_404(cluster_id)
-    sequence_associations = cluster.sequence_associations.order_by('probe').paginate(page, g.page_items, False).items
+    sequence_associations = cluster.sequence_associations.order_by(SequenceCoexpressionClusterAssociation.probe).paginate(page, g.page_items, False).items
 
     return render_template('pagination/cluster_probes.html', sequence_associations=sequence_associations,
                            species_id=cluster.method.network_method.species.id)
@@ -71,7 +71,7 @@ def expression_cluster_download(cluster_id):
     :param page: page number
     """
     cluster = CoexpressionCluster.query.get_or_404(cluster_id)
-    sequence_associations = cluster.sequence_associations.order_by('probe')
+    sequence_associations = cluster.sequence_associations.order_by(SequenceCoexpressionClusterAssociation.probe)
 
     output = ["probe\tsequence\tdescription"]
 
