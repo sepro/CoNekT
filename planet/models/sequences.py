@@ -52,3 +52,16 @@ class Sequence(db.Model):
         :return: The amino acid sequence based on the coding sequence
         """
         return translate(self.coding_sequence)
+
+    @property
+    def aliases(self):
+        """
+        Returns a readable string with the aliases or tokens stored for this sequence in the table xrefs
+
+        :return: human readable string with aliases or None
+        """
+        t = [x.name for x in self.xrefs if x.platform == 'token']
+
+        return ", ".join(t) if len(t) > 0 else None
+
+
