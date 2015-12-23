@@ -22,7 +22,11 @@ class Search:
         """
         terms = term_string.upper().split()
 
-        sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
+        sequences = Sequence.query.filter(or_(Sequence.name.in_(terms),
+                                              and_(*[Sequence.description.ilike("%"+term+"%") for term in terms
+                                                     if len(term) > 3])
+                                              )
+                                          ).all()
 
         go = GO.query.filter(or_(and_(*[GO.description.ilike("%"+term+"%") for term in terms]),
                                  and_(*[GO.name.ilike("%"+term+"%") for term in terms]),
@@ -42,8 +46,10 @@ class Search:
 
     @staticmethod
     def keyword(keyword):
-        sequences = Sequence.query.with_entities(Sequence.id, Sequence.name)\
-            .filter(Sequence.name == keyword).all()
+        sequences = Sequence.query.filter(or_(Sequence.name == keyword,
+                                              Sequence.description.ilike("%"+keyword+"%"),
+                                              )
+                                          ).all()
 
         go = GO.query.filter(or_(GO.description.ilike("%"+keyword+"%"),
                                  GO.name.ilike("%"+keyword+"%"),

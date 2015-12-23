@@ -1,16 +1,11 @@
 from flask import g, Blueprint, flash, request, redirect, url_for, render_template, Response
-from sqlalchemy.sql import or_, and_
+from sqlalchemy.sql import or_
 from sqlalchemy import func
 
-from planet.models.sequences import Sequence
 from planet.models.go import GO
-from planet.models.interpro import Interpro
-from planet.models.gene_families import GeneFamily
-from planet.models.expression_profiles import ExpressionProfile
 from planet.models.search import Search
 from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
 
-from utils.benchmark import benchmark
 
 import json
 
