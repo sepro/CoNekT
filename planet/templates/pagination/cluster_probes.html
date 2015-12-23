@@ -9,6 +9,7 @@
                     {% else %}
                     <td><em class="text-muted">No sequence associated with this probe</em></td>
                     {% endif %}
+                    <td>{% if sequence_association.sequence.description %}{{ sequence_association.sequence.description|truncate(60) }}{% else %}<em class="text-muted">No description available</em>{% endif %}</td>
                 </tr>
             {% endfor %}
         </tbody>
