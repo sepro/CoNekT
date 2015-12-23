@@ -2,6 +2,7 @@ from flask import url_for
 from sqlalchemy.orm import joinedload
 
 from planet.models.relationships import SequenceFamilyAssociation, SequenceInterproAssociation
+from planet.models.sequences import Sequence
 
 from utils.color import family_to_shape_and_color
 from copy import deepcopy
@@ -139,6 +140,39 @@ class CytoscapeHelper:
                 if node["data"]["gene_id"] in both_to_shape_and_color:
                     node["data"]["lc_color"] = both_to_shape_and_color[node["data"]["gene_id"]][1]
                     node["data"]["lc_shape"] = both_to_shape_and_color[node["data"]["gene_id"]][0]
+
+        return completed_network
+
+    @staticmethod
+    def add_descriptions_nodes(network):
+        completed_network = deepcopy(network)
+
+        sequence_ids = []
+        for node in completed_network["nodes"]:
+            if "data" in node.keys() and "gene_id" in node["data"].keys():
+                sequence_ids.append(node["data"]["gene_id"])
+
+        sequences = Sequence.query.filter(Sequence.id.in_(sequence_ids)).all()
+
+        descriptions = {s.id: s.description for s in sequences}
+        tokens = {s.id: ", ".join([x.name for x in s.xrefs if x.platform == 'token']) for s in sequences}
+
+        # Set empty tokens to None
+        for k, v in tokens.items():
+            if v == "":
+                tokens[k] = None
+
+        for node in completed_network["nodes"]:
+            if "data" in node.keys() and "gene_id" in node["data"].keys():
+                if node["data"]["gene_id"] in descriptions.keys():
+                    node["data"]["description"] = descriptions[node["data"]["gene_id"]]
+                else:
+                    node["data"]["description"] = None
+
+                if node["data"]["gene_id"] in tokens.keys():
+                    node["data"]["tokens"] = tokens[node["data"]["gene_id"]]
+                else:
+                    node["data"]["tokens"] = None
 
         return completed_network
 

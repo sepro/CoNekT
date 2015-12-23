@@ -67,6 +67,7 @@ def expression_network_json(node_id, family_method_id=1):
     network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
     network_cytoscape = CytoscapeHelper.add_depth_data_edges(network_cytoscape)
     network_cytoscape = CytoscapeHelper.add_depth_data_nodes(network_cytoscape)
+    network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
 
     return json.dumps(network_cytoscape)
 

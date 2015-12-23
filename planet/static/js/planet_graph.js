@@ -29,7 +29,14 @@ cy = cytoscape({
     var content = [
         {
           value: n.data('gene_id') !== null ? 'Planet : <a href="' + n.data('gene_link') + '">' + n.data('gene_name') + '</a>' : '<span class="text-muted">No sequence linked to probe</span>'
-        }, {
+        },
+        {
+          value: n.data('description') !== null ? '<strong>' + n.data('description') + '</strong><br />' : '<span class="text-muted">No description available</span>'
+        },
+        {
+          value: n.data('tokens') !== null ? 'Other names: <strong>' + n.data('tokens') + '</strong><br />' : '<span class="text-muted">No description available</span>'
+        },
+        {
           value: 'Profile : <a href="' + n.data('profile_link') + '">' + n.data('id') + '</a>'
         }, {
           value: n.data('family_name') !== null ? 'Family : <a href="' + n.data('family_url') + '">' + n.data('family_name') + '</a>' : '<span class="text-muted">No family found</span>'
@@ -145,8 +152,9 @@ $('.cy-layout').click(function() {
     var layout = $( this ).attr( 'layout' );
 
     cy.layout({name: layout,
-               padding: 1,
-               minNodeSpacing: 1 });
+               padding: 30,
+               minNodeSpacing: 1,
+               animate: false});
 })
 
 $(".cy-option-menu li a").click(function(){
