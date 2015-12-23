@@ -12,8 +12,9 @@ cy = cytoscape({
   elements: $.getJSON(url),
   layout: {
     name: 'concentric',
-    padding: 5,
-    minNodeSpacing: 5
+    padding: 30,
+    minNodeSpacing: 10,
+    avoidOverlap: false
   },
   
 
@@ -153,8 +154,14 @@ $('.cy-layout').click(function() {
 
     cy.layout({name: layout,
                padding: 30,
-               minNodeSpacing: 1,
-               animate: false});
+               minNodeSpacing: 10,
+               animate: false,
+               avoidOverlap: false,
+               //cose settings
+               nodeOverlap: 1,
+               idealEdgeLength: function( edge ){ return 5; },
+               edgeElasticity: function( edge ){ return 10; }
+               });
 })
 
 $(".cy-option-menu li a").click(function(){

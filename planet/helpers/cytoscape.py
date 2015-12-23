@@ -250,8 +250,8 @@ class CytoscapeHelper:
         nodes = []
         edges = network_one['edges'] + network_two['edges']
 
-        nodes.append({"data": {"id": "compound_node_one", "compound": True, "color": "#888"}})
-        nodes.append({"data": {"id": "compound_node_two", "compound": True, "color": "#888"}})
+        nodes.append({"data": {"id": "compound_node_one", "compound": True, "color": "#BEF"}})
+        nodes.append({"data": {"id": "compound_node_two", "compound": True, "color": "#BEF"}})
 
         for node in network_one["nodes"]:
             node["data"]["parent"] = "compound_node_one"
