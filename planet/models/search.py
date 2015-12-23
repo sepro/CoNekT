@@ -24,7 +24,8 @@ class Search:
 
         sequences = Sequence.query.filter(or_(Sequence.name.in_(terms),
                                               and_(*[Sequence.description.ilike("%"+term+"%") for term in terms
-                                                     if len(term) > 3])
+                                                     if len(term) > 3]),
+                                              *[Sequence.xrefs.any(name=term) for term in terms]
                                               )
                                           ).all()
 
@@ -48,6 +49,7 @@ class Search:
     def keyword(keyword):
         sequences = Sequence.query.filter(or_(Sequence.name == keyword,
                                               Sequence.description.ilike("%"+keyword+"%"),
+                                              Sequence.xrefs.any(name=keyword)
                                               )
                                           ).all()
 
