@@ -7,6 +7,9 @@
     {% if interpro %}
     <h1><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='interpro_domain') }}" data-target="#helpModal">InterPro</abbr>:{{ interpro.label }}: <strong>{{ interpro.description }}</strong></h1>
     <br/>
+    {% if interpro.clade_id %}
+    <p>Specific for <strong>{{ interpro.clade.name}}</strong></p>
+    {% endif %}
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="panel panel-default">
