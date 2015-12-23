@@ -59,7 +59,7 @@ def species_download_coding(species_id):
 
     current_species = Species.query.get(species_id)
     sequences = db.engine.execute(db.select([Sequence.__table__.c.name, Sequence.__table__.c.coding_sequence]).
-                                  where(Sequence.__table__.c.c.species_id == current_species.id)).\
+                                  where(Sequence.__table__.c.species_id == current_species.id)).\
         fetchall()
 
     for (name, coding_sequence) in sequences:
@@ -107,7 +107,7 @@ def species_stream_coding(species_id):
     """
     def generate(selected_species):
         sequences = db.engine.execute(db.select([Sequence.__table__.c.name, Sequence.__table__.c.coding_sequence]).
-                                      where(Sequence.__table__.c.c.species_id == selected_species)).\
+                                      where(Sequence.__table__.c.species_id == selected_species)).\
             fetchall()
 
         for name, coding_sequence in sequences:

@@ -5,7 +5,9 @@ import os
 import gzip
 import csv
 
+from planet import db
 from planet.models.species import Species
+from planet.models.sequences import Sequence
 from planet.models.relationships import SequenceGOAssociation, SequenceFamilyAssociation
 from planet.models.relationships import SequenceCoexpressionClusterAssociation
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod
@@ -31,15 +33,18 @@ def export_coding_sequences():
     if not os.path.exists(SEQUENCE_PATH):
         os.makedirs(SEQUENCE_PATH)
 
-    species = Species.query.options(undefer('coding_sequence')).all()
+    species = Species.query.all()
 
     for s in species:
         filename = s.code + ".cds.fasta.gz"
         filename = os.path.join(SEQUENCE_PATH, filename)
+        sequences = db.engine.execute(db.select([Sequence.__table__.c.name, Sequence.__table__.c.coding_sequence]).
+                                      where(Sequence.__table__.c.species_id == s.id)
+                                      ).fetchall()
 
         with gzip.open(filename, 'wb') as f:
-            for sequence in s.sequences:
-                f.write(bytes(">" + sequence.name + '\n' + sequence.coding_sequence + '\n', 'UTF-8'))
+            for (name, coding_sequence) in sequences:
+                f.write(bytes(">" + name + '\n' + coding_sequence + '\n', 'UTF-8'))
 
 
 def export_protein_sequences():
