@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, g, make_response, Response
 
-from planet import db
+from planet import db, cache
 from planet.models.species import Species
 from planet.models.sequences import Sequence
 
@@ -10,6 +10,7 @@ species = Blueprint('species', __name__)
 
 
 @species.route('/')
+@cache.cached()
 def species_overview():
     """
     Overview of all species with data in the current database, including some basic statistics
@@ -20,6 +21,7 @@ def species_overview():
 
 
 @species.route('/view/<species_id>')
+@cache.cached()
 def species_view(species_id):
     """
     Get a species based on the ID and show the details for this species
@@ -33,6 +35,7 @@ def species_view(species_id):
 
 @species.route('/sequences/<species_id>/')
 @species.route('/sequences/<species_id>/<int:page>')
+@cache.cached()
 def species_sequences(species_id, page=1):
     """
     Returns a table with sequences from the selected species

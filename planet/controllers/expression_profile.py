@@ -1,11 +1,11 @@
 from flask import Blueprint, redirect, url_for, render_template, Response
+from sqlalchemy.orm import undefer
 
+from planet import cache
 from planet.models.expression_profiles import ExpressionProfile
-
 
 import json
 from statistics import mean
-from sqlalchemy.orm import undefer
 
 
 expression_profile = Blueprint('expression_profile', __name__)
@@ -20,6 +20,7 @@ def expression_profile_overview():
 
 
 @expression_profile.route('/view/<profile_id>')
+@cache.cached()
 def expression_profile_view(profile_id):
     """
     Gets expression profile data from the database and renders it.
@@ -32,6 +33,7 @@ def expression_profile_view(profile_id):
 
 
 @expression_profile.route('/modal/<profile_id>')
+@cache.cached()
 def expression_profile_modal(profile_id):
     """
     Gets expression profile data from the database and renders it.
@@ -45,6 +47,7 @@ def expression_profile_modal(profile_id):
 
 @expression_profile.route('/find/<probe>')
 @expression_profile.route('/find/<probe>/<species_id>')
+@cache.cached()
 def expression_profile_find(probe, species_id=None):
     """
     Gets expression profile data from the database and renders it.
@@ -61,6 +64,7 @@ def expression_profile_find(probe, species_id=None):
 
 
 @expression_profile.route('/compare/<first_profile_id>/<second_profile_id>')
+@cache.cached()
 def expression_profile_compare(first_profile_id, second_profile_id):
     """
     Gets expression profile data from the database and renders it.
@@ -75,6 +79,7 @@ def expression_profile_compare(first_profile_id, second_profile_id):
 
 
 @expression_profile.route('/compare_probes/<probe_a>/<probe_b>/<species_id>')
+@cache.cached()
 def expression_profile_compare_probes(probe_a, probe_b, species_id):
     """
     Gets expression profile data from the database and renders it.
@@ -89,6 +94,7 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id):
 
 
 @expression_profile.route('/json/radar/<profile_id>')
+@cache.cached()
 def expression_profile_radar_json(profile_id):
     """
     Generates a JSON object that can be rendered using Chart.js radar plots
@@ -117,6 +123,7 @@ def expression_profile_radar_json(profile_id):
 
 
 @expression_profile.route('/json/plot/<profile_id>')
+@cache.cached()
 def expression_profile_plot_json(profile_id):
     """
     Generates a JSON object that can be rendered using Chart.js line plots
@@ -168,6 +175,7 @@ def expression_profile_plot_json(profile_id):
 
 
 @expression_profile.route('/json/compare_plot/<first_profile_id>/<second_profile_id>')
+@cache.cached()
 def expression_profile_compare_plot_json(first_profile_id, second_profile_id):
     """
     Generates a JSON object with two profiles that can be rendered using Chart.js line plots

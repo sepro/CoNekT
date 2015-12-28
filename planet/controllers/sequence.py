@@ -1,5 +1,6 @@
 from flask import Blueprint, redirect, url_for, render_template, make_response
 
+from planet import cache
 from planet.models.sequences import Sequence
 from sqlalchemy.orm import undefer
 
@@ -15,6 +16,7 @@ def sequence_overview():
 
 
 @sequence.route('/find/<sequence_name>')
+@cache.cached()
 def sequence_find(sequence_name):
     """
     Find a sequence based on the name and show the details for this sequence (useful for incoming links from other
@@ -37,6 +39,7 @@ def sequence_find(sequence_name):
 
 
 @sequence.route('/view/<sequence_id>')
+@cache.cached()
 def sequence_view(sequence_id):
     """
     Get a sequence based on the ID and show the details for this sequence

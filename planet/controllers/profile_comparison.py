@@ -1,5 +1,6 @@
 from flask import Blueprint, request, render_template,flash
 
+from planet import cache
 from planet.models.expression_profiles import ExpressionProfile
 from planet.models.relationships import SequenceCoexpressionClusterAssociation
 from planet.models.coexpression_clusters import CoexpressionCluster
@@ -15,6 +16,7 @@ profile_comparison = Blueprint('profile_comparison', __name__)
 
 @profile_comparison.route('/cluster/<cluster_id>')
 @profile_comparison.route('/cluster/<cluster_id>/<int:normalize>')
+@cache.cached()
 def profile_comparison_cluster(cluster_id, normalize=0):
     """
     This will get all the expression profiles for members of given cluster and plot them

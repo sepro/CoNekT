@@ -14,6 +14,7 @@ Everything that needs to be set up to get flask running is initialized in this f
 from flask import Flask, render_template, g
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
+from flask.ext.cache import Cache
 
 from flask_admin import Admin
 
@@ -30,14 +31,18 @@ app.config.from_object('config')
 
 db = SQLAlchemy(app)
 
+# Enable login manager
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 
+# Enable DebutToolBar
 toolbar = DebugToolbarExtension(app)
 
-# Import all models here
+# Enable cach
+cache = Cache(app)
 
+# Import all models here
 from planet.models.users import User
 from planet.models.species import Species
 from planet.models.sequences import Sequence
@@ -51,11 +56,9 @@ from planet.models.clades import Clade
 from planet.models.xrefs import XRef
 
 # Import all relationships (tables for many-to-many relationships)
-
 import planet.models.relationships
 
 # Import controllers and register as blueprint
-
 from planet.controllers.main import main
 from planet.controllers.auth import auth, no_login
 from planet.controllers.sequence import sequence

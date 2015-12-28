@@ -1,11 +1,13 @@
 from flask import Blueprint, redirect, url_for, render_template, Response, g
+from sqlalchemy.orm import joinedload
 
+from planet import cache
 from planet.models.go import GO
 from planet.models.sequences import Sequence
-import json
-from utils.benchmark import benchmark
 
-from sqlalchemy.orm import joinedload, defer
+import json
+
+
 
 go = Blueprint('go', __name__)
 
@@ -19,6 +21,7 @@ def go_overview():
 
 
 @go.route('/find/<go_label>')
+@cache.cached()
 def go_find(go_label):
     """
     Find a go term based on the label and show the details for this term
@@ -31,6 +34,7 @@ def go_find(go_label):
 
 
 @go.route('/view/<go_id>')
+@cache.cached()
 def go_view(go_id):
     """
     Get a go term based on the ID and show the details for this term
@@ -49,6 +53,7 @@ def go_view(go_id):
 
 @go.route('/sequences/<go_id>/')
 @go.route('/sequences/<go_id>/<int:page>')
+@cache.cached()
 def go_sequences(go_id, page=1):
     """
     Returns a table with sequences with the selected go
@@ -65,6 +70,7 @@ def go_sequences(go_id, page=1):
 
 
 @go.route('/json/species/<go_id>')
+@cache.cached()
 def go_json_species(go_id):
     """
     Generates a JSON object with the species composition that can be rendered using Chart.js pie charts or doughnut

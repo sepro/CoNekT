@@ -1,5 +1,6 @@
 from flask import Blueprint, request, render_template
 
+from planet import cache
 from planet.models.expression_profiles import ExpressionProfile
 from planet.models.relationships import SequenceCoexpressionClusterAssociation
 from planet.models.coexpression_clusters import CoexpressionCluster
@@ -9,6 +10,7 @@ heatmap = Blueprint('heatmap', __name__)
 
 
 @heatmap.route('/cluster/<cluster_id>')
+@cache.cached()
 def heatmap_cluster(cluster_id):
     """
     Controller that gets expression profiles for all members of a co-expression cluster and renders it as a

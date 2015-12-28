@@ -1,7 +1,9 @@
 from flask import Blueprint, redirect, url_for, render_template, Response, g
 
+from planet import cache
 from planet.models.interpro import Interpro
 from planet.models.sequences import Sequence
+
 import json
 
 interpro = Blueprint('interpro', __name__)
@@ -16,6 +18,7 @@ def interpro_overview():
 
 
 @interpro.route('/find/<interpro_domain>')
+@cache.cached()
 def interpro_find(interpro_domain):
     """
     Find an interpro domain based on the label and show the details for this domain
@@ -35,6 +38,7 @@ def interpro_find(interpro_domain):
 
 
 @interpro.route('/view/<interpro_id>')
+@cache.cached()
 def interpro_view(interpro_id):
     """
     Get an interpro domain based on the ID and show the details for this domain
@@ -55,6 +59,7 @@ def interpro_view(interpro_id):
 
 @interpro.route('/sequences/<interpro_id>/')
 @interpro.route('/sequences/<interpro_id>/<int:page>')
+@cache.cached()
 def interpro_sequences(interpro_id, page=1):
     """
     Returns a table with sequences with the selected interpro domain
@@ -69,6 +74,7 @@ def interpro_sequences(interpro_id, page=1):
 
 
 @interpro.route('/json/species/<interpro_id>')
+@cache.cached()
 def interpro_json_species(interpro_id):
     """
     Generates a JSON object with the species composition that can be rendered using Chart.js pie charts or doughnut

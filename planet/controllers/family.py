@@ -1,6 +1,7 @@
 from flask import Blueprint, redirect, url_for, render_template, Response, g
 from sqlalchemy.orm import joinedload
 
+from planet import cache
 from planet.models.gene_families import GeneFamily
 from planet.models.sequences import Sequence
 import json
@@ -18,6 +19,7 @@ def family_overview():
 
 
 @family.route('/find/<family_name>')
+@cache.cached()
 def family_find(family_name):
     """
     Find a gene family based on the name and show the details for this family
@@ -31,6 +33,7 @@ def family_find(family_name):
 
 
 @family.route('/view/<family_id>')
+@cache.cached()
 def family_view(family_id):
     """
     Get a gene family based on the ID and show the details for this family
@@ -45,6 +48,7 @@ def family_view(family_id):
 
 @family.route('/sequences/<family_id>/')
 @family.route('/sequences/<family_id>/<int:page>')
+@cache.cached()
 def family_sequences(family_id, page=1):
     """
     Returns a table with sequences in the selected family
@@ -61,6 +65,7 @@ def family_sequences(family_id, page=1):
 
 
 @family.route('/json/species/<family_id>')
+@cache.cached()
 def family_json_species(family_id):
     """
     Generates a JSON object with the species composition that can be rendered using Chart.js pie charts or doughnut

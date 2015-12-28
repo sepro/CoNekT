@@ -1,12 +1,11 @@
-from flask import Blueprint, url_for, render_template, flash, redirect, g, Response
+from flask import Blueprint, render_template, g, Response
+from sqlalchemy import or_
 
+from planet import cache
 from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
 from planet.models.relationships import CoexpressionClusterSimilarity, SequenceCoexpressionClusterAssociation
 from planet.helpers.cytoscape import CytoscapeHelper
-
 from planet.models.sequences import Sequence
-
-from sqlalchemy import or_
 
 import json
 
@@ -25,6 +24,7 @@ def expression_cluster_overview():
 
 
 @expression_cluster.route('/view/<cluster_id>')
+@cache.cached()
 def expression_cluster_view(cluster_id):
     """
     Tablular view of the contents of a single cluster
@@ -48,6 +48,7 @@ def expression_cluster_view(cluster_id):
 
 @expression_cluster.route('/sequences/<cluster_id>/')
 @expression_cluster.route('/sequences/<cluster_id>/<int:page>')
+@cache.cached()
 def expression_cluster_sequences(cluster_id, page=1):
     """
     Paginated view of the probes (and linked sequences)
@@ -94,6 +95,7 @@ def expression_cluster_download(cluster_id):
 
 @expression_cluster.route('/graph/<cluster_id>')
 @expression_cluster.route('/graph/<cluster_id>/<int:family_method_id>')
+@cache.cached()
 def expression_cluster_graph(cluster_id, family_method_id=1):
     """
     Creates the graph with all the members of the cluster
@@ -107,6 +109,7 @@ def expression_cluster_graph(cluster_id, family_method_id=1):
 
 @expression_cluster.route('/json/<cluster_id>')
 @expression_cluster.route('/json/<cluster_id>/<int:family_method_id>')
+@cache.cached()
 def expression_cluster_json(cluster_id, family_method_id=1):
     """
     Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)

@@ -1,5 +1,6 @@
 from flask import Blueprint, url_for, render_template, flash, redirect
 
+from planet import cache
 from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
 from planet.helpers.cytoscape import CytoscapeHelper
 
@@ -20,6 +21,7 @@ def expression_network_overview():
 
 
 @expression_network.route('/species/<species_id>')
+@cache.cached()
 def expression_network_species(species_id):
     """
     Overview of all networks in the current database with basic information
@@ -31,6 +33,7 @@ def expression_network_species(species_id):
 
 @expression_network.route('/graph/<node_id>')
 @expression_network.route('/graph/<node_id>/<int:family_method_id>')
+@cache.cached()
 def expression_network_graph(node_id, depth=1, family_method_id=1):
     """
     Page that displays the network graph for a specific network's probe, the depth indicates how many steps away from
@@ -53,6 +56,7 @@ def expression_network_graph(node_id, depth=1, family_method_id=1):
 
 @expression_network.route('/json/<node_id>')
 @expression_network.route('/json/<node_id>/<int:family_method_id>')
+@cache.cached()
 def expression_network_json(node_id, family_method_id=1):
     """
     Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)

@@ -2,6 +2,7 @@ from flask import g, Blueprint, flash, request, redirect, url_for, render_templa
 from sqlalchemy.sql import or_
 from sqlalchemy import func
 
+from planet import cache
 from planet.models.go import GO
 from planet.models.search import Search
 from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
@@ -13,6 +14,7 @@ search = Blueprint('search', __name__)
 
 
 @search.route('/keyword/<keyword>')
+@cache.cached()
 def search_single_keyword(keyword):
     """
     Function to perform a keyword search without a form.
@@ -80,6 +82,7 @@ def simple():
 
 
 @search.route('/json/genes/<label>')
+@cache.cached()
 def search_json_genes(label):
     output = []
     current_go = GO.query.filter_by(label=label).first()
@@ -135,6 +138,7 @@ def search_enriched_clusters():
 
 
 @search.route('/typeahead/go/<term>.json')
+@cache.cached()
 def search_typeahead_go(term):
     """
     Controller required for populating predictive search forms using typeahead.js.
@@ -148,6 +152,7 @@ def search_typeahead_go(term):
 
 
 @search.route('/typeahead/go/prefetch')
+@cache.cached()
 def search_typeahead_prefetch():
     """
     Controller returning a small subset of GO terms (the short ones) to be used as the prefetched data for typeahead.js

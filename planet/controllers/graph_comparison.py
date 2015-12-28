@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template
+
+from planet import cache
 from planet.models.coexpression_clusters import CoexpressionCluster
 from planet.helpers.cytoscape import CytoscapeHelper
 
@@ -15,6 +17,7 @@ def graph_comparison_overview():
 
 @graph_comparison.route('/cluster/<int:one>/<int:two>')
 @graph_comparison.route('/cluster/<int:one>/<int:two>/<int:family_method_id>')
+@cache.cached()
 def graph_comparison_cluster(one, two, family_method_id=1):
     """
     Controller to compare two clusters, requires a family_method_id and internal id's for two clusters. The order of the
@@ -34,6 +37,7 @@ def graph_comparison_cluster(one, two, family_method_id=1):
 
 @graph_comparison.route('/cluster/json/<int:one>/<int:two>')
 @graph_comparison.route('/cluster/json/<int:one>/<int:two>/<int:family_method_id>')
+@cache.cached()
 def graph_comparison_cluster_json(one, two, family_method_id=1):
     """
     Controller that fetches network data from two clusters from the database, adds all essential information and merges
