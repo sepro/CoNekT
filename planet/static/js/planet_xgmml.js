@@ -2,8 +2,22 @@
 Function to write XGMML file from cytoscape json object
 */
 
+function __componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function __rgbToHex(r, g, b) {
+    return "#" + __componentToHex(r) + __componentToHex(g) + __componentToHex(b);
+}
+
 function __convertColor( color ) {
-    if (color.length === 7) {
+    if (color.indexOf('rgb(') > -1) {
+        values = color.replace('rgb','').replace('(','').replace(')','');
+        rgb = values.split(", ");
+        return __rgbToHex(parseInt(rgb[0]), parseInt(rgb[1]), parseInt(rgb[2])).toLowerCase();
+    }
+    else if (color.length === 7) {
         return color.toLowerCase();
     } else {
         c = '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3];
@@ -50,49 +64,52 @@ function writeXGMML(data) {
         xw.writeEndElement();
 
         data.elements.nodes.forEach( function(node) {
-              xw.writeStartElement( 'node' );
-              xw.writeAttributeString( 'id', node.data.id );
-              xw.writeAttributeString( 'label', node.data.name );
-              xw.writeAttributeString( 'name', 'base' );
-
-                    xw.writeStartElement( 'att' );
-                    xw.writeAttributeString( 'label', 'gene_name' );
-                    xw.writeAttributeString( 'name', 'gene_name' );
-                    xw.writeAttributeString( 'value', node.data.gene_name );
-                    xw.writeAttributeString( 'type', 'string');
-                    xw.writeEndElement();
-
-                    xw.writeStartElement( 'graphics' );
-                    xw.writeAttributeString( 'width', '1' );
-                    xw.writeAttributeString( 'fill', __convertColor(node.data.current_color) );
-                    xw.writeAttributeString( 'outline', "#000000" );
-                    xw.writeAttributeString( 'x', node.position.x);
-                    xw.writeAttributeString( 'y', node.position.y);
-                    xw.writeAttributeString( 'h', '30.0');
-                    xw.writeAttributeString( 'w', '30.0');
-                    xw.writeAttributeString( 'type', __convertShape(node.data.current_shape) );
+              if (!node.data.compound)
+              {
+                  xw.writeStartElement( 'node' );
+                  xw.writeAttributeString( 'id', node.data.id );
+                  xw.writeAttributeString( 'label', node.data.name );
+                  xw.writeAttributeString( 'name', 'base' );
 
                         xw.writeStartElement( 'att' );
-                        xw.writeAttributeString( 'name', 'cytoscapeNodeGraphicsAttributes' );
-                            xw.writeStartElement( 'att' );
-                            xw.writeAttributeString( 'name', 'nodeTransparency' );
-                            xw.writeAttributeString( 'value', '1.0' );
-                            xw.writeEndElement();
-
-                            xw.writeStartElement( 'att' );
-                            xw.writeAttributeString( 'name', 'nodeLabelFont' );
-                            xw.writeAttributeString( 'value', 'Default-0-12' );
-                            xw.writeEndElement();
-
-                            xw.writeStartElement( 'att' );
-                            xw.writeAttributeString( 'name', 'borderLineType' );
-                            xw.writeAttributeString( 'value', 'solid' );
-                            xw.writeEndElement();
+                        xw.writeAttributeString( 'label', 'gene_name' );
+                        xw.writeAttributeString( 'name', 'gene_name' );
+                        xw.writeAttributeString( 'value', node.data.gene_name );
+                        xw.writeAttributeString( 'type', 'string');
                         xw.writeEndElement();
 
-                    xw.writeEndElement();
+                        xw.writeStartElement( 'graphics' );
+                        xw.writeAttributeString( 'width', '1' );
+                        xw.writeAttributeString( 'fill', __convertColor(node.data.current_color) );
+                        xw.writeAttributeString( 'outline', "#000000" );
+                        xw.writeAttributeString( 'x', node.position.x);
+                        xw.writeAttributeString( 'y', node.position.y);
+                        xw.writeAttributeString( 'h', '30.0');
+                        xw.writeAttributeString( 'w', '30.0');
+                        xw.writeAttributeString( 'type', __convertShape(node.data.current_shape) );
 
-              xw.writeEndElement();
+                            xw.writeStartElement( 'att' );
+                            xw.writeAttributeString( 'name', 'cytoscapeNodeGraphicsAttributes' );
+                                xw.writeStartElement( 'att' );
+                                xw.writeAttributeString( 'name', 'nodeTransparency' );
+                                xw.writeAttributeString( 'value', '1.0' );
+                                xw.writeEndElement();
+
+                                xw.writeStartElement( 'att' );
+                                xw.writeAttributeString( 'name', 'nodeLabelFont' );
+                                xw.writeAttributeString( 'value', 'Default-0-12' );
+                                xw.writeEndElement();
+
+                                xw.writeStartElement( 'att' );
+                                xw.writeAttributeString( 'name', 'borderLineType' );
+                                xw.writeAttributeString( 'value', 'solid' );
+                                xw.writeEndElement();
+                            xw.writeEndElement();
+
+                        xw.writeEndElement();
+
+                  xw.writeEndElement();
+              }
         });
 
         data.elements.edges.forEach( function(edge) {
@@ -105,6 +122,9 @@ function writeXGMML(data) {
                 xw.writeStartElement( 'graphics' );
                 xw.writeAttributeString( 'width', edge.data.current_width.replace('px', '') );
                 xw.writeAttributeString( 'fill', __convertColor(edge.data.current_color) );
+                if (edge.data.homology) {
+                    xw.writeAttributeString( 'EDGE_LINE_TYPE', 'LONG_DASH' );
+                }
                 xw.writeEndElement();
 
             xw.writeEndElement();

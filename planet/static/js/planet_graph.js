@@ -233,11 +233,11 @@ $('#cy-download-jsoncy').click(function() {
 
   eles.each( function(i, ele) {
     if (ele.isNode()) {
-      ele.data('current_color', ele.style('background-color'));
-      ele.data('current_shape', ele.style('shape'));
+      ele.data('current_color', ele.renderedStyle('background-color'));
+      ele.data('current_shape', ele.renderedStyle('shape'));
     } else if (ele.isEdge()) {
-      ele.data('current_color', ele.style('line-color'));
-      ele.data('current_width', ele.style('width'));
+      ele.data('current_color', ele.renderedStyle('line-color'));
+      ele.data('current_width', ele.renderedStyle('width'));
     }
   });
 
@@ -257,11 +257,11 @@ $('#cy-download-xgmml').click(function() {
 
   eles.each( function(i, ele) {
     if (ele.isNode()) {
-      ele.data('current_color', ele.style('background-color'));
-      ele.data('current_shape', ele.style('shape'));
+      ele.data('current_color', ele.renderedStyle('background-color'));
+      ele.data('current_shape', ele.renderedStyle('shape'));
     } else if (ele.isEdge()) {
-      ele.data('current_color', ele.style('line-color'));
-      ele.data('current_width', ele.style('width'));
+      ele.data('current_color', ele.renderedStyle('line-color'));
+      ele.data('current_width', ele.renderedStyle('width'));
     }
   });
 
@@ -279,11 +279,11 @@ $('#cy-download-svg').click(function() {
 
   eles.each( function(i, ele) {
     if (ele.isNode()) {
-      ele.data('current_color', ele.style('background-color'));
-      ele.data('current_shape', ele.style('shape'));
+      ele.data('current_color', ele.renderedStyle('background-color'));
+      ele.data('current_shape', ele.renderedStyle('shape'));
     } else if (ele.isEdge()) {
-      ele.data('current_color', ele.style('line-color'));
-      ele.data('current_width', ele.style('width'));
+      ele.data('current_color', ele.renderedStyle('line-color'));
+      ele.data('current_width', ele.renderedStyle('width'));
     }
   });
 
