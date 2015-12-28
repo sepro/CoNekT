@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, url_for, render_template, Response, g
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, noload
 
 from planet import cache
 from planet.models.interpro import Interpro
@@ -106,7 +106,7 @@ def interpro_json_species(interpro_id):
     :param interpro_id: ID of the interpro domain to render
     """
     current_interpro = Interpro.query.get_or_404(interpro_id)
-    sequences = current_interpro.sequences.all()
+    sequences = current_interpro.sequences.options(noload('xrefs')).all()
 
     counts = {}
 

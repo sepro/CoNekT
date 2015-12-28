@@ -14,7 +14,7 @@ from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
 from planet.models.gene_families import GeneFamilyMethod
 
-from sqlalchemy.orm import joinedload, undefer
+from sqlalchemy.orm import joinedload, undefer, noload
 
 from config import PLANET_FTP_DATA
 
@@ -79,7 +79,7 @@ def export_go_annotation():
         filename = s.code + ".go.csv.gz"
         filename = os.path.join(ANNOTATION_PATH, filename)
 
-        sequences = s.sequences.all()
+        sequences = s.sequences.options(noload('xrefs')).all()
 
         with gzip.open(filename, 'wt') as f:
             csv_out = csv.writer(f, lineterminator='\n')
@@ -108,7 +108,7 @@ def export_interpro_annotation():
         filename = s.code + ".interpro.csv.gz"
         filename = os.path.join(ANNOTATION_PATH, filename)
 
-        sequences = s.sequences.all()
+        sequences = s.sequences.options(noload('xrefs')).all()
 
         with gzip.open(filename, 'wt') as f:
             csv_out = csv.writer(f, lineterminator='\n')

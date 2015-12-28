@@ -18,6 +18,6 @@ class SearchEnrichedClustersForm(Form):
     max_corrected_p = FloatField('max_corrected_p', default=0.05)
 
     def populate_method(self):
-        self.method.choices = [(s.id, s.method) for s in CoexpressionClusteringMethod.query.order_by('method')]
+        self.method.choices = [(s.id, s.method) for s in CoexpressionClusteringMethod.query.order_by(CoexpressionClusteringMethod.method)]
         self.method.choices.append((-1, "All Species"))
 

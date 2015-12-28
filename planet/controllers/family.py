@@ -57,7 +57,7 @@ def family_sequences(family_id, page=1):
     :param page: Page number
     """
     sequences = GeneFamily.query.get(family_id).sequences.options(joinedload('species')).\
-        order_by('name').paginate(page,
+        order_by(Sequence.name).paginate(page,
                                   g.page_items,
                                   False).items
 
@@ -67,7 +67,7 @@ def family_sequences(family_id, page=1):
 @family.route('/sequences/table/<family_id>/')
 @cache.cached()
 def family_sequences_table(family_id):
-    sequences = GeneFamily.query.get(family_id).sequences.options(joinedload('species')).order_by('name')
+    sequences = GeneFamily.query.get(family_id).sequences.options(joinedload('species')).order_by(Sequence.name)
     output = ["sequence_id\talias\tspecies\tdescription\ttype"]
 
     for s in sequences:

@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, url_for, render_template, make_response
 
 from planet import cache
 from planet.models.sequences import Sequence
-from sqlalchemy.orm import undefer
+from sqlalchemy.orm import undefer, noload
 
 sequence = Blueprint('sequence', __name__)
 
@@ -66,7 +66,10 @@ def sequence_fasta_coding(sequence_id):
     :param sequence_id: ID of the sequence
     :return: Response with the fasta file
     """
-    current_sequence = Sequence.query.options(undefer('coding_sequence')).get_or_404(sequence_id)
+    current_sequence = Sequence.query\
+        .options(undefer('coding_sequence'))\
+        .options(noload('xrefs'))\
+        .get_or_404(sequence_id)
 
     fasta = ">" + current_sequence.name + "\n" + current_sequence.coding_sequence + "\n"
     response = make_response(fasta)
@@ -83,7 +86,10 @@ def sequence_fasta_protein(sequence_id):
     :param sequence_id: ID of the sequence
     :return: Response with the fasta file
     """
-    current_sequence = Sequence.query.options(undefer('coding_sequence')).get_or_404(sequence_id)
+    current_sequence = Sequence.query\
+        .options(undefer('coding_sequence'))\
+        .options(noload('xrefs'))\
+        .get_or_404(sequence_id)
 
     fasta = ">" + current_sequence.name + "\n" + current_sequence.protein_sequence + "\n"
     response = make_response(fasta)

@@ -4,7 +4,7 @@ from planet import db, cache
 from planet.models.species import Species
 from planet.models.sequences import Sequence
 
-from sqlalchemy.orm import undefer
+from sqlalchemy.orm import undefer, noload
 
 species = Blueprint('species', __name__)
 
@@ -43,7 +43,7 @@ def species_sequences(species_id, page=1):
     :param species_id: Internal ID of the species
     :param page: Page number
     """
-    sequences = Species.query.get(species_id).sequences.order_by('name').paginate(page,
+    sequences = Species.query.get(species_id).sequences.order_by(Sequence.name).paginate(page,
                                                                                   g.page_items,
                                                                                   False).items
 
@@ -86,7 +86,7 @@ def species_download_protein(species_id):
     output = []
 
     current_species = Species.query.get(species_id)
-    sequences = current_species.sequences.options(undefer('coding_sequence')).all()
+    sequences = current_species.sequences.options(undefer('coding_sequence')).options(noload('xrefs')).all()
 
     for s in sequences:
         if s.type == "protein_coding":
@@ -129,7 +129,11 @@ def species_stream_protein(species_id):
     :return: Streamed response with the fasta file
     """
     def generate(selected_species):
-        sequences = Sequence.query.options(undefer('coding_sequence')).filter_by(species_id=selected_species).all()
+        sequences = Sequence.query\
+            .options(undefer('coding_sequence'))\
+            .options(noload('xrefs'))\
+            .filter_by(species_id=selected_species)\
+            .all()
 
         for s in sequences:
             if s.type == "protein_coding":

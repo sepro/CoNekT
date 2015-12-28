@@ -10,5 +10,5 @@ class HeatmapForm(Form):
     probes = TextAreaField('probes', [InputRequired()])
 
     def populate_species(self):
-        self.species_id.choices = [(s.id, s.name) for s in Species.query.order_by('name')]
+        self.species_id.choices = [(s.id, s.name) for s in Species.query.order_by(Species.name)]
 
