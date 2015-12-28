@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, g, Response
 from sqlalchemy import or_
+from sqlalchemy.orm import joinedload
 
 from planet import cache
 from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
@@ -63,6 +64,7 @@ def expression_cluster_sequences(cluster_id, page=1):
                            species_id=cluster.method.network_method.species.id)
 
 
+# TODO including aliases hammers the database
 @expression_cluster.route('/download/<cluster_id>/')
 def expression_cluster_download(cluster_id):
     """
@@ -74,18 +76,21 @@ def expression_cluster_download(cluster_id):
     cluster = CoexpressionCluster.query.get_or_404(cluster_id)
     sequence_associations = cluster.sequence_associations.order_by(SequenceCoexpressionClusterAssociation.probe)
 
-    output = ["probe\tsequence\tdescription"]
+    output = ["probe\tsequence_id\talias\tdescription"]
 
     for sequence_association in sequence_associations:
         line = [sequence_association.probe]
         if sequence_association.sequence is not None:
             line.append(sequence_association.sequence.name)
+            aliases = sequence_association.sequence.aliases
+            line.append(aliases if aliases is not None else "No alias")
             if sequence_association.sequence.description is not None:
                 line.append(sequence_association.sequence.description)
             else:
                 line.append("No description available")
         else:
             line.append("None sequence associated with this probe")
+            line.append("No alias")
             line.append("No description available")
 
         output.append("\t".join(line))

@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        {{ macro.sequence_pagination(url_for('species.species_sequences', species_id=species.id), species.sequence_count) }}
+        {{ macro.sequence_pagination(url_for('species.species_sequences', species_id=species.id), species.sequence_count, none) }}
 
     {% elif all_species %}
          <h1>Species Overview</h1>

@@ -64,6 +64,25 @@ def family_sequences(family_id, page=1):
     return render_template('pagination/sequences.html', sequences=sequences)
 
 
+@family.route('/sequences/table/<family_id>/')
+@cache.cached()
+def family_sequences_table(family_id):
+    sequences = GeneFamily.query.get(family_id).sequences.options(joinedload('species')).order_by('name')
+    output = ["sequence_id\talias\tspecies\tdescription\ttype"]
+
+    for s in sequences:
+        aliases = s.aliases
+        description = s.description
+        line = [s.name,
+                aliases if aliases is not None else "No alias",
+                s.species.name,
+                description if description is not None else "No description available",
+                s.type]
+        output.append("\t".join(line))
+
+    return Response("\r\n".join(output), mimetype='text/plain')
+
+
 @family.route('/json/species/<family_id>')
 @cache.cached()
 def family_json_species(family_id):

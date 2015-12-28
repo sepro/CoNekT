@@ -104,8 +104,8 @@
         </div>
 
 
-        {{ macro.sequence_pagination(url_for('expression_cluster.expression_cluster_sequences', cluster_id=cluster.id), sequence_count) }}
-        <a href="{{ url_for('expression_cluster.expression_cluster_download', cluster_id=cluster.id) }}" download="table.txt">Download table</a> <i class="fa fa-download"></i>
+        {{ macro.sequence_pagination(url_for('expression_cluster.expression_cluster_sequences', cluster_id=cluster.id), sequence_count, url_for('expression_cluster.expression_cluster_download', cluster_id=cluster.id)) }}
+
         <br /><br />
     {% endif %}
 

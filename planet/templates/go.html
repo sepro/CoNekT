@@ -60,7 +60,7 @@
         </div>
     </div>
 </div>
-    {{ macro.sequence_pagination(url_for('go.go_sequences', go_id=go.id), count) }}
+    {{ macro.sequence_pagination(url_for('go.go_sequences', go_id=go.id), count, none) }}
 
     {% endif %}
 
