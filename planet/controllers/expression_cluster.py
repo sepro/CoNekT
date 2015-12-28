@@ -64,7 +64,6 @@ def expression_cluster_sequences(cluster_id, page=1):
                            species_id=cluster.method.network_method.species.id)
 
 
-# TODO including aliases hammers the database
 @expression_cluster.route('/download/<cluster_id>/')
 def expression_cluster_download(cluster_id):
     """

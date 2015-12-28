@@ -230,12 +230,12 @@
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">External Links</div>
-                {% if xrefs|count > 0 %}
+                {% if sequence.xrefs|count > 0 %}
                 <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <tbody>
-                            {% for xref in xrefs %}
+                            {% for xref in sequence.xrefs %}
                             <tr>
                                 <td><strong>{{ xref.platform }}</strong></td>
                                 <td>
