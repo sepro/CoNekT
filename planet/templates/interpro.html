@@ -25,9 +25,11 @@
         </div>
     </div>
 
-    {{ macro.sequence_pagination(url_for('interpro.interpro_sequences', interpro_id=interpro.id),
-    count,
-    url_for('interpro.interpro_sequences_table', interpro_id=interpro.id)) }}
+    {{ macro.sequence_pagination(
+        url_for('interpro.interpro_sequences', interpro_id=interpro.id),
+        count,
+        url_for('interpro.interpro_sequences_table', interpro_id=interpro.id)
+    ) }}
 
     {% endif %}
 </div>

@@ -54,9 +54,11 @@
         </div>
     </div>
 
-    {{ macro.sequence_pagination(url_for('family.family_sequences', family_id=family.id),
-    count, url_for('family.family_sequences_table',
-    family_id=family.id)) }}
+    {{ macro.sequence_pagination(
+        url_for('family.family_sequences', family_id=family.id),
+        count,
+        url_for('family.family_sequences_table', family_id=family.id)
+    ) }}
 
     {% endif %}
 </div>
