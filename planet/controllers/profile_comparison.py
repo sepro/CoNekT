@@ -1,6 +1,8 @@
 from flask import Blueprint, request, render_template,flash
+from sqlalchemy.orm import noload
 
 from planet import cache
+from planet.models.sequences import Sequence
 from planet.models.expression_profiles import ExpressionProfile
 from planet.models.relationships import SequenceCoexpressionClusterAssociation
 from planet.models.coexpression_clusters import CoexpressionCluster
@@ -24,7 +26,10 @@ def profile_comparison_cluster(cluster_id, normalize=0):
     :param cluster_id: internal id of the cluster to visualize
     """
     cluster = CoexpressionCluster.query.get(cluster_id)
-    associations = SequenceCoexpressionClusterAssociation.query.filter_by(coexpression_cluster_id=cluster_id).all()
+    associations = SequenceCoexpressionClusterAssociation.query.\
+        filter_by(coexpression_cluster_id=cluster_id).\
+        options(noload(SequenceCoexpressionClusterAssociation.sequence)).\
+        all()
 
     probes = [a.probe for a in associations]
 

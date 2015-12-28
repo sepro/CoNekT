@@ -1,4 +1,5 @@
 from planet import db
+from planet.models.sequences import Sequence
 
 from config import SQL_COLLATION
 
@@ -6,7 +7,7 @@ import json
 from statistics import mean
 from math import log
 
-from sqlalchemy.orm import joinedload, undefer
+from sqlalchemy.orm import joinedload, undefer, noload
 
 
 class ExpressionProfile(db.Model):
@@ -76,7 +77,7 @@ class ExpressionProfile(db.Model):
             options(undefer('profile')).\
             filter(ExpressionProfile.probe.in_(probes)).\
             filter_by(species_id=species_id).\
-            options(joinedload('sequence').load_only('name')).\
+            options(joinedload('sequence').load_only('name').noload('xrefs')).\
             limit(limit).all()
 
         return profiles
