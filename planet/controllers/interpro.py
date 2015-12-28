@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, url_for, render_template, Response, g
+from sqlalchemy.orm import joinedload
 
 from planet import cache
 from planet.models.interpro import Interpro
@@ -68,9 +69,31 @@ def interpro_sequences(interpro_id, page=1):
     :param page: Page number
     """
     sequences = Interpro.query.get(interpro_id).sequences.group_by(Sequence.id).order_by(Sequence.name)\
+        .options(joinedload('species'))\
         .paginate(page, g.page_items, False).items
 
     return render_template('pagination/sequences.html', sequences=sequences)
+
+
+@interpro.route('/sequences/table/<interpro_id>/')
+@cache.cached()
+def interpro_sequences_table(interpro_id):
+    sequences = Interpro.query.get(interpro_id).sequences.group_by(Sequence.id)\
+        .options(joinedload('species'))\
+        .order_by(Sequence.name)
+    output = ["sequence_id\talias\tspecies\tdescription\ttype"]
+
+    for s in sequences:
+        aliases = s.aliases
+        description = s.description
+        line = [s.name,
+                aliases if aliases is not None else "No alias",
+                s.species.name,
+                description if description is not None else "No description available",
+                s.type]
+        output.append("\t".join(line))
+
+    return Response("\r\n".join(output), mimetype='text/plain')
 
 
 @interpro.route('/json/species/<interpro_id>')
