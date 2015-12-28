@@ -96,7 +96,7 @@ def search_json_genes(label):
     #     for association in current_interpro.sequence_associations:
     #         output.append(association.sequence_id)
 
-    return json.dumps(output)
+    return Response(json.dumps(output), mimetype='application/json')
 
 
 @search.route('/enriched/clusters', methods=['GET', 'POST'])

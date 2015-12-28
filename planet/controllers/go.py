@@ -122,6 +122,6 @@ def go_genes_find(go_label):
     current_go = GO.query.filter_by(label=go_label).first()
 
     if current_go is not None:
-        return json.dumps([association.sequence_id for association in current_go.sequence_associations])
+        return Response(json.dumps([association.sequence_id for association in current_go.sequence_associations]), mimetype='application/json')
     else:
-        return json.dumps([])
+        return Response(json.dumps([]), mimetype='application/json')

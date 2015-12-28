@@ -1,4 +1,4 @@
-from flask import Blueprint, url_for, render_template, flash, redirect
+from flask import Blueprint, url_for, render_template, flash, redirect, Response
 
 from planet import cache
 from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
@@ -73,6 +73,6 @@ def expression_network_json(node_id, family_method_id=1):
     network_cytoscape = CytoscapeHelper.add_depth_data_nodes(network_cytoscape)
     network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
 
-    return json.dumps(network_cytoscape)
+    return Response(json.dumps(network_cytoscape), mimetype='application/json')
 
 

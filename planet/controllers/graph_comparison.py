@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, Response
 
 from planet import cache
 from planet.models.coexpression_clusters import CoexpressionCluster
@@ -60,4 +60,4 @@ def graph_comparison_cluster_json(one, two, family_method_id=1):
     output = CytoscapeHelper.add_lc_data_nodes(output)
     output = CytoscapeHelper.add_descriptions_nodes(output)
 
-    return json.dumps(output)
+    return Response(json.dumps(output), mimetype='application/json')

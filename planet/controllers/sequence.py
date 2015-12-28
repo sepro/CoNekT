@@ -74,6 +74,7 @@ def sequence_fasta_coding(sequence_id):
     fasta = ">" + current_sequence.name + "\n" + current_sequence.coding_sequence + "\n"
     response = make_response(fasta)
     response.headers["Content-Disposition"] = "attachment; filename=" + current_sequence.name + ".coding.fasta"
+    response.headers['Content-type'] = 'text/plain'
 
     return response
 
@@ -94,5 +95,6 @@ def sequence_fasta_protein(sequence_id):
     fasta = ">" + current_sequence.name + "\n" + current_sequence.protein_sequence + "\n"
     response = make_response(fasta)
     response.headers["Content-Disposition"] = "attachment; filename=" + current_sequence.name + ".protein.fasta"
+    response.headers['Content-type'] = 'text/plain'
 
     return response

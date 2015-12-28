@@ -71,6 +71,7 @@ def species_download_coding(species_id):
 
     response = make_response("\n".join(output))
     response.headers["Content-Disposition"] = "attachment; filename=" + current_species.code + ".cds.fasta"
+    response.headers['Content-type'] = 'text/plain'
 
     return response
 
@@ -95,6 +96,7 @@ def species_download_protein(species_id):
 
     response = make_response("\n".join(output))
     response.headers["Content-Disposition"] = "attachment; filename=" + current_species.code + ".aa.fasta"
+    response.headers['Content-type'] = 'text/plain'
 
     return response
 
