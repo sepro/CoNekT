@@ -36,6 +36,9 @@ CACHE_TYPE = 'simple'
 CACHE_DEFAULT_TIMEOUT = 120
 CACHE_THRESHOLD = 10000
 
+# Minify pages when debug is off
+MINIFY_PAGE = not DEBUG
+
 # Debug settings
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 SQLALCHEMY_ECHO = DEBUG

@@ -17,6 +17,7 @@ from flask.ext.login import LoginManager
 from flask.ext.cache import Cache
 
 from flask_admin import Admin
+from flask_htmlmin import HTMLMIN
 
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -41,6 +42,9 @@ toolbar = DebugToolbarExtension(app)
 
 # Enable cach
 cache = Cache(app)
+
+# Enable HTMLMIN
+htmlmin = HTMLMIN(app)
 
 # Import all models here
 from planet.models.users import User
