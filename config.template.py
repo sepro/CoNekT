@@ -41,7 +41,7 @@ MINIFY_PAGE = not DEBUG
 # BLAST settings
 BLAST_ENABLED = True
 BLAST_TMP_DIR = tempfile.mkdtemp()
-BLASTP_CMD = 'timeout 5 > NUL && echo "FAKE BLAST SUCCESS" > <OUT>'
+BLASTP_CMD = ''
 BLASTN_CMD = ''
 
 # Debug settings

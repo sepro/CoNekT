@@ -3,6 +3,7 @@ from queue import Queue
 from time import sleep
 
 import os
+import sys
 import subprocess
 import shlex
 
@@ -39,25 +40,35 @@ class BlastThread(Thread):
         if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.config['DEBUG']:
             self.commands['blastp'] = app.config['BLASTP_CMD']
             self.commands['blastn'] = app.config['BLASTN_CMD']
-            self.temp_dir = app.config['BLAST_TMP_DIR']
-
-            print(self.temp_dir)
-
-            print("Starting Blast thread...")
+            print(" * Starting Blast thread...", file=sys.stderr)
             self.start()
 
-    def process_job(self, job):
+    def add_job(self, blast_type, blast_input, blast_output):
+        job = {'type': blast_type,
+               'in': blast_input,
+               'out': blast_output}
+        print(" * Blast thread : Adding job..." + str(job), file=sys.stderr)
+        self.queue.put(job)
+
+    def __process_job(self, job):
+        print(" * Blast thread : Processing: " + str(job), file=sys.stderr)
         if job['type'] == 'blastp':
             command = self.commands['blastp'].replace('<IN>', job['in']).replace('<OUT>', job['out'])
-            subprocess.call(shlex.split(command))
+            # subprocess.call(shlex.split(command)) # good case
+            subprocess.call(command, shell=True)
+            print(command)
+        else:
+            print("Type not found")
+            pass
 
     def run(self):
         """
         Function that runs when the thread is started, checks the queue and acts accordingly
         """
+        print(" * Started Blast thread...", file=sys.stderr)
         while True:
             if self.queue.empty():
                 sleep(0.1)
             else:
                 job = self.queue.get()
-                self.process_job(job)
+                self.__process_job(job)

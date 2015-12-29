@@ -49,7 +49,7 @@ cache = Cache(app)
 htmlmin = HTMLMIN(app)
 
 # Enable BLAST
-blast = BlastThread(app)
+blast_thread = BlastThread(app)
 
 # Import all models here
 from planet.models.users import User
@@ -70,6 +70,7 @@ import planet.models.relationships
 # Import controllers and register as blueprint
 from planet.controllers.main import main
 from planet.controllers.auth import auth, no_login
+from planet.controllers.blast import blast
 from planet.controllers.sequence import sequence
 from planet.controllers.species import species
 from planet.controllers.go import go
@@ -89,6 +90,7 @@ if LOGIN_ENABLED:
     app.register_blueprint(auth, url_prefix='/auth')
 else:
     app.register_blueprint(no_login, url_prefix='/auth')
+app.register_blueprint(blast, url_prefix='/blast')
 app.register_blueprint(sequence, url_prefix='/sequence')
 app.register_blueprint(species, url_prefix='/species')
 app.register_blueprint(go, url_prefix='/go')
