@@ -21,6 +21,8 @@ from flask_htmlmin import HTMLMIN
 
 from flask_debugtoolbar import DebugToolbarExtension
 
+from planet.extensions.blast import BlastThread
+
 from config import LOGIN_ENABLED
 
 # Set up app, database and login manager before importing models and controllers
@@ -45,6 +47,9 @@ cache = Cache(app)
 
 # Enable HTMLMIN
 htmlmin = HTMLMIN(app)
+
+# Enable BLAST
+blast = BlastThread(app)
 
 # Import all models here
 from planet.models.users import User
