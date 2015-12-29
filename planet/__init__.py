@@ -23,7 +23,6 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from planet.extensions.blast import BlastThread
 
-from config import LOGIN_ENABLED
 
 # Set up app, database and login manager before importing models and controllers
 # Important for db_create script
@@ -48,8 +47,11 @@ cache = Cache(app)
 # Enable HTMLMIN
 htmlmin = HTMLMIN(app)
 
+LOGIN_ENABLED = app.config['LOGIN_ENABLED']
+BLAST_ENABLED = app.config['BLAST_ENABLED']
+
 # Enable BLAST
-blast_thread = BlastThread(app)
+blast_thread = BlastThread(app) if BLAST_ENABLED else None
 
 # Import all models here
 from planet.models.users import User
@@ -90,7 +92,8 @@ if LOGIN_ENABLED:
     app.register_blueprint(auth, url_prefix='/auth')
 else:
     app.register_blueprint(no_login, url_prefix='/auth')
-app.register_blueprint(blast, url_prefix='/blast')
+if BLAST_ENABLED:
+    app.register_blueprint(blast, url_prefix='/blast')
 app.register_blueprint(sequence, url_prefix='/sequence')
 app.register_blueprint(species, url_prefix='/species')
 app.register_blueprint(go, url_prefix='/go')
@@ -161,5 +164,6 @@ from planet.forms.search import BasicSearchForm
 @app.before_request
 def before_request():
     g.login_enabled = LOGIN_ENABLED
+    g.blast_enabled = BLAST_ENABLED
     g.search_form = BasicSearchForm()
     g.page_items = 7

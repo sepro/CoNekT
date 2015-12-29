@@ -6,6 +6,7 @@ import os
 import json
 import random
 import string
+from collections import OrderedDict
 
 blast = Blueprint('blast', __name__)
 
@@ -33,15 +34,21 @@ def blast_queue():
 
 @blast.route('/results/json/<token>')
 def blast_results_json(token):
-    filename = os.path.join(current_app.config['BLAST_TMP_DIR'], token + '.out')
+    file_results = os.path.join(current_app.config['BLAST_TMP_DIR'], token + '.out')
+    file_in = os.path.join(current_app.config['BLAST_TMP_DIR'], token + '.in')
     columns = ["query", "hit", "percent_identity", "alignment_length", "num_mismatch",
                "num_gaps", "q_start", "q_end", "h_start", "h_end", "e_value", "bit_score"]
 
-    if os.path.exists(filename):
+    if not os.path.exists(file_in):
+        return Response(json.dumps({'status': 'error',
+                                    'message': 'An error occurred. Most likely the results expired'}),
+                        mimetype='application/json')
+
+    if os.path.exists(file_results):
         output = []
-        with open(filename) as f:
+        with open(file_results) as f:
             for line in f:
-                output.append(dict(zip(columns, line.split())))
+                output.append(OrderedDict(zip(columns, line.split())))
         return Response(json.dumps({'status': 'done', 'data': output}), mimetype='application/json')
     else:
         return Response(json.dumps({'status': 'waiting'}), mimetype='application/json')

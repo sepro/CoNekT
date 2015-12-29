@@ -51,6 +51,9 @@
                                 </li>
                             </ul>
                         </li>
+                        {% if g.blast_enabled %}
+                        <li><a href="{{ url_for('blast.blast_main') }}">BLAST</a></li>
+                        {% endif %}
                     </ul>
 
 

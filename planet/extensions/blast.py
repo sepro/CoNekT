@@ -56,7 +56,6 @@ class BlastThread(Thread):
             command = self.commands['blastp'].replace('<IN>', job['in']).replace('<OUT>', job['out'])
             # subprocess.call(shlex.split(command)) # good case
             subprocess.call(command, shell=True)
-            print(command)
         else:
             print("Type not found")
             pass
