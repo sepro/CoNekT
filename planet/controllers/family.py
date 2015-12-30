@@ -64,7 +64,7 @@ def family_sequences(family_id, page=1):
     return render_template('pagination/sequences.html', sequences=sequences)
 
 
-@family.route('/sequences/table/<family_id>/')
+@family.route('/sequences/table/<family_id>')
 @cache.cached()
 def family_sequences_table(family_id):
     sequences = GeneFamily.query.get(family_id).sequences.options(joinedload('species')).order_by(Sequence.name)

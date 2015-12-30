@@ -5,6 +5,7 @@ from planet.models.sequences import Sequence
 from planet.models.species import Species
 from planet.models.interpro import Interpro
 from planet.models.go import GO
+from planet.models.gene_families import GeneFamily
 
 from flask.ext.testing import TestCase
 
@@ -146,6 +147,32 @@ class MyTest(TestCase):
             self.assert200(response)
         else:
             print('  * test_go: No go label found, skipping test...', file=sys.stderr)
+
+    def test_family(self):
+        family = GeneFamily.query.first()
+
+        if family is not None:
+            response = self.client.get("/family/view/%d" % family.id)
+            self.assert_template_used('family.html')
+            self.assert200(response)
+
+            response = self.client.get("/family/find/" + family.name)
+            self.assert_template_used('family.html')
+            self.assert200(response)
+
+            response = self.client.get("/family/sequences/%d/1" % family.id)
+            self.assert_template_used('pagination/sequences.html')
+            self.assert200(response)
+
+            response = self.client.get("/family/sequences/table/%d" % family.id)
+            self.assert_template_used('tables/sequences.txt')
+            self.assert200(response)
+
+            response = self.client.get("/family/json/species/%d" % family.id)
+            self.assert200(response)
+        else:
+            print('  * test_family: No family found, skipping test...', file=sys.stderr)
+
 
 if __name__ == '__main__':
     unittest.main()
