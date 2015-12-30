@@ -4,6 +4,7 @@ from planet import app
 from planet.models.sequences import Sequence
 from planet.models.species import Species
 from planet.models.interpro import Interpro
+from planet.models.go import GO
 
 from flask.ext.testing import TestCase
 
@@ -101,8 +102,50 @@ class MyTest(TestCase):
             response = self.client.get("/interpro/view/%d" % interpro.id)
             self.assert_template_used('interpro.html')
             self.assert200(response)
+
+            response = self.client.get("/interpro/find/" + interpro.label)
+            self.assert_template_used('interpro.html')
+            self.assert200(response)
+
+            response = self.client.get("/interpro/sequences/%d/1" % interpro.id)
+            self.assert_template_used('pagination/sequences.html')
+            self.assert200(response)
+
+            response = self.client.get("/interpro/sequences/table/%d" % interpro.id)
+            self.assert_template_used('tables/sequences.txt')
+            self.assert200(response)
+
+            response = self.client.get("/interpro/json/species/%d" % interpro.id)
+            self.assert200(response)
         else:
             print('  * test_interpro: No interpro domain found, skipping test...', file=sys.stderr)
+
+    def test_go(self):
+        go = GO.query.first()
+
+        if go is not None:
+            response = self.client.get("/go/view/%d" % go.id)
+            self.assert_template_used('go.html')
+            self.assert200(response)
+
+            response = self.client.get("/go/find/" + go.label)
+            self.assertRedirects(response, "/go/view/%d" % go.id)
+
+            response = self.client.get("/go/sequences/%d/1" % go.id)
+            self.assert_template_used('pagination/sequences.html')
+            self.assert200(response)
+
+            response = self.client.get("/go/sequences/table/%d" % go.id)
+            self.assert_template_used('tables/sequences.txt')
+            self.assert200(response)
+
+            response = self.client.get("/go/json/species/%d" % go.id)
+            self.assert200(response)
+
+            response = self.client.get("/go/json/genes/" + go.label)
+            self.assert200(response)
+        else:
+            print('  * test_go: No go label found, skipping test...', file=sys.stderr)
 
 if __name__ == '__main__':
     unittest.main()

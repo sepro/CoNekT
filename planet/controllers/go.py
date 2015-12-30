@@ -68,7 +68,7 @@ def go_sequences(go_id, page=1):
     return render_template('pagination/sequences.html', sequences=sequences)
 
 
-@go.route('/sequences/table/<go_id>/')
+@go.route('/sequences/table/<go_id>')
 @cache.cached()
 def go_sequences_table(go_id):
     sequences = GO.query.get(go_id).sequences.\

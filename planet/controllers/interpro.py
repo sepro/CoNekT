@@ -75,7 +75,7 @@ def interpro_sequences(interpro_id, page=1):
     return render_template('pagination/sequences.html', sequences=sequences)
 
 
-@interpro.route('/sequences/table/<interpro_id>/')
+@interpro.route('/sequences/table/<interpro_id>')
 @cache.cached()
 def interpro_sequences_table(interpro_id):
     sequences = Interpro.query.get(interpro_id).sequences.group_by(Sequence.id)\
