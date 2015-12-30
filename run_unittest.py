@@ -3,6 +3,7 @@ from planet import app
 
 from planet.models.sequences import Sequence
 from planet.models.species import Species
+from planet.models.interpro import Interpro
 
 from flask.ext.testing import TestCase
 
@@ -47,6 +48,7 @@ class MyTest(TestCase):
         else:
             print('  * test_sequence: No sequence found, skipping test...', file=sys.stderr)
 
+    @unittest.skip("Skipping species ...")
     def test_species(self):
         response = self.client.get("/species/")
         self.assert_template_used('species.html')
@@ -93,6 +95,14 @@ class MyTest(TestCase):
         else:
             print('  * test_species: No species found, skipping test...', file=sys.stderr)
 
+    def test_interpro(self):
+        interpro = Interpro.query.first()
+        if interpro is not None:
+            response = self.client.get("/interpro/view/%d" % interpro.id)
+            self.assert_template_used('interpro.html')
+            self.assert200(response)
+        else:
+            print('  * test_interpro: No interpro domain found, skipping test...', file=sys.stderr)
 
 if __name__ == '__main__':
     unittest.main()

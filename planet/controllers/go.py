@@ -73,19 +73,8 @@ def go_sequences(go_id, page=1):
 def go_sequences_table(go_id):
     sequences = GO.query.get(go_id).sequences.\
         group_by(Sequence.id).options(joinedload('species')).order_by(Sequence.name)
-    output = ["sequence_id\talias\tspecies\tdescription\ttype"]
 
-    for s in sequences:
-        aliases = s.aliases
-        description = s.description
-        line = [s.name,
-                aliases if aliases is not None else "No alias",
-                s.species.name,
-                description if description is not None else "No description available",
-                s.type]
-        output.append("\t".join(line))
-
-    return Response("\r\n".join(output), mimetype='text/plain')
+    return Response(render_template('tables/sequences.txt', sequences=sequences), mimetype='text/plain')
 
 
 @go.route('/json/species/<go_id>')
