@@ -8,4 +8,4 @@ class BlastForm(Form):
     fasta = TextAreaField('fasta', [InputRequired()])
 
     def populate_blast_types(self):
-        self.blast_type.choices = [(1,  'blastp'), (2, 'blastn')]
+        self.blast_type.choices = [('blastp',  'blastp'), ('blastn', 'blastn')]

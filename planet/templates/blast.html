@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<div class="top-pad">
+
+    <h1>Blast</h1>
+    {% if token %}
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Results</div>
+                    <div class="panel-body">
+                        <p>Job id: <a href="{{ url_for('blast.blast_results', token=token) }}">{{ token }}</a> <span class="text-muted">(results will expire after one week)</span></p>
+                        <div id="waiting_indicator">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                    <span>Waiting for results...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="results" style="display: none">
+                         <div class="table-responsive">
+                            <table class="table" style="margin-bottom:100px;" id="results_table">
+                                <thead>
+                                    <tr>
+                                        <th  data-sort="string-ins">Hit</th>
+                                        <th  data-sort="float">Percent identity</th>
+                                        <th  data-sort="int">Alignment length</th>
+                                        <th  data-sort="int">Mismatches</th>
+                                        <th  data-sort="int">Gaps</th>
+                                        <th  data-sort="float">E-value</th>
+                                        <th  data-sort="float">Bitscore</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="results_table_body">
+                                </tbody>
+                                </table>
+                             </div>
+                        </div>
+                        <div id="error" class="alert alert-danger" role="alert" style="display:none">
+                            <p id="error_message"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    {% else %}
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form method="POST"  action="{{ url_for('blast.blast_main') }}"  role="form">
+                            {{ form.csrf_token }}
+                            <label>Blast Type</label>
+                            {{form.blast_type(class_="form-control") }}<br />
+                            <label>Query sequence</label>
+                            {{form.fasta(class_="form-control") }}<br />
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+
+</div>
+{% endblock %}
+
+{% block extrajs %}
+{% if token %}
+<script>
+    $(function() {
+        function check_results() {
+            $.getJSON( "{{ url_for('blast.blast_results_json', token=token) }}", function( data ) {
+
+              if (data['status'] === 'waiting') {
+                setTimeout(check_results, 2000);
+              } else if (data['status'] === 'done') {
+                $('#waiting_indicator').hide();
+
+                data['data'].forEach(function( hit ) {
+                    $("#results_table_body")
+                        .append($('<tr>')
+                            .append($('<td>')
+                                .append($('<a>')
+                                    .attr('href', '{{url_for('sequence.sequence_find', sequence_name='')}}' + hit['hit'])
+                                    .text(hit['hit']))
+                                )
+                            .append($('<td>').text(hit['percent_identity']))
+                            .append($('<td>').text(hit['alignment_length']))
+                            .append($('<td>').text(hit['num_mismatch']))
+                            .append($('<td>').text(hit['num_gap']))
+                            .append($('<td>').text(hit['e_value']))
+                            .append($('<td>').text(hit['bit_score']))
+                        );
+                });
+                $("#results_table").stupidtable();
+
+                $('#results').show();
+
+              }  else if (data['status'] === 'error') {
+
+                $('#waiting_indicator').hide();
+                $('#error_message').text(data['message']);
+                $('#error').show();
+              }
+
+            });
+
+
+        }
+        check_results();
+    });
+</script>
+
+{% endif %}
+{% endblock %}

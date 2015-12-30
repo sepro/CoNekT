@@ -10,6 +10,7 @@ padding-top: 50px;
   position: relative;
   overflow: hidden;
 }
+
 .btn-file input[type=file]{
   position: absolute;
   top: 0;
@@ -38,9 +39,15 @@ padding-top: 50px;
   cursor: inherit;
   display: block;
 }
+
 input[readonly] {
   background-color: white !important;
   cursor: text !important;
+}
+
+textarea.form-control {
+  resize:vertical;
+  min-height: 200px;
 }
 
 .glyphicon-large {

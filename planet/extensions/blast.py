@@ -52,13 +52,16 @@ class BlastThread(Thread):
 
     def __process_job(self, job):
         print(" * Blast thread : Processing: " + str(job), file=sys.stderr)
-        if job['type'] == 'blastp':
-            command = self.commands['blastp'].replace('<IN>', job['in']).replace('<OUT>', job['out'])
-            # subprocess.call(shlex.split(command)) # good case
-            subprocess.call(command, shell=True)
+        if job['type'] == 'blastp' or job['type'] == 'blastn':
+            command = self.commands[job['type']].replace('<IN>', job['in']).replace('<OUT>', job['out'] + '.tmp')
+
+            # Run Blast
+            subprocess.call(shlex.split(command))
+
+            # Move results upon completion
+            os.rename(job['out'] + '.tmp', job['out'])
         else:
-            print("Type not found")
-            pass
+            print('  * Blast tread : job type "' + job['type'] + '" unknown !', file=sys.stderr)
 
     def run(self):
         """
