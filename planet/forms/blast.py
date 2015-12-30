@@ -7,5 +7,5 @@ class BlastForm(Form):
     blast_type = SelectField('blast_type')
     fasta = TextAreaField('fasta', [InputRequired()])
 
-    def populate_species(self):
+    def populate_blast_types(self):
         self.blast_type.choices = [(1,  'blastp'), (2, 'blastn')]

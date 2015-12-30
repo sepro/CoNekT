@@ -39,10 +39,14 @@ CACHE_THRESHOLD = 10000
 MINIFY_PAGE = not DEBUG
 
 # BLAST settings
-BLAST_ENABLED = True
+BLAST_ENABLED = False
 BLAST_TMP_DIR = tempfile.mkdtemp()
-BLASTP_CMD = ''
-BLASTN_CMD = ''
+BLASTP_PATH = ''
+BLASTP_DB_PATH = ''
+BLASTN_PATH = ''
+BLASTN_DB_PATH = ''
+BLASTP_CMD = BLASTP_PATH + ' -db ' + BLASTP_DB_PATH + ' -query <IN> -out <OUT> -outfmt 6 -num_threads 1'
+BLASTN_CMD = BLASTN_PATH + ' -db ' + BLASTN_DB_PATH + ' -query <IN> -out <OUT> -outfmt 6 -num_threads 1'
 
 # Debug settings
 DEBUG_TB_INTERCEPT_REDIRECTS = False
