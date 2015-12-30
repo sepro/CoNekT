@@ -10,7 +10,7 @@
     Species: <em><a href="{{ url_for('species.species_view', species_id=sequence.species.id) }}">{{ sequence.species.name }}</a></em>
     <br />
 
-    {% if sequence.description != '' %}
+    {% if sequence.description %}
 
     <strong>Description: </strong> {{sequence.description}}
 
