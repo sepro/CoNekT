@@ -166,4 +166,4 @@ def before_request():
     g.login_enabled = LOGIN_ENABLED
     g.blast_enabled = BLAST_ENABLED
     g.search_form = BasicSearchForm()
-    g.page_items = 7
+    g.page_items = 30
