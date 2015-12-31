@@ -7,6 +7,7 @@ from planet.models.coexpression_clusters import CoexpressionCluster, Coexpressio
 from planet.models.relationships import CoexpressionClusterSimilarity, SequenceCoexpressionClusterAssociation
 from planet.helpers.cytoscape import CytoscapeHelper
 from planet.models.sequences import Sequence
+from planet.models.expression_profiles import ExpressionProfile
 
 import json
 
@@ -75,7 +76,7 @@ def expression_cluster_download(cluster_id):
     cluster = CoexpressionCluster.query.get_or_404(cluster_id)
     sequence_associations = cluster.sequence_associations.order_by(SequenceCoexpressionClusterAssociation.probe)
 
-    output = ["probe\tsequence_id\talias\tdescription"]
+    output = ["\"probe\",\"sequence_id\",\"alias\",\"description\""]
 
     for sequence_association in sequence_associations:
         line = [sequence_association.probe]
@@ -92,7 +93,7 @@ def expression_cluster_download(cluster_id):
             line.append("No alias")
             line.append("No description available")
 
-        output.append("\t".join(line))
+        output.append('"' + "\",\"".join(line) + '"')
 
     return Response("\r\n".join(output), mimetype='text/plain')
 

@@ -125,24 +125,15 @@
                 $('[data-toggle="tooltip"]').tooltip();
                 $("#EnrichedGO").stupidtable();
                 $("#SimilarClusters").stupidtable();
-                $("#DownloadEnrichedGO").click(
-                    function() {
-                        var csv_data = $("#EnrichedGO").table2CSV({delivery:'value'});
-                        var element = document.createElement('a');
-                        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv_data));
-                        element.setAttribute('download', "table.csv");
-                        element.click();
-                    }
-                );
-                $("#DownloadSimilarClusters").click(
-                    function() {
-                        var csv_data = $("#SimilarClusters").table2CSV({delivery:'value'});
-                        var element = document.createElement('a');
-                        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv_data));
-                        element.setAttribute('download', "table.csv");
-                        element.click();
-                    }
-                );
+
+                var csv_data = $("#EnrichedGO").table2CSV({delivery:'value'});
+                $("#DownloadEnrichedGO").attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv_data));
+                $("#DownloadEnrichedGO").attr('download', "table.csv");
+
+                var csv_data = $("#SimilarClusters").table2CSV({delivery:'value'});
+                $("#DownloadSimilarClusters").attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv_data));
+                $("#DownloadSimilarClusters").attr('download', "table.csv");
+
         });
         </script>
 
