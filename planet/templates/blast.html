@@ -38,6 +38,9 @@
                                 </table>
                              </div>
                         </div>
+                        <div id="warning" class="alert alert-warning" role="alert" style="display:none">
+                            <p>No hits found in the database</p>
+                        </div>
                         <div id="error" class="alert alert-danger" role="alert" style="display:none">
                             <p id="error_message"></p>
                         </div>
@@ -84,25 +87,29 @@
               } else if (data['status'] === 'done') {
                 $('#waiting_indicator').hide();
 
-                data['data'].forEach(function( hit ) {
-                    $("#results_table_body")
-                        .append($('<tr>')
-                            .append($('<td>')
-                                .append($('<a>')
-                                    .attr('href', '{{url_for('sequence.sequence_find', sequence_name='')}}' + hit['hit'])
-                                    .text(hit['hit']))
-                                )
-                            .append($('<td>').text(hit['percent_identity']))
-                            .append($('<td>').text(hit['alignment_length']))
-                            .append($('<td>').text(hit['num_mismatch']))
-                            .append($('<td>').text(hit['num_gap']))
-                            .append($('<td>').text(hit['e_value']))
-                            .append($('<td>').text(hit['bit_score']))
-                        );
-                });
-                $("#results_table").stupidtable();
+                if (data['data'].length === 0) {
+                    $('#warning').show();
+                } else {
+                    data['data'].forEach(function( hit ) {
+                        $("#results_table_body")
+                            .append($('<tr>')
+                                .append($('<td>')
+                                    .append($('<a>')
+                                        .attr('href', '{{url_for('sequence.sequence_find', sequence_name='')}}' + hit['hit'])
+                                        .text(hit['hit']))
+                                    )
+                                .append($('<td>').text(hit['percent_identity']))
+                                .append($('<td>').text(hit['alignment_length']))
+                                .append($('<td>').text(hit['num_mismatch']))
+                                .append($('<td>').text(hit['num_gap']))
+                                .append($('<td>').text(hit['e_value']))
+                                .append($('<td>').text(hit['bit_score']))
+                            );
+                    });
+                    $("#results_table").stupidtable();
 
-                $('#results').show();
+                    $('#results').show();
+                }
 
               }  else if (data['status'] === 'error') {
 

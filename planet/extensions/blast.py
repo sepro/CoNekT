@@ -58,8 +58,9 @@ class BlastThread(Thread):
             # Run Blast
             subprocess.call(shlex.split(command))
 
-            # Move results upon completion
+            # Move results upon completion and remove input
             os.rename(job['out'] + '.tmp', job['out'])
+            os.remove(job['in'])
         else:
             print('  * Blast tread : job type "' + job['type'] + '" unknown !', file=sys.stderr)
 

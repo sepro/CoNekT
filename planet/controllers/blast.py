@@ -51,14 +51,9 @@ def blast_results_json(token):
     columns = ['query', 'hit', 'percent_identity', 'alignment_length', 'num_mismatch',
                'num_gaps', 'q_start', 'q_end', 'h_start', 'h_end', 'e_value', 'bit_score']
 
-    if not os.path.exists(file_in):
-        return Response(json.dumps({'status': 'error',
-                                    'message': 'An error occurred. Most likely the results expired'}),
-                        mimetype='application/json')
-
     # Check if output exists and is writeable (which indicates the move is completed... i hope)
     if os.path.exists(file_results) and os.access(file_results, os.W_OK):
-        #sleep(0.2) #might be necessary in case the os.access doesn't do the trick
+        # sleep(0.2) #might be necessary in case the os.access doesn't do the trick
         output = []
 
         with open(file_results) as f:
@@ -67,4 +62,9 @@ def blast_results_json(token):
 
         return Response(json.dumps({'status': 'done', 'data': output}), mimetype='application/json')
     else:
-        return Response(json.dumps({'status': 'waiting'}), mimetype='application/json')
+        if not os.path.exists(file_in):
+            return Response(json.dumps({'status': 'error',
+                                        'message': 'An error occurred. Error with input or results expired'}),
+                            mimetype='application/json')
+        else:
+            return Response(json.dumps({'status': 'waiting'}), mimetype='application/json')
