@@ -50,7 +50,6 @@ class MyTest(TestCase):
         else:
             print('  * test_sequence: No sequence found, skipping test...', file=sys.stderr)
 
-    @unittest.skip("Skipping species ...")
     def test_species(self):
         response = self.client.get("/species/")
         self.assert_template_used('species.html')
