@@ -82,7 +82,7 @@ def interpro_sequences_table(interpro_id):
         .options(joinedload('species'))\
         .order_by(Sequence.name)
 
-    return Response(render_template('tables/sequences.txt', sequences=sequences), mimetype='text/plain')
+    return Response(render_template('tables/sequences.csv', sequences=sequences), mimetype='text/plain')
 
 
 @interpro.route('/json/species/<interpro_id>')

@@ -74,7 +74,7 @@ def go_sequences_table(go_id):
     sequences = GO.query.get(go_id).sequences.\
         group_by(Sequence.id).options(joinedload('species')).order_by(Sequence.name)
 
-    return Response(render_template('tables/sequences.txt', sequences=sequences), mimetype='text/plain')
+    return Response(render_template('tables/sequences.csv', sequences=sequences), mimetype='text/plain')
 
 
 @go.route('/json/species/<go_id>')

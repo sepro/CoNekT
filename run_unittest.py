@@ -113,7 +113,7 @@ class MyTest(TestCase):
             self.assert200(response)
 
             response = self.client.get("/interpro/sequences/table/%d" % interpro.id)
-            self.assert_template_used('tables/sequences.txt')
+            self.assert_template_used('tables/sequences.csv')
             self.assert200(response)
 
             response = self.client.get("/interpro/json/species/%d" % interpro.id)
@@ -137,7 +137,7 @@ class MyTest(TestCase):
             self.assert200(response)
 
             response = self.client.get("/go/sequences/table/%d" % go.id)
-            self.assert_template_used('tables/sequences.txt')
+            self.assert_template_used('tables/sequences.csv')
             self.assert200(response)
 
             response = self.client.get("/go/json/species/%d" % go.id)
@@ -165,7 +165,7 @@ class MyTest(TestCase):
             self.assert200(response)
 
             response = self.client.get("/family/sequences/table/%d" % family.id)
-            self.assert_template_used('tables/sequences.txt')
+            self.assert_template_used('tables/sequences.csv')
             self.assert200(response)
 
             response = self.client.get("/family/json/species/%d" % family.id)

@@ -69,7 +69,7 @@ def family_sequences(family_id, page=1):
 def family_sequences_table(family_id):
     sequences = GeneFamily.query.get(family_id).sequences.options(joinedload('species')).order_by(Sequence.name)
 
-    return Response(render_template('tables/sequences.txt', sequences=sequences), mimetype='text/plain')
+    return Response(render_template('tables/sequences.csv', sequences=sequences), mimetype='text/plain')
 
 
 @family.route('/json/species/<family_id>')

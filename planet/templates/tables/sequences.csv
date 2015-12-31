@@ -1,0 +1,4 @@
+"sequence_id","alias","species","description","type"
+{% for s in sequences -%}
+"{{ s.name }}","{% if s.aliases -%}{{s.aliases}}{%- else -%}No alias{%- endif %}","{{s.species.name}}","{% if s.description -%}{{s.description}}{%- else -%}No description available{%- endif %}","{{s.type}}"
+{% endfor %}
