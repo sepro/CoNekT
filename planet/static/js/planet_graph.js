@@ -19,8 +19,8 @@ cy = cytoscape({
   
 
   ready: function(){
-    var loading = document.getElementById('loading');
-    loading.classList.add('loaded');
+    $('#loading').addClass('loaded')
+    $('#legend').show();
     window.cy = this;
 
     initial_json = JSON.stringify(cy.json(), null, '\t');

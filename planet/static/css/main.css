@@ -301,3 +301,8 @@ submenu
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
 }
+
+#legend {
+    display:none;
+    margin-top:800px;
+}

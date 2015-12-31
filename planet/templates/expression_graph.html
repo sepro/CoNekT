@@ -178,6 +178,7 @@
             <div id="cy" json="{{ url_for('graph_comparison.graph_comparison_cluster_json', one=cluster_one.id, two=cluster_two.id, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% endif %}
             <div id="loading"><span class="fa fa-refresh fa-spin"></span></div>
+            <div id="legend"></div>
             </div>
         </div>
     </div>
@@ -207,4 +208,13 @@ $('#cy-edge-score').on("slide", function(slideEvt) {
 <script src="{{ url_for('static', filename='js/jquery.qtip.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/cytoscape-qtip.js') }}"></script>
 <script src="{{ url_for('static', filename='js/planet_graph.js') }}"></script>
+<script>
+    var svg = Pablo.load('{{ url_for('static', filename='svg/test.svg') }}', function(){
+        this.appendTo(legend);
+        //svg.find('g#score_group').transform('rotate', [45])
+        //console.log(svg.find('g#score_group'));
+    });
+
+
+</script>
 {% endblock %}
