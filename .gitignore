@@ -10,7 +10,7 @@ pip-selfcheck.json
 scripts
 
 config.cfg
-config.py
+/config.py
 
 ftp
 data/*

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-from planet import create_app
+from planet import create_app, db
 
 from planet.models.sequences import Sequence
 from planet.models.species import Species
 from planet.models.interpro import Interpro
 from planet.models.go import GO
-from planet.models.gene_families import GeneFamily
+from planet.models.gene_families import GeneFamily, GeneFamilyMethod
 
 from flask.ext.testing import TestCase
 
@@ -15,10 +15,44 @@ import sys
 class WebsiteTest(TestCase):
 
     def create_app(self):
-        app = create_app('config')
-        app.config['DEBUG'] = False
-        app.config['SQLALCHEMY_ECHO'] = False
+        app = create_app('tests.config')
         return app
+
+    def setUp(self):
+        db.create_all()
+
+        # Add dummy data
+
+        test_species = Species('tst', 'Unittest species')
+        test_interpro = Interpro('IPR_TEST', 'Test label')
+        test_go = GO('GO:TEST', 'test_process', 'biological_process',  'Test label', False, None, None)
+
+        test_gf_method = GeneFamilyMethod('test_gf_method')
+        test_gf = GeneFamily('test_gf')
+
+        db.session.add(test_species)
+        db.session.add(test_interpro)
+        db.session.add(test_go)
+        db.session.add(test_gf_method)
+        db.session.add(test_gf)
+        db.session.commit()
+
+        test_gf.method_id = test_gf_method.id
+
+        db.session.commit()
+
+        test_sequence = Sequence(test_species.id, 'TEST_SEQ_01', 'ATG', description='test sequence')
+        test_sequence.families.append(test_gf)
+        test_sequence.interpro_domains.append(test_interpro)
+        test_sequence.go_labels.append(test_go)
+
+        db.session.add(test_sequence)
+        db.session.commit()
+
+    def tearDown(self):
+
+        db.session.remove()
+        db.drop_all()
 
     def test_sequence(self):
         sequence = Sequence.query.first()
