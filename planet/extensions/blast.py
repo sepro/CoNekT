@@ -45,6 +45,14 @@ class BlastThread(Thread):
             self.start()
 
     def add_job(self, blast_type, blast_input, blast_output):
+        """
+        Adds a new job to the queue
+
+        :param blast_type: 'blastp' for protein blast against a protein database, 'blastn' for nucleotide blast against
+        the nucleotide database
+        :param blast_input: fasta file to blast
+        :param blast_output: path where the results will be stored (outfmt 6)
+        """
         job = {'type': blast_type,
                'in': blast_input,
                'out': blast_output}
@@ -52,6 +60,12 @@ class BlastThread(Thread):
         self.queue.put(job)
 
     def __process_job(self, job):
+        """
+        Prepares the command to run the correct blast and executes it. Upon completion the temporary output is moved to
+        the final location and the input is removed.
+
+        :param job: dict with job (type, input file and output)
+        """
         print(" * Blast thread : Processing: " + str(job), file=sys.stderr)
         if job['type'] == 'blastp' or job['type'] == 'blastn':
             command = self.commands[job['type']].replace('<IN>', job['in']).replace('<OUT>', job['out'] + '.tmp')

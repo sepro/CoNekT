@@ -418,6 +418,9 @@ class WebsiteTest(TestCase):
 
     @unittest.skipIf(not LOGIN_ENABLED, "Skipping test because LOGIN is not enabled")
     def test_auth(self):
+        """
+        Test if a user can log in
+        """
         response = self.client.get('/auth/login')
         self.assert_template_used('login.html')
         self.assert200(response)
@@ -438,6 +441,11 @@ class WebsiteTest(TestCase):
 
     @unittest.skipIf(not BLAST_ENABLED, "Skipping test because BLAST is not enabled")
     def test_blast(self):
+        """
+        Test basic components of the BLAST search
+
+        TODO: check if BLAST is configured correctly !
+        """
         response = self.client.get('/blast/')
         self.assert_template_used('blast.html')
         self.assert200(response)
