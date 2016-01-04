@@ -8,6 +8,8 @@ from planet.models.interpro import Interpro
 from planet.models.go import GO
 from planet.models.gene_families import GeneFamily, GeneFamilyMethod
 
+from planet.controllers.help import __TOPICS as topics
+
 from flask.ext.testing import TestCase
 
 import sys
@@ -345,3 +347,9 @@ class WebsiteTest(TestCase):
                 self.assertTrue('pointHighlightFill' in data['datasets'][i].keys())
         else:
             print('  * test_profile: No profile found, skipping test...', file=sys.stderr)
+
+    def test_help(self):
+        for k, v in topics.items():
+            response = self.client.get("/help/%s" % k)
+            self.assert_template_used(v)
+            self.assert200(response)
