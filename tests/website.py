@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from planet import create_app, db
 
+from planet.models.users import User
 from planet.models.expression_profiles import ExpressionProfile
 from planet.models.sequences import Sequence
 from planet.models.species import Species
@@ -12,9 +13,11 @@ from planet.controllers.help import __TOPICS as topics
 
 from flask.ext.testing import TestCase
 
+from tests.config import LOGIN_ENABLED
+
 import sys
 import json
-
+import unittest
 
 class WebsiteTest(TestCase):
     """
@@ -39,6 +42,8 @@ class WebsiteTest(TestCase):
         """
         db.create_all()
 
+        test_user = User('admin', 'admin', '', is_admin=True)
+
         test_species = Species('tst', 'Unittest species')
         test_interpro = Interpro('IPR_TEST', 'Test label')
         test_go = GO('GO:TEST', 'test_process', 'biological_process',  'Test label', False, None, None)
@@ -47,6 +52,7 @@ class WebsiteTest(TestCase):
         test_gf_method = GeneFamilyMethod('test_gf_method')
         test_gf = GeneFamily('test_gf')
 
+        db.session.add(test_user)
         db.session.add(test_species)
         db.session.add(test_interpro)
         db.session.add(test_go)
@@ -392,6 +398,8 @@ class WebsiteTest(TestCase):
         data = json.loads(response.data.decode('utf-8'))
         self.assertTrue(sequence.id in data)
 
+        # TODO: search_enriched_clusters() is currently untested !
+
         response = self.client.get('/search/typeahead/go/prefetch')
         self.assert200(response)
         data = json.loads(response.data.decode('utf-8'))
@@ -407,3 +415,25 @@ class WebsiteTest(TestCase):
         for d in data:
             self.assertTrue('value' in d.keys())
             self.assertTrue('tokens' in d.keys())
+
+    @unittest.skipIf(not LOGIN_ENABLED, "Skipping test because LOGIN is not enabled")
+    def test_auth(self):
+        response = self.client.get('/auth/login')
+        self.assert_template_used('login.html')
+        self.assert200(response)
+
+        response = self.client.post('/auth/login', data=dict(username='admin', password='admin', keep_logged='y'),
+                                    follow_redirects=True)
+        self.assert200(response)
+        self.assertTrue('You have successfully logged in.' in response.data.decode('utf-8'))
+
+        response = self.client.get('/auth/logout', follow_redirects=True)
+        self.assert200(response)
+        self.assertTrue('You have successfully logged out.' in response.data.decode('utf-8'))
+
+        response = self.client.post('/auth/login', data=dict(username='admin', password='wrong', keep_logged='y'),
+                                    follow_redirects=True)
+        self.assert200(response)
+        self.assertTrue('Invalid username or password. Please try again.' in response.data.decode('utf-8'))
+
+
