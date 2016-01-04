@@ -42,6 +42,7 @@ class WebsiteTest(TestCase):
         test_species = Species('tst', 'Unittest species')
         test_interpro = Interpro('IPR_TEST', 'Test label')
         test_go = GO('GO:TEST', 'test_process', 'biological_process',  'Test label', False, None, None)
+        test_go2 = GO('GO:TEST2', 'test2', 'biological_process',  'Test', False, None, None)
 
         test_gf_method = GeneFamilyMethod('test_gf_method')
         test_gf = GeneFamily('test_gf')
@@ -49,6 +50,7 @@ class WebsiteTest(TestCase):
         db.session.add(test_species)
         db.session.add(test_interpro)
         db.session.add(test_go)
+        db.session.add(test_go2)
         db.session.add(test_gf_method)
         db.session.add(test_gf)
         db.session.commit()
@@ -383,3 +385,19 @@ class WebsiteTest(TestCase):
 
         data = json.loads(response.data.decode('utf-8'))
         self.assertTrue(sequence.id in data)
+
+        response = self.client.get('/search/typeahead/go/prefetch')
+        self.assert200(response)
+        data = json.loads(response.data.decode('utf-8'))
+        self.assertTrue(len(data) == 1)
+        for d in data:
+            self.assertTrue('value' in d.keys())
+            self.assertTrue('tokens' in d.keys())
+
+        response = self.client.get('/search/typeahead/go/test.json')
+        self.assert200(response)
+        data = json.loads(response.data.decode('utf-8'))
+        self.assertTrue(len(data) == 2)
+        for d in data:
+            self.assertTrue('value' in d.keys())
+            self.assertTrue('tokens' in d.keys())
