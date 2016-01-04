@@ -272,6 +272,9 @@ class WebsiteTest(TestCase):
             print('  * test_family: No family found, skipping test...', file=sys.stderr)
 
     def test_profile(self):
+        """
+        Test for routes associated with an ExpressionProfile
+        """
         profile = ExpressionProfile.query.first()
         if profile is not None:
             response = self.client.get("/profile/view/%d" % profile.id)
@@ -349,12 +352,18 @@ class WebsiteTest(TestCase):
             print('  * test_profile: No profile found, skipping test...', file=sys.stderr)
 
     def test_help(self):
+        """
+        Test for help pages (which are static)
+        """
         for k, v in topics.items():
             response = self.client.get("/help/%s" % k)
             self.assert_template_used(v)
             self.assert200(response)
 
     def test_search(self):
+        """
+        Test different components of the search function
+        """
         sequence = Sequence.query.first()
         interpro = Interpro.query.first()
         go = GO.query.first()
