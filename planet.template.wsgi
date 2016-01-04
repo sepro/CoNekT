@@ -16,4 +16,6 @@ with open(activator) as f:
     exec(f.read(), {'__file__': activator})
 
 # import the app. Note that it should not run by itself !
-from planet import app as application
+from planet import create_app
+
+application = create_app('config')
