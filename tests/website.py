@@ -353,3 +353,33 @@ class WebsiteTest(TestCase):
             response = self.client.get("/help/%s" % k)
             self.assert_template_used(v)
             self.assert200(response)
+
+    def test_search(self):
+        sequence = Sequence.query.first()
+        interpro = Interpro.query.first()
+        go = GO.query.first()
+
+        response = self.client.get('/search/keyword/%s' % sequence.name)
+        self.assertRedirects(response, '/sequence/view/%d' % sequence.id)
+
+        response = self.client.get('/search/keyword/%s' % interpro.label)
+        self.assertRedirects(response, '/interpro/view/%d' % interpro.id)
+
+        response = self.client.get('/search/keyword/%s' % go.label)
+        self.assertRedirects(response, '/go/view/%d' % go.id)
+
+        response = self.client.get('/search/')
+        self.assertRedirects(response, '/')
+
+        response = self.client.post('/search/', data=dict(terms="TEST_SEQ_01"))
+        self.assertRedirects(response, '/sequence/view/%d' % sequence.id)
+
+        response = self.client.post('/search/', data=dict(terms='Test label'))
+        self.assert_template_used('search_results.html')
+        self.assert200(response)
+
+        response = self.client.get('/search/json/genes/%s' % go.label)
+        self.assert200(response)
+
+        data = json.loads(response.data.decode('utf-8'))
+        self.assertTrue(sequence.id in data)

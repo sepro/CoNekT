@@ -10,6 +10,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # Flask settings, make sure to set the SECRET_KEY and turn DEBUG and TESTING to False for production
 DEBUG = False
 TESTING = True
+WTF_CSRF_ENABLED = False
 
 SECRET_KEY = 'DragonsLiveHere'
 
