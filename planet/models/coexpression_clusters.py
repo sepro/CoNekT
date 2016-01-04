@@ -26,16 +26,6 @@ class CoexpressionClusteringMethod(db.Model):
 
     clusters = db.relationship('CoexpressionCluster', backref=db.backref('method', lazy='joined'), lazy='dynamic')
 
-    def calculate_enrichment(self):
-        gene_count = self.network_method.species.sequence_count
-        species_id = self.network_method.species_id
-
-        clusters = self.clusters.all()
-
-        for cluster in clusters:
-            print(gene_count, species_id, cluster.id)
-            pass
-
     @staticmethod
     def update_counts():
         """
