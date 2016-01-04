@@ -459,3 +459,16 @@ class WebsiteTest(TestCase):
         data = json.loads(response.data.decode('utf-8'))
         self.assertTrue('status' in data)
 
+    def test_heatmap(self):
+        profile = ExpressionProfile.query.first()
+
+        response = self.client.get('/heatmap/')
+        self.assert_template_used('expression_heatmap.html')
+        self.assert200(response)
+
+        response = self.client.post('/heatmap/', data=dict(probes=profile.probe, species_id=profile.species_id))
+        self.assert_template_used('expression_heatmap.html')
+        self.assert200(response)
+        self.assertTrue('<td>' + profile.probe + '</td>' in response.data.decode('utf-8'))
+
+        # TODO: test heatmap for a cluster
