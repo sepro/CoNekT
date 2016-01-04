@@ -472,3 +472,20 @@ class WebsiteTest(TestCase):
         self.assertTrue('<td>' + profile.probe + '</td>' in response.data.decode('utf-8'))
 
         # TODO: test heatmap for a cluster
+
+    def test_profile_comparison(self):
+        profile = ExpressionProfile.query.first()
+
+        response = self.client.get('/profile_comparison/')
+        self.assert_template_used('expression_profile_comparison.html')
+        self.assert200(response)
+
+        response = self.client.post('/profile_comparison/', data=dict(probes=profile.probe, species_id=profile.species_id, normalize='y'))
+        self.assert_template_used('expression_profile_comparison.html')
+        self.assert200(response)
+
+        response = self.client.post('/profile_comparison/', data=dict(probes=profile.probe, species_id=profile.species_id, normalize='n'))
+        self.assert_template_used('expression_profile_comparison.html')
+        self.assert200(response)
+
+        # TODO: test profile comparison for a cluster
