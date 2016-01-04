@@ -65,7 +65,7 @@ class ExpressionProfile(db.Model):
     @staticmethod
     def get_profiles(species_id, probes, limit=1000):
         """
-        Gets the data for a set of probes (includeding the full profiles), a limit can be provided to avoid overly
+        Gets the data for a set of probes (including the full profiles), a limit can be provided to avoid overly
         long queries
 
         :param species_id: internal id of the species
