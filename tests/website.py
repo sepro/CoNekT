@@ -97,17 +97,17 @@ class WebsiteTest(TestCase):
 
             response = self.client.get("/sequence/fasta/coding/%d" % sequence.id)
             self.assert200(response)
-
             data = response.data.decode("utf-8").strip()
             self.assertEqual(len(data.split('\n')), 2)
             self.assertEqual(data[0], '>')
+            self.assertTrue('>' + sequence.name + '\n' in data)
 
             response = self.client.get("/sequence/fasta/protein/%d" % sequence.id)
             self.assert200(response)
-
             data = response.data.decode("utf-8").strip()
             self.assertEqual(len(data.split('\n')), 2)
             self.assertEqual(data[0], '>')
+            self.assertTrue('>' + sequence.name + '\n' in data)
 
             response = self.client.get("/sequence/find/" + sequence.name)
             self.assert_template_used('sequence.html')
@@ -127,6 +127,7 @@ class WebsiteTest(TestCase):
         self.assert200(response)
 
         species = Species.query.first()
+        sequence = species.sequences.first()
         if species is not None:
             response = self.client.get("/species/view/%d" % species.id)
             self.assert_template_used('species.html')
@@ -138,32 +139,31 @@ class WebsiteTest(TestCase):
 
             response = self.client.get("/species/download/coding/%d" % species.id)
             self.assert200(response)
-
             data = response.data.decode("utf-8").strip()
             self.assertTrue(len(data.split('\n')) > 0)
             self.assertEqual(data[0], '>')
+            self.assertTrue('>' + sequence.name + '\n' in data)
 
             response = self.client.get("/species/download/protein/%d" % species.id)
             self.assert200(response)
-
             data = response.data.decode("utf-8").strip()
             self.assertTrue(len(data.split('\n')) > 0)
             self.assertEqual(data[0], '>')
+            self.assertTrue('>' + sequence.name + '\n' in data)
 
             response = self.client.get("/species/stream/coding/%d" % species.id)
             self.assert200(response)
-
             data = response.data.decode("utf-8").strip()
             self.assertTrue(len(data.split('\n')) > 0)
             self.assertEqual(data[0], '>')
+            self.assertTrue('>' + sequence.name + '\n' in data)
 
             response = self.client.get("/species/stream/protein/%d" % species.id)
             self.assert200(response)
-
             data = response.data.decode("utf-8").strip()
             self.assertTrue(len(data.split('\n')) > 0)
             self.assertEqual(data[0], '>')
-
+            self.assertTrue('>' + sequence.name + '\n' in data)
         else:
             print('  * test_species: No species found, skipping test...', file=sys.stderr)
 
