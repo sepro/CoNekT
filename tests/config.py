@@ -43,9 +43,8 @@ CACHE_NO_NULL_WARNING = True
 MINIFY_PAGE = not DEBUG
 
 # BLAST settings
-BLAST_ENABLED = False
-# BLAST_TMP_DIR = tempfile.mkdtemp()
-BLAST_TMP_DIR = 'C:/Users/Seb/AppData/Local/Temp/'
+BLAST_ENABLED = True
+BLAST_TMP_DIR = tempfile.mkdtemp()
 
 BLASTP_PATH = 'D:/blast/bin/blastp.exe'
 BLASTP_DB_PATH = 'D:/blast/db/ath_db'

@@ -37,10 +37,11 @@ class BlastThread(Thread):
         app.extensions['flask-blast'] = self
 
         # Check this to make sure the Werkzeug reloader doesn't spawn an extra thread !
-        if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.config['DEBUG']:
+        if (os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.config['DEBUG']) and not self.running:
             self.commands['blastp'] = app.config['BLASTP_CMD']
             self.commands['blastn'] = app.config['BLASTN_CMD']
             print(" * Starting Blast thread...", file=sys.stderr)
+            self.running = True
             self.start()
 
     def add_job(self, blast_type, blast_input, blast_output):

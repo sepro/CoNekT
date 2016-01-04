@@ -13,7 +13,7 @@ from planet.controllers.help import __TOPICS as topics
 
 from flask.ext.testing import TestCase
 
-from tests.config import LOGIN_ENABLED
+from tests.config import LOGIN_ENABLED, BLAST_ENABLED
 
 import sys
 import json
@@ -436,4 +436,18 @@ class WebsiteTest(TestCase):
         self.assert200(response)
         self.assertTrue('Invalid username or password. Please try again.' in response.data.decode('utf-8'))
 
+    @unittest.skipIf(not BLAST_ENABLED, "Skipping test because BLAST is not enabled")
+    def test_blast(self):
+        response = self.client.get('/blast/')
+        self.assert_template_used('blast.html')
+        self.assert200(response)
+
+        response = self.client.get('/blast/results/testtoken')
+        self.assert_template_used('blast.html')
+        self.assert200(response)
+
+        response = self.client.get('/blast/results/json/testtoken')
+        self.assert200(response)
+        data = json.loads(response.data.decode('utf-8'))
+        self.assertTrue('status' in data)
 
