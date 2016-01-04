@@ -20,7 +20,6 @@ ADMIN_EMAIL = 'admin@web.com'
 
 
 # Database settings, database location and path to migration scripts
-# SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db', 'fungi.db')
 _, DATABASE_PATH = tempfile.mkstemp()
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE_PATH
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'migration')

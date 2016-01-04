@@ -10,18 +10,31 @@ from planet.models.gene_families import GeneFamily, GeneFamilyMethod
 from flask.ext.testing import TestCase
 
 import sys
+import json
 
 
 class WebsiteTest(TestCase):
+    """
+    TestCase to check if the website is functional
+        * a DB will be created and filled with dummy data
+        * an app will be spawned with the testing config, DO NOT run this against a database that is in use !!
+        * the DB will be cleared !
+    """
 
     def create_app(self):
+        """
+        Creates the app using the tests config (tests/config.py)
+
+        :return: flask app with settings from tests/config.py
+        """
         app = create_app('tests.config')
         return app
 
     def setUp(self):
+        """
+        Creates a database and fills it with sufficient dummy data to run the tests.
+        """
         db.create_all()
-
-        # Add dummy data
 
         test_species = Species('tst', 'Unittest species')
         test_interpro = Interpro('IPR_TEST', 'Test label')
@@ -50,11 +63,16 @@ class WebsiteTest(TestCase):
         db.session.commit()
 
     def tearDown(self):
+        """
 
+        """
         db.session.remove()
         db.drop_all()
 
     def test_sequence(self):
+        """
+        Test for routes associated with a Sequence
+        """
         sequence = Sequence.query.first()
         if sequence is not None:
             response = self.client.get("/sequence/view/%d" % sequence.id)
@@ -85,6 +103,9 @@ class WebsiteTest(TestCase):
             print('  * test_sequence: No sequence found, skipping test...', file=sys.stderr)
 
     def test_species(self):
+        """
+        Test for routes associated with a Species
+        """
         response = self.client.get("/species/")
         self.assert_template_used('species.html')
         self.assert200(response)
@@ -131,6 +152,9 @@ class WebsiteTest(TestCase):
             print('  * test_species: No species found, skipping test...', file=sys.stderr)
 
     def test_interpro(self):
+        """
+        Test for routes associated with an InterPro domain
+        """
         interpro = Interpro.query.first()
         if interpro is not None:
             response = self.client.get("/interpro/view/%d" % interpro.id)
@@ -151,10 +175,21 @@ class WebsiteTest(TestCase):
 
             response = self.client.get("/interpro/json/species/%d" % interpro.id)
             self.assert200(response)
+
+            data = json.loads(response.data.decode('utf-8'))
+
+            self.assertTrue('highlight' in data[0].keys())
+            self.assertTrue('color' in data[0].keys())
+            self.assertTrue('value' in data[0].keys())
+            self.assertTrue('label' in data[0].keys())
+
         else:
             print('  * test_interpro: No interpro domain found, skipping test...', file=sys.stderr)
 
     def test_go(self):
+        """
+        Test for routes associated with a GO label
+        """
         go = GO.query.first()
 
         if go is not None:
@@ -176,12 +211,25 @@ class WebsiteTest(TestCase):
             response = self.client.get("/go/json/species/%d" % go.id)
             self.assert200(response)
 
+            data = json.loads(response.data.decode('utf-8'))
+
+            self.assertTrue('highlight' in data[0].keys())
+            self.assertTrue('color' in data[0].keys())
+            self.assertTrue('value' in data[0].keys())
+            self.assertTrue('label' in data[0].keys())
+
             response = self.client.get("/go/json/genes/" + go.label)
             self.assert200(response)
+
+            data = json.loads(response.data.decode('utf-8'))
+            self.assertTrue(1 in data)
         else:
             print('  * test_go: No go label found, skipping test...', file=sys.stderr)
 
     def test_family(self):
+        """
+        Test for routes associated with a GeneFamily
+        """
         family = GeneFamily.query.first()
 
         if family is not None:
@@ -203,6 +251,13 @@ class WebsiteTest(TestCase):
 
             response = self.client.get("/family/json/species/%d" % family.id)
             self.assert200(response)
+
+            data = json.loads(response.data.decode('utf-8'))
+
+            self.assertTrue('highlight' in data[0].keys())
+            self.assertTrue('color' in data[0].keys())
+            self.assertTrue('value' in data[0].keys())
+            self.assertTrue('label' in data[0].keys())
         else:
             print('  * test_family: No family found, skipping test...', file=sys.stderr)
 
