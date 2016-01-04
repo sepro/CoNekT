@@ -302,9 +302,7 @@ class WebsiteTest(TestCase):
 
             response = self.client.get("/profile/json/radar/%d" % profile.id)
             self.assert200(response)
-
             data = json.loads(response.data.decode('utf-8'))
-
             self.assertTrue('labels' in data.keys())
             self.assertTrue('datasets' in data.keys())
             self.assertTrue('strokeColor' in data['datasets'][0].keys())
@@ -382,7 +380,6 @@ class WebsiteTest(TestCase):
 
         response = self.client.get('/search/json/genes/%s' % go.label)
         self.assert200(response)
-
         data = json.loads(response.data.decode('utf-8'))
         self.assertTrue(sequence.id in data)
 
