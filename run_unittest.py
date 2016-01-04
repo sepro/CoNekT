@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from planet import app
+from planet import create_app
 
 from planet.models.sequences import Sequence
 from planet.models.species import Species
@@ -16,6 +16,7 @@ import sys
 class MyTest(TestCase):
 
     def create_app(self):
+        app = create_app('config')
         app.config['DEBUG'] = False
         app.config['SQLALCHEMY_ECHO'] = False
         return app
