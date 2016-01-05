@@ -21,6 +21,8 @@ ADMIN_EMAIL = 'admin@web.com'
 
 
 # Database settings, database location and path to migration scripts
+# THIS WILL CREATE A NEW DATABASE AND FILL IT WITH DUMMY DATA
+# DO NOT RUN THIS WITH AN EXISTING DATABASE AS IT WILL BE DROPPED !
 _, DATABASE_PATH = tempfile.mkstemp()
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE_PATH
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'migration')

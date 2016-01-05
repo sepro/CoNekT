@@ -9,7 +9,8 @@ from planet.models.interpro import Interpro
 from planet.models.go import GO
 from planet.models.gene_families import GeneFamily, GeneFamilyMethod
 from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
-from planet.models.expression_networks import ExpressionNetwork,ExpressionNetworkMethod
+from planet.models.expression_networks import ExpressionNetwork, ExpressionNetworkMethod
+from planet.models.relationships import SequenceCoexpressionClusterAssociation
 
 from planet.controllers.help import __TOPICS as topics
 
@@ -93,12 +94,14 @@ class WebsiteTest(TestCase):
 
         test_expression_network = ExpressionNetwork(test_profile.probe,
                                                     test_sequence.id,
-                                                    '[{"gene_name": "TEST_SEQ_02", "gene_id": ' + str(test_sequence2.id) +', "probe_name": "test_probe2", "link_score": 0}]',
+                                                    '[{"gene_name": "TEST_SEQ_02", "gene_id": ' + str(test_sequence2.id)
+                                                    + ', "probe_name": "test_probe2", "link_score": 0}]',
                                                     test_expression_network_method.id)
 
         test_expression_network2 = ExpressionNetwork(test_profile2.probe,
                                                      test_sequence2.id,
-                                                     '[{"gene_name": "TEST_SEQ_01", "gene_id": ' + str(test_sequence.id) +', "probe_name": "test_probe2", "link_score": 0}]',
+                                                     '[{"gene_name": "TEST_SEQ_01", "gene_id": ' + str(test_sequence.id)
+                                                     + ', "probe_name": "test_probe2", "link_score": 0}]',
                                                      test_expression_network_method.id)
 
         db.session.add(test_expression_network)
@@ -111,10 +114,35 @@ class WebsiteTest(TestCase):
         test_cluster_method.network_method_id = test_expression_network_method.id
         test_cluster_method.method = 'test clustering method'
 
+        db.session.add(test_cluster_method)
+        db.session.commit()
+
+        test_cluster = CoexpressionCluster()
+        test_cluster.method_id = test_cluster_method.id
+        test_cluster.name = 'TEST_COEXP_CLUSTER'
+
+        db.session.add(test_cluster)
+        db.session.commit()
+
+        test_cluster_method.update_counts()
+
+        new_association = SequenceCoexpressionClusterAssociation()
+        new_association.probe = test_profile.probe
+        new_association.sequence_id = test_sequence.id
+        new_association.coexpression_cluster_id = test_cluster.id
+
+        new_association2 = SequenceCoexpressionClusterAssociation()
+        new_association2.probe = test_profile2.probe
+        new_association2.sequence_id = test_sequence2.id
+        new_association2.coexpression_cluster_id = test_cluster.id
+
+        db.session.add(new_association)
+        db.session.add(new_association2)
+        db.session.commit()
 
     def tearDown(self):
         """
-
+        Removes test database again, so the next test can start with a clean slate
         """
         db.session.remove()
         db.drop_all()
@@ -567,8 +595,72 @@ class WebsiteTest(TestCase):
             self.assertTrue('gene_id' in node['data'].keys())
             self.assertTrue('id' in node['data'].keys())
             self.assertTrue('family_id' in node['data'].keys())
-            # self.assertTrue('probe_id' in node['data'].keys())
-            # self.assertTrue('family_url' in node['data'].keys())
+            self.assertTrue('family_clade' in node['data'].keys())
+            self.assertTrue('family_shape' in node['data'].keys())
+            self.assertTrue('profile_link' in node['data'].keys())
+
+        for edge in data['edges']:
+            self.assertTrue('data' in edge.keys())
+            self.assertTrue('link_score' in edge['data'].keys())
+            self.assertTrue('source' in edge['data'].keys())
+            self.assertTrue('color' in edge['data'].keys())
+            self.assertTrue('profile_comparison' in edge['data'].keys())
+            self.assertTrue('edge_type' in edge['data'].keys())
+            self.assertTrue('depth' in edge['data'].keys())
+            self.assertTrue('target' in edge['data'].keys())
+
+    def test_coexpression_cluster(self):
+        species = Species.query.first()
+        cluster = CoexpressionCluster.query.first()
+        sequence = cluster.sequences.first()
+        gf_method = GeneFamilyMethod.query.first()
+
+        response = self.client.get('/cluster/')
+        self.assert_template_used('expression_cluster.html')
+        self.assert200(response)
+        self.assertTrue(species.name in response.data.decode('utf-8'))
+
+        response = self.client.get('/cluster/view/%d' % cluster.id)
+        self.assert_template_used('expression_cluster.html')
+        self.assert200(response)
+
+        response = self.client.get('/cluster/sequences/%d/%d' % (cluster.id, 1))
+        self.assert200(response)
+        self.assert_template_used('pagination/cluster_probes.html')
+        self.assertTrue(sequence.name in response.data.decode('utf-8'))
+
+        response = self.client.get('/cluster/download/%d' % cluster.id)
+        self.assert200(response)
+        self.assertTrue(sequence.name in response.data.decode('utf-8'))
+
+        response = self.client.get('/cluster/graph/%d/%d' % (cluster.id, gf_method.id))
+        self.assert200(response)
+        self.assert_template_used('expression_graph.html')
+
+        response = self.client.get('/cluster/json/%d/%d' % (cluster.id, gf_method.id))
+        self.assert200(response)
+        data = json.loads(response.data.decode('utf-8'))
+
+        self.assertTrue('nodes' in data.keys())
+        self.assertTrue('edges' in data.keys())
+
+        for node in data['nodes']:
+            self.assertTrue('data' in node.keys())
+            self.assertTrue('family_color' in node['data'].keys())
+            self.assertTrue('lc_color' in node['data'].keys())
+            self.assertTrue('lc_shape' in node['data'].keys())
+            self.assertTrue('family_name' in node['data'].keys())
+            self.assertTrue('shape' in node['data'].keys())
+            self.assertTrue('description' in node['data'].keys())
+            self.assertTrue('color' in node['data'].keys())
+            self.assertTrue('name' in node['data'].keys())
+            self.assertTrue('gene_name' in node['data'].keys())
+            self.assertTrue('tokens' in node['data'].keys())
+            self.assertTrue('depth' in node['data'].keys())
+            self.assertTrue('family_clade_count' in node['data'].keys())
+            self.assertTrue('gene_id' in node['data'].keys())
+            self.assertTrue('id' in node['data'].keys())
+            self.assertTrue('family_id' in node['data'].keys())
             self.assertTrue('family_clade' in node['data'].keys())
             self.assertTrue('family_shape' in node['data'].keys())
             self.assertTrue('profile_link' in node['data'].keys())

@@ -4,4 +4,4 @@ import unittest
 from tests.website import WebsiteTest
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(failfast=True)
