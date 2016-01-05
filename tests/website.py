@@ -147,6 +147,49 @@ class WebsiteTest(TestCase):
         db.session.remove()
         db.drop_all()
 
+    def assertCytoscapeJson(self, data):
+        self.assertTrue('nodes' in data.keys())
+        self.assertTrue('edges' in data.keys())
+
+        for node in data['nodes']:
+            self.assertTrue('color' in node['data'].keys())
+            self.assertTrue('id' in node['data'].keys())
+
+            compound = node['data']['compound'] if 'compound' in node['data'].keys() else False
+
+            if not compound:
+                self.assertTrue('data' in node.keys())
+                self.assertTrue('family_color' in node['data'].keys())
+                self.assertTrue('lc_color' in node['data'].keys())
+                self.assertTrue('lc_shape' in node['data'].keys())
+                self.assertTrue('family_name' in node['data'].keys())
+                self.assertTrue('shape' in node['data'].keys())
+                self.assertTrue('description' in node['data'].keys())
+                self.assertTrue('name' in node['data'].keys())
+                self.assertTrue('gene_name' in node['data'].keys())
+                self.assertTrue('tokens' in node['data'].keys())
+                self.assertTrue('depth' in node['data'].keys())
+                self.assertTrue('family_clade_count' in node['data'].keys())
+                self.assertTrue('gene_id' in node['data'].keys())
+                self.assertTrue('family_id' in node['data'].keys())
+                self.assertTrue('family_clade' in node['data'].keys())
+                self.assertTrue('family_shape' in node['data'].keys())
+                self.assertTrue('profile_link' in node['data'].keys())
+
+        for edge in data['edges']:
+            self.assertTrue('data' in edge.keys())
+            self.assertTrue('source' in edge['data'].keys())
+            self.assertTrue('target' in edge['data'].keys())
+            self.assertTrue('color' in edge['data'].keys())
+
+            homology = edge['data']['homology'] if 'homology' in edge['data'].keys() else False
+
+            if not homology:
+                self.assertTrue('link_score' in edge['data'].keys())
+                self.assertTrue('profile_comparison' in edge['data'].keys())
+                self.assertTrue('edge_type' in edge['data'].keys())
+                self.assertTrue('depth' in edge['data'].keys())
+
     def test_sequence(self):
         """
         Test for routes associated with a Sequence
@@ -583,41 +626,7 @@ class WebsiteTest(TestCase):
         response = self.client.get('/network/json/%d' % expression_network.id)
         self.assert200(response)
         data = json.loads(response.data.decode('utf-8'))
-
-        self.assertTrue('nodes' in data.keys())
-        self.assertTrue('edges' in data.keys())
-
-        for node in data['nodes']:
-            self.assertTrue('data' in node.keys())
-            self.assertTrue('family_color' in node['data'].keys())
-            self.assertTrue('lc_color' in node['data'].keys())
-            self.assertTrue('lc_shape' in node['data'].keys())
-            self.assertTrue('family_name' in node['data'].keys())
-            self.assertTrue('shape' in node['data'].keys())
-            self.assertTrue('description' in node['data'].keys())
-            self.assertTrue('color' in node['data'].keys())
-            self.assertTrue('name' in node['data'].keys())
-            self.assertTrue('gene_name' in node['data'].keys())
-            self.assertTrue('tokens' in node['data'].keys())
-            self.assertTrue('depth' in node['data'].keys())
-            self.assertTrue('family_clade_count' in node['data'].keys())
-            self.assertTrue('node_type' in node['data'].keys())
-            self.assertTrue('gene_id' in node['data'].keys())
-            self.assertTrue('id' in node['data'].keys())
-            self.assertTrue('family_id' in node['data'].keys())
-            self.assertTrue('family_clade' in node['data'].keys())
-            self.assertTrue('family_shape' in node['data'].keys())
-            self.assertTrue('profile_link' in node['data'].keys())
-
-        for edge in data['edges']:
-            self.assertTrue('data' in edge.keys())
-            self.assertTrue('link_score' in edge['data'].keys())
-            self.assertTrue('source' in edge['data'].keys())
-            self.assertTrue('color' in edge['data'].keys())
-            self.assertTrue('profile_comparison' in edge['data'].keys())
-            self.assertTrue('edge_type' in edge['data'].keys())
-            self.assertTrue('depth' in edge['data'].keys())
-            self.assertTrue('target' in edge['data'].keys())
+        self.assertCytoscapeJson(data)
 
     def test_coexpression_cluster(self):
         species = Species.query.first()
@@ -651,36 +660,19 @@ class WebsiteTest(TestCase):
         self.assert200(response)
         data = json.loads(response.data.decode('utf-8'))
 
-        self.assertTrue('nodes' in data.keys())
-        self.assertTrue('edges' in data.keys())
+        self.assertCytoscapeJson(data)
 
-        for node in data['nodes']:
-            self.assertTrue('data' in node.keys())
-            self.assertTrue('family_color' in node['data'].keys())
-            self.assertTrue('lc_color' in node['data'].keys())
-            self.assertTrue('lc_shape' in node['data'].keys())
-            self.assertTrue('family_name' in node['data'].keys())
-            self.assertTrue('shape' in node['data'].keys())
-            self.assertTrue('description' in node['data'].keys())
-            self.assertTrue('color' in node['data'].keys())
-            self.assertTrue('name' in node['data'].keys())
-            self.assertTrue('gene_name' in node['data'].keys())
-            self.assertTrue('tokens' in node['data'].keys())
-            self.assertTrue('depth' in node['data'].keys())
-            self.assertTrue('family_clade_count' in node['data'].keys())
-            self.assertTrue('gene_id' in node['data'].keys())
-            self.assertTrue('id' in node['data'].keys())
-            self.assertTrue('family_id' in node['data'].keys())
-            self.assertTrue('family_clade' in node['data'].keys())
-            self.assertTrue('family_shape' in node['data'].keys())
-            self.assertTrue('profile_link' in node['data'].keys())
+    def test_graph_comparison(self):
+        cluster = CoexpressionCluster.query.first()
+        gf_method = GeneFamilyMethod.query.first()
 
-        for edge in data['edges']:
-            self.assertTrue('data' in edge.keys())
-            self.assertTrue('link_score' in edge['data'].keys())
-            self.assertTrue('source' in edge['data'].keys())
-            self.assertTrue('color' in edge['data'].keys())
-            self.assertTrue('profile_comparison' in edge['data'].keys())
-            self.assertTrue('edge_type' in edge['data'].keys())
-            self.assertTrue('depth' in edge['data'].keys())
-            self.assertTrue('target' in edge['data'].keys())
+        response = self.client.get('/graph_comparison/cluster/%d/%d/%d' % (cluster.id, cluster.id, gf_method.id))
+        self.assert200(response)
+        self.assert_template_used('expression_graph.html')
+
+        response = self.client.get('/graph_comparison/cluster/json/%d/%d/%d' % (cluster.id, cluster.id, gf_method.id))
+        self.assert200(response)
+        data = json.loads(response.data.decode('utf-8'))
+
+        self.assertCytoscapeJson(data)
+
