@@ -191,16 +191,23 @@
 <script src="{{ url_for('static', filename='js/bootstrap-slider.min.js') }}"></script>
 <script>
 $('#cy-edge-score').slider({
-	formatter: function(value) {
-		return 'Cut-off: ' + value;
-	}
+    formatter: function(value) {
+        return 'Cut-off: ' + value;
+    }
 });
 $('#cy-edge-score').on("slide", function(slideEvt) {
-	$("#cy-edge-score-value").text(slideEvt.value);
+    $("#cy-edge-score-value").text(slideEvt.value);
 });
 </script>
-<script src="{{ url_for('static', filename='js/XMLWriter-1.0.0-min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/pablo.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/planet_svg_legend.js') }}"></script>
+<script>
+$(function() {
+    svg_legend_init('{{ url_for('static', filename='svg/test.svg') }}', legend);
+});
+
+</script>
+<script src="{{ url_for('static', filename='js/XMLWriter-1.0.0-min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/planet_xgmml.js') }}"></script>
 <script src="{{ url_for('static', filename='js/planet_svg.js') }}"></script>
 <!--<script src="{{ url_for('static', filename='js/arbor.js') }}"></script>-->
@@ -208,13 +215,5 @@ $('#cy-edge-score').on("slide", function(slideEvt) {
 <script src="{{ url_for('static', filename='js/jquery.qtip.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/cytoscape-qtip.js') }}"></script>
 <script src="{{ url_for('static', filename='js/planet_graph.js') }}"></script>
-<script>
-    var svg = Pablo.load('{{ url_for('static', filename='svg/test.svg') }}', function(){
-        this.appendTo(legend);
-        //svg.find('g#score_group').transform('rotate', [45])
-        //console.log(svg.find('g#score_group'));
-    });
 
-
-</script>
 {% endblock %}
