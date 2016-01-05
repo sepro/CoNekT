@@ -523,6 +523,7 @@ class WebsiteTest(TestCase):
 
     def test_heatmap(self):
         profile = ExpressionProfile.query.first()
+        cluster = CoexpressionCluster.query.first()
 
         response = self.client.get('/heatmap/')
         self.assert_template_used('expression_heatmap.html')
@@ -533,10 +534,13 @@ class WebsiteTest(TestCase):
         self.assert200(response)
         self.assertTrue('<td>' + profile.probe + '</td>' in response.data.decode('utf-8'))
 
-        # TODO: test heatmap for a cluster
+        response = self.client.get('/heatmap/cluster/%d' % cluster.id)
+        self.assert_template_used('expression_heatmap.html')
+        self.assert200(response)
 
     def test_profile_comparison(self):
         profile = ExpressionProfile.query.first()
+        cluster = CoexpressionCluster.query.first()
 
         response = self.client.get('/profile_comparison/')
         self.assert_template_used('expression_profile_comparison.html')
@@ -550,7 +554,13 @@ class WebsiteTest(TestCase):
         self.assert_template_used('expression_profile_comparison.html')
         self.assert200(response)
 
-        # TODO: test profile comparison for a cluster
+        response = self.client.get('/profile_comparison/cluster/%d/%d' % (cluster.id, 0))
+        self.assert_template_used('expression_profile_comparison.html')
+        self.assert200(response)
+
+        response = self.client.get('/profile_comparison/cluster/%d/%d' % (cluster.id, 1))
+        self.assert_template_used('expression_profile_comparison.html')
+        self.assert200(response)
 
     def test_expression_network(self):
         species = Species.query.first()
