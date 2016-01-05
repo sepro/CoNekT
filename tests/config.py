@@ -15,7 +15,7 @@ WTF_CSRF_ENABLED = False
 SECRET_KEY = 'DragonsLiveHere'
 
 # Login settings + admin account
-LOGIN_ENABLED = True
+LOGIN_ENABLED = False
 ADMIN_PASSWORD = 'admin'
 ADMIN_EMAIL = 'admin@web.com'
 
@@ -43,7 +43,7 @@ CACHE_NO_NULL_WARNING = True
 MINIFY_PAGE = not DEBUG
 
 # BLAST settings
-BLAST_ENABLED = True
+BLAST_ENABLED = False
 BLAST_TMP_DIR = tempfile.mkdtemp()
 
 BLASTP_PATH = 'D:/blast/bin/blastp.exe'
