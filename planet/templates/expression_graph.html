@@ -167,7 +167,7 @@
             <h1>Expression Graph: <strong>{{ node.probe }}</strong><br /><small>({{ node.method.description }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
 
             <div class="row">
-            <div id="cy" json="{{ url_for('expression_network.expression_network_json', node_id=node.id, depth=depth, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
+            <div id="cy" json="{{ url_for('expression_network.expression_network_json', node_id=node.id, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% elif cluster %}
             <h1>Coexpression cluster: <strong>{{ cluster.name }}</strong><br /><small>{{ cluster.method.method }}</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
 

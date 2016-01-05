@@ -107,6 +107,11 @@ class WebsiteTest(TestCase):
 
         test_expression_network_method.update_count()
 
+        test_cluster_method = CoexpressionClusteringMethod()
+        test_cluster_method.network_method_id = test_expression_network_method.id
+        test_cluster_method.method = 'test clustering method'
+
+
     def tearDown(self):
         """
 
