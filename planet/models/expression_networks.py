@@ -108,41 +108,44 @@ class ExpressionNetwork(db.Model):
             existing_nodes.append(link["probe_name"])
 
         # iterate n times to add deeper links
+        if len(additional_nodes) > 0:
+            for i in range(1, depth+1):
+                new_nodes = ExpressionNetwork.\
+                    query.filter(and_(ExpressionNetwork.probe.in_(additional_nodes),
+                                      ExpressionNetwork.method_id == method_id))
+                next_nodes = []
 
-        for i in range(1, depth+1):
-            new_nodes = ExpressionNetwork.\
-                query.filter(and_(ExpressionNetwork.probe.in_(additional_nodes),
-                                  ExpressionNetwork.method_id == method_id))
-            next_nodes = []
+                for new_node in new_nodes:
+                    new_links = json.loads(new_node.network)
 
-            for new_node in new_nodes:
-                new_links = json.loads(new_node.network)
+                    for link in new_links:
+                        if link["probe_name"] not in existing_nodes:
+                            nodes.append(ExpressionNetwork.__process_link(link, depth=depth))
+                            existing_nodes.append(link["probe_name"])
+                            next_nodes.append(link["probe_name"])
 
-                for link in new_links:
-                    if link["probe_name"] not in existing_nodes:
-                        nodes.append(ExpressionNetwork.__process_link(link, depth=depth))
-                        existing_nodes.append(link["probe_name"])
-                        next_nodes.append(link["probe_name"])
+                        if [new_node.probe, link["probe_name"]] not in existing_edges:
+                            edges.append({"source": new_node.probe,
+                                          "target": link["probe_name"],
+                                          "profile_comparison":
+                                              url_for('expression_profile.expression_profile_compare_probes',
+                                                      probe_a=new_node.probe,
+                                                      probe_b=link["probe_name"],
+                                                      species_id=node.method.species.id),
+                                          "depth": i,
+                                          "link_score": link["link_score"],
+                                          "edge_type": edge_type})
+                            existing_edges.append([new_node.probe, link["probe_name"]])
+                            existing_edges.append([link["probe_name"], new_node.probe])
 
-                    if [new_node.probe, link["probe_name"]] not in existing_edges:
-                        edges.append({"source": new_node.probe,
-                                      "target": link["probe_name"],
-                                      "profile_comparison":
-                                          url_for('expression_profile.expression_profile_compare_probes',
-                                                  probe_a=new_node.probe,
-                                                  probe_b=link["probe_name"],
-                                                  species_id=node.method.species.id),
-                                      "depth": i,
-                                      "link_score": link["link_score"],
-                                      "edge_type": edge_type})
-                        existing_edges.append([new_node.probe, link["probe_name"]])
-                        existing_edges.append([link["probe_name"], new_node.probe])
-
-            additional_nodes = next_nodes
+                additional_nodes = next_nodes
 
         # Add links between the last set of nodes added
-        new_nodes = ExpressionNetwork.query.filter(and_(ExpressionNetwork.probe.in_(additional_nodes),
-                                                        ExpressionNetwork.method_id == method_id))
+        new_nodes = []
+        if len(additional_nodes) > 0:
+            new_nodes = ExpressionNetwork.query.filter(and_(ExpressionNetwork.probe.in_(additional_nodes),
+                                                            ExpressionNetwork.method_id == method_id))
+
         for new_node in new_nodes:
             new_links = json.loads(new_node.network)
             for link in new_links:

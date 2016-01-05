@@ -541,8 +541,6 @@ class WebsiteTest(TestCase):
         self.assert200(response)
         data = json.loads(response.data.decode('utf-8'))
 
-        print(data)
-
         self.assertTrue('nodes' in data.keys())
         self.assertTrue('edges' in data.keys())
 
