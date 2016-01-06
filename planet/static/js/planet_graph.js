@@ -124,6 +124,15 @@ $('.cy-node-color').click(function(ev) {
     cy.nodes('[^compound]').removeClass( $( this ).attr( 'attr' ) );
   });
  cy.nodes('[^compound]').addClass( $( this ).attr( 'attr' ) );
+
+ if ($( this ).attr( 'attr' ) === 'family_color' ) {
+    $('.cy-node-shape[attr="family_shape"]').click();
+ } else if ($( this ).attr( 'attr' ) === 'lc_color' ) {
+    $('.cy-node-shape[attr="lc_shape"]').click();
+ } else {
+    $('.cy-node-shape[attr="shape"]').click();
+ }
+
 })
 
 $('.cy-node-shape').click(function(ev) {
