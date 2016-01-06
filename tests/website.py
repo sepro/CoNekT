@@ -11,6 +11,7 @@ from planet.models.gene_families import GeneFamily, GeneFamilyMethod
 from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
 from planet.models.expression_networks import ExpressionNetwork, ExpressionNetworkMethod
 from planet.models.relationships import SequenceCoexpressionClusterAssociation
+from planet.models.clades import Clade
 
 from planet.controllers.help import __TOPICS as topics
 
@@ -139,6 +140,8 @@ class WebsiteTest(TestCase):
         db.session.add(new_association)
         db.session.add(new_association2)
         db.session.commit()
+
+        Clade.add_clade('test', ["tst"])
 
     def tearDown(self):
         """

@@ -37,7 +37,7 @@ for species (from .hrr file)
 
 """
 from flask.ext.script import Manager
-from planet import app
+from planet import create_app
 
 from build.db.go import populate_go as pg
 from build.db.interpro_xml import populate_interpro as pi
@@ -52,7 +52,7 @@ from build.db.expression import parse_expression_network
 
 from build.db.coexpression_clusters import add_planet_coexpression_clusters
 
-
+app = create_app('config')
 manager = Manager(app)
 
 
@@ -63,7 +63,8 @@ def populate_go(filename):
 
     :param filename: path to the OBO file
     """
-    pg(filename)
+    with app.app_context():
+        pg(filename)
 
 
 @manager.command
@@ -73,7 +74,8 @@ def populate_interpro(filename):
 
     :param filename: path to the interpro.xml
     """
-    pi(filename)
+    with app.app_context():
+        pi(filename)
 
 
 @manager.command
@@ -85,7 +87,8 @@ def add_fasta_species(filename, species_code, species_name):
     :param species_code: short code for the species (usually three letters)
     :param species_name: full name of the species
     """
-    add_species_from_fasta(filename, species_code, species_name)
+    with app.app_context():
+        add_species_from_fasta(filename, species_code, species_name)
 
 
 @manager.command
@@ -95,7 +98,8 @@ def add_plaza_go(filename):
 
     :param filename: path to the data (csv file)
     """
-    add_go_from_plaza(filename)
+    with app.app_context():
+        add_go_from_plaza(filename)
 
 
 @manager.command
@@ -105,7 +109,8 @@ def add_plaza_interpro(filename):
 
     :param filename: path to the data (csv file)
     """
-    add_interpro_from_plaza(filename)
+    with app.app_context():
+        add_interpro_from_plaza(filename)
 
 
 @manager.command
@@ -117,7 +122,8 @@ def add_plaza_families(filename, description):
     :param description: description of the method
     """
 
-    add_families_from_plaza(filename, description)
+    with app.app_context():
+        add_families_from_plaza(filename, description)
 
 
 @manager.command
@@ -130,17 +136,20 @@ def add_expression_plot(plot, conversion, species_code):
     :param conversion: path to conversion table
     :param species_code: short code for the species the profile belongs to
     """
-    parse_expression_plot(plot, conversion, species_code)
+    with app.app_context():
+        parse_expression_plot(plot, conversion, species_code)
 
 
 @manager.command
 def add_expression_network(network_file, species, description, score_type="rank"):
-    parse_expression_network(network_file, species, description, score_type)
+    with app.app_context():
+        parse_expression_network(network_file, species, description, score_type)
 
 
 @manager.command
 def add_planet_clusters(hrr_file, hcca_file, description, network):
-    add_planet_coexpression_clusters(hrr_file, hcca_file, description, network)
+    with app.app_context():
+        add_planet_coexpression_clusters(hrr_file, hcca_file, description, network)
 
 if __name__ == "__main__":
 

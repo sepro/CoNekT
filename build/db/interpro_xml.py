@@ -1,4 +1,4 @@
-from planet import app,db
+from planet import db
 from planet.models.interpro import Interpro
 from utils.parser.interpro import Parser as InterproParser
 

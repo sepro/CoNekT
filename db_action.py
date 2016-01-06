@@ -5,7 +5,7 @@ from config import SQLALCHEMY_MIGRATE_REPO
 from config import ADMIN_PASSWORD
 from config import ADMIN_EMAIL
 
-from planet import app, db
+from planet import create_app, db
 from planet.models.users import User
 
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod
@@ -19,7 +19,7 @@ from flask.ext.script import Manager
 
 import os.path
 
-
+app = create_app('config')
 manager = Manager(app)
 
 
@@ -28,6 +28,7 @@ def create():
     """
     function to create the initial database and migration information
     """
+
     db.create_all(app=app)
 
     if not os.path.exists(SQLALCHEMY_MIGRATE_REPO):
@@ -75,5 +76,4 @@ def update_counts():
     Species.update_counts()
 
 if __name__ == "__main__":
-
     manager.run()
