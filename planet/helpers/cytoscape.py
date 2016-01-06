@@ -123,7 +123,7 @@ class CytoscapeHelper:
                 fam_only, both = [], []
                 if "family_name" in node["data"]:
                     fam_only += [node["data"]["family_name"]]
-                    both+=[node["data"]["family_name"]]
+                    both += [node["data"]["family_name"]]
                 if "interpro" in node["data"]:
                     both += node["data"]["interpro"]
                 gene_family_only[node["data"]["gene_id"]] = set(fam_only)

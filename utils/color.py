@@ -102,9 +102,9 @@ def family_to_shape_and_color(input_dictionary):
                     hashed_string = hashlib.sha1(str(label_co_occurrences[counter][0]).encode('utf-8')).hexdigest()
                     color = "#" + hashed_string[0:3].upper()
                     for label in label_co_occurrences[counter]:
-                        label_to_shape_color[label] = [shape, color]
+                        label_to_shape_color[label] = [shape, color, str(label)]
                 counter += 1
-
+    print(label_co_occurrences, label_to_shape_color, sep='\n')
     gene_2_color_shape = {}
 
     for gene in input_dictionary:
