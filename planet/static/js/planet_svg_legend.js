@@ -1,4 +1,6 @@
 var svg_legend;
+var svg_families;
+var svg_labels;
 
 $(function() {
      var svg_file  = $('#legend').attr( "url" );

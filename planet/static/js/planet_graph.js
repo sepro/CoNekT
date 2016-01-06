@@ -35,7 +35,7 @@ cy = cytoscape({
           value: n.data('description') !== null ? '<strong>' + n.data('description') + '</strong><br />' : '<span class="text-muted">No description available</span>'
         },
         {
-          value: n.data('tokens') !== null ? 'Other names: <strong>' + n.data('tokens') + '</strong><br />' : '<span class="text-muted">No description available</span>'
+          value: n.data('tokens') !== null ? 'Other names: <strong>' + n.data('tokens') + '</strong><br />' : '<span class="text-muted">No alias available</span>'
         },
         {
           value: 'Profile : <a href="' + n.data('profile_link') + '">' + n.data('id') + '</a>'
@@ -97,6 +97,23 @@ cy = cytoscape({
     });
   }); // end cy.edges.forEach...
 
+        // Fill data for legend
+        svg_families = []
+        cy.nodes('[^compound]').forEach(function(n){
+            family_color = n.data('family_color');
+            family_shape = n.data('family_shape');
+            family = n.data('family_name')
+            lc_color = n.data('lc_color');
+            lc_shape = n.data('lc_shape');
+
+            if (!(family_color in svg_families)) {
+                svg_families[family_color] = []
+            }
+            svg_families[family_color][family_shape] = family;
+
+        }); //end cy.nodes.forEach
+
+        console.log(svg_families);
   }
 });
 
