@@ -98,7 +98,8 @@ cy = cytoscape({
   }); // end cy.edges.forEach...
 
         // Fill data for legend
-        svg_families = []
+        svg_families = [];
+        svg_labels = [];
         cy.nodes('[^compound]').forEach(function(n){
             family_color = n.data('family_color');
             family_shape = n.data('family_shape');
@@ -111,9 +112,15 @@ cy = cytoscape({
             }
             svg_families[family_color][family_shape] = family;
 
+            if (!(lc_color in svg_labels)) {
+                svg_labels[lc_color] = []
+            }
+            svg_labels[lc_color][lc_shape] = family;
+
         }); //end cy.nodes.forEach
 
         console.log(svg_families);
+        console.log(svg_labels);
   }
 });
 
