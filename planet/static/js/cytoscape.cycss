@@ -84,7 +84,7 @@ edge[homology] {
 }
 
 edge.depth_color {
-        line-color: data(depth_color);
+        line-color: mapData(depth, 0, 2, green, red);
 }
 
 edge.link_score {
@@ -98,5 +98,5 @@ edge.default {
 }
 
 edge.depth {
-        width: mapData(depth, 0, 3, 3, 1);
+        width: mapData(depth, 0, 2, 3, 1);
 }

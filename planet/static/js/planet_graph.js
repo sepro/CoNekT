@@ -101,28 +101,32 @@ cy = cytoscape({
 });
 
 
-$('.cy-node-color').click(function() {
+$('.cy-node-color').click(function(ev) {
+  ev.preventDefault();
   $( this ).closest('.cy-option-menu').find('.cy-node-color').each(function () {
     cy.nodes('[^compound]').removeClass( $( this ).attr( 'attr' ) );
   });
  cy.nodes('[^compound]').addClass( $( this ).attr( 'attr' ) );
 })
 
-$('.cy-node-shape').click(function() {
+$('.cy-node-shape').click(function(ev) {
+  ev.preventDefault();
   $( this ).closest('.cy-option-menu').find('.cy-node-shape').each(function () {
     cy.nodes('[^compound]').removeClass( $( this ).attr( 'attr' ) );
   });
  cy.nodes('[^compound]').addClass( $( this ).attr( 'attr' ) );
 })
 
-$('.cy-edge-color').click(function() {
+$('.cy-edge-color').click(function(ev) {
+  ev.preventDefault();
   $( this ).closest('.cy-option-menu').find('.cy-edge-color').each(function () {
     cy.edges('[^homology]').removeClass( $( this ).attr( 'attr' ) );
   });
  cy.edges('[^homology]').addClass( $( this ).attr( 'attr' ) );
 })
 
-$('.cy-edge-width').click(function() {
+$('.cy-edge-width').click(function(ev) {
+  ev.preventDefault();
   $( this ).closest('.cy-option-menu').find('.cy-edge-width').each(function () {
     cy.edges('[^homology]').removeClass( $( this ).attr( 'attr' ) );
   });
@@ -136,7 +140,8 @@ $('#cy-edge-score').on("slideStop", function(slideEvt) {
     cy.edges("[link_score<=" + cutoff + "]").style('display', 'element');
 })
 
-$('.cy-depth-filter').click(function() {
+$('.cy-depth-filter').click(function(ev) {
+    ev.preventDefault();
     $( '.cy-depth-filter' ).removeClass( 'active' );
     $( this ).addClass( 'active' );
 
@@ -149,7 +154,8 @@ $('.cy-depth-filter').click(function() {
     cy.edges("[depth<=" + cutoff + "]").style('display', 'element');
 })
 
-$('.cy-layout').click(function() {
+$('.cy-layout').click(function(ev) {
+    ev.preventDefault();
     var layout = $( this ).attr( 'layout' );
 
     cy.layout({name: layout,
@@ -169,7 +175,8 @@ $(".cy-option-menu li a").click(function(){
   $(this).parents(".btn-group").find('.btn').val($(this).data('value'));
 });
 
-$("#cy-search").click(function(){
+$("#cy-search").click(function(ev){
+  ev.preventDefault();
   var term = $("#cy-search-term").val().trim().toLowerCase();
   var url = $( this ).attr( 'search-url' );
 
@@ -200,8 +207,8 @@ $("#cy-search").click(function(){
 
 });
 
-$('#cy-download-img-hires').click(function() {
-
+$('#cy-download-img-hires').click(function(ev) {
+  ev.preventDefault();
   var png64 = cy.png({scale: 4, bg: "#FFFFFF"});
 
   var download = document.createElement('a');
@@ -210,8 +217,8 @@ $('#cy-download-img-hires').click(function() {
   download.click();
 })
 
-$('#cy-download-img-lowres').click(function() {
-
+$('#cy-download-img-lowres').click(function(ev) {
+  ev.preventDefault();
   var png64 = cy.png({scale: 1, bg: "#FFFFFF"});
 
   var download = document.createElement('a');
@@ -220,7 +227,8 @@ $('#cy-download-img-lowres').click(function() {
   download.click();
 })
 
-$('#cy-download-json').click(function() {
+$('#cy-download-json').click(function(ev) {
+  ev.preventDefault();
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(initial_json));
   element.setAttribute('download', "cytoscape.json");
@@ -228,7 +236,8 @@ $('#cy-download-json').click(function() {
   element.click();
 })
 
-$('#cy-download-jsoncy').click(function() {
+$('#cy-download-jsoncy').click(function(ev) {
+  ev.preventDefault();
   var eles = cy.elements()
 
   eles.each( function(i, ele) {
@@ -252,7 +261,8 @@ $('#cy-download-jsoncy').click(function() {
 
 })
 
-$('#cy-download-xgmml').click(function() {
+$('#cy-download-xgmml').click(function(ev) {
+  ev.preventDefault();
   var eles = cy.elements();
 
   eles.each( function(i, ele) {
@@ -274,7 +284,8 @@ $('#cy-download-xgmml').click(function() {
   element.click();
 })
 
-$('#cy-download-svg').click(function() {
+$('#cy-download-svg').click(function(ev) {
+  ev.preventDefault();
   var eles = cy.elements();
 
   eles.each( function(i, ele) {
@@ -296,7 +307,8 @@ $('#cy-download-svg').click(function() {
   element.click();
 })
 
-$('#cy-reset').on('click', function(){
+$('#cy-reset').on('click', function(ev){
+  ev.preventDefault();
   cy.animate({
     fit: {
       eles: cy.elements(),

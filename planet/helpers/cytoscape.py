@@ -181,6 +181,8 @@ class CytoscapeHelper:
         """
         Colors a cytoscape compatible network (dict) based on edge depth
 
+        This function is no longer used as it has been replaced by a mapper in the cycss
+
         :param network: dict containing the network
         :return: Cytoscape.js compatible network with depth information for nodes added
         """
@@ -221,6 +223,8 @@ class CytoscapeHelper:
     def add_depth_data_edges(network):
         """
         Colors a cytoscape compatible network (dict) based on edge depth
+
+        This function is no longer used as it has been replaced by a mapper in the cycss
 
         :param network: dict containing the network
         :return: Cytoscape.js compatible network with depth information for edges added
