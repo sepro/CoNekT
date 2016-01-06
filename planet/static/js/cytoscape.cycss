@@ -56,11 +56,11 @@ node.neighbors {
 }
 
 node.depth_color {
-        background-color: mapData(depth, 0, 2, green, orange);
+        background-color: mapData(depth, 0, 2, green, red);
 }
 
 node.family_clade_count {
-        background-color: mapData(family_clade_count, 1, 15, green, blue);
+        background-color: mapData(family_clade_count, 1, 15, green, red);
 }
 
 node.lc_shape {

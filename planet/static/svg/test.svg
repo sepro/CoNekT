@@ -20,6 +20,18 @@
   <defs
      id="defs4">
     <linearGradient
+       id="reverse"
+       inkscape:collect="always">
+      <stop
+         id="stop4273"
+         offset="0"
+         style="stop-color:#ff0000;stop-opacity:1;" />
+      <stop
+         id="stop4275"
+         offset="1"
+         style="stop-color:#008000;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
        inkscape:collect="always"
        id="linearGradient4140">
       <stop
@@ -51,6 +63,36 @@
        y2="69.683632"
        gradientUnits="userSpaceOnUse"
        gradientTransform="translate(-0.04248029,-27.783902)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#reverse"
+       id="linearGradient4146-4-9"
+       x1="170.99347"
+       y1="205.80168"
+       x2="100.23586"
+       y2="205.80168"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-0.7950916,-135.74078)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#reverse"
+       id="linearGradient4146-4-9-7"
+       x1="170.99347"
+       y1="205.80168"
+       x2="100.23586"
+       y2="205.80168"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-0.4102367,-136.32494)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#reverse"
+       id="linearGradient4146-4-9-7-3"
+       x1="170.99347"
+       y1="205.80168"
+       x2="100.23586"
+       y2="205.80168"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-1.250349,-136.57493)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -59,9 +101,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.959798"
-     inkscape:cx="167.26718"
-     inkscape:cy="958.20671"
+     inkscape:zoom="5.6"
+     inkscape:cx="86.521196"
+     inkscape:cy="847.59756"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -88,18 +130,6 @@
      inkscape:label="Laag 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <text
-       xml:space="preserve"
-       style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="24.884972"
-       y="38.076488"
-       id="text4134"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan4136"
-         x="24.884972"
-         y="38.076488"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;font-family:Tahoma;-inkscape-font-specification:Tahoma">Edges</tspan></text>
     <g
        id="score_group-3"
        edge_color="color"
@@ -182,18 +212,33 @@
            y="89.600319"
            style="font-size:10px">30</tspan></text>
     </g>
-    <text
-       xml:space="preserve"
-       style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="26.060509"
-       y="72.014526"
-       id="text4134-9"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan4136-5"
-         x="26.060509"
+    <g
+       id="g4214">
+      <text
+         sodipodi:linespacing="125%"
+         id="text4134"
+         y="38.076488"
+         x="24.884972"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;font-family:Tahoma;-inkscape-font-specification:Tahoma"
+           y="38.076488"
+           x="24.884972"
+           id="tspan4136"
+           sodipodi:role="line">Edges</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4134-9"
          y="72.014526"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Tahoma;-inkscape-font-specification:Tahoma">Color</tspan></text>
+         x="26.060509"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Tahoma;-inkscape-font-specification:Tahoma"
+           y="72.014526"
+           x="26.060509"
+           id="tspan4136-5"
+           sodipodi:role="line">Color</tspan></text>
+    </g>
     <g
        id="score_group-2"
        edge_color="depth_color"
@@ -356,6 +401,243 @@
          d="m 255.96377,100.92879 42.42642,0"
          style="fill:none;fill-rule:evenodd;stroke:#888888;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1"
          sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="g4208"
+       transform="translate(-0.36213875,0)">
+      <text
+         sodipodi:linespacing="125%"
+         id="text4134-1"
+         y="147.56918"
+         x="25.24711"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;font-family:Tahoma;-inkscape-font-specification:Tahoma"
+           y="147.56918"
+           x="25.24711"
+           id="tspan4136-4"
+           sodipodi:role="line">Nodes</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4134-9-1"
+         y="181.50722"
+         x="26.422647"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Tahoma;-inkscape-font-specification:Tahoma"
+           y="181.50722"
+           x="26.422647"
+           id="tspan4136-5-8"
+           sodipodi:role="line">Color</tspan></text>
+    </g>
+    <g
+       id="score_group-2-3"
+       node_color="neighbors"
+       transform="translate(1.250349,136.57493)">
+      <rect
+         y="63.290775"
+         x="98.857147"
+         height="11.428571"
+         width="71.428574"
+         id="rect4138-0-6"
+         style="opacity:1;fill:url(#linearGradient4146-4-9);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.56896548" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text4162-9-0"
+         y="73.790771"
+         x="24.642859"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Tahoma;-inkscape-font-specification:Tahoma"
+           y="73.790771"
+           x="24.642859"
+           id="tspan4164-4-3"
+           sodipodi:role="line">Neighbors</tspan></text>
+      <path
+         style="fill:#b2b2b2;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:0.56862745"
+         d="m 98.835885,76.566275 0,3.78807"
+         id="path4155-36-0"
+         inkscape:connector-curvature="0" />
+      <path
+         style="fill:#b2b2b2;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:0.56862745"
+         d="m 170.30418,76.566275 0,3.78807"
+         id="path4155-3-6-7"
+         inkscape:connector-curvature="0" />
+      <text
+         xml:space="preserve"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="95.380699"
+         y="89.600319"
+         id="text4172-7-1"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4174-3-6"
+           x="95.380699"
+           y="89.600319"
+           style="font-size:10px">15+</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="167.11137"
+         y="89.600319"
+         id="text4172-9-2-7"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4174-5-2-9"
+           x="167.11137"
+           y="89.600319"
+           style="font-size:10px">1</tspan></text>
+    </g>
+    <g
+       id="score_group-2-3-3"
+       node_color="color"
+       transform="translate(0.6245224,135.7535)">
+      <text
+         sodipodi:linespacing="125%"
+         id="text4162-9-0-2"
+         y="73.790771"
+         x="24.642859"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Tahoma;-inkscape-font-specification:Tahoma"
+           y="73.790771"
+           x="24.642859"
+           id="tspan4164-4-3-6"
+           sodipodi:role="line">Default</tspan></text>
+      <circle
+         style="opacity:1;fill:#cccccc;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="path4328"
+         cx="137.30405"
+         cy="69.465858"
+         r="13.75" />
+    </g>
+    <g
+       id="score_group-2-3-9"
+       node_color="depth_color"
+       transform="translate(1.250349,136.57493)">
+      <rect
+         y="63.290775"
+         x="98.857147"
+         height="11.428571"
+         width="71.428574"
+         id="rect4138-0-6-1"
+         style="opacity:1;fill:url(#linearGradient4146-4-9-7);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.56896548" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text4162-9-0-9"
+         y="73.790771"
+         x="24.642859"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Tahoma;-inkscape-font-specification:Tahoma"
+           y="73.790771"
+           x="24.642859"
+           id="tspan4164-4-3-2"
+           sodipodi:role="line">Depth</tspan></text>
+      <path
+         style="fill:#b2b2b2;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:0.56862745"
+         d="m 98.835885,76.566275 0,3.78807"
+         id="path4155-36-0-4"
+         inkscape:connector-curvature="0" />
+      <path
+         style="fill:#b2b2b2;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:0.56862745"
+         d="m 170.30418,76.566275 0,3.78807"
+         id="path4155-3-6-7-7"
+         inkscape:connector-curvature="0" />
+      <text
+         xml:space="preserve"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="95.380699"
+         y="89.600319"
+         id="text4172-7-1-8"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4174-3-6-1"
+           x="95.380699"
+           y="89.600319"
+           style="font-size:10px">0</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="167.11137"
+         y="89.600319"
+         id="text4172-9-2-7-4"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4174-5-2-9-7"
+           x="167.11137"
+           y="89.600319"
+           style="font-size:10px">2</tspan></text>
+    </g>
+    <g
+       id="score_group-2-3-9-8"
+       node_color="family_clade_count"
+       transform="translate(1.250349,136.57493)">
+      <rect
+         y="63.290775"
+         x="98.857147"
+         height="11.428571"
+         width="71.428574"
+         id="rect4138-0-6-1-8"
+         style="opacity:1;fill:url(#linearGradient4146-4-9-7-3);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.56896548" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text4162-9-0-9-3"
+         y="73.790771"
+         x="24.642859"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Tahoma;-inkscape-font-specification:Tahoma"
+           y="73.790771"
+           x="24.642859"
+           sodipodi:role="line"
+           id="tspan4270">Clade</tspan></text>
+      <path
+         style="fill:#b2b2b2;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:0.56862745"
+         d="m 98.835885,76.566275 0,3.78807"
+         id="path4155-36-0-4-6"
+         inkscape:connector-curvature="0" />
+      <path
+         style="fill:#b2b2b2;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:0.56862745"
+         d="m 170.30418,76.566275 0,3.78807"
+         id="path4155-3-6-7-7-5"
+         inkscape:connector-curvature="0" />
+      <text
+         xml:space="preserve"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="95.380699"
+         y="89.600319"
+         id="text4172-7-1-8-8"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4174-3-6-1-6"
+           x="95.380699"
+           y="89.600319"
+           style="font-size:10px">1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="167.11137"
+         y="89.600319"
+         id="text4172-9-2-7-4-5"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4174-5-2-9-7-2"
+           x="167.11137"
+           y="89.600319"
+           style="font-size:10px">15</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="26.606794"
+         y="86.930138"
+         id="text4274"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4276"
+           x="26.606794"
+           y="86.930138"
+           style="font-size:8.75px">species in clade</tspan></text>
     </g>
   </g>
 </svg>
