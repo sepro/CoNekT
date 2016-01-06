@@ -1,8 +1,9 @@
 var svg_legend;
 
-function svg_legend_init(svg_file, container_id) {
+$(function() {
+     var svg_file  = $('#legend').attr( "url" );
      svg_legend = Pablo.load(svg_file, function(){
-        this.appendTo(container_id);
+        this.appendTo($('#legend'));
         svg_legend.find('[edge_color]').attr('style', 'opacity:0');
         svg_legend.find('[edge_color="color"]').attr('style', 'opacity:100')
 
@@ -12,7 +13,7 @@ function svg_legend_init(svg_file, container_id) {
         svg_legend.find('[node_color]').attr('style', 'opacity:0');
         svg_legend.find('[node_color="color"]').attr('style', 'opacity:100')
     });
-}
+});
 
 $('.cy-edge-color').click(function(ev) {
     ev.preventDefault();

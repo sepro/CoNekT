@@ -178,7 +178,7 @@
             <div id="cy" json="{{ url_for('graph_comparison.graph_comparison_cluster_json', one=cluster_one.id, two=cluster_two.id, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% endif %}
             <div id="loading"><span class="fa fa-refresh fa-spin"></span></div>
-            <div id="legend"></div>
+            <div id="legend" url="{{ url_for('static', filename='svg/test.svg') }}"></div>
             </div>
         </div>
     </div>
@@ -201,12 +201,6 @@ $('#cy-edge-score').on("slide", function(slideEvt) {
 </script>
 <script src="{{ url_for('static', filename='js/pablo.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/planet_svg_legend.js') }}"></script>
-<script>
-$(function() {
-    svg_legend_init('{{ url_for('static', filename='svg/test.svg') }}', legend);
-});
-
-</script>
 <script src="{{ url_for('static', filename='js/XMLWriter-1.0.0-min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/planet_xgmml.js') }}"></script>
 <script src="{{ url_for('static', filename='js/planet_svg.js') }}"></script>
