@@ -15,7 +15,7 @@ WTF_CSRF_ENABLED = False
 SECRET_KEY = 'DragonsLiveHere'
 
 # Login settings + admin account
-LOGIN_ENABLED = False
+LOGIN_ENABLED = True
 ADMIN_PASSWORD = 'admin'
 ADMIN_EMAIL = 'admin@web.com'
 

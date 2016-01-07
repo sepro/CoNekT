@@ -163,6 +163,7 @@ class WebsiteTest(TestCase):
             if not compound:
                 self.assertTrue('data' in node.keys())
                 self.assertTrue('family_color' in node['data'].keys())
+                self.assertTrue('lc_label' in node['data'].keys())
                 self.assertTrue('lc_color' in node['data'].keys())
                 self.assertTrue('lc_shape' in node['data'].keys())
                 self.assertTrue('family_name' in node['data'].keys())

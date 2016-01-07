@@ -138,6 +138,7 @@ class CytoscapeHelper:
                     node["data"]["family_color"] = fam_to_shape_and_color[node["data"]["gene_id"]][1]
                     node["data"]["family_shape"] = fam_to_shape_and_color[node["data"]["gene_id"]][0]
                 if node["data"]["gene_id"] in both_to_shape_and_color:
+                    node["data"]["lc_label"] = both_to_shape_and_color[node["data"]["gene_id"]][2]
                     node["data"]["lc_color"] = both_to_shape_and_color[node["data"]["gene_id"]][1]
                     node["data"]["lc_shape"] = both_to_shape_and_color[node["data"]["gene_id"]][0]
 
