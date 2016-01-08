@@ -106,6 +106,7 @@ cy = cytoscape({
             family = n.data('family_name')
             lc_color = n.data('lc_color');
             lc_shape = n.data('lc_shape');
+            lc_label = n.data('lc_label');
 
             if (!(family_color in svg_families)) {
                 svg_families[family_color] = []
@@ -115,12 +116,12 @@ cy = cytoscape({
             if (!(lc_color in svg_labels)) {
                 svg_labels[lc_color] = []
             }
-            svg_labels[lc_color][lc_shape] = family;
+            svg_labels[lc_color][lc_shape] = lc_label;
 
         }); //end cy.nodes.forEach
 
-        console.log(svg_families);
-        console.log(svg_labels);
+        generate_legend(svg_labels, 'lc_color');
+        generate_legend(svg_families, 'family_color');
   }
 });
 
