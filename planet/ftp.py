@@ -5,7 +5,7 @@ import os
 import gzip
 import csv
 
-from planet import db
+from planet import create_app, db
 from planet.models.species import Species
 from planet.models.sequences import Sequence
 from planet.models.relationships import SequenceGOAssociation, SequenceFamilyAssociation
@@ -231,12 +231,15 @@ def export_ftp_data():
     """
     Export all data
     """
-    export_coding_sequences()
-    export_protein_sequences()
+    app = create_app('config')
 
-    export_go_annotation()
-    export_interpro_annotation()
+    with app.app_context():
+        export_coding_sequences()
+        export_protein_sequences()
 
-    export_families()
-    export_coexpression_clusters()
-    export_expression_networks()
+        export_go_annotation()
+        export_interpro_annotation()
+
+        export_families()
+        export_coexpression_clusters()
+        export_expression_networks()
