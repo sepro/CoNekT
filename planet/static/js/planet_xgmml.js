@@ -63,8 +63,8 @@ function writeXGMML(data) {
         xw.writeAttributeString( 'value', '#ffffff');
         xw.writeEndElement();
 
-        data.nodes.forEach( function(node) {
-              if (!node.data.compound)
+        data.nodes().forEach( function(node) {
+              if (!node.data('compound'))
               {
                   xw.writeStartElement( 'node' );
                   xw.writeAttributeString( 'id', node.data('id') );
@@ -82,8 +82,8 @@ function writeXGMML(data) {
                         xw.writeAttributeString( 'width', '1' );
                         xw.writeAttributeString( 'fill', __convertColor(node.renderedStyle('background-color')) );
                         xw.writeAttributeString( 'outline', "#000000" );
-                        xw.writeAttributeString( 'x', node.position.x);
-                        xw.writeAttributeString( 'y', node.position.y);
+                        xw.writeAttributeString( 'x', node.position('x'));
+                        xw.writeAttributeString( 'y', node.position('y'));
                         xw.writeAttributeString( 'h', '30.0');
                         xw.writeAttributeString( 'w', '30.0');
                         xw.writeAttributeString( 'type', __convertShape(node.renderedStyle('shape')) );
@@ -112,7 +112,7 @@ function writeXGMML(data) {
               }
         });
 
-        data.edges.forEach( function(edge) {
+        data.edges().forEach( function(edge) {
             xw.writeStartElement( 'edge' );
             xw.writeAttributeString( 'id', edge.data('id') );
             xw.writeAttributeString( 'label', edge.data('id') );

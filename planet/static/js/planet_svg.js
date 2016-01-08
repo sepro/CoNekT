@@ -34,20 +34,19 @@ function writeSVG(data) {
     var margin = 100;
 
     var node_positions = new Array();
-    data.elements.nodes.forEach( function(node) {
+    data.nodes().forEach( function(node) {
+        node_positions[node.data('id')] = new Array();
+        node_positions[node.data('id')]["x"] = node.position('x');
+        node_positions[node.data('id')]["y"] = node.position('y');
 
-        node_positions[node.data.id] = new Array();
-        node_positions[node.data.id]["x"] = node.position.x;
-        node_positions[node.data.id]["y"] = node.position.y;
-
-        if (node.position.x > max_x) { max_x = node.position.x}
-        if (node.position.y > max_y) { max_y = node.position.y}
+        if (node.position('x') > max_x) { max_x = node.position('x')}
+        if (node.position('y') > max_y) { max_y = node.position('y')}
         
-        if (min_x === null) {min_x =  node.position.x;}
-        if (min_y === null) {min_y =  node.position.y;}
+        if (min_x === null) {min_x =  node.position('x');}
+        if (min_y === null) {min_y =  node.position('y');}
         
-        if (node.position.x < min_x) { min_x = node.position.x}
-        if (node.position.y < min_y) { min_y = node.position.y}
+        if (node.position('x') < min_x) { min_x = node.position('x')}
+        if (node.position('y') < min_y) { min_y = node.position('y')}
         
     });
 
@@ -64,58 +63,56 @@ function writeSVG(data) {
 
     var network = svg.g().transform('translate', (-min_x)+margin, (-min_y)+margin);
 
-    data.elements.edges.forEach( function(edge) {
-        if (edge.data.homology)
+    data.edges().forEach( function(edge) {
+        if (edge.data('homology'))
         {
-            network.line({  x1:node_positions[edge.data.source]["x"],
-                        y1:node_positions[edge.data.source]["y"],
-                        x2:node_positions[edge.data.target]["x"],
-                        y2:node_positions[edge.data.target]["y"],
-                        stroke: __convertColor(edge.data.current_color),
-                        'stroke-width': edge.data.current_width.replace('px', ''),
+            network.line({  x1:node_positions[edge.data('source')]["x"],
+                        y1:node_positions[edge.data('source')]["y"],
+                        x2:node_positions[edge.data('target')]["x"],
+                        y2:node_positions[edge.data('target')]["y"],
+                        stroke: __convertColor(edge.renderedStyle('line-color')),
+                        'stroke-width': edge.renderedStyle('width').replace('px', ''),
                         'stroke-dasharray': '5,5'})
         } else {
-            network.line({  x1:node_positions[edge.data.source]["x"],
-                        y1:node_positions[edge.data.source]["y"],
-                        x2:node_positions[edge.data.target]["x"],
-                        y2:node_positions[edge.data.target]["y"],
-                        stroke: __convertColor(edge.data.current_color),
-                        'stroke-width': edge.data.current_width.replace('px', '')})
+            network.line({  x1:node_positions[edge.data('source')]["x"],
+                        y1:node_positions[edge.data('source')]["y"],
+                        x2:node_positions[edge.data('target')]["x"],
+                        y2:node_positions[edge.data('target')]["y"],
+                        stroke: __convertColor(edge.renderedStyle('line-color')),
+                        'stroke-width': edge.renderedStyle('width').replace('px', '')})
         }
-
-
     });
 
-    data.elements.nodes.forEach( function(node) {
-        if (!node.data.compound) {
+    data.nodes().forEach( function(node) {
+        if (!node.data('compound')) {
             var group = network.g();
-            group.transform('translate', node.position.x, node.position.y)
-            if (node.data.current_shape === 'ellipse') {
-                group.circle({r:15, fill:__convertColor(node.data.current_color)});
-            } else if (node.data.current_shape === 'rectangle') {
-                group.rect({x:-15, y:-15, width:30, height:30, fill:__convertColor(node.data.current_color)});
-            } else if (node.data.current_shape === 'roundrectangle') {
-                group.rect({x:-15, y:-15, rx:5, ry:5, width:30, height:30, fill:__convertColor(node.data.current_color)});
-            } else if (node.data.current_shape === 'triangle') {
-                group.polygon({points:'0,-20 17,10 -17,10', fill:__convertColor(node.data.current_color)});
-            } else if (node.data.current_shape === 'hexagon') {
-                group.polygon({points:'0,15 13,7.5 13,-7.5 0,-15 -13,-7.5 -13,7.5', fill:__convertColor(node.data.current_color)})
+            group.transform('translate', node.position('x'), node.position('y'))
+            if (node.renderedStyle('shape') === 'ellipse') {
+                group.circle({r:15, fill:__convertColor(node.renderedStyle('background-color'))});
+            } else if (node.renderedStyle('shape') === 'rectangle') {
+                group.rect({x:-15, y:-15, width:30, height:30, fill:__convertColor(node.renderedStyle('background-color'))});
+            } else if (node.renderedStyle('shape') === 'roundrectangle') {
+                group.rect({x:-15, y:-15, rx:5, ry:5, width:30, height:30, fill:__convertColor(node.renderedStyle('background-color'))});
+            } else if (node.renderedStyle('shape') === 'triangle') {
+                group.polygon({points:'0,-20 17,10 -17,10', fill:__convertColor(node.renderedStyle('background-color'))});
+            } else if (node.renderedStyle('shape') === 'hexagon') {
+                group.polygon({points:'0,15 13,7.5 13,-7.5 0,-15 -13,-7.5 -13,7.5', fill:__convertColor(node.renderedStyle('background-color'))})
                     .transform('rotate', 30);
-            } else if (node.data.current_shape === 'octagon') {
-                group.polygon({points:'0,15 10.6,10.6 15,0 10.6,-10.6 0,-15 -10.6,-10.6 -15,0 -10.6,10.6', fill:__convertColor(node.data.current_color)})
+            } else if (node.renderedStyle('shape') === 'octagon') {
+                group.polygon({points:'0,15 10.6,10.6 15,0 10.6,-10.6 0,-15 -10.6,-10.6 -15,0 -10.6,10.6', fill:__convertColor(node.renderedStyle('background-color'))})
                     .transform('rotate', 22.5);
-            } else if (node.data.current_shape === 'vee') {
-                group.polygon({points:'0,20 17,-10 0,0 -17,-10', fill:__convertColor(node.data.current_color)});
-            } else if (node.data.current_shape === 'diamond') {
-                group.rect({x:-13, y:-13, width:26, height:26, fill:__convertColor(node.data.current_color)})
+            } else if (node.renderedStyle('shape') === 'vee') {
+                group.polygon({points:'0,20 17,-10 0,0 -17,-10', fill:__convertColor(node.renderedStyle('background-color'))});
+            } else if (node.renderedStyle('shape') === 'diamond') {
+                group.rect({x:-13, y:-13, width:26, height:26, fill:__convertColor(node.renderedStyle('background-color'))})
                 .transform('rotate', 45);
-            } else if (node.data.current_shape === 'rhomboid') {
-                group.rect({x:-13, y:-15, width:26, height:30, fill:__convertColor(node.data.current_color)})
+            } else if (node.renderedStyle('shape') === 'rhomboid') {
+                group.rect({x:-13, y:-15, width:26, height:30, fill:__convertColor(node.renderedStyle('background-color'))})
                 .transform('skewX', 30);
             }
 
-            text = node.data.name;
-            if (node.data.gene_name !== '') { text = node.data.gene_name; }
+            text = node.data('name');
+            if (node.data('gene_name') !== '') { text = node.data('gene_name'); }
 
             group.text({y:6, fill:"none", stroke:'#888888'}).content(text)
                 .attr('text-anchor', 'middle')

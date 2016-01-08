@@ -309,19 +309,8 @@ $('#cy-download-xgmml').click(function(ev) {
 
 $('#cy-download-svg').click(function(ev) {
   ev.preventDefault();
-  var eles = cy.elements();
 
-  eles.each( function(i, ele) {
-    if (ele.isNode()) {
-      ele.data('current_color', ele.renderedStyle('background-color'));
-      ele.data('current_shape', ele.renderedStyle('shape'));
-    } else if (ele.isEdge()) {
-      ele.data('current_color', ele.renderedStyle('line-color'));
-      ele.data('current_width', ele.renderedStyle('width'));
-    }
-  });
-
-  svg = writeSVG(cy.json());
+  svg = writeSVG(cy);
 
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(svg));
