@@ -113,8 +113,12 @@ function generate_legend(label_set, attribute) {
         }
     }
 
-    var total_height = parseInt(((row+1)*VSPACE + MARGIN_TOP*2)/3.779527559);
-    var document_height = parseInt(svg_legend.attr('height').replace('mm',''));
-
-    if (total_height > document_height) { svg_legend.attr('height', total_height + 'mm'); }
+    var total_height = parseInt((row*VSPACE + MARGIN_TOP));
+    var document_height = parseInt(svg_legend.attr('height').replace('px',''));
+    if (total_height > document_height) {
+        var viewbox = svg_legend.attr('viewBox');
+        console.log(viewbox);
+        svg_legend.attr('viewBox', '0 0 750 ' + total_height);
+        svg_legend.attr('height', total_height + 'px');
+    }
 }
