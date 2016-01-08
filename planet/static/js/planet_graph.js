@@ -297,19 +297,8 @@ $('#cy-download-jsoncy').click(function(ev) {
 
 $('#cy-download-xgmml').click(function(ev) {
   ev.preventDefault();
-  var eles = cy.elements();
 
-  eles.each( function(i, ele) {
-    if (ele.isNode()) {
-      ele.data('current_color', ele.renderedStyle('background-color'));
-      ele.data('current_shape', ele.renderedStyle('shape'));
-    } else if (ele.isEdge()) {
-      ele.data('current_color', ele.renderedStyle('line-color'));
-      ele.data('current_width', ele.renderedStyle('width'));
-    }
-  });
-
-  xgmml = writeXGMML(cy.json());
+  xgmml = writeXGMML(cy);
 
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(xgmml));

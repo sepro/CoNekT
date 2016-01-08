@@ -117,7 +117,6 @@ function generate_legend(label_set, attribute) {
     var document_height = parseInt(svg_legend.attr('height').replace('px',''));
     if (total_height > document_height) {
         var viewbox = svg_legend.attr('viewBox');
-        console.log(viewbox);
         svg_legend.attr('viewBox', '0 0 750 ' + total_height);
         svg_legend.attr('height', total_height + 'px');
     }

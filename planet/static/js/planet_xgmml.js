@@ -63,30 +63,30 @@ function writeXGMML(data) {
         xw.writeAttributeString( 'value', '#ffffff');
         xw.writeEndElement();
 
-        data.elements.nodes.forEach( function(node) {
+        data.nodes.forEach( function(node) {
               if (!node.data.compound)
               {
                   xw.writeStartElement( 'node' );
-                  xw.writeAttributeString( 'id', node.data.id );
-                  xw.writeAttributeString( 'label', node.data.name );
+                  xw.writeAttributeString( 'id', node.data('id') );
+                  xw.writeAttributeString( 'label', node.data('name') );
                   xw.writeAttributeString( 'name', 'base' );
 
                         xw.writeStartElement( 'att' );
                         xw.writeAttributeString( 'label', 'gene_name' );
                         xw.writeAttributeString( 'name', 'gene_name' );
-                        xw.writeAttributeString( 'value', node.data.gene_name );
+                        xw.writeAttributeString( 'value', node.data('gene_name') );
                         xw.writeAttributeString( 'type', 'string');
                         xw.writeEndElement();
 
                         xw.writeStartElement( 'graphics' );
                         xw.writeAttributeString( 'width', '1' );
-                        xw.writeAttributeString( 'fill', __convertColor(node.data.current_color) );
+                        xw.writeAttributeString( 'fill', __convertColor(node.renderedStyle('background-color')) );
                         xw.writeAttributeString( 'outline', "#000000" );
                         xw.writeAttributeString( 'x', node.position.x);
                         xw.writeAttributeString( 'y', node.position.y);
                         xw.writeAttributeString( 'h', '30.0');
                         xw.writeAttributeString( 'w', '30.0');
-                        xw.writeAttributeString( 'type', __convertShape(node.data.current_shape) );
+                        xw.writeAttributeString( 'type', __convertShape(node.renderedStyle('shape')) );
 
                             xw.writeStartElement( 'att' );
                             xw.writeAttributeString( 'name', 'cytoscapeNodeGraphicsAttributes' );
@@ -112,17 +112,17 @@ function writeXGMML(data) {
               }
         });
 
-        data.elements.edges.forEach( function(edge) {
+        data.edges.forEach( function(edge) {
             xw.writeStartElement( 'edge' );
-            xw.writeAttributeString( 'id', edge.data.id );
-            xw.writeAttributeString( 'label', edge.data.id );
-            xw.writeAttributeString( 'source', edge.data.source );
-            xw.writeAttributeString( 'target', edge.data.target );
+            xw.writeAttributeString( 'id', edge.data('id') );
+            xw.writeAttributeString( 'label', edge.data('id') );
+            xw.writeAttributeString( 'source', edge.data('source') );
+            xw.writeAttributeString( 'target', edge.data('target') );
 
                 xw.writeStartElement( 'graphics' );
-                xw.writeAttributeString( 'width', edge.data.current_width.replace('px', '') );
-                xw.writeAttributeString( 'fill', __convertColor(edge.data.current_color) );
-                if (edge.data.homology) {
+                xw.writeAttributeString( 'width', edge.renderedStyle('width').replace('px', '') );
+                xw.writeAttributeString( 'fill', __convertColor(edge.renderedStyle('line-color')) );
+                if (edge.data('homology')) {
                     xw.writeAttributeString( 'EDGE_LINE_TYPE', 'LONG_DASH' );
                 }
                 xw.writeEndElement();
