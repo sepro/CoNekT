@@ -7,7 +7,7 @@ var MARGIN_TOP = 150
 var MARGIN_LEFT = 50
 var HSPACE = 120
 var VSPACE = 80
-var COLS = 5
+var COLS = 6
 var MAX_LABELS = 3
 
 $(function() {
@@ -112,4 +112,9 @@ function generate_legend(label_set, attribute) {
             }
         }
     }
+
+    var total_height = parseInt(((row+1)*VSPACE + MARGIN_TOP*2)/3.779527559);
+    var document_height = parseInt(svg_legend.attr('height').replace('mm',''));
+
+    if (total_height > document_height) { svg_legend.attr('height', total_height + 'mm'); }
 }
