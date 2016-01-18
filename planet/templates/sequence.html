@@ -258,6 +258,33 @@
                 {% endif %}
             </div>
         </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">ECC</div>
+                <div class="panel-scroll">
+                <div class="table-responsive">
+                    <table class="table  table-striped" id="ecc_query_table">
+                        <thead>
+                            <tr>
+                                <th data-sort="string-ins">Query</th>
+                                <th data-sort="string-ins">Target</th>
+                                <th data-sort="string-ins">ECC score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ecc_query_association in sequence.ecc_query_associations %}
+                            <tr>
+                                <td>{{ ecc_query_association.query.name }}</td>
+                                <td>{{ ecc_query_association.target.name }}</td>
+                                <td>{{ ecc_query_association.ecc }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 <div class="modal" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel">

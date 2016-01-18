@@ -31,12 +31,15 @@ class Sequence(db.Model):
     coexpression_clusters = db.relationship('CoexpressionCluster', secondary=sequence_coexpression_cluster,
                                             lazy='dynamic')
 
-    ecc_targets = db.relationship('Sequence',
-                                  secondary=sequence_sequence_ecc,
-                                  primaryjoin=(sequence_sequence_ecc.c.query_id == id),
-                                  secondaryjoin=(sequence_sequence_ecc.c.target_id == id),
-                                  backref=db.backref('is_ecc_query', lazy='dynamic'),
-                                  lazy='dynamic')
+    ecc_query_associations = db.relationship('SequenceSequenceECCAssociation',
+                                             primaryjoin=(sequence_sequence_ecc.c.query_id == id),
+                                             backref=db.backref('query', lazy='joined'),
+                                             lazy='dynamic')
+
+    ecc_target_associations = db.relationship('SequenceSequenceECCAssociation',
+                                              primaryjoin=(sequence_sequence_ecc.c.target_id == id),
+                                              backref=db.backref('target', lazy='joined'),
+                                              lazy='dynamic')
 
     xrefs = db.relationship('XRef', secondary=sequence_xref, lazy='joined')
 
