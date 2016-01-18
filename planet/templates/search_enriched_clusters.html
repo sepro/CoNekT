@@ -51,7 +51,7 @@
                     <div class="panel-body">
                         <form method="POST"  action="{{ url_for('search.search_enriched_clusters') }}"  role="form">
                             {{ form.csrf_token }}
-                            <label>GO</label>
+                            <label><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr></label>
                             {{form.go_term(class_="form-control typeahead") }}<br />
                             <label>Cluster Method</label>
                             {{form.method(class_="form-control") }}<br />
