@@ -38,6 +38,12 @@ sequence_xref = db.Table('sequence_xref',
                          db.Column('xref_id', db.Integer, db.ForeignKey('xrefs.id'), index=True)
                          )
 
+sequence_sequence_ecc = db.Table('sequence_sequence_ecc',
+                                 db.Column('id', db.Integer, primary_key=True),
+                                 db.Column('query_id', db.Integer, db.ForeignKey('sequences.id'), index=True),
+                                 db.Column('target_id', db.Integer, db.ForeignKey('sequences.id'), index=True)
+                                 )
+
 family_xref = db.Table('family_xref',
                        db.Column('id', db.Integer, primary_key=True),
                        db.Column('gene_family_id', db.Integer, db.ForeignKey('gene_families.id'), index=True),
@@ -81,6 +87,7 @@ class CoexpressionClusterSimilarity(db.Model):
 
     gene_family_method = db.relationship('GeneFamilyMethod', lazy='joined')
 
+
 class SequenceFamilyAssociation(db.Model):
     __tablename__ = 'sequence_family'
     __table_args__ = {'extend_existing': True}
@@ -118,6 +125,24 @@ class SequenceGOAssociation(db.Model):
                                  'ISS', 'ISO', 'ISA', 'ISM', 'IGC', 'IBA', 'IBD', 'IKR', 'IRD', 'RCA',
                                  'TAS', 'NAS', 'IC', 'ND', 'IEA', name='evidence'))
     source = db.Column(db.Text)
+
+
+class SequenceSequenceECCAssociation(db.Model):
+    __tablename__ = 'sequence_sequence_ecc'
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    query_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
+    target_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
+
+    ecc = db.Column(db.Float)
+    p_value = db.Column(db.Float)
+    corrected_p_value = db.Column(db.Float)
+
+    gene_family_method_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id'))
+
+    gene_family_method = db.relationship('GeneFamilyMethod', lazy='joined')
 
 
 class ClusterGOEnrichment(db.Model):

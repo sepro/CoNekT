@@ -1,7 +1,7 @@
 from planet import db
 
 from planet.models.relationships import sequence_go, sequence_interpro, sequence_family, sequence_coexpression_cluster
-from planet.models.relationships import sequence_xref
+from planet.models.relationships import sequence_xref, sequence_sequence_ecc
 from utils.sequence import translate
 from config import SQL_COLLATION
 
@@ -30,6 +30,13 @@ class Sequence(db.Model):
     families = db.relationship('GeneFamily', secondary=sequence_family, lazy='dynamic')
     coexpression_clusters = db.relationship('CoexpressionCluster', secondary=sequence_coexpression_cluster,
                                             lazy='dynamic')
+
+    ecc_targets = db.relationship('Sequence',
+                                  secondary=sequence_sequence_ecc,
+                                  primaryjoin=(sequence_sequence_ecc.c.query_id == id),
+                                  secondaryjoin=(sequence_sequence_ecc.c.target_id == id),
+                                  backref=db.backref('is_ecc_query', lazy='dynamic'),
+                                  lazy='dynamic')
 
     xrefs = db.relationship('XRef', secondary=sequence_xref, lazy='joined')
 
