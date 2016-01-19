@@ -258,7 +258,7 @@
                 {% endif %}
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="col-lg-8 col-md-12 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">ECC</div>
                 <div class="panel-scroll">
@@ -266,17 +266,23 @@
                     <table class="table  table-striped" id="ecc_query_table">
                         <thead>
                             <tr>
-                                <th data-sort="string-ins">Query</th>
+                                <!--<th data-sort="string-ins">Query</th>-->
                                 <th data-sort="string-ins">Target</th>
-                                <th data-sort="string-ins">ECC score</th>
+                                <th data-sort="float">ECC score</th>
+                                <th data-sort="float">p-value</th>
+                                <th data-sort="float">corrected p-value</th>
+                                <th data-sort="string-ins">gene family method</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for ecc_query_association in sequence.ecc_query_associations %}
                             <tr>
-                                <td>{{ ecc_query_association.query.name }}</td>
-                                <td>{{ ecc_query_association.target.name }}</td>
+                                <!--<td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.query_id) }}">{{ ecc_query_association.query.name }}</a></td>-->
+                                <td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.target_id) }}">{{ ecc_query_association.target.name }}</a></td>
                                 <td>{{ ecc_query_association.ecc }}</td>
+                                <td>{{ ecc_query_association.p_value }}</td>
+                                <td>{{ ecc_query_association.corrected_p_value }}</td>
+                                <td>{{ ecc_query_association.gene_family_method.method }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>

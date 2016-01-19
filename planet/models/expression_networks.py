@@ -1,7 +1,7 @@
 from flask import url_for
 from config import SQL_COLLATION
 from planet import db
-from planet.models.relationships import SequenceFamilyAssociation
+from planet.models.relationships import SequenceFamilyAssociation, SequenceSequenceECCAssociation
 from planet.models.gene_families import GeneFamily
 
 from utils.jaccard import jaccard
@@ -95,15 +95,46 @@ class ExpressionNetworkMethod(db.Model):
 
             family_sequence[int(family)].append(int(sequence))
 
+        # TODO: Determine threshold and p-value
+
+        threshhold = 0.75
+
         # Data loaded start calculating ECCs
+        new_ecc_scores = []
+
         for family, sequences in family_sequence.items():
-            for query in sequences:
-                for target in sequences:
+            for i in range(len(sequences) - 1):
+                query = sequences[i]
+                for j in range(i+1, len(sequences)):
+                    target = sequences[j]
                     if query in sequence_network.keys() and target in sequence_network.keys() and query != target:
                         ecc = ExpressionNetworkMethod.__ecc(sequence_network[query],
                                                             sequence_network[target],
                                                             sequence_family)
-                        print(target, query, ecc)
+                        if threshhold < ecc:
+                            new_ecc_scores.append({
+                                'query_id': query,
+                                'target_id': target,
+                                'ecc': ecc,
+                                'gene_family_method_id': gene_family_method_id,
+                                'query_network_method_id': sequence_network_method[query],
+                                'target_network_method_id': sequence_network_method[target],
+                            })
+
+                            # add reciprocal relation
+                            new_ecc_scores.append({
+                                'query_id': target,
+                                'target_id': query,
+                                'ecc': ecc,
+                                'gene_family_method_id': gene_family_method_id,
+                                'query_network_method_id': sequence_network_method[target],
+                                'target_network_method_id': sequence_network_method[query],
+                            })
+                            if len(new_ecc_scores) > 400:
+                                db.engine.execute(SequenceSequenceECCAssociation.__table__.insert(), new_ecc_scores)
+                                new_ecc_scores = []
+
+        db.engine.execute(SequenceSequenceECCAssociation.__table__.insert(), new_ecc_scores)
 
     @staticmethod
     def __ecc(q_network, t_network, families):
@@ -114,7 +145,7 @@ class ExpressionNetworkMethod(db.Model):
         :param q_network: network for the query gene
         :param t_network: network for the target gene
         :param families: dictionary that links a sequence (key) to a family (value)
-        :return: the ECC score
+        :return: the ECC score for the two input neighborhoods given the families
         """
         q_data = json.loads(q_network)
         t_data = json.loads(t_network)
