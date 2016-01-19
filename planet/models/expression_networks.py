@@ -43,6 +43,16 @@ class ExpressionNetworkMethod(db.Model):
             db.session.rollback()
             print(e)
 
+    @staticmethod
+    def calculate_ecc(network_method_ids, gene_family_method_id):
+        """
+        Function to calculate the ECC scores in and between genes of different networks
+
+        :param network_method_ids: array of networks to compare
+        :param gene_family_method_id: internal id of the type of family methods to be used for the comparison
+        """
+        pass
+
 
 class ExpressionNetwork(db.Model):
     __tablename__ = 'expression_networks'

@@ -141,8 +141,16 @@ class SequenceSequenceECCAssociation(db.Model):
     corrected_p_value = db.Column(db.Float)
 
     gene_family_method_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id'))
+    query_network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'))
+    target_network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'))
 
     gene_family_method = db.relationship('GeneFamilyMethod', lazy='joined')
+    query_expression_network_method = db.relationship('ExpressionNetworkMethod',
+                                                      foreign_keys=[query_network_method_id],
+                                                      lazy='joined')
+    target_expression_network_method = db.relationship('ExpressionNetworkMethod',
+                                                       foreign_keys=[target_network_method_id],
+                                                       lazy='joined')
 
 
 class ClusterGOEnrichment(db.Model):
