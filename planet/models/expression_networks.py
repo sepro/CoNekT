@@ -1,9 +1,14 @@
 from flask import url_for
-from sqlalchemy import and_
 from config import SQL_COLLATION
 from planet import db
+from planet.models.relationships import SequenceFamilyAssociation
+from planet.models.gene_families import GeneFamily
+
+from utils.jaccard import jaccard
+from utils.benchmark import benchmark
 
 import json
+from sqlalchemy import and_
 
 
 class ExpressionNetworkMethod(db.Model):
@@ -44,14 +49,74 @@ class ExpressionNetworkMethod(db.Model):
             print(e)
 
     @staticmethod
+    @benchmark
     def calculate_ecc(network_method_ids, gene_family_method_id):
         """
         Function to calculate the ECC scores in and between genes of different networks
 
-        :param network_method_ids: array of networks to compare
+        ORM free method for speed !
+
+        :param network_method_ids: array of networks (using their internal id !) to compare
         :param gene_family_method_id: internal id of the type of family methods to be used for the comparison
         """
-        pass
+
+        sequence_network = {}
+        sequence_family = {}
+        family_sequence = {}
+
+        # Get all the network information and store in dictionary
+        for n in network_method_ids:
+            print(n)
+            current_network = db.engine.execute(db.select([ExpressionNetwork.__table__.c.sequence_id,
+                                                       ExpressionNetwork.__table__.c.network]).
+                                                   where(ExpressionNetwork.__table__.c.method_id == n).
+                                                   where(ExpressionNetwork.__table__.c.sequence_id != None)
+                                                ).fetchall()
+
+            for sequence, network in current_network:
+                sequence_network[int(sequence)] = network
+
+        # Get family data and store in dictionary
+        current_families = db.engine.execute(db.select([SequenceFamilyAssociation.__table__.c.sequence_id,
+                                                        SequenceFamilyAssociation.__table__.c.gene_family_id,
+                                                        GeneFamily.__table__.c.method_id]).
+                                             select_from(SequenceFamilyAssociation.__table__.join(GeneFamily.__table__)).
+                                             where(GeneFamily.__table__.c.method_id == gene_family_method_id)
+                                             ).fetchall()
+
+        for sequence, family, method in current_families:
+            sequence_family[int(sequence)] = int(family)
+
+            if family not in family_sequence.keys():
+                family_sequence[int(family)] = []
+
+            family_sequence[int(family)].append(int(sequence))
+
+        # Data loaded start calculating ECCs
+        for family, sequences in family_sequence.items():
+            for query in sequences:
+                for target in sequences:
+                    if query in sequence_network.keys() and target in sequence_network.keys() and query != target:
+                        ecc = ExpressionNetworkMethod.__ecc(sequence_network[query],
+                                                            sequence_network[target],
+                                                            sequence_family)
+                        print(target, query, ecc)
+
+    @staticmethod
+    def __ecc(q_network, t_network, families):
+        q_data = json.loads(q_network)
+        t_data = json.loads(t_network)
+
+        q_genes = [t['gene_id'] for t in q_data if t['gene_id'] is not None]
+        t_genes = [t['gene_id'] for t in t_data if t['gene_id'] is not None]
+
+        q_families = [families[q] for q in q_genes if q in families.keys()]
+        t_families = [families[t] for t in t_genes if t in families.keys()]
+
+        if len(q_families) == 0 or len(t_families) == 0:
+            return 0.0
+        else:
+            return jaccard(q_families, t_families)
 
 
 class ExpressionNetwork(db.Model):
