@@ -61,6 +61,7 @@ class ExpressionNetworkMethod(db.Model):
         """
 
         sequence_network = {}
+        sequence_network_method = {}
         sequence_family = {}
         family_sequence = {}
 
@@ -68,13 +69,15 @@ class ExpressionNetworkMethod(db.Model):
         for n in network_method_ids:
             print(n)
             current_network = db.engine.execute(db.select([ExpressionNetwork.__table__.c.sequence_id,
-                                                       ExpressionNetwork.__table__.c.network]).
+                                                           ExpressionNetwork.__table__.c.network,
+                                                           ExpressionNetwork.__table__.c.method_id]).
                                                    where(ExpressionNetwork.__table__.c.method_id == n).
                                                    where(ExpressionNetwork.__table__.c.sequence_id != None)
                                                 ).fetchall()
 
-            for sequence, network in current_network:
+            for sequence, network, network_method_id in current_network:
                 sequence_network[int(sequence)] = network
+                sequence_network_method[int(sequence)] = int(network_method_id)
 
         # Get family data and store in dictionary
         current_families = db.engine.execute(db.select([SequenceFamilyAssociation.__table__.c.sequence_id,
@@ -104,6 +107,15 @@ class ExpressionNetworkMethod(db.Model):
 
     @staticmethod
     def __ecc(q_network, t_network, families):
+        """
+        Takes the networks neighborhoods (as stored in the databases), extracts the genes and find the families for
+        each gene. Next the ECC score is calculated
+
+        :param q_network: network for the query gene
+        :param t_network: network for the target gene
+        :param families: dictionary that links a sequence (key) to a family (value)
+        :return: the ECC score
+        """
         q_data = json.loads(q_network)
         t_data = json.loads(t_network)
 
