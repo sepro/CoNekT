@@ -98,7 +98,7 @@ class ExpressionNetworkMethod(db.Model):
 
         # TODO: Determine threshold and p-value
         print("Starting permutation tests")
-        thresholds = ExpressionNetworkMethod.__set_threshholds(list(sequence_family.values()), max_size=10)
+        thresholds = ExpressionNetworkMethod.__set_threshholds(list(sequence_family.values()), max_size=30)
         print(thresholds)
 
         # Data loaded start calculating ECCs
@@ -110,15 +110,15 @@ class ExpressionNetworkMethod(db.Model):
                 for j in range(i+1, len(sequences)):
                     target = sequences[j]
                     if query in sequence_network.keys() and target in sequence_network.keys() and query != target:
-                        ecc, p_value = ExpressionNetworkMethod.__ecc(sequence_network[query],
-                                                                     sequence_network[target],
-                                                                     sequence_family)
-                        if ecc > 0.75:
+                        ecc, significant = ExpressionNetworkMethod.__ecc(sequence_network[query],
+                                                                         sequence_network[target],
+                                                                         sequence_family,
+                                                                         thresholds, max_size=30)
+                        if significant:
                             new_ecc_scores.append({
                                 'query_id': query,
                                 'target_id': target,
                                 'ecc': ecc,
-                                'p_value': p_value,
                                 'gene_family_method_id': gene_family_method_id,
                                 'query_network_method_id': sequence_network_method[query],
                                 'target_network_method_id': sequence_network_method[target],
@@ -129,7 +129,6 @@ class ExpressionNetworkMethod(db.Model):
                                 'query_id': target,
                                 'target_id': query,
                                 'ecc': ecc,
-                                'p_value': p_value,
                                 'gene_family_method_id': gene_family_method_id,
                                 'query_network_method_id': sequence_network_method[target],
                                 'target_network_method_id': sequence_network_method[query],
@@ -141,7 +140,7 @@ class ExpressionNetworkMethod(db.Model):
         db.engine.execute(SequenceSequenceECCAssociation.__table__.insert(), new_ecc_scores)
 
     @staticmethod
-    def __ecc(q_network, t_network, families):
+    def __ecc(q_network, t_network, families, threshholds, max_size=30):
         """
         Takes the networks neighborhoods (as stored in the databases), extracts the genes and find the families for
         each gene. Next the ECC score is calculated
@@ -149,7 +148,7 @@ class ExpressionNetworkMethod(db.Model):
         :param q_network: network for the query gene
         :param t_network: network for the target gene
         :param families: dictionary that links a sequence (key) to a family (value)
-        :return: the ECC score for the two input neighborhoods given the families
+        :return: the ECC score for the two input neighborhoods given the families, a boolean flag if this is significant
         """
         q_data = json.loads(q_network)
         t_data = json.loads(t_network)
@@ -161,12 +160,21 @@ class ExpressionNetworkMethod(db.Model):
         t_families = [families[t] for t in t_genes if t in families.keys()]
 
         if len(q_families) == 0 or len(t_families) == 0:
-            return 0.0, 1.0
+            return 0.0, False
         else:
-            return jaccard(q_families, t_families), 0.0
+            min_len = min([len(set(q_families)), len(set(t_families)), max_size])
+            max_len = max([len(set(q_families)), len(set(t_families))])
+            max_len = max_len if max_len < max_size else max_size
+
+            ecc = jaccard(q_families, t_families)
+
+            t = threshholds[max_len-1][min_len-1]
+
+            return ecc, ecc > t
 
     @staticmethod
-    def __set_threshholds(families, max_size=30):
+    @benchmark
+    def __set_threshholds(families, max_size=30, iterations=1000):
         thresholds = []
 
         for i in range(max_size):
@@ -174,13 +182,13 @@ class ExpressionNetworkMethod(db.Model):
             new_threshholds = []
             for j in range(i+1):
                 scores = []
-                for iterations in range(1000):
+                for iterations in range(iterations):
                     i_fams = random.sample(families, i+1)
                     j_fams = random.sample(families, j+1)
                     scores.append(jaccard(i_fams, j_fams))
 
                 scores = sorted(scores)
-                new_threshholds.append(scores[95])
+                new_threshholds.append(scores[int(iterations*0.95)])
             thresholds.append(new_threshholds)
 
         return thresholds
