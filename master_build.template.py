@@ -83,11 +83,11 @@ with app.app_context():
 
     print("Adding clades and assigning them to gene families")
     print("=================================================")
-    Clade.add_clade('Arabidopsis', ['ath'])
-    Clade.add_clade('Poplar', ['ptr'])
-    Clade.add_clade('Soy', ['gma'])
-    Clade.add_clade('Fabids', ['ptr', 'gma'])
-    Clade.add_clade('Dicots', ['ath', 'ptr', 'gma'])
+    Clade.add_clade('Arabidopsis', ['ath'], None)
+    Clade.add_clade('Poplar', ['ptr'], None)
+    Clade.add_clade('Soy', ['gma'], None)
+    Clade.add_clade('Fabids', ['ptr', 'gma'], None)
+    Clade.add_clade('Dicots', ['ath', 'ptr', 'gma'], None)
 
     Clade.update_clades()
 

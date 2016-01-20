@@ -88,3 +88,13 @@ class CoexpressionClusteringMethodAdminView(MyModelView):
     column_display_pk = True
 
     can_create = False
+
+class CladesAdminView(MyModelView):
+    """
+    CoexpressionClusteringMethod view for admins, specifies what is available in CRUD
+    """
+    form_columns = ('id', 'name', 'species', 'newick_tree')
+
+    column_display_pk = True
+
+    can_create = True

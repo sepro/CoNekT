@@ -94,6 +94,7 @@ def create_app(config):
     from planet.controllers.heatmap import heatmap
     from planet.controllers.profile_comparison import profile_comparison
     from planet.controllers.graph_comparison import graph_comparison
+    from planet.controllers.clade import clade
 
     app.register_blueprint(main)
     if LOGIN_ENABLED:
@@ -115,15 +116,17 @@ def create_app(config):
     app.register_blueprint(heatmap, url_prefix='/heatmap')
     app.register_blueprint(profile_comparison, url_prefix='/profile_comparison')
     app.register_blueprint(graph_comparison, url_prefix='/graph_comparison')
+    app.register_blueprint(clade, url_prefix='/clade')
 
     # Admin panel
     if LOGIN_ENABLED:
         from planet.admin.views import MyAdminIndexView
         from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
-            CoexpressionClusteringMethodAdminView
+            CoexpressionClusteringMethodAdminView, CladesAdminView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'))
         admin.add_view(SpeciesAdminView(Species, db.session, url='species/'))
+        admin.add_view(CladesAdminView(Clade, db.session, url='clades/'))
         admin.add_view(GeneFamilyMethodAdminView(GeneFamilyMethod, db.session, url='families/', category="Methods"))
         admin.add_view(ExpressionNetworkMethodAdminView(ExpressionNetworkMethod, db.session, url='networks/',
                                                         category="Methods"))

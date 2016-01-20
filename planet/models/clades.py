@@ -12,27 +12,29 @@ class Clade(db.Model):
     name = db.Column(db.String(50, collation=SQL_COLLATION), unique=True, index=True)
     species = db.Column(db.Text(collation=SQL_COLLATION))
     species_count = db.Column(db.Integer)
+    newick_tree = db.Column(db.Text)
 
     families = db.relationship('GeneFamily', backref='clade', lazy='dynamic')
     interpro = db.relationship('Interpro', backref='clade', lazy='dynamic')
 
-    def __init__(self, name, species):
+    def __init__(self, name, species, tree):
         self.name = name
         self.species = json.dumps(species)
         self.species_count = len(species)
+        self.newick_tree = tree
 
     def __repr__(self):
         return str(self.id) + ". " + self.name
 
     @staticmethod
-    def add_clade(name, species):
+    def add_clade(name, species, tree):
         """
         Add a clade to the database
 
         :param name: name of the clade
         :param species: list with codes (!) of the species in the clade
         """
-        new_clade = Clade(name, species)
+        new_clade = Clade(name, species, tree)
         db.session.add(new_clade)
         try:
             db.session.commit()
