@@ -141,7 +141,10 @@ class WebsiteTest(TestCase):
         db.session.add(new_association2)
         db.session.commit()
 
-        Clade.add_clade('test', ["tst"])
+        Clade.add_clade('test', ["tst"], "(test:0.01);")
+        clade = Clade.query.first()
+        clade.families.append(GeneFamily.query.first())
+        db.session.commit()
 
     def tearDown(self):
         """
@@ -680,3 +683,19 @@ class WebsiteTest(TestCase):
 
         self.assertCytoscapeJson(data)
 
+    def test_clades(self):
+        clade = Clade.query.first()
+        family = GeneFamily.query.first()
+
+        response = self.client.get('/clade/view/%d' % clade.id)
+        self.assert200(response)
+        self.assert_template_used('clade.html')
+
+        response = self.client.get('/clade/families/%d/1' % clade.id)
+        self.assert200(response)
+        self.assert_template_used('pagination/families.html')
+
+        response = self.client.get('/clade/families/table/%d' % clade.id)
+        self.assert200(response)
+        self.assert_template_used('tables/families.csv')
+        self.assertTrue(family.name in response.data.decode('utf-8'))

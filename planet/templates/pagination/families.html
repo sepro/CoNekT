@@ -1,0 +1,12 @@
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tbody>
+            {% for family in families %}
+                <tr>
+                    <td><a href="{{ url_for('family.family_view', family_id=family.id) }}">{{ family.name }}</a></td>
+                    <td>{{ family.method.method }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

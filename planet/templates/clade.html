@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block container %}
-{% import 'macros/sequence_pagination.html' as macro %}
+{% import 'macros/family_pagination.html' as macro %}
 <div class="top-pad">
 
     {% if clade %}
@@ -25,7 +25,6 @@
             </div>
         </div>
 
-        <br /><br />
 
         {% if clade.species_count > 1 %}
         <div class="row">
@@ -40,6 +39,7 @@
         </div>
         {% endif %}
 
+    {{ macro.family_pagination(url_for('clade.clade_families', clade_id=clade.id), families_count, url_for('clade.clade_families_table', clade_id=clade.id)) }}
 
     {% endif %}
 </div>
@@ -69,8 +69,9 @@
                 buildNewickNodes(newick)
 
                 d3.phylogram.build('#phylogram', newick, {
-                  width: $('#tree_panel').width()-100,
-                  height: {{ clade.species_count*30+30 }}
+                  width: $('#tree_panel').width()-160,
+                  height: {{ clade.species_count*30+30 }},
+                  skipTicks: true
                 });
               }
 
