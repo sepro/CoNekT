@@ -61,6 +61,7 @@ class ExpressionNetworkMethod(db.Model):
         :param gene_family_method_id: internal id of the type of family methods to be used for the comparison
         """
 
+        network_families = {}
         sequence_network = {}
         sequence_network_method = {}
         sequence_family = {}
@@ -96,10 +97,29 @@ class ExpressionNetworkMethod(db.Model):
 
             family_sequence[int(family)].append(int(sequence))
 
+        # Create a dict (key = network) with the families present in that network
+        # Families that occur multiple times should be present multiple times as this is used
+        # to set threshholds later !
+
+        for sequence, network_method in sequence_network_method.items():
+            # ignore sequences without a family, ideally this shouldn't happen
+            if network_method not in network_families.keys():
+                network_families[network_method] = []
+
+            if sequence in sequence_family.keys():
+                family = sequence_family[sequence]
+                network_families[network_method].append(family)
+
+
         # TODO: Determine threshold and p-value
+        thresholds = {}
         print("Starting permutation tests")
-        thresholds = ExpressionNetworkMethod.__set_threshholds(list(sequence_family.values()), max_size=30)
-        print(thresholds)
+        for n in network_method_ids:
+            thresholds[n] = {}
+            for m in network_method_ids:
+                thresholds[n][m] = ExpressionNetworkMethod.__set_thresholds(network_families[n],
+                                                                            network_families[m],
+                                                                            max_size=30)
 
         # Data loaded start calculating ECCs
         new_ecc_scores = []
@@ -113,7 +133,7 @@ class ExpressionNetworkMethod(db.Model):
                         ecc, significant = ExpressionNetworkMethod.__ecc(sequence_network[query],
                                                                          sequence_network[target],
                                                                          sequence_family,
-                                                                         thresholds, max_size=30)
+                                                                         thresholds[sequence_network_method[query]][sequence_network_method[target]], max_size=30)
                         if significant:
                             new_ecc_scores.append({
                                 'query_id': query,
@@ -140,7 +160,7 @@ class ExpressionNetworkMethod(db.Model):
         db.engine.execute(SequenceSequenceECCAssociation.__table__.insert(), new_ecc_scores)
 
     @staticmethod
-    def __ecc(q_network, t_network, families, threshholds, max_size=30):
+    def __ecc(q_network, t_network, families, thresholds, max_size=30):
         """
         Takes the networks neighborhoods (as stored in the databases), extracts the genes and find the families for
         each gene. Next the ECC score is calculated
@@ -162,29 +182,28 @@ class ExpressionNetworkMethod(db.Model):
         if len(q_families) == 0 or len(t_families) == 0:
             return 0.0, False
         else:
-            min_len = min([len(set(q_families)), len(set(t_families)), max_size])
-            max_len = max([len(set(q_families)), len(set(t_families))])
-            max_len = max_len if max_len < max_size else max_size
-
             ecc = jaccard(q_families, t_families)
 
-            t = threshholds[max_len-1][min_len-1]
+            q_size = len(set(q_families)) if len(set(q_families)) < max_size else max_size
+            t_size = len(set(t_families)) if len(set(t_families)) < max_size else max_size
+
+            t = thresholds[q_size-1][t_size-1]
 
             return ecc, ecc > t
 
     @staticmethod
     @benchmark
-    def __set_threshholds(families, max_size=30, iterations=1000):
+    def __set_thresholds(families_a, families_b, max_size=30, iterations=1000):
         thresholds = []
 
         for i in range(max_size):
             print("%d done" % i)
             new_threshholds = []
-            for j in range(i+1):
+            for j in range(max_size):
                 scores = []
                 for iterations in range(iterations):
-                    i_fams = random.sample(families, i+1)
-                    j_fams = random.sample(families, j+1)
+                    i_fams = random.sample(families_a, i+1)
+                    j_fams = random.sample(families_b, j+1)
                     scores.append(jaccard(i_fams, j_fams))
 
                 scores = sorted(scores)
