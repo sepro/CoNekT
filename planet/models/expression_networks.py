@@ -69,7 +69,6 @@ class ExpressionNetworkMethod(db.Model):
 
         # Get all the network information and store in dictionary
         for n in network_method_ids:
-            print(n)
             current_network = db.engine.execute(db.select([ExpressionNetwork.__table__.c.sequence_id,
                                                            ExpressionNetwork.__table__.c.network,
                                                            ExpressionNetwork.__table__.c.method_id]).

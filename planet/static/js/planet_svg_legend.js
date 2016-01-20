@@ -44,6 +44,16 @@ $('.cy-node-color').click(function(ev) {
     svg_legend.find('[node_color="' + $( this ).attr( 'attr' ) + '"]').attr('style', 'opacity:100');
 })
 
+$('#cy-download-svg-legend').click(function(ev) {
+  ev.preventDefault();
+
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(svg_legend));
+  element.setAttribute('download', "cytoscape_legend.svg");
+
+  element.click();
+})
+
 function generate_legend(label_set, attribute) {
     var families = svg_legend.g().transform('translate', MARGIN_LEFT, MARGIN_TOP);
     families.attr('node_color', attribute);
