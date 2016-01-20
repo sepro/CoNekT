@@ -2,6 +2,9 @@ from flask import Blueprint, redirect, url_for, render_template
 
 from planet import cache
 from planet.models.clades import Clade
+from planet.models.species import Species
+
+import json
 
 clade = Blueprint('clade', __name__)
 
@@ -24,4 +27,10 @@ def clade_view(clade_id):
     """
     current_clade = Clade.query.get_or_404(clade_id)
 
-    return render_template('clade.html', clade=current_clade)
+    species_codes = json.loads(current_clade.species)
+
+    species = Species.query.filter(Species.code.in_(species_codes)).order_by(Species.name).all()
+
+    print(species)
+
+    return render_template('clade.html', clade=current_clade, species=species)
