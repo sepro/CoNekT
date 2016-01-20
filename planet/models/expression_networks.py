@@ -110,8 +110,10 @@ class ExpressionNetworkMethod(db.Model):
                 family = sequence_family[sequence]
                 network_families[network_method].append(family)
 
+        # Determine threshold and p-value
+        # A background model will be computed for each combination of networks, an ECC score will need to be better
+        # than 95 % of the randomly found values to be considered significant
 
-        # TODO: Determine threshold and p-value
         thresholds = {}
         print("Starting permutation tests")
         for n in network_method_ids:
