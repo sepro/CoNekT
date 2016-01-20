@@ -8,7 +8,7 @@
     <h1><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='gene_family') }}" data-target="#helpModal">Gene Family</abbr>: <strong>{{ family.name }}</strong></h1>
 
     {% if family.clade_id %}
-    <p>Specific for <strong>{{ family.clade.name}}</strong></p>
+    <p>Specific for <strong><a href="{{ url_for('clade.clade_view', clade_id=family.clade_id) }}">{{ family.clade.name}}</a></strong></p>
     {% endif %}
     <p>{{ family.method.method }}</p>
     <br />
