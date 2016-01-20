@@ -263,7 +263,7 @@
                 <div class="panel-heading">ECC</div>
                 <div class="panel-scroll">
                 <div class="table-responsive">
-                    <table class="table  table-striped" id="ecc_query_table">
+                    <table class="table  table-striped" id="ecc_hits_table">
                         <thead>
                             <tr>
                                 <!--<th data-sort="string-ins">Query</th>-->
@@ -318,6 +318,7 @@ $(function () {
   $("#go_table").stupidtable();
   $("#interpro_table").stupidtable();
   $("#family_table").stupidtable();
+  $("#ecc_hits_table").stupidtable();
 
   $('[data-toggle="tooltip"]').tooltip();
   $('a[data-target=#profileModal]').click(function(ev) {
