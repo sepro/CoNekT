@@ -1,9 +1,11 @@
 $( document ).ready(function() {
-    var current_page = 1;
-    var base_url = $('#planet-pagination').attr( "base-url" );
-    var page_count = $('#planet-pagination').attr( "page-count" );
+    $('#planet-pagination').attr( "current_page", 1 );
 
-    function update(page){
+    function update(){
+        var base_url = $('#planet-pagination').attr( "base-url" );
+        var page_count = parseInt($('#planet-pagination').attr( "page-count" ));
+        var page = parseInt($('#planet-pagination').attr( "current_page"));
+
         $( "#planet-pagination" ).html('<br /><br /><div id="loading" class="pagination"><i class="fa fa-refresh fa-spin"></i></div>');
         $( "#planet-pagination" ).load( base_url + page );
 
@@ -27,31 +29,35 @@ $( document ).ready(function() {
 
     }
 
-    update(current_page);
+    update();
 
     $( "#planet-pagination-first" ).click( function () {
-        current_page = 1;
-        update(current_page);
+        $('#planet-pagination').attr( "current_page", 1);
+        update();
     });
 
     $( "#planet-pagination-last" ).click( function () {
-        current_page = page_count;
-        update(current_page);
+        var page_count = parseInt($('#planet-pagination').attr( "page-count" ));
+        $('#planet-pagination').attr( "current_page", page_count);
+        update();
     });
 
     $( "#planet-pagination-next" ).click( function () {
+        var page_count = parseInt($('#planet-pagination').attr( "page-count" ));
+        var current_page = parseInt($('#planet-pagination').attr( "current_page"));
         if (current_page < page_count)
         {
-            current_page++;
+            $('#planet-pagination').attr( "current_page", current_page + 1);
         }
-        update(current_page);
+        update();
     });
 
     $( "#planet-pagination-back" ).click( function () {
+        var current_page = parseInt($('#planet-pagination').attr( "current_page"));
         if (current_page > 1)
         {
-            current_page--;
+            $('#planet-pagination').attr( "current_page", current_page - 1);
         }
-        update(current_page);
+        update();
     });
 });
