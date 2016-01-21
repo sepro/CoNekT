@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block container %}
-{% import 'macros/sequence_pagination.html' as macro %}
+{% import 'macros/pagination.html' as macro %}
 <div class="top-pad">
 
     {% if interpro %}
@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    {{ macro.sequence_pagination(
+    {{ macro.pagination('Sequences',
         url_for('interpro.interpro_sequences', interpro_id=interpro.id),
         count,
         url_for('interpro.interpro_sequences_table', interpro_id=interpro.id)

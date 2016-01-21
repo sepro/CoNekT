@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block container %}
-{% import 'macros/sequence_pagination.html' as macro %}
+{% import 'macros/pagination.html' as macro %}
 {% import 'macros/cluster_actions.html' as ca %}
 <div class="top-pad">
 
@@ -60,7 +60,7 @@
         </div>
     </div>
 </div>
-    {{ macro.sequence_pagination(
+    {{ macro.pagination('Sequences',
         url_for('go.go_sequences', go_id=go.id),
         count,
         url_for('go.go_sequences_table', go_id=go.id)

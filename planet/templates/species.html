@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block container %}
-{% import 'macros/sequence_pagination.html' as macro %}
+{% import 'macros/pagination.html' as macro %}
 <div class="top-pad">
 
     {% if species %}
@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        {{ macro.sequence_pagination(url_for('species.species_sequences', species_id=species.id), species.sequence_count, none) }}
+        {{ macro.pagination('Sequences', url_for('species.species_sequences', species_id=species.id), species.sequence_count, none) }}
 
     {% elif all_species %}
          <h1>Species Overview</h1>

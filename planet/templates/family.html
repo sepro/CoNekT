@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block container %}
-{% import 'macros/sequence_pagination.html' as macro %}
+{% import 'macros/pagination.html' as macro %}
 <div class="top-pad">
 
     {% if family %}
@@ -54,7 +54,8 @@
         </div>
     </div>
 
-    {{ macro.sequence_pagination(
+    {{ macro.pagination(
+        'Sequences',
         url_for('family.family_sequences', family_id=family.id),
         count,
         url_for('family.family_sequences_table', family_id=family.id)

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block container %}
-{% import 'macros/sequence_pagination.html' as macro %}
+{% import 'macros/pagination.html' as macro %}
 <div class="top-pad">
 
     {% if cluster_methods %}
@@ -104,7 +104,7 @@
         </div>
 
 
-        {{ macro.sequence_pagination(
+        {{ macro.pagination('Sequences',
             url_for('expression_cluster.expression_cluster_sequences', cluster_id=cluster.id),
             sequence_count,
             url_for('expression_cluster.expression_cluster_download', cluster_id=cluster.id)
