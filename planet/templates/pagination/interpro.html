@@ -1,0 +1,12 @@
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tbody>
+            {% for i in interpro %}
+                <tr>
+                    <td><a href="{{ url_for('interpro.interpro_view', interpro_id=i.id) }}">{{ i.label }}</a></td>
+                    <td>{{ i.description }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

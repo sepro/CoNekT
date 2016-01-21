@@ -1,0 +1,4 @@
+"label","description"
+{% for i in interpro -%}
+"{{ i.label }}", "{{ i.description }}"
+{% endfor %}

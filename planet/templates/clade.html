@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
 {% block container %}
-{% import 'macros/family_pagination.html' as macro %}
+{% import 'macros/family_pagination.html' as family_macro %}
+{% import 'macros/interpro_pagination.html' as interpro_macro %}
 <div class="top-pad">
 
     {% if clade %}
@@ -39,7 +40,8 @@
         </div>
         {% endif %}
 
-    {{ macro.family_pagination(url_for('clade.clade_families', clade_id=clade.id), families_count, url_for('clade.clade_families_table', clade_id=clade.id)) }}
+    {{ family_macro.family_pagination(url_for('clade.clade_families', clade_id=clade.id), families_count, url_for('clade.clade_families_table', clade_id=clade.id)) }}
+    <!--{{ interpro_macro.interpro_pagination(url_for('clade.clade_interpro', clade_id=clade.id), interpro_count, url_for('clade.clade_interpro_table', clade_id=clade.id)) }}-->
 
     {% endif %}
 </div>

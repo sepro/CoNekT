@@ -4,6 +4,7 @@ from planet import cache
 from planet.models.clades import Clade
 from planet.models.species import Species
 from planet.models.gene_families import GeneFamily
+from planet.models.interpro import Interpro
 
 import json
 
@@ -32,9 +33,12 @@ def clade_view(clade_id):
 
     species = Species.query.filter(Species.code.in_(species_codes)).order_by(Species.name).all()
 
-    families_count = current_clade.families.count();
+    families_count = current_clade.families.count()
+    interpro_count = current_clade.interpro.count()
 
-    return render_template('clade.html', clade=current_clade, families_count=families_count, species=species)
+    return render_template('clade.html', clade=current_clade,
+                           families_count=families_count, interpro_count=interpro_count,
+                           species=species)
 
 
 @clade.route('/families/<int:clade_id>/')
@@ -57,3 +61,26 @@ def clade_families_table(clade_id):
     families = Clade.query.get(clade_id).families.order_by(GeneFamily.name)
 
     return Response(render_template('tables/families.csv', families=families), mimetype='text/plain')
+
+
+@clade.route('/interpro/<int:clade_id>/')
+@clade.route('/interpro/<int:clade_id>/<int:page>')
+@cache.cached()
+def clade_interpro(clade_id, page=1):
+
+    current_clade = Clade.query.get_or_404(clade_id)
+    interpro = current_clade.interpro.order_by(Interpro.label).paginate(page,
+                                                                        g.page_items,
+                                                                        False).items
+
+    print(interpro)
+    return render_template('pagination/interpro.html', interpro=interpro)
+
+
+@clade.route('/interpro/table/<int:clade_id>')
+@cache.cached()
+def clade_interpro_table(clade_id):
+
+    interpro = Clade.query.get(clade_id).interpro.order_by(Interpro.label)
+
+    return Response(render_template('tables/interpro.csv', interpro=interpro), mimetype='text/plain')
