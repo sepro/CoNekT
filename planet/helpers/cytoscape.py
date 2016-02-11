@@ -3,6 +3,7 @@ from sqlalchemy.orm import joinedload
 
 from planet.models.relationships import SequenceFamilyAssociation, SequenceInterproAssociation
 from planet.models.sequences import Sequence
+from planet.models.species import Species
 
 from utils.color import family_to_shape_and_color
 from copy import deepcopy
@@ -217,6 +218,23 @@ class CytoscapeHelper:
                             neighbors += 1
 
                 node["data"]["neighbors"] = neighbors
+
+        return colored_network
+
+    @staticmethod
+    def add_species_data_nodes(network):
+        """
+        Colors nodes in a cytoscape compatible network (dict) based on species
+
+        :param network: dict containing the network
+        :return: Cytoscape.js compatible network with depth information for edges added
+        """
+        colors = {s.id: s.color for s in Species.query.all()}
+        colored_network = deepcopy(network)
+
+        for node in colored_network["nodes"]:
+            if "data" in node.keys() and "species_id" in node["data"].keys():
+                node["data"]["species_color"] = colors[node["data"]["species_id"]]
 
         return colored_network
 

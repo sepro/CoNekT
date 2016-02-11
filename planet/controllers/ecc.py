@@ -46,6 +46,8 @@ def ecc_graph_json(sequence, network, family):
               "node_type": "query"}]
     edges = []
 
+    networks= {}
+
     for d in data:
         nodes.append({"id": d.target_id,
                       "name": d.target_sequence.name,
@@ -54,15 +56,41 @@ def ecc_graph_json(sequence, network, family):
                       "network_method_id": d.target_network_method_id,
                       "gene_name": d.target_sequence.name})
 
+        if d.target_network_method_id not in networks.keys():
+            networks[d.target_network_method_id] = []
+        networks[d.target_network_method_id].append(d.target_id)
+
         # TODO: add p-value and corrected p once implemented
         edges.append({"source": sequence.id,
                       "target": d.target_id,
-                      "ecc_score": d.ecc})
+                      "ecc_score": d.ecc,
+                      "edge_type": 'ecc_prime'})
 
     # TODO add next level of connectivity
+    for n, sequences in networks.items():
+        new_data = SequenceSequenceECCAssociation.query.filter(and_(
+            SequenceSequenceECCAssociation.query_id.in_(sequences),
+            SequenceSequenceECCAssociation.target_network_method_id == n,
+            SequenceSequenceECCAssociation.query_network_method_id == n,
+            SequenceSequenceECCAssociation.gene_family_method_id == family,
+            SequenceSequenceECCAssociation.query_id != SequenceSequenceECCAssociation.target_id
+        )).all()
+
+        for nd in new_data:
+            # TODO: add p-value and corrected p once implemented
+            # make sure the connection doesn't exist already
+            if not any(d['source'] == nd.target_id and d['target'] == nd.query_id for d in edges):
+                edges.append({"source": nd.query_id,
+                              "target": nd.target_id,
+                              "ecc_score": nd.ecc,
+                              "edge_type": 'ecc_secondary'})
 
     network = {"nodes": nodes, "edges": edges}
 
-    cytoscape_network = CytoscapeHelper.parse_network(network)
+    network_cytoscape = CytoscapeHelper.parse_network(network)
+    network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
+    network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, family)
+    network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
+    network_cytoscape = CytoscapeHelper.add_species_data_nodes(network_cytoscape)
 
-    return json.dumps(cytoscape_network)
+    return json.dumps(network_cytoscape)

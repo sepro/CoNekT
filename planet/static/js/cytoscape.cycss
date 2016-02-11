@@ -39,6 +39,10 @@ node.color {
         background-color: data(color);
 }
 
+node.species_color {
+        background-color: data(species_color);
+}
+
 node.lc_color {
         background-color: data(lc_color);
 }

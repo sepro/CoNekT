@@ -278,7 +278,7 @@
                             {% for ecc_query_association in sequence.ecc_query_associations %}
                             <tr>
                                 <!--<td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.query_id) }}">{{ ecc_query_association.query.name }}</a></td>-->
-                                <td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.target_id) }}">{{ ecc_query_association.target.name }}</a></td>
+                                <td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.target_id) }}">{{ ecc_query_association.target_sequence.name }}</a></td>
                                 <td>{{ ecc_query_association.ecc }}</td>
                                 <td>{{ ecc_query_association.p_value }}</td>
                                 <td>{{ ecc_query_association.corrected_p_value }}</td>
