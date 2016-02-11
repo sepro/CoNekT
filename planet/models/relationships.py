@@ -167,7 +167,7 @@ class SequenceSequenceECCAssociation(db.Model):
 
         # add the query node
         d = data[0]
-        nodes = [{"id": d.query_id,
+        nodes = [{"id": d.query_sequence.name,
                   "name": d.query_sequence.name,
                   "species_id": d.query_sequence.species_id,
                   "species_name": d.query_sequence.species.name,
@@ -180,7 +180,7 @@ class SequenceSequenceECCAssociation(db.Model):
         networks = {}
 
         for d in data:
-            nodes.append({"id": d.target_id,
+            nodes.append({"id": d.target_sequence.name,
                           "name": d.target_sequence.name,
                           "species_id": d.target_sequence.species_id,
                           "species_name": d.target_sequence.species.name,
@@ -193,8 +193,8 @@ class SequenceSequenceECCAssociation(db.Model):
             networks[d.target_network_method_id].append(d.target_id)
 
             # TODO: add p-value and corrected p once implemented
-            edges.append({"source": d.query_id,
-                          "target": d.target_id,
+            edges.append({"source": d.query_sequence.name,
+                          "target": d.target_sequence.name,
                           "ecc_score": d.ecc,
                           "edge_type": 0})
 
@@ -211,9 +211,9 @@ class SequenceSequenceECCAssociation(db.Model):
             for nd in new_data:
                 # TODO: add p-value and corrected p once implemented
                 # make sure the connection doesn't exist already
-                if not any(d['source'] == nd.target_id and d['target'] == nd.query_id for d in edges):
-                    edges.append({"source": nd.query_id,
-                                  "target": nd.target_id,
+                if not any(d['source'] == nd.target_sequence.name and d['target'] == nd.query_sequence.name for d in edges):
+                    edges.append({"source": nd.query_sequence.name,
+                                  "target": nd.target_sequence.name,
                                   "ecc_score": nd.ecc,
                                   "edge_type": 1})
 

@@ -69,14 +69,21 @@ cy = cytoscape({
     // code to add tooltips to the selected node
     var content = [{
           value: 'Edge: ' + e.data('source') + ' and ' + e.data('target'),
-        }, {
-          value: '<a href="' + e.data('profile_comparison') + '">Compare profiles</a>'
-        }, {
-          value: 'Link Score: ' + e.data('link_score')
-        }, {
-          value: 'Depth: ' + e.data('depth')
-        }
-      ]
+        }];
+
+    if (typeof e.data('profile_comparison') !== 'undefined') {
+        content.push({value: '<a href="' + e.data('profile_comparison') + '">Compare profiles</a>'});
+    }
+
+    if (typeof e.data('link_score') !== 'undefined') {
+    content.push({ value: 'Link Score: ' + e.data('link_score') });
+    }
+
+    if (typeof e.data('depth') !== 'undefined') {
+    content.push({ value: 'Depth: ' + e.data('depth') });
+    }
+
+
 
 
     e.qtip({
