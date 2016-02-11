@@ -1,5 +1,7 @@
 from planet import db
 
+from sqlalchemy import and_
+
 sequence_go = db.Table('sequence_go',
                        db.Column('id', db.Integer, primary_key=True),
                        db.Column('sequence_id', db.Integer, db.ForeignKey('sequences.id'), index=True),
@@ -151,6 +153,68 @@ class SequenceSequenceECCAssociation(db.Model):
     target_expression_network_method = db.relationship('ExpressionNetworkMethod',
                                                        foreign_keys=[target_network_method_id],
                                                        lazy='joined')
+
+    @staticmethod
+    def get_ecc_network(sequence, network, family):
+        data = SequenceSequenceECCAssociation.query.filter(and_(
+                SequenceSequenceECCAssociation.query_id == sequence,
+                SequenceSequenceECCAssociation.query_network_method_id == network,
+                SequenceSequenceECCAssociation.gene_family_method_id == family)).all()
+
+        # return an empty dict in case there are no hits for this query
+        if len(data) < 1:
+            return {'nodes': [], 'edges': []}
+
+        # add the query node
+        d = data[0]
+        nodes = [{"id": d.query_id,
+                  "name": d.query_sequence.name,
+                  "species_id": d.query_sequence.species_id,
+                  "gene_id": d.query_id,
+                  "gene_name": d.query_sequence.name,
+                  "network_method_id": network,
+                  "node_type": "query"}]
+        edges = []
+
+        networks = {}
+
+        for d in data:
+            nodes.append({"id": d.target_id,
+                          "name": d.target_sequence.name,
+                          "species_id": d.target_sequence.species_id,
+                          "gene_id": d.target_id,
+                          "network_method_id": d.target_network_method_id,
+                          "gene_name": d.target_sequence.name})
+
+            if d.target_network_method_id not in networks.keys():
+                networks[d.target_network_method_id] = []
+            networks[d.target_network_method_id].append(d.target_id)
+
+            # TODO: add p-value and corrected p once implemented
+            edges.append({"source": d.query_id,
+                          "target": d.target_id,
+                          "ecc_score": d.ecc,
+                          "edge_type": 'ecc_prime'})
+
+        for n, sequences in networks.items():
+            new_data = SequenceSequenceECCAssociation.query.filter(and_(
+                SequenceSequenceECCAssociation.query_id.in_(sequences),
+                SequenceSequenceECCAssociation.target_network_method_id == n,
+                SequenceSequenceECCAssociation.query_network_method_id == n,
+                SequenceSequenceECCAssociation.gene_family_method_id == family,
+                SequenceSequenceECCAssociation.query_id != SequenceSequenceECCAssociation.target_id
+            )).all()
+
+            for nd in new_data:
+                # TODO: add p-value and corrected p once implemented
+                # make sure the connection doesn't exist already
+                if not any(d['source'] == nd.target_id and d['target'] == nd.query_id for d in edges):
+                    edges.append({"source": nd.query_id,
+                                  "target": nd.target_id,
+                                  "ecc_score": nd.ecc,
+                                  "edge_type": 'ecc_secondary'})
+
+        return {"nodes": nodes, "edges": edges}
 
 
 class ClusterGOEnrichment(db.Model):
