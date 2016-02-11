@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for
+from flask import Blueprint, redirect, url_for, render_template
 from sqlalchemy import and_
 
 from planet.models.sequences import Sequence
@@ -17,6 +17,15 @@ def ecc_overview():
     For lack of a better alternative redirect users to the main page
     """
     return redirect(url_for('main.screen'))
+
+
+@ecc.route('/graph/<int:sequence>/<int:network>/<int:family>')
+def ecc_graph(sequence, network, family):
+    sequence = Sequence.query.get_or_404(sequence)
+    return render_template("expression_graph.html",
+                           sequence=sequence,
+                           network_method_id=network,
+                           family_method_id=family)
 
 
 @ecc.route('/json/<int:sequence>/<int:network>/<int:family>')
@@ -46,8 +55,8 @@ def ecc_graph_json(sequence, network, family):
                       "gene_name": d.target_sequence.name})
 
         # TODO: add p-value and corrected p once implemented
-        edges.append({"source": sequence.name,
-                      "target": d.target_sequence.name,
+        edges.append({"source": sequence.id,
+                      "target": d.target_id,
                       "ecc_score": d.ecc})
 
     # TODO add next level of connectivity

@@ -179,6 +179,9 @@
             {% elif cluster_one %}
             <h1>Comparing clusters: <strong>{{ cluster_one.name }}</strong> vs <strong>{{ cluster_two.name }}</strong><br /><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
             <div id="cy" json="{{ url_for('graph_comparison.graph_comparison_cluster_json', one=cluster_one.id, two=cluster_two.id, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
+           {% elif sequence %}
+            <h1>ECC network: <strong>{{ sequence.name }}</strong><br /><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            <div id="cy" json="{{ url_for('ecc.ecc_graph_json', sequence=sequence.id, network=network_method_id, family=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% endif %}
             <div id="loading"><span class="fa fa-refresh fa-spin"></span></div>
             <div id="legend" url="{{ url_for('static', filename='svg/legend.svg') }}"></div>

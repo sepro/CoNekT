@@ -106,6 +106,7 @@ def expression_cluster_graph(cluster_id, family_method_id=1):
     Creates the graph with all the members of the cluster
 
     :param cluster_id: internal identifier of the cluster
+    :param family_method_id: gene family method used for color coding the graph
     """
     cluster = CoexpressionCluster.query.get(cluster_id)
 
@@ -120,6 +121,7 @@ def expression_cluster_json(cluster_id, family_method_id=1):
     Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)
 
     :param cluster_id: id of the cluster to plot
+    :param family_method_id: gene family method used for color coding the graph
     """
     network = CoexpressionCluster.get_cluster(cluster_id)
 
