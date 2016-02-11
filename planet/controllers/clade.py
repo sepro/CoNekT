@@ -73,7 +73,6 @@ def clade_interpro(clade_id, page=1):
                                                                         g.page_items,
                                                                         False).items
 
-    print(interpro)
     return render_template('pagination/interpro.html', interpro=interpro)
 
 

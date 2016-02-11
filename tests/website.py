@@ -144,6 +144,7 @@ class WebsiteTest(TestCase):
         Clade.add_clade('test', ["tst"], "(test:0.01);")
         clade = Clade.query.first()
         clade.families.append(GeneFamily.query.first())
+        clade.interpro.append(Interpro.query.first())
         db.session.commit()
 
     def tearDown(self):
@@ -686,6 +687,7 @@ class WebsiteTest(TestCase):
     def test_clades(self):
         clade = Clade.query.first()
         family = GeneFamily.query.first()
+        interpro = Interpro.query.first()
 
         response = self.client.get('/clade/view/%d' % clade.id)
         self.assert200(response)
@@ -699,3 +701,12 @@ class WebsiteTest(TestCase):
         self.assert200(response)
         self.assert_template_used('tables/families.csv')
         self.assertTrue(family.name in response.data.decode('utf-8'))
+
+        response = self.client.get('/clade/interpro/%d/1' % clade.id)
+        self.assert200(response)
+        self.assert_template_used('pagination/interpro.html')
+
+        response = self.client.get('/clade/interpro/table/%d' % clade.id)
+        self.assert200(response)
+        self.assert_template_used('tables/interpro.csv')
+        self.assertTrue(interpro.label in response.data.decode('utf-8'))
