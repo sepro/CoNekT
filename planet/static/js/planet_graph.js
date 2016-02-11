@@ -36,15 +36,18 @@ cy = cytoscape({
         },
         {
           value: n.data('tokens') !== null ? 'Other names: <strong>' + n.data('tokens') + '</strong><br />' : '<span class="text-muted">No alias available</span>'
-        },
+        }]
+
+        if (typeof n.data('profile_link') !== 'undefined') {
+            content.push({value: 'Profile : <a href="' + n.data('profile_link') + '">' + n.data('id') + '</a>'});
+        }
+        content.push(
         {
-          value: 'Profile : <a href="' + n.data('profile_link') + '">' + n.data('id') + '</a>'
-        }, {
           value: n.data('family_name') !== null ? 'Family : <a href="' + n.data('family_url') + '">' + n.data('family_name') + '</a>' : '<span class="text-muted">No family found</span>'
         }, {
           value: n.data('family_clade') !== 'None' ? 'Clade : <strong>' + n.data('family_clade') + '</strong>' : '<span class="text-muted">No clade assigned</span>'
-        }
-      ]
+        });
+
 
 
     n.qtip({
