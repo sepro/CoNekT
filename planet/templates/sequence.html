@@ -272,6 +272,7 @@
                                 <th data-sort="float">p-value</th>
                                 <th data-sort="float">corrected p-value</th>
                                 <th data-sort="string-ins">gene family method</th>
+                                <th>action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -283,6 +284,8 @@
                                 <td>{{ ecc_query_association.p_value }}</td>
                                 <td>{{ ecc_query_association.corrected_p_value }}</td>
                                 <td>{{ ecc_query_association.gene_family_method.method }}</td>
+                                <td><a href="{{ url_for('ecc.ecc_graph', sequence=sequence.id, network=ecc_query_association.query_network_method_id, family=ecc_query_association.gene_family_method_id) }}" data-toggle="tooltip"
+   data-placement="top" title="View ECC as graph"><i class="fa fa-share-alt"></i></a></td>
                             </tr>
                             {% endfor %}
                         </tbody>
