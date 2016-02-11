@@ -170,6 +170,7 @@ class SequenceSequenceECCAssociation(db.Model):
         nodes = [{"id": d.query_id,
                   "name": d.query_sequence.name,
                   "species_id": d.query_sequence.species_id,
+                  "species_name": d.query_sequence.species.name,
                   "gene_id": d.query_id,
                   "gene_name": d.query_sequence.name,
                   "network_method_id": network,
@@ -182,6 +183,7 @@ class SequenceSequenceECCAssociation(db.Model):
             nodes.append({"id": d.target_id,
                           "name": d.target_sequence.name,
                           "species_id": d.target_sequence.species_id,
+                          "species_name": d.target_sequence.species.name,
                           "gene_id": d.target_id,
                           "network_method_id": d.target_network_method_id,
                           "gene_name": d.target_sequence.name})
@@ -199,6 +201,7 @@ class SequenceSequenceECCAssociation(db.Model):
         for n, sequences in networks.items():
             new_data = SequenceSequenceECCAssociation.query.filter(and_(
                 SequenceSequenceECCAssociation.query_id.in_(sequences),
+                SequenceSequenceECCAssociation.target_id.in_(sequences),
                 SequenceSequenceECCAssociation.target_network_method_id == n,
                 SequenceSequenceECCAssociation.query_network_method_id == n,
                 SequenceSequenceECCAssociation.gene_family_method_id == family,

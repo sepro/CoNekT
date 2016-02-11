@@ -4,10 +4,10 @@ var svg_labels;
 
 // constants for drawing grid legend
 var MARGIN_TOP = 150
-var MARGIN_LEFT = 60
-var HSPACE = 120
+var MARGIN_LEFT = 85
+var HSPACE = 140
 var VSPACE = 80
-var COLS = 6
+var COLS = 5
 var MAX_LABELS = 3
 
 $(function() {
