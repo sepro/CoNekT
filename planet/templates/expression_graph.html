@@ -88,7 +88,12 @@
                         {% if node %}
                         <li><a href="#" class="cy-edge-color" attr="depth_color">Depth</a></li>
                         {% endif %}
+                        {% if not sequence %}
                         <li><a href="#" class="cy-edge-color" attr="link_score">Score</a></li>
+                        {% else %}
+                        <li><a href="#" class="cy-edge-color" attr="ecc_score">ECC</a></li>
+                        <li><a href="#" class="cy-edge-color" attr="ecc_type">ECC type</a></li>
+                        {% endif %}
                     </ul>
                     </div>
                 </div>
@@ -108,12 +113,14 @@
                 </div>
                 </div>
             </li>
+            {% if not sequence %}
             <li>
                 <div>
                 <br /><p><strong>Score</strong> <span id="cy-edge-score-value" class="text-muted">30</span></p>
                 <input id="cy-edge-score" data-slider-id='cy-edge-score-slider' type="text" data-slider-min="0" data-slider-max="30" data-slider-step="1" data-slider-value="30" data-slider-tooltip="hide"/>
                 </div>
             </li>
+            {% endif %}
             <li><hr /></li>
             <li><p>Layout</p></li>
             <li>

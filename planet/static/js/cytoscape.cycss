@@ -95,6 +95,14 @@ edge.link_score {
         line-color: mapData(link_score, 0, 30, green, red);
 }
 
+edge.ecc_score {
+        line-color: mapData(ecc_score, 0, 1, red, green);
+}
+
+edge.ecc_type {
+        line-color: mapData(edge_type, 0, 1, #00ccff, #ffcc00);
+}
+
 edge.default {
         opacity: 0.7;
         width: 1;

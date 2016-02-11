@@ -196,7 +196,7 @@ class SequenceSequenceECCAssociation(db.Model):
             edges.append({"source": d.query_id,
                           "target": d.target_id,
                           "ecc_score": d.ecc,
-                          "edge_type": 'ecc_prime'})
+                          "edge_type": 0})
 
         for n, sequences in networks.items():
             new_data = SequenceSequenceECCAssociation.query.filter(and_(
@@ -215,7 +215,7 @@ class SequenceSequenceECCAssociation(db.Model):
                     edges.append({"source": nd.query_id,
                                   "target": nd.target_id,
                                   "ecc_score": nd.ecc,
-                                  "edge_type": 'ecc_secondary'})
+                                  "edge_type": 1})
 
         return {"nodes": nodes, "edges": edges}
 
