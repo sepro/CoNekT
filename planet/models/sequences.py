@@ -33,12 +33,12 @@ class Sequence(db.Model):
 
     ecc_query_associations = db.relationship('SequenceSequenceECCAssociation',
                                              primaryjoin=(sequence_sequence_ecc.c.query_id == id),
-                                             backref=db.backref('query', lazy='joined'),
+                                             backref=db.backref('query_sequence', lazy='joined'),
                                              lazy='dynamic')
 
     ecc_target_associations = db.relationship('SequenceSequenceECCAssociation',
                                               primaryjoin=(sequence_sequence_ecc.c.target_id == id),
-                                              backref=db.backref('target', lazy='joined'),
+                                              backref=db.backref('target_sequence', lazy='joined'),
                                               lazy='dynamic')
 
     xrefs = db.relationship('XRef', secondary=sequence_xref, lazy='joined')
