@@ -11,7 +11,7 @@ from build.db.expression import parse_expression_network
 from build.db.coexpression_clusters import add_planet_coexpression_clusters
 from build.db.xref import create_plaza_xref_families, create_plaza_xref_genes
 
-from planet.models.coexpression_clusters import CoexpressionClusteringMethod
+from planet.models.coexpression_clusters import CoexpressionClusteringMethod,CoexpressionCluster
 from planet.models.expression_networks import ExpressionNetworkMethod
 from planet.models.gene_families import GeneFamilyMethod
 from planet.models.species import Species
@@ -90,6 +90,15 @@ with app.app_context():
     Clade.add_clade('Dicots', ['ath', 'ptr', 'gma'], None)
 
     Clade.update_clades()
+
+    print("Calculate GO enrichment for clusters and similarities")
+    print("=====================================================")
+    CoexpressionCluster.calculate_enrichment()
+    CoexpressionCluster.calculate_similarities(gene_family_method_id=families_id)
+
+    print("Calculate ECC scores for homologous genes")
+    print("=====================================================")
+    ExpressionNetworkMethod.calculate_ecc([soy_network_id, ath_network_id, mtr_network_id], families_id)
 
     print("Adding XRefs")
     print("============")
