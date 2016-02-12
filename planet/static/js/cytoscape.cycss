@@ -100,7 +100,7 @@ edge.ecc_score {
 }
 
 edge.ecc_width {
-        width: mapData(ecc_score, 0, 1, 0, 3);
+        width: mapData(ecc_score, 0, 1, 1, 3);
 }
 
 edge.ecc_type {
