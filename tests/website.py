@@ -10,7 +10,7 @@ from planet.models.go import GO
 from planet.models.gene_families import GeneFamily, GeneFamilyMethod
 from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
 from planet.models.expression_networks import ExpressionNetwork, ExpressionNetworkMethod
-from planet.models.relationships import SequenceCoexpressionClusterAssociation
+from planet.models.relationships import SequenceCoexpressionClusterAssociation, SequenceSequenceECCAssociation
 from planet.models.clades import Clade
 
 from planet.controllers.help import __TOPICS as topics
@@ -147,6 +147,19 @@ class WebsiteTest(TestCase):
         clade.interpro.append(Interpro.query.first())
         db.session.commit()
 
+        new_ecc = SequenceSequenceECCAssociation()
+        new_ecc.query_id = test_sequence.id
+        new_ecc.target_id = test_sequence2.id
+        new_ecc.gene_family_method_id = test_gf_method.id
+        new_ecc.query_network_method_id = test_expression_network_method.id
+        new_ecc.target_network_method_id = test_expression_network_method.id
+        new_ecc.ecc = 0.5
+        new_ecc.p_value = 0.05
+        new_ecc.corrected_p_value = 0.05
+
+        db.session.add(new_ecc)
+        db.session.commit()
+
     def tearDown(self):
         """
         Removes test database again, so the next test can start with a clean slate
@@ -154,7 +167,7 @@ class WebsiteTest(TestCase):
         db.session.remove()
         db.drop_all()
 
-    def assertCytoscapeJson(self, data):
+    def assertCytoscapeJson(self, data, ecc_graph=False):
         self.assertTrue('nodes' in data.keys())
         self.assertTrue('edges' in data.keys())
 
@@ -176,13 +189,18 @@ class WebsiteTest(TestCase):
                 self.assertTrue('name' in node['data'].keys())
                 self.assertTrue('gene_name' in node['data'].keys())
                 self.assertTrue('tokens' in node['data'].keys())
-                self.assertTrue('depth' in node['data'].keys())
                 self.assertTrue('family_clade_count' in node['data'].keys())
                 self.assertTrue('gene_id' in node['data'].keys())
                 self.assertTrue('family_id' in node['data'].keys())
                 self.assertTrue('family_clade' in node['data'].keys())
                 self.assertTrue('family_shape' in node['data'].keys())
-                self.assertTrue('profile_link' in node['data'].keys())
+                if not ecc_graph:
+                    self.assertTrue('depth' in node['data'].keys())
+                    self.assertTrue('profile_link' in node['data'].keys())
+                else:
+                    self.assertTrue('species_name' in node['data'].keys())
+                    self.assertTrue('species_id' in node['data'].keys())
+                    self.assertTrue('species_color' in node['data'].keys())
 
         for edge in data['edges']:
             self.assertTrue('data' in edge.keys())
@@ -193,10 +211,13 @@ class WebsiteTest(TestCase):
             homology = edge['data']['homology'] if 'homology' in edge['data'].keys() else False
 
             if not homology:
-                self.assertTrue('link_score' in edge['data'].keys())
-                self.assertTrue('profile_comparison' in edge['data'].keys())
                 self.assertTrue('edge_type' in edge['data'].keys())
-                self.assertTrue('depth' in edge['data'].keys())
+                if not ecc_graph:
+                    self.assertTrue('link_score' in edge['data'].keys())
+                    self.assertTrue('profile_comparison' in edge['data'].keys())
+                    self.assertTrue('depth' in edge['data'].keys())
+                else:
+                    self.assertTrue('ecc_score' in edge['data'].keys())
 
     def test_sequence(self):
         """
@@ -710,3 +731,16 @@ class WebsiteTest(TestCase):
         self.assert200(response)
         self.assert_template_used('tables/interpro.csv')
         self.assertTrue(interpro.label in response.data.decode('utf-8'))
+
+    def test_ecc(self):
+        ecc = SequenceSequenceECCAssociation.query.first()
+
+        response = self.client.get('/ecc/graph/%d/%d/%d' % (ecc.query_id, ecc.query_network_method_id, ecc.gene_family_method.id))
+        self.assert200(response)
+        self.assert_template_used('expression_graph.html')
+
+        response = self.client.get('/ecc/json/%d/%d/%d' % (ecc.query_id, ecc.query_network_method_id, ecc.gene_family_method.id))
+        self.assert200(response)
+        data = json.loads(response.data.decode('utf-8'))
+
+        self.assertCytoscapeJson(data, ecc_graph=True)
