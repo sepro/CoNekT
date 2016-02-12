@@ -99,6 +99,10 @@ edge.ecc_score {
         line-color: mapData(ecc_score, 0, 1, red, green);
 }
 
+edge.ecc_width {
+        width: mapData(ecc_score, 0, 1, 0, 3);
+}
+
 edge.ecc_type {
         line-color: mapData(edge_type, 0, 1, #00ccff, #ffcc00);
 }

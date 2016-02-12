@@ -86,7 +86,9 @@ cy = cytoscape({
     content.push({ value: 'Depth: ' + e.data('depth') });
     }
 
-
+    if (typeof e.data('ecc_score') !== 'undefined') {
+    content.push({ value: 'ECC: ' + e.data('ecc_score').toFixed(2) });
+    }
 
 
     e.qtip({
