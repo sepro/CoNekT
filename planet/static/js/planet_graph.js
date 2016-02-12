@@ -342,6 +342,34 @@ $('#cy-download-svg').click(function(ev) {
   element.click();
 })
 
+$('#cy-download-svg-with-legend').click(function(ev) {
+  ev.preventDefault();
+
+  svg_out = Pablo(writeSVG(cy));
+  legend = Pablo(svg_legend.markup(false));
+
+  var graph_height = parseInt(Pablo.getAttributes(svg_out[0])['height'].replace('px',''));
+  var graph_width = parseInt(Pablo.getAttributes(svg_out[0])['width'].replace('px',''));
+  var legend_height = parseInt(Pablo.getAttributes(legend[0])['height'].replace('px',''));
+  var legend_width = parseInt(Pablo.getAttributes(legend[0])['width'].replace('px',''));
+  var total_height = graph_height + 20 + legend_height;
+  var total_width = (graph_width > legend_width ? graph_width : legend_width);
+
+  l = svg_out.g({'id':'legend'}).transform('translate', 0, graph_height+20);
+
+  l.append(legend);
+
+  svg_out.attr('viewBox', '0 0 ' + total_width + ' ' + total_height);
+  svg_out.attr('height', total_height + 'px');
+  svg_out.attr('width', total_width + 'px');
+
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(svg_out));
+  element.setAttribute('download', "cytoscape_w_legend.svg");
+
+  element.click();
+})
+
 $('#cy-reset').on('click', function(ev){
   ev.preventDefault();
   cy.animate({
