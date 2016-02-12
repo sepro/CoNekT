@@ -5,7 +5,8 @@ __TOPICS = {"gene_family": "modals/help/gene_family.html",
             "interpro_domain": "modals/help/interpro_domain.html",
             "go": "modals/help/go.html",
             "correction": "modals/help/fdr.html",
-            "fdr": "modals/help/fdr.html"}
+            "fdr": "modals/help/fdr.html",
+            "ecc": "modals/help/ecc.html"}
 
 help = Blueprint('help', __name__)
 

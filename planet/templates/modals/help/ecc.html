@@ -1,0 +1,12 @@
+<div class="modal-header">
+<h4 class="modal-title" id="myModalLabel"><strong>Expression Context Conservation (ECC)</strong></h4>
+</div>
+<div class="modal-body" syle="width:700px;height:200px">
+    <p>As expression profiles from different species cannot be directly compared the co-expression neighborhoods are compared instead. Consider two homologous genes A and B from different species. To calculate the ECC score
+        first all genes co-expressed with A (in the first species) are extracted and the same is done for gene B. The ECC score is the number of gene families these two neighborhoods have in common divided by the total
+        number of gene families in the union (i.e. the jaccard index).</p>
+    <p>Our implementation of ECC is similar to <strong>Movahedi <em>et al.</em></strong> <a href="http://www.ncbi.nlm.nih.gov/pubmed/21571672" class="badge">pubmed</a>.</p>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
