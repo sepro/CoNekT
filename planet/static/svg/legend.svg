@@ -157,6 +157,49 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Tahoma;-inkscape-font-specification:Tahoma">Default</tspan></text>
       </g>
       <g
+         transform="translate(263.46892,15.857144)"
+         edge_color="ecc_type"
+         id="score_group-3">
+        <rect
+           style="opacity:1;fill:#00ccff;fill-opacity:1;fill-rule:nonzero;stroke:#00ccff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.56896548"
+           id="rect4138-8"
+           width="71.428574"
+           height="11.428571"
+           x="72.857147"
+           y="75.290771" />
+        <text
+           xml:space="preserve"
+           style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="24.642859"
+           y="85.790771"
+           id="text4162-3"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan4164-2"
+             x="24.642859"
+             y="85.790771"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Tahoma;-inkscape-font-specification:Tahoma">First</tspan></text>
+        <rect
+           style="opacity:1;fill:#ffcc00;fill-opacity:1;fill-rule:nonzero;stroke:#ffcc00;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.56896548"
+           id="rect4138-8"
+           width="71.428574"
+           height="11.428571"
+           x="72.857147"
+           y="95.290771" />
+        <text
+           xml:space="preserve"
+           style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="24.642859"
+           y="85.790771"
+           id="text4162-3"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan4164-2"
+             x="24.642859"
+             y="105.790771"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Tahoma;-inkscape-font-specification:Tahoma">Second</tspan></text>
+      </g>
+      <g
          transform="translate(262,0)"
          id="g4214">
         <text
@@ -299,6 +342,64 @@
              x="138.31723"
              id="tspan4174-5"
              sodipodi:role="line">30</tspan></text>
+      </g>
+      <g
+         transform="translate(263.41033,28)"
+         edge_color="ecc_score"
+         id="score_group">
+        <rect
+           style="opacity:1;fill:url(#reverse);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.56896548"
+           id="rect4138"
+           width="71.428574"
+           height="11.428571"
+           x="72.857147"
+           y="63.290775" />
+        <text
+           xml:space="preserve"
+           style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="24.642859"
+           y="73.790771"
+           id="text4162"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan4164"
+             x="24.642859"
+             y="73.790771"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:Tahoma;-inkscape-font-specification:Tahoma">ECC</tspan></text>
+        <path
+           inkscape:connector-curvature="0"
+           id="path4155"
+           d="m 72.835885,76.566275 0,3.78807"
+           style="fill:#b2b2b2;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:0.56862745" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path4155-3"
+           d="m 144.30418,76.566275 0,3.78807"
+           style="fill:#b2b2b2;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:0.56862745" />
+        <text
+           sodipodi:linespacing="125%"
+           id="text4172"
+           y="89.600319"
+           x="69.380699"
+           style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           xml:space="preserve"><tspan
+             style="font-size:10px"
+             y="89.600319"
+             x="69.380699"
+             id="tspan4174"
+             sodipodi:role="line">0</tspan></text>
+        <text
+           sodipodi:linespacing="125%"
+           id="text4172-9"
+           y="89.600319"
+           x="138.31723"
+           style="font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:'Sans Oblique';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           xml:space="preserve"><tspan
+             style="font-size:10px"
+             y="89.600319"
+             x="140.31723"
+             id="tspan4174-5"
+             sodipodi:role="line">1</tspan></text>
       </g>
       <text
          sodipodi:linespacing="125%"
