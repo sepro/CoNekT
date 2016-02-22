@@ -187,6 +187,13 @@ class CoexpressionCluster(db.Model):
     @staticmethod
     @benchmark
     def calculate_similarities(gene_family_method_id=1, percentile_pass=0.95):
+        """
+        This function will calculate ALL similarities between clusters in the database. Results will be added to the
+        DB
+
+        :param gene_family_method_id: Internal ID of gene family method to use to calculate the scores (default = 1)
+        :param percentile_pass: percentile based cutoff (default = 0.95)
+        """
 
         # sqlalchemy to fetch cluster associations
         fields = [SequenceCoexpressionClusterAssociation.__table__.c.sequence_id,

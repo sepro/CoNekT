@@ -78,6 +78,11 @@ def interpro_sequences(interpro_id, page=1):
 @interpro.route('/sequences/table/<interpro_id>')
 @cache.cached()
 def interpro_sequences_table(interpro_id):
+    """
+    Returns a csv table with all sequences with the selected interpro domain
+
+    :param interpro_id: Internal ID of the interpro domain
+    """
     sequences = Interpro.query.get(interpro_id).sequences.group_by(Sequence.id)\
         .options(joinedload('species'))\
         .order_by(Sequence.name)

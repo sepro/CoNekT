@@ -21,6 +21,14 @@ def ecc_overview():
 
 @ecc.route('/graph/<int:sequence>/<int:network>/<int:family>')
 def ecc_graph(sequence, network, family):
+    """
+    Returns a page rendering the ECC graph for a specific sequence
+
+    :param sequence: Internal ID of a sequence
+    :param network: Internal ID of the network method
+    :param family: Internal ID of the family method
+    :return: Response with html page that shows the ECC network
+    """
     sequence = Sequence.query.get_or_404(sequence)
     return render_template("expression_graph.html",
                            sequence=sequence,
@@ -30,6 +38,14 @@ def ecc_graph(sequence, network, family):
 
 @ecc.route('/json/<int:sequence>/<int:network>/<int:family>')
 def ecc_graph_json(sequence, network, family):
+    """
+    Returns a JSON object compatible with cytoscape.js that contains the ECC graph for a specific sequence
+
+    :param sequence: Internal ID of a sequence
+    :param network: Internal ID of the network method
+    :param family: Internal ID of the family method
+    :return: JSON object compatible with cytoscape.js
+    """
 
     network = SequenceSequenceECCAssociation.get_ecc_network(sequence, network, family)
 

@@ -23,9 +23,9 @@ def clade_overview():
 @cache.cached()
 def clade_view(clade_id):
     """
-    Get a sequence based on the ID and show the details for this sequence
+    Get all information for the desired clade and return the main view
 
-    :param sequence_id: ID of the sequence
+    :param clade_id: internal ID of the clade
     """
     current_clade = Clade.query.get_or_404(clade_id)
 
@@ -45,7 +45,13 @@ def clade_view(clade_id):
 @clade.route('/families/<int:clade_id>/<int:page>')
 @cache.cached()
 def clade_families(clade_id, page=1):
+    """
+    Paginated list of families that emerged in this clade
 
+    :param clade_id: internal clade ID
+    :param page: page number
+    :return: html-response which can be used in combination with the pagination code
+    """
     current_clade = Clade.query.get_or_404(clade_id)
     families = current_clade.families.order_by(GeneFamily.name).paginate(page,
                                                                          g.page_items,
@@ -57,7 +63,12 @@ def clade_families(clade_id, page=1):
 @clade.route('/families/table/<int:clade_id>')
 @cache.cached()
 def clade_families_table(clade_id):
+    """
+    Returns a table (csv) of all families that emerged in this clade
 
+    :param clade_id: internal clade id
+    :return: plain text response with csv file
+    """
     families = Clade.query.get(clade_id).families.order_by(GeneFamily.name)
 
     return Response(render_template('tables/families.csv', families=families), mimetype='text/plain')
@@ -67,7 +78,13 @@ def clade_families_table(clade_id):
 @clade.route('/interpro/<int:clade_id>/<int:page>')
 @cache.cached()
 def clade_interpro(clade_id, page=1):
+    """
+    Paginated list of InterPro domains that emerged in this clade
 
+    :param clade_id: internal clade ID
+    :param page: page number
+    :return: html-response which can be used in combination with the pagination code
+    """
     current_clade = Clade.query.get_or_404(clade_id)
     interpro = current_clade.interpro.order_by(Interpro.label).paginate(page,
                                                                         g.page_items,
@@ -79,7 +96,12 @@ def clade_interpro(clade_id, page=1):
 @clade.route('/interpro/table/<int:clade_id>')
 @cache.cached()
 def clade_interpro_table(clade_id):
+    """
+    Returns a table (csv) of all InterPro domains that emerged in this clade
 
+    :param clade_id: internal clade id
+    :return: plain text response with csv file
+    """
     interpro = Clade.query.get(clade_id).interpro.order_by(Interpro.label)
 
     return Response(render_template('tables/interpro.csv', interpro=interpro), mimetype='text/plain')

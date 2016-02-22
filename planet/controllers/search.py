@@ -84,17 +84,19 @@ def simple():
 @search.route('/json/genes/<label>')
 @cache.cached()
 def search_json_genes(label):
+    """
+    This search function is used by the cytoscape.js GUI we implemented. It will look for genes with a specific GO
+    label associated with them. It will return a JSON object
+
+    :param label: GO-label to look for
+    :return: JSON object with gene IDs that can be used by our GUI
+    """
     output = []
     current_go = GO.query.filter_by(label=label).first()
 
     if current_go is not None:
         for association in current_go.sequence_associations:
             output.append(association.sequence_id)
-
-    # current_interpro = Interpro.query.filter_by(label=label).first()
-    # if current_interpro is not None:
-    #     for association in current_interpro.sequence_associations:
-    #         output.append(association.sequence_id)
 
     return Response(json.dumps(output), mimetype='application/json')
 

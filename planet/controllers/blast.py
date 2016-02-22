@@ -15,6 +15,12 @@ blast = Blueprint('blast', __name__)
 
 @blast.route('/', methods=['GET', 'POST'])
 def blast_main():
+    """
+    Main blast interface
+
+    GET request: the html with the blast form will be returned
+    POST requests: the input will be validated and the blast will be started
+    """
     form = BlastForm(request.form)
     form.populate_blast_types()
     
@@ -41,11 +47,23 @@ def blast_main():
 
 @blast.route('/results/<token>')
 def blast_results(token):
+    """
+    Renders the blast results for a given token
+
+    :param token: code for the generated results
+    :return: page containing the blast results
+    """
     return render_template('blast.html', token=token)
 
 
 @blast.route('/results/json/<token>')
 def blast_results_json(token):
+    """
+    Returns a json file with the status of the blast and the results in case it is completed
+
+    :param token: code for the generated results
+    :return: json object with the blast status and results
+    """
     file_results = os.path.join(current_app.config['BLAST_TMP_DIR'], token + '.out')
     file_in = os.path.join(current_app.config['BLAST_TMP_DIR'], token + '.in')
     columns = ['query', 'hit', 'percent_identity', 'alignment_length', 'num_mismatch',

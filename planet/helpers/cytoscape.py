@@ -149,6 +149,12 @@ class CytoscapeHelper:
 
     @staticmethod
     def add_descriptions_nodes(network):
+        """
+        Adds the description to nodes (if available) and alternative names (aka gene tokens) to a cytoscape.js network
+
+        :param network: Cytoscape.js compatible network object
+        :return: Network with descriptions and tokens added
+        """
         completed_network = deepcopy(network)
 
         sequence_ids = []
@@ -302,6 +308,12 @@ class CytoscapeHelper:
 
     @staticmethod
     def get_families(network):
+        """
+        Extracts gene families from a cytoscape.js compatible network object
+
+        :param network: network to extract families from
+        :return: List of all families that occur in the network
+        """
         return [f["data"]["family_name"] for f in network["nodes"] if 'data' in f.keys() and
                 'family_name' in f["data"].keys() and
                 f["data"]["family_name"] is not None]

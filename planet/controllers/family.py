@@ -67,6 +67,11 @@ def family_sequences(family_id, page=1):
 @family.route('/sequences/table/<family_id>')
 @cache.cached()
 def family_sequences_table(family_id):
+    """
+    Returns a csv table with sequences in the selected family
+
+    :param family_id: Internal ID of the family
+    """
     sequences = GeneFamily.query.get(family_id).sequences.options(joinedload('species')).order_by(Sequence.name)
 
     return Response(render_template('tables/sequences.csv', sequences=sequences), mimetype='text/plain')

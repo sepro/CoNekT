@@ -107,5 +107,11 @@ def logout():
 @no_login.route('/', defaults={'path': ''})
 @no_login.route('/<path:path>')
 def catch_all():
+    """
+    Route to gracefully disable links to the log in system if this blueprint is loaded instead of the auth. It will
+    raise a warning and return to the home screen.
+
+    :return: redirects to home
+    """
     flash('Logins are disabled', 'danger')
     return redirect(url_for('main.screen'))
