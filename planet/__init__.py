@@ -30,6 +30,7 @@ cache = Cache()
 htmlmin = HTMLMIN()
 blast_thread = BlastThread()
 
+
 def create_app(config):
     # Set up app, database and login manager before importing models and controllers
     # Important for db_create script
@@ -159,7 +160,6 @@ def create_app(config):
     #         ______( (_  / \______
     #       ,'  ,-----'   |        \
     #       `--{__________)        \/
-
 
     # Custom error handler for 404 errors
 
