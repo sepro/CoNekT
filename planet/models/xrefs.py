@@ -1,6 +1,7 @@
 from planet import db
 from config import SQL_COLLATION
 
+
 class XRef(db.Model):
     __tablename__ = 'xrefs'
     id = db.Column(db.Integer, primary_key=True)

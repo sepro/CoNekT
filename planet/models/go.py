@@ -55,6 +55,9 @@ class GO(db.Model):
 
     @staticmethod
     def update_species_counts():
+        """
+        adds phylo-profile to each go-label, results are stored in the database
+        """
         # link species to sequences
         sequences = db.engine.execute(db.select([Sequence.__table__.c.id, Sequence.__table__.c.species_id])).fetchall()
 

@@ -195,6 +195,15 @@ class ExpressionNetworkMethod(db.Model):
     @staticmethod
     @benchmark
     def __set_thresholds(families_a, families_b, max_size=30, iterations=1000):
+        """
+        Empirically determine (permutation test) thresholds for ECC
+
+        :param families_a: families of species_a
+        :param families_b: families of species_b
+        :param max_size: maximum number of families (default = 30)
+        :param iterations: number of permutations done
+        :return: matrix (list of lists) with the thresholds at various family sizes
+        """
         thresholds = []
 
         for i in range(max_size):
@@ -208,6 +217,7 @@ class ExpressionNetworkMethod(db.Model):
                     scores.append(jaccard(i_fams, j_fams))
 
                 scores = sorted(scores)
+                # TODO (maybe?): cutoff is hard coded here, replace ?
                 new_threshholds.append(scores[int(iterations*0.95)])
             thresholds.append(new_threshholds)
 
