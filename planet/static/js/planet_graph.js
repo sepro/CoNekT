@@ -271,7 +271,10 @@ $('#cy-download-img-hires').click(function(ev) {
   var download = document.createElement('a');
   download.href = png64;
   download.download = 'cytoscape-hires.png';
+
+  document.body.appendChild(element);
   download.click();
+  document.body.removeChild(element);
 })
 
 $('#cy-download-img-lowres').click(function(ev) {
@@ -281,7 +284,10 @@ $('#cy-download-img-lowres').click(function(ev) {
   var download = document.createElement('a');
   download.href = png64;
   download.download = 'cytoscape-lowres.png';
+
+  document.body.appendChild(element);
   download.click();
+  document.body.removeChild(element);
 })
 
 $('#cy-download-json').click(function(ev) {
@@ -290,7 +296,9 @@ $('#cy-download-json').click(function(ev) {
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(initial_json));
   element.setAttribute('download', "cytoscape.json");
 
+  document.body.appendChild(element);
   element.click();
+  document.body.removeChild(element);
 })
 
 $('#cy-download-jsoncy').click(function(ev) {
@@ -314,8 +322,9 @@ $('#cy-download-jsoncy').click(function(ev) {
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(json));
   element.setAttribute('download', "cytoscape_full.json");
 
+  document.body.appendChild(element);
   element.click();
-
+  document.body.removeChild(element);
 })
 
 $('#cy-download-xgmml').click(function(ev) {
@@ -327,7 +336,9 @@ $('#cy-download-xgmml').click(function(ev) {
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(xgmml));
   element.setAttribute('download', "cytoscape.xgmml");
 
+  document.body.appendChild(element);
   element.click();
+  document.body.removeChild(element);
 })
 
 $('#cy-download-svg').click(function(ev) {
@@ -339,7 +350,9 @@ $('#cy-download-svg').click(function(ev) {
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(svg));
   element.setAttribute('download', "cytoscape.svg");
 
+  document.body.appendChild(element);
   element.click();
+  document.body.removeChild(element);
 })
 
 $('#cy-download-svg-with-legend').click(function(ev) {
@@ -367,7 +380,9 @@ $('#cy-download-svg-with-legend').click(function(ev) {
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(svg_out));
   element.setAttribute('download', "cytoscape_w_legend.svg");
 
+  document.body.appendChild(element);
   element.click();
+  document.body.removeChild(element);
 })
 
 $('#cy-reset').on('click', function(ev){
