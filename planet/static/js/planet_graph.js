@@ -218,7 +218,7 @@ $('.cy-layout').click(function(ev) {
     cy.layout({name: layout,
                padding: 30,
                minNodeSpacing: 10,
-               animate: false,
+               animate: true,
                avoidOverlap: false,
                //cose settings
                nodeOverlap: 1,
