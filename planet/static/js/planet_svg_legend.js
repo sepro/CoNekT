@@ -51,7 +51,24 @@ $('#cy-download-svg-legend').click(function(ev) {
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(svg_legend));
   element.setAttribute('download', "cytoscape_legend.svg");
 
+  document.body.appendChild(element);
   element.click();
+  document.body.removeChild(element);
+})
+
+$('#cy-download-png-legend').click(function(ev) {
+  ev.preventDefault();
+
+  svg_legend.dataUrl('png', function(dataUrl){
+      var element = document.createElement('a');
+      element.setAttribute('href', dataUrl);
+      element.setAttribute('download', "cytoscape_legend.png");
+      element.setAttribute('style', 'display:none');
+
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    });
 })
 
 function generate_legend(label_set, attribute) {

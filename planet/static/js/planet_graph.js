@@ -385,6 +385,39 @@ $('#cy-download-svg-with-legend').click(function(ev) {
   document.body.removeChild(element);
 })
 
+$('#cy-download-png-with-legend').click(function(ev) {
+  ev.preventDefault();
+
+  svg_out = Pablo(writeSVG(cy));
+  legend = Pablo(svg_legend.markup(false));
+
+  var graph_height = parseInt(Pablo.getAttributes(svg_out[0])['height'].replace('px',''));
+  var graph_width = parseInt(Pablo.getAttributes(svg_out[0])['width'].replace('px',''));
+  var legend_height = parseInt(Pablo.getAttributes(legend[0])['height'].replace('px',''));
+  var legend_width = parseInt(Pablo.getAttributes(legend[0])['width'].replace('px',''));
+  var total_height = graph_height + 20 + legend_height;
+  var total_width = (graph_width > legend_width ? graph_width : legend_width);
+
+  l = svg_out.g({'id':'legend'}).transform('translate', 0, graph_height+20);
+
+  l.append(legend);
+
+  svg_out.attr('viewBox', '0 0 ' + total_width + ' ' + total_height);
+  svg_out.attr('height', total_height + 'px');
+  svg_out.attr('width', total_width + 'px');
+
+  svg_out.dataUrl('png', function(dataUrl){
+      var element = document.createElement('a');
+      element.setAttribute('href', dataUrl);
+      element.setAttribute('download', "cytoscape__w_legend.png");
+      element.setAttribute('style', 'display:none');
+
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    });
+})
+
 $('#cy-reset').on('click', function(ev){
   ev.preventDefault();
   cy.animate({
