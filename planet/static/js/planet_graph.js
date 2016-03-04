@@ -272,9 +272,9 @@ $('#cy-download-img-hires').click(function(ev) {
   download.href = png64;
   download.download = 'cytoscape-hires.png';
 
-  document.body.appendChild(element);
+  document.body.appendChild(download);
   download.click();
-  document.body.removeChild(element);
+  document.body.removeChild(download);
 })
 
 $('#cy-download-img-lowres').click(function(ev) {
@@ -285,9 +285,9 @@ $('#cy-download-img-lowres').click(function(ev) {
   download.href = png64;
   download.download = 'cytoscape-lowres.png';
 
-  document.body.appendChild(element);
+  document.body.appendChild(download);
   download.click();
-  document.body.removeChild(element);
+  document.body.removeChild(download);
 })
 
 $('#cy-download-json').click(function(ev) {
