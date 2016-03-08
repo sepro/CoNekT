@@ -106,7 +106,6 @@ with app.app_context():
     create_plaza_xref_genes(ptr_id)
     create_plaza_xref_families(families_id)
 
-
     print("Building FTP data")
     print("=================")
     export_ftp_data()

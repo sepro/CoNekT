@@ -46,6 +46,6 @@ def translate(sequence, trim=True, return_on_stop=True):
             if __CODONTABLE[codon] == '*' and return_on_stop:
                 break
         else:
-            output += '?'
+            output += 'X'
 
     return output
