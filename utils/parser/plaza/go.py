@@ -12,7 +12,7 @@ class Parser:
                 gene = row['gene_id']
                 go = {"id": row['go'],
                       "evidence": row['evidence'],
-                      "source": row['provider']}
+                      "source": row['provider'] if 'provider' in row.keys() else 'PLAZA'}
 
                 if gene not in self.annotation.keys():
                     self.annotation[gene] = []

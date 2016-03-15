@@ -1,4 +1,5 @@
 import json
+import sys
 
 from utils.parser.planet.expression_plot import Parser as ExpressionPlotParser
 from utils.parser.planet.expression_network import Parser as NetworkParser
@@ -31,7 +32,9 @@ def parse_expression_plot(plotfile, conversion, species_code):
     new_probes = []
 
     for probe, profile in plot.profiles.items():
-
+        if probe not in plot.probe_list.keys():
+            print('Cannot convert', probe, '...SKIPPING!', file=sys.stderr)
+            continue
         gene_id = plot.probe_list[probe].upper()
 
         output = {"order": plot.conditions,
