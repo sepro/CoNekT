@@ -71,8 +71,10 @@ SPECIES = {
         'profile_conversion': 'data/profiles/ath_probe_conversion.txt',
         'network': 'data/hrr/AthPfamPlazaGO.clean.hrr',
         'network_description': 'HQ Network for Arabidopsis thaliana',
-        'id': None,
-        'network_id': None
+        'clusters': 'data/hrr/Ath.S=3R=50.hcca',
+        'clusters_description': 'Ath HCCA',
+        'id': 3,
+        'network_id': 3
     },
     'Populus trichocarpa': {
         'code': 'ptr',
@@ -83,8 +85,10 @@ SPECIES = {
         'profile_conversion': 'data/profiles/ptr_probe_conversion.txt',
         'network': 'data/hrr/PtrPfamPlazaGO.clean.hrr',
         'network_description': 'HQ Network for Populus trichocarpa',
-        'id': None,
-        'network_id': None
+        'clusters': 'data/hrr/Ptr.S=3R=50.hcca',
+        'clusters_description': 'Ptr HCCA',
+        'id': 1,
+        'network_id': 2
     },
     'Glycine max': {
         'code': 'gma',
@@ -95,8 +99,10 @@ SPECIES = {
         'profile_conversion': 'data/profiles/gma_probe_conversion.txt',
         'network': 'data/hrr/GmaPfamPlazaGO.clean.hrr',
         'network_description': 'HQ Network for Glycine max',
-        'id': None,
-        'network_id': None
+        'clusters': 'data/hrr/Gma.S=3R=50.hcca',
+        'clusters_description': 'Gma HCCA',
+        'id': 5,
+        'network_id': 1
     },
     'Medicago truncatula': {
         'code': 'mtr',
@@ -107,8 +113,10 @@ SPECIES = {
         'profile_conversion': 'data/profiles/mtr_probe_conversion.txt',
         'network': 'data/hrr/MtrPfamPlazaGO.clean.hrr',
         'network_description': 'HQ Network for Medicago truncatula',
-        'id': None,
-        'network_id': None
+        'clusters': 'data/hrr/Mtr.S=3R=50.hcca',
+        'clusters_description': 'Mtr HCCA',
+        'id': 4,
+        'network_id': 4
     },
     'Oryza sativa': {
         'code': 'osa',
@@ -119,94 +127,95 @@ SPECIES = {
         'profile_conversion': 'data/profiles/osa_probe_conversion.txt',
         'network': 'data/hrr/OsaPfamPlazaGO.clean.hrr',
         'network_description': 'HQ Network for Oryza sativa',
-        'id': None,
-        'network_id': None
+        'clusters': 'data/hrr/Osa.S=3R=50.hcca',
+        'clusters_description': 'Osa HCCA',
+        'id': 2,
+        'network_id': 5
     }
 }
 
 
 with app.app_context():
-    # print("Adding species")
-    # print("==============")
-    #
-    # for species, data in SPECIES.items():
-    #     print("\tAdding", species)
-    #     data['id'] = add_species_from_fasta(data['fasta'], data['code'], species)
-    #
-    # print("Populating GO and InterPro")
-    # print("==========================")
-    # populate_go("data/go.obo")
-    # populate_interpro("data/interpro.xml")
-    #
-    # print("Adding Functional Annotation")
-    # print("============================")
-    # for species, data in SPECIES.items():
-    #     if 'go' in data.keys():
-    #         add_go_from_plaza(data['go'])
-    #
-    #     if 'interpro' in data.keys():
-    #         add_interpro_from_plaza(data['interpro'])
-    #
-    # print("Adding Families")
-    # print("===============")
-    # families_id = add_families_from_plaza("data/genefamily_data.hom.csv", "PLAZA 3.0 Homologous gene families")
-    #
-    # print("Adding Expression Plots")
-    # print("=======================")
-    # for species, data in SPECIES.items():
-    #     if 'profile' in data.keys() and 'profile_conversion' in data.keys():
-    #         parse_expression_plot(data['profile'], data['profile_conversion'], data['code'])
-    #
-    #
-    # print("Adding Expression Networks")
-    # print("==========================")
-    # for species, data in SPECIES.items():
-    #     if 'network_description' in data.keys() and 'network' in data.keys():
-    #         data['network_id'] = parse_expression_network(data['network'], data['code'], data['network_description'])
+    print("Adding species")
+    print("==============")
 
-    #
-    # print("Adding Coexpression Clusters")
-    # print("============================")
-    # add_planet_coexpression_clusters("data/GmaPfamPlazaGO.hrr", "data/Gma.S=3R=30.hcca",
-    #                                  "Glycine max clusters PlaNet 1", soy_network_id)
-    # add_planet_coexpression_clusters("data/AthPfamPlazaGO.hrr", "data/Ath.S=3R=30.hcca",
-    #                                  "Arabidopsis thaliana clusters PlaNet 1", ath_network_id)
-    # add_planet_coexpression_clusters("data/mtr/MtrPfamPlazaGO.clean.hrr", "data/mtr/Mtr.S=3R=30.hcca",
-    #                                  "Medicago truncatula clusters PlaNet 1", mtr_network_id)
-    #
-    #
-    # print("Precalculating big counts")
-    # print("=========================")
-    # CoexpressionClusteringMethod.update_counts()
-    # ExpressionNetworkMethod.update_count()
-    # GeneFamilyMethod.update_count()
-    # Species.update_counts()
-    # GO.update_species_counts()
-    #
-    # print("Adding clades and assigning them to gene families")
-    # print("=================================================")
-    # for c, data in CLADES.items():
-    #     Clade.add_clade(c, data['species'], data['tree'])
+    for species, data in SPECIES.items():
+        print("\tAdding", species)
+        data['id'] = add_species_from_fasta(data['fasta'], data['code'], species)
 
-    #
+    print("Populating GO and InterPro")
+    print("==========================")
+    populate_go("data/go.obo")
+    populate_interpro("data/interpro.xml")
+
+    print("Adding Functional Annotation")
+    print("============================")
+    for species, data in SPECIES.items():
+        if 'go' in data.keys():
+            add_go_from_plaza(data['go'])
+
+        if 'interpro' in data.keys():
+            add_interpro_from_plaza(data['interpro'])
+
+    print("Adding Families")
+    print("===============")
+    families_id = add_families_from_plaza("data/genefamily_data.hom.csv", "PLAZA 2.5 Homologous gene families")
+
+    print("Adding Expression Plots")
+    print("=======================")
+    for species, data in SPECIES.items():
+        if 'profile' in data.keys() and 'profile_conversion' in data.keys():
+            parse_expression_plot(data['profile'], data['profile_conversion'], data['code'])
+
+
+    print("Adding Expression Networks")
+    print("==========================")
+    for species, data in SPECIES.items():
+        if 'network_description' in data.keys() and 'network' in data.keys():
+            data['network_id'] = parse_expression_network(data['network'], data['code'], data['network_description'])
+
+    print("Adding Coexpression Clusters")
+    print("============================")
+    for species, data in SPECIES.items():
+        if all(x in data.keys() for x in ['network', 'clusters', 'network_id', 'clusters_description']):
+            add_planet_coexpression_clusters(data['network'],
+                                             data['clusters'],
+                                             data['clusters_description'],
+                                             data['network_id'])
+
+    print("Precalculating big counts")
+    print("=========================")
+    CoexpressionClusteringMethod.update_counts()
+    ExpressionNetworkMethod.update_count()
+    GeneFamilyMethod.update_count()
+    Species.update_counts()
+    GO.update_species_counts()
+
+    print("Adding clades and assigning them to gene families")
+    print("=================================================")
+    for c, data in CLADES.items():
+        Clade.add_clade(c, data['species'], data['tree'])
+
     Clade.update_clades()
-    #
-    # print("Calculate GO enrichment for clusters and similarities")
-    # print("=====================================================")
-    # CoexpressionCluster.calculate_enrichment()
-    # CoexpressionCluster.calculate_similarities(gene_family_method_id=families_id)
-    #
-    # print("Calculate ECC scores for homologous genes")
-    # print("=====================================================")
-    # ExpressionNetworkMethod.calculate_ecc([soy_network_id, ath_network_id, mtr_network_id], families_id)
+    Clade.update_clades_interpro()
+
+    print("Calculate GO enrichment for clusters and similarities")
+    print("=====================================================")
+    CoexpressionCluster.calculate_enrichment()
+    CoexpressionCluster.calculate_similarities(gene_family_method_id=1)
+
+    print("Calculate ECC scores for homologous genes")
+    print("=====================================================")
+    ExpressionNetworkMethod.calculate_ecc(list(range(1, 6)), 1)
     #
     # print("Adding XRefs")
     # print("============")
-    # create_plaza_xref_genes(ath_id)
-    # create_plaza_xref_genes(ptr_id)
-    # create_plaza_xref_families(families_id)
+    # for i in range(1, 6):
+    #     create_plaza_xref_genes(i)
+    # # create_plaza_xref_genes(ptr_id)
+    # create_plaza_xref_families(1)
     #
-    # print("Building FTP data")
-    # print("=================")
-    # export_ftp_data()
+    print("Building FTP data")
+    print("=================")
+    export_ftp_data()
 
