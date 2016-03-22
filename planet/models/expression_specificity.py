@@ -32,7 +32,7 @@ class ExpressionSpecificityMethod(db.Model):
 
             print(profile_id, profile_mean)
             for condition in profile_data['order']:
-                expression_specificity(condition, profile_mean)
+                score = expression_specificity(condition, profile_mean)
 
 
 class ExpressionSpecificity(db.Model):
