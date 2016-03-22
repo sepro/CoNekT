@@ -1,6 +1,7 @@
 from planet import db
 from config import SQL_COLLATION
 
+
 class Species(db.Model):
     __tablename__ = 'species'
     id = db.Column(db.Integer, primary_key=True)
@@ -19,6 +20,7 @@ class Species(db.Model):
     sequences = db.relationship('Sequence', backref='species', lazy='dynamic')
     networks = db.relationship('ExpressionNetworkMethod', backref='species', lazy='dynamic')
     profiles = db.relationship('ExpressionProfile', backref='species', lazy='dynamic')
+    expression_specificities = db.relationship('ExpressionSpecificityMethod', backref='species', lazy='dynamic')
 
     def __init__(self, code, name, data_type='genome', ncbi_tax_id=None, pubmed_id=None, project_page=None,
                  color="#C7C7C7", highlight="#DEDEDE"):
