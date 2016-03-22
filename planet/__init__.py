@@ -72,6 +72,7 @@ def create_app(config):
     from planet.models.coexpression_clusters import CoexpressionClusteringMethod, CoexpressionCluster
     from planet.models.expression_profiles import ExpressionProfile
     from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
+    from planet.models.expression_specificity import ExpressionSpecificityMethod, ExpressionSpecificity
     from planet.models.clades import Clade
     from planet.models.xrefs import XRef
 
@@ -125,7 +126,7 @@ def create_app(config):
     if LOGIN_ENABLED:
         from planet.admin.views import MyAdminIndexView
         from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
-            CoexpressionClusteringMethodAdminView, CladesAdminView
+            CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'))
         admin.add_view(SpeciesAdminView(Species, db.session, url='species/'))
@@ -134,6 +135,8 @@ def create_app(config):
         admin.add_view(ExpressionNetworkMethodAdminView(ExpressionNetworkMethod, db.session, url='networks/',
                                                         category="Methods"))
         admin.add_view(CoexpressionClusteringMethodAdminView(CoexpressionClusteringMethod, db.session, url='clusters/',
+                                                             category="Methods"))
+        admin.add_view(ExpressionSpecificityMethodAdminView(ExpressionSpecificityMethod, db.session, url='specificity/',
                                                              category="Methods"))
 
 

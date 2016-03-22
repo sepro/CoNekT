@@ -78,6 +78,15 @@ class ExpressionNetworkMethodAdminView(MyModelView):
 
     can_create = False
 
+class ExpressionSpecificityMethodAdminView(MyModelView):
+    """
+    ExpressionNetworkMethod view for admins, specifies what is available in CRUD
+    """
+    form_columns = ('description', 'conditions', 'species')
+
+    column_display_pk = True
+
+    can_create = False
 
 class CoexpressionClusteringMethodAdminView(MyModelView):
     """
