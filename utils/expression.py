@@ -9,7 +9,4 @@ def expression_specificity(condition, profile):
 
     mul_len = norm(values) * norm(vector)
 
-    if mul_len != 0:
-        return dot_product/mul_len
-    else:
-        return 0
+    return dot_product/mul_len if mul_len != 0 else 0

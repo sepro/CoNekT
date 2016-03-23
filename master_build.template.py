@@ -17,6 +17,7 @@ from planet.models.gene_families import GeneFamilyMethod
 from planet.models.species import Species
 from planet.models.clades import Clade
 from planet.models.go import GO
+from planet.models.expression_specificity import ExpressionSpecificityMethod
 
 from planet.ftp import export_ftp_data
 
@@ -207,6 +208,13 @@ with app.app_context():
     print("Calculate ECC scores for homologous genes")
     print("=====================================================")
     ExpressionNetworkMethod.calculate_ecc(list(range(1, 6)), 1)
+
+    print("Calculate conditions specific profiles")
+    print("=========================================")
+    for s, data in SPECIES.items():
+        ExpressionSpecificityMethod.calculate_specificities(data['id'], s + " condition specific profiles")
+
+
     #
     # print("Adding XRefs")
     # print("============")

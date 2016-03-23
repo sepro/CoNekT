@@ -23,26 +23,33 @@ class ExpressionSpecificityMethod(db.Model):
         new_method.description = description
         conditions = []
 
+        # get profile from the database (ORM free for speed)
         profiles = db.engine.execute(db.select([ExpressionProfile.__table__.c.id, ExpressionProfile.__table__.c.profile]).
                                      where(ExpressionProfile.__table__.c.species_id == species_id)
                                      ).fetchall()
 
+        # detect all conditions
         for profile_id, profile in profiles:
             profile_data = json.loads(profile)
             for condition in profile_data['order']:
                 if condition not in conditions:
                     conditions.append(condition)
 
+        # complete new method and add to database
         new_method.conditions = json.dumps(conditions)
-
         db.session.add(new_method)
         db.session.commit()
 
+        # detect specifities and add to the database
         specificities = []
 
         for profile_id, profile in profiles:
+            # prepare profile data for calculation
             profile_data = json.loads(profile)
             profile_means = {k: mean(v) for k, v in profile_data['data'].items()}
+
+            # determine spm score for each condition
+            profile_specificities = []
 
             for condition in profile_data['order']:
                 score = expression_specificity(condition, profile_means)
@@ -53,11 +60,20 @@ class ExpressionSpecificityMethod(db.Model):
                     'method_id': new_method.id,
                 }
 
-                specificities.append(new_specificity)
-                if len(specificities) > 400:
-                    db.engine.execute(ExpressionSpecificity.__table__.insert(), specificities)
-                    specificities = []
+                profile_specificities.append(new_specificity)
 
+            # sort conditions and add top 2 to array
+
+            profile_specificities = sorted(profile_specificities, key=lambda x: x['score'], reverse=True)
+
+            specificities += profile_specificities[:2]
+
+            # write specificities to db if there are more than 400 (ORM free for speed)
+            if len(specificities) > 400:
+                db.engine.execute(ExpressionSpecificity.__table__.insert(), specificities)
+                specificities = []
+
+        # write remaining specificities to the db
         db.engine.execute(ExpressionSpecificity.__table__.insert(), specificities)
 
 
