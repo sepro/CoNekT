@@ -5,8 +5,11 @@ from sqlalchemy import func
 from planet import cache
 from planet.models.go import GO
 from planet.models.search import Search
-from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
+from planet.models.expression_specificity import ExpressionSpecificityMethod
+from planet.models.species import Species
 
+from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
+from planet.forms.search_specific_profiles import SearchSpecificProfilesForm
 
 import json
 
@@ -137,6 +140,39 @@ def search_enriched_clusters():
         return render_template("search_enriched_clusters.html", results=results)
     else:
         return render_template("search_enriched_clusters.html", form=form)
+
+
+@search.route('/specific/profiles')
+@cache.cached()
+def search_specific_profiles():
+    """
+    Controller that shows the search form to find condition/tissue specific expressed genes
+
+    :return: Html response
+    """
+    form = SearchSpecificProfilesForm(request.form)
+    form.populate_species()
+
+    print(form.species)
+
+    return render_template("search_specific_profiles.html", form=form)
+
+
+@search.route('/specific/profiles/methods/<int:species_id>')
+@cache.cached()
+def search_specific_profiles_methods(species_id):
+    """
+    Controller that fetches the data for available methods
+
+    :param species_id: species
+    :return: JSON object with available methods
+    """
+    methods = ExpressionSpecificityMethod.query.filter_by(species_id=species_id).all()
+
+    return Response(json.dumps([{'id': m.id,
+                                 'description': m.description,
+                                 'conditions': json.loads(m.conditions)
+                                 } for m in methods]), mimetype='application/json')
 
 
 @search.route('/typeahead/go/<term>.json')

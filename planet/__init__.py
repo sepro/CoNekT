@@ -91,6 +91,7 @@ def create_app(config):
     from planet.controllers.expression_cluster import expression_cluster
     from planet.controllers.expression_profile import expression_profile
     from planet.controllers.expression_network import expression_network
+    from planet.controllers.expression_specificity import expression_specificity
     from planet.controllers.search import search
     from planet.controllers.help import help
     from planet.controllers.heatmap import heatmap
@@ -98,6 +99,7 @@ def create_app(config):
     from planet.controllers.graph_comparison import graph_comparison
     from planet.controllers.clade import clade
     from planet.controllers.ecc import ecc
+
 
     app.register_blueprint(main)
     if LOGIN_ENABLED:
@@ -114,6 +116,7 @@ def create_app(config):
     app.register_blueprint(expression_cluster, url_prefix='/cluster')
     app.register_blueprint(expression_profile, url_prefix='/profile')
     app.register_blueprint(expression_network, url_prefix='/network')
+    app.register_blueprint(expression_specificity, url_prefix='/specificity')
     app.register_blueprint(search, url_prefix='/search')
     app.register_blueprint(help, url_prefix='/help')
     app.register_blueprint(heatmap, url_prefix='/heatmap')
@@ -121,6 +124,7 @@ def create_app(config):
     app.register_blueprint(graph_comparison, url_prefix='/graph_comparison')
     app.register_blueprint(clade, url_prefix='/clade')
     app.register_blueprint(ecc, url_prefix='/ecc')
+
 
     # Admin panel
     if LOGIN_ENABLED:
