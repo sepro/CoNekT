@@ -12,6 +12,6 @@ class SearchSpecificProfilesForm(Form):
 
     def populate_form(self):
         self.species.choices = [(s.id, s.name) for s in Species.query.order_by(Species.name)]
-        self.methods.choices = [(0, "not loaded")]
-        self.conditions.choices = [(0, "not loaded")]
+        self.methods.choices = [(0, "Select species first")]
+        self.conditions.choices = [(0, "Select method first")]
 
