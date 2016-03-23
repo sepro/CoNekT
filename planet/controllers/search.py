@@ -110,7 +110,7 @@ def search_enriched_clusters():
     Search function to find clusters enriched with a specific GO term
     """
     form = SearchEnrichedClustersForm(request.form)
-    form.populate_method()
+    form.populate_form()
 
     if request.method == 'POST':
         term = request.form.get('go_term')
@@ -151,7 +151,7 @@ def search_specific_profiles():
     :return: Html response
     """
     form = SearchSpecificProfilesForm(request.form)
-    form.populate_species()
+    form.populate_form()
 
     print(form.species)
 

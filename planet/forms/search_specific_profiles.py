@@ -10,7 +10,7 @@ class SearchSpecificProfilesForm(Form):
     methods = SelectField('Method')
     conditions = SelectField('Condition')
 
-    def populate_species(self):
+    def populate_form(self):
         self.species.choices = [(s.id, s.name) for s in Species.query.order_by(Species.name)]
         self.methods.choices = [(0, "not loaded")]
         self.conditions.choices = [(0, "not loaded")]
