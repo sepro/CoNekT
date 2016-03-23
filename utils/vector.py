@@ -1,5 +1,6 @@
 from math import sqrt
 
+
 def dot_prod(a, b):
     """
     Calculates the dot product of two lists with values
@@ -18,4 +19,4 @@ def norm(a):
     :param a: list of values
     :return: the Frobenius norm
     """
-    return sqrt(sum([abs(i)**2 for i in a]))
+    return sqrt(sum([i**2 for i in a]))
