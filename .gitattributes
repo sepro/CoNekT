@@ -1,0 +1,2 @@
+planet/static/js/* linguist-vendored
+planet/static/js/planet* linguist-vendored=false
