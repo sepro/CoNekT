@@ -1,6 +1,11 @@
 {% if profile %}
 <div class="modal-header">
-<h4 class="modal-title" id="myModalLabel">Expression profile for: <strong>{{ profile.probe }}</strong></h4>
+    {% if  profile.sequence %}
+    <h4 class="modal-title" id="myModalLabel">Expression profile for: <strong>{{ profile.sequence.name }}</strong> <small>({{ profile.probe }})</small></h4>
+    {% else %}
+    <h4 class="modal-title" id="myModalLabel">Expression profile for: <strong>{{ profile.probe }}</strong></h4>
+    {% endif %}
+
 </div>
 <div class="modal-body" syle="width:700px;height:800px">
     <canvas id="profile-chart" class="center-block" width="700" height="800"/>
