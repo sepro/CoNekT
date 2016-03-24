@@ -38,12 +38,23 @@
 {% block extrajs %}
 <script src="{{ url_for('static', filename='js/bootstrap-slider.min.js') }}"></script>
 <script>
+$(function () {
 
-$('#cutoff').slider({
-	formatter: function(value) {
-		return 'Cutoff: ' + value;
-	}
+    $('#cutoff').slider({
+        formatter: function(value) {
+            return 'Cutoff: ' + value;
+        }
+    });
+
+    var formdata;
+
+    $.getJSON("{{ url_for('search.search_specific_profiles_json') }}", function(json) {
+      formdata = json;
+      console.log(formdata);
+    });
+
+
+
 });
-
 </script>
 {% endblock %}

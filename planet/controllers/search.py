@@ -158,6 +158,28 @@ def search_specific_profiles():
     return render_template("search_specific_profiles.html", form=form)
 
 
+@search.route('/specific/profiles/json')
+@cache.cached()
+def search_specific_profiles_json():
+    """
+    Controller that fetches the data for available methods
+
+    :param species_id: species
+    :return: JSON object with available methods
+    """
+    species = Species.query.all()
+    methods = ExpressionSpecificityMethod.query.all()
+
+    output = [{'id': s.id,
+               'name': s.name,
+               'methods': [{'id': m.id,
+                            'description': m.description,
+                            'conditions': json.loads(m.conditions)} for m in methods if m.species_id == s.id]
+               } for s in species]
+
+    return Response(json.dumps(output), mimetype='application/json')
+
+
 @search.route('/specific/profiles/methods/<int:species_id>')
 @cache.cached()
 def search_specific_profiles_methods(species_id):
