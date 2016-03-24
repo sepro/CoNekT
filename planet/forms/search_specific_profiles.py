@@ -9,6 +9,7 @@ class SearchSpecificProfilesForm(Form):
     species = SelectField('Species')
     methods = SelectField('Method')
     conditions = SelectField('Condition')
+    cutoff = StringField('Cutoff')
 
     def populate_form(self):
         self.species.choices = [(s.id, s.name) for s in Species.query.order_by(Species.name)]
