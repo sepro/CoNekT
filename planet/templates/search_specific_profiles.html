@@ -14,9 +14,9 @@
                             {{ form.csrf_token }}
                             <label>Species</label>
                             {{form.species(class_="form-control")}}<br/>
-                            <label>Methods</label>
+                            <label>Method</label>
                             {{form.methods(class_="form-control", disabled=True)}}<br/>
-                            <label>Conditions</label>
+                            <label>Condition</label>
                             {{form.conditions(class_="form-control", disabled=True)}}<br/>
                             <label><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr> cutoff :</label>
                             {{form.cutoff(class_="form-control", **{'data-provide':"slider",
@@ -47,6 +47,7 @@
             </thead>
             <tbody>
             {% for r in results %}
+                {% if r.profile.sequence %}
                     <tr>
                         <td>{{ r.id }}</td>
                         <td><a href="{{url_for('sequence.sequence_view', sequence_id=r.profile.sequence.id)}}">{{ r.profile.sequence.name }}</a></td>
@@ -54,6 +55,7 @@
                         <td>{{ r.score }}</td>
                         <td><a href="{{url_for('expression_profile.expression_profile_view', profile_id=r.profile_id)}}">view profile</a></td>
                     </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>
