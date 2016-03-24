@@ -17,7 +17,7 @@ class Sequence(db.Model):
     is_mitochondrial = db.Column(db.Boolean, default=False)
     is_chloroplast = db.Column(db.Boolean, default=False)
 
-    expression_profiles = db.relationship('ExpressionProfile', backref='sequence', lazy='dynamic')
+    expression_profiles = db.relationship('ExpressionProfile', backref=db.backref('sequence', lazy='joined'), lazy='dynamic')
     network_nodes = db.relationship('ExpressionNetwork', backref='sequence', lazy='dynamic')
     interpro_associations = db.relationship('SequenceInterproAssociation', backref='sequence', lazy='dynamic')
     go_associations = db.relationship('SequenceGOAssociation', backref='sequence', lazy='dynamic')

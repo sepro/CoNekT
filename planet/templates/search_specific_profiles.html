@@ -10,7 +10,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><strong>Search options</strong></div>
                     <div class="panel-body">
-                        <form method="POST"  action="{{ url_for('search.search_enriched_clusters') }}"  role="form">
+                        <form method="POST"  action="{{ url_for('search.search_specific_profiles') }}"  role="form">
                             {{ form.csrf_token }}
                             <label>Species</label>
                             {{form.species(class_="form-control")}}<br/>
@@ -31,6 +31,34 @@
                 </div>
             </div>
         </div>
+    {% elif results %}
+    <h1><em>{{species.name}}</em> profiles specific for <strong>{{condition}}</strong><br /><small>Method: {{method.description}}</small></h1>
+        <div class="row">
+        <table class="table table-striped" id="results_table">
+            <thead>
+            <tr>
+                <th data-sort="int">ID</th>
+
+                <th data-sort="string-ins">Gene</th>
+                <th data-sort="string-ins">Condition</th>
+                <th data-sort="float"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr> score</th>
+                <th data-sort="float">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for r in results %}
+                    <tr>
+                        <td>{{ r.id }}</td>
+                        <td><a href="{{url_for('sequence.sequence_view', sequence_id=r.profile.sequence.id)}}">{{ r.profile.sequence.name }}</a></td>
+                        <td>{{ r.condition }}</td>
+                        <td>{{ r.score }}</td>
+                        <td><a href="{{url_for('expression_profile.expression_profile_view', profile_id=r.profile_id)}}">view profile</a></td>
+                    </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        </div>
     {% endif %}
 </div>
 {% endblock %}
@@ -47,13 +75,74 @@ $(function () {
     });
 
     var formdata;
+    var selectedSpecies = []
+
+    var populate_species = function(data) {
+        $('#species').find('option').remove();
+        $.each(data, function () {
+            $('#species').append($("<option />").val(this.id).text(this.name));
+        });
+        $('#species').trigger('change');
+    };
+
+    var populate_methods = function(data) {
+        $('#methods').find('option').remove();
+        $.each(data, function () {
+            $('#methods').append($("<option />").val(this.id).text(this.description));
+        });
+
+        if ($('#methods').find('option').length > 0) {
+            $('#methods').prop('disabled', false);
+        } else {
+            $('#methods').prop('disabled', 'disabled');
+            $('#methods').append($("<option />").val(0).text("Not available"));
+        }
+        $('#methods').trigger('change');
+    }
+
+    var populate_conditions = function(data) {
+        $('#conditions').find('option').remove();
+        $.each(data, function () {
+            $('#conditions').append($("<option />").val(this).text(this));
+        });
+
+        if ($('#conditions').find('option').length > 0) {
+            $('#conditions').prop('disabled', false);
+        } else {
+            $('#conditions').prop('disabled', 'disabled');
+            $('#conditions').append($("<option />").val(0).text("Not available"));
+        }
+
+        $('#conditions').trigger('change');
+    }
+
+    $('#species').change(function(ev) {
+        var valueSelected = this.value;
+         $.each(formdata, function () {
+
+          if (this.id == valueSelected) {
+            selectedSpecies = this;
+            populate_methods(this.methods);
+          }
+
+         });
+    });
+
+    $('#methods').change(function(ev) {
+        var valueSelected = this.value;
+         $.each(selectedSpecies.methods, function () {
+
+          if (this.id == valueSelected) {
+            populate_conditions(this.conditions);
+          }
+
+         });
+    });
 
     $.getJSON("{{ url_for('search.search_specific_profiles_json') }}", function(json) {
       formdata = json;
-      console.log(formdata);
+      populate_species(formdata);
     });
-
-
 
 });
 </script>

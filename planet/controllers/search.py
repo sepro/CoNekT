@@ -5,7 +5,7 @@ from sqlalchemy import func
 from planet import cache
 from planet.models.go import GO
 from planet.models.search import Search
-from planet.models.expression_specificity import ExpressionSpecificityMethod
+from planet.models.expression_specificity import ExpressionSpecificityMethod, ExpressionSpecificity
 from planet.models.species import Species
 
 from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
@@ -142,7 +142,7 @@ def search_enriched_clusters():
         return render_template("search_enriched_clusters.html", form=form)
 
 
-@search.route('/specific/profiles')
+@search.route('/specific/profiles', methods=['GET', 'POST'])
 @cache.cached()
 def search_specific_profiles():
     """
@@ -153,9 +153,20 @@ def search_specific_profiles():
     form = SearchSpecificProfilesForm(request.form)
     form.populate_form()
 
-    print(form.species)
+    if request.method == 'GET':
+        return render_template("search_specific_profiles.html", form=form)
+    else:
+        species_id = request.form.get('species')
+        method_id = request.form.get('methods')
+        condition = request.form.get('conditions')
+        cutoff = request.form.get('cutoff')
 
-    return render_template("search_specific_profiles.html", form=form)
+        species = Species.query.get_or_404(species_id)
+        method = ExpressionSpecificityMethod.query.get_or_404(method_id)
+        results = ExpressionSpecificity.query.filter_by(method_id=method_id, condition=condition).filter(ExpressionSpecificity.score>=cutoff)
+        for r in results:
+            print(r)
+        return render_template("search_specific_profiles.html", results=results, species=species, method=method, condition=condition)
 
 
 @search.route('/specific/profiles/json')

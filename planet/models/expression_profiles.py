@@ -18,6 +18,8 @@ class ExpressionProfile(db.Model):
     sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'), index=True)
     profile = db.deferred(db.Column(db.Text))
 
+    specificities = db.relationship('ExpressionSpecificity', backref=db.backref('profile', lazy='joined'), lazy='dynamic')
+
     def __init__(self, probe, sequence_id, profile):
         self.probe = probe
         self.sequence_id = sequence_id
