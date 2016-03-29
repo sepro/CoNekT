@@ -89,7 +89,14 @@ SPECIES = {
         'clusters': 'data/hrr/Ptr.S=3R=50.hcca',
         'clusters_description': 'Ptr HCCA',
         'id': 1,
-        'network_id': 2
+        'network_id': 2,
+        'tissues': {"seedlings in light": "seedling",
+                    "dark sdlings in 3h light": "seedling",
+                    "seedlings in dark": "seedling",
+                    "young leaf": "leaf", "mature leaf": "leaf",
+                    "root": "root",
+                    "xylem": "stem",
+                    "female catkins": "female catkins", "male catkins": "male catkins"}
     },
     'Glycine max': {
         'code': 'gma',
@@ -213,7 +220,8 @@ with app.app_context():
     print("=========================================")
     for s, data in SPECIES.items():
         ExpressionSpecificityMethod.calculate_specificities(data['id'], s + " condition specific profiles")
-
+        if 'tissues' in data:
+            ExpressionSpecificityMethod.calculate_tissue_specificities(data['id'], s + " tissue specific profiles", data['tissues'])
 
     #
     # print("Adding XRefs")
