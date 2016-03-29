@@ -76,6 +76,80 @@ class ExpressionSpecificityMethod(db.Model):
         # write remaining specificities to the db
         db.engine.execute(ExpressionSpecificity.__table__.insert(), specificities)
 
+    @staticmethod
+    def calculate_tissue_specificities(species_id, description, condition_to_tissue):
+        """
+        Function calculates tissue specific genes based on the expression conditions. A dict is required to link
+        specific conditions to the correct tissues. This also allows conditions to be excluded in case they are
+        unrelated with a specific tissue.
+
+
+        :param species_id: internal species ID
+        :param description: description for the method to determine the specificity
+        :param condition_to_tissue: dict to connect a condition to a tissue
+        """
+        new_method = ExpressionSpecificityMethod()
+        new_method.species_id = species_id
+        new_method.description = description
+        tissues = list(set(condition_to_tissue.values()))
+
+        # get profile from the database (ORM free for speed)
+        profiles = db.engine.execute(db.select([ExpressionProfile.__table__.c.id, ExpressionProfile.__table__.c.profile]).
+                                     where(ExpressionProfile.__table__.c.species_id == species_id)
+                                     ).fetchall()
+
+        new_method.conditions = json.dumps(tissues)
+
+        print(tissues)
+
+        db.session.add(new_method)
+        db.session.commit()
+
+        # detect specifities and add to the database
+        specificities = []
+
+        for profile_id, profile in profiles:
+            # prepare profile data for calculation
+            profile_data = json.loads(profile)
+            profile_means = {}
+            for t in tissues:
+                count = 0
+                total_sum = 0
+                valid_conditions = [k for k in profile_data['data'] if k in condition_to_tissue and condition_to_tissue[k] == t]
+                for k, v in profile_data['data'].items():
+                    if k in valid_conditions:
+                        count += len(v)
+                        total_sum += sum(v)
+
+                profile_means[t] = total_sum/count if count != 0 else 0
+
+            # determine spm score for each condition
+            profile_specificities = []
+
+            for t in tissues:
+                score = expression_specificity(t, profile_means)
+                new_specificity = {
+                    'profile_id': profile_id,
+                    'condition': t,
+                    'score': score,
+                    'method_id': new_method.id,
+                }
+
+                profile_specificities.append(new_specificity)
+
+            # sort conditions and add top 2 to array
+            profile_specificities = sorted(profile_specificities, key=lambda x: x['score'], reverse=True)
+
+            specificities += profile_specificities[:2]
+
+            # write specificities to db if there are more than 400 (ORM free for speed)
+            if len(specificities) > 400:
+                db.engine.execute(ExpressionSpecificity.__table__.insert(), specificities)
+                specificities = []
+
+        # write remaining specificities to the db
+        db.engine.execute(ExpressionSpecificity.__table__.insert(), specificities)
+
 
 class ExpressionSpecificity(db.Model):
     __tablename__ = 'expression_specificity'
