@@ -13,6 +13,7 @@
   * [XMLWriter for javascript](http://flesler.blogspot.de/2008/03/xmlwriter-for-javascript.html) by Ariel Flesler
   * [Pablo.js](http://pablojs.com/)
   * [Stupid-Table-Plugin](https://github.com/joequery/Stupid-Table-Plugin)
-  * [table2CSV.js](http://www.kunalbabre.com/projects/table2CSV.php)\
+  * [table2CSV.js](http://www.kunalbabre.com/projects/table2CSV.php)
   * [D3.js](https://d3js.org/) 
   * [d3.phylogram.js](https://gist.github.com/kueda/1036776)
+  * [typeahead.js](https://twitter.github.io/typeahead.js/)
