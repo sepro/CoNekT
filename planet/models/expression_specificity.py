@@ -18,9 +18,7 @@ class ExpressionSpecificityMethod(db.Model):
 
     @staticmethod
     def calculate_specificities(species_id, description):
-        new_method = ExpressionSpecificityMethod()
-        new_method.species_id = species_id
-        new_method.description = description
+
         conditions = []
 
         # get profile from the database (ORM free for speed)
@@ -35,46 +33,9 @@ class ExpressionSpecificityMethod(db.Model):
                 if condition not in conditions:
                     conditions.append(condition)
 
-        # complete new method and add to database
-        new_method.conditions = json.dumps(conditions)
-        db.session.add(new_method)
-        db.session.commit()
+        tissues = {k: k for k in conditions}
 
-        # detect specifities and add to the database
-        specificities = []
-
-        for profile_id, profile in profiles:
-            # prepare profile data for calculation
-            profile_data = json.loads(profile)
-            profile_means = {k: mean(v) for k, v in profile_data['data'].items()}
-
-            # determine spm score for each condition
-            profile_specificities = []
-
-            for condition in profile_data['order']:
-                score = expression_specificity(condition, profile_means)
-                new_specificity = {
-                    'profile_id': profile_id,
-                    'condition': condition,
-                    'score': score,
-                    'method_id': new_method.id,
-                }
-
-                profile_specificities.append(new_specificity)
-
-            # sort conditions and add top 2 to array
-
-            profile_specificities = sorted(profile_specificities, key=lambda x: x['score'], reverse=True)
-
-            specificities += profile_specificities[:2]
-
-            # write specificities to db if there are more than 400 (ORM free for speed)
-            if len(specificities) > 400:
-                db.engine.execute(ExpressionSpecificity.__table__.insert(), specificities)
-                specificities = []
-
-        # write remaining specificities to the db
-        db.engine.execute(ExpressionSpecificity.__table__.insert(), specificities)
+        ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description, tissues)
 
     @staticmethod
     def calculate_tissue_specificities(species_id, description, condition_to_tissue):
