@@ -18,6 +18,13 @@ class ExpressionSpecificityMethod(db.Model):
 
     @staticmethod
     def calculate_specificities(species_id, description):
+        """
+        Function that calculates condition specificities for each profile. No grouping is applied, each condition is
+        used as is
+
+        :param species_id: internal species ID
+        :param description: description for the method to determine the specificity
+        """
 
         conditions = []
 
@@ -33,9 +40,9 @@ class ExpressionSpecificityMethod(db.Model):
                 if condition not in conditions:
                     conditions.append(condition)
 
-        tissues = {k: k for k in conditions}
-
-        ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description, tissues)
+        # convert list into dictionary and run function
+        conditions_dict = {k: k for k in conditions}
+        ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description, conditions_dict)
 
     @staticmethod
     def calculate_tissue_specificities(species_id, description, condition_to_tissue):
@@ -60,8 +67,6 @@ class ExpressionSpecificityMethod(db.Model):
                                      ).fetchall()
 
         new_method.conditions = json.dumps(tissues)
-
-        print(tissues)
 
         db.session.add(new_method)
         db.session.commit()
