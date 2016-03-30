@@ -20,7 +20,6 @@ from flask.ext.testing import TestCase
 
 from tests.config import LOGIN_ENABLED, BLAST_ENABLED
 
-import sys
 import json
 import unittest
 
@@ -227,33 +226,31 @@ class WebsiteTest(TestCase):
         Test for routes associated with a Sequence
         """
         sequence = Sequence.query.first()
-        if sequence is not None:
-            response = self.client.get("/sequence/view/%d" % sequence.id)
-            self.assert_template_used('sequence.html')
-            self.assert200(response)
 
-            response = self.client.get("/sequence/fasta/coding/%d" % sequence.id)
-            self.assert200(response)
-            data = response.data.decode("utf-8").strip()
-            self.assertEqual(len(data.split('\n')), 2)
-            self.assertEqual(data[0], '>')
-            self.assertTrue('>' + sequence.name + '\n' in data)
+        response = self.client.get("/sequence/view/%d" % sequence.id)
+        self.assert_template_used('sequence.html')
+        self.assert200(response)
 
-            response = self.client.get("/sequence/fasta/protein/%d" % sequence.id)
-            self.assert200(response)
-            data = response.data.decode("utf-8").strip()
-            self.assertEqual(len(data.split('\n')), 2)
-            self.assertEqual(data[0], '>')
-            self.assertTrue('>' + sequence.name + '\n' in data)
+        response = self.client.get("/sequence/fasta/coding/%d" % sequence.id)
+        self.assert200(response)
+        data = response.data.decode("utf-8").strip()
+        self.assertEqual(len(data.split('\n')), 2)
+        self.assertEqual(data[0], '>')
+        self.assertTrue('>' + sequence.name + '\n' in data)
 
-            response = self.client.get("/sequence/find/" + sequence.name)
-            self.assert_template_used('sequence.html')
-            self.assert200(response)
+        response = self.client.get("/sequence/fasta/protein/%d" % sequence.id)
+        self.assert200(response)
+        data = response.data.decode("utf-8").strip()
+        self.assertEqual(len(data.split('\n')), 2)
+        self.assertEqual(data[0], '>')
+        self.assertTrue('>' + sequence.name + '\n' in data)
 
-            response = self.client.get("/sequence/view/a")
-            self.assert404(response)
-        else:
-            print('  * test_sequence: No sequence found, skipping test...', file=sys.stderr)
+        response = self.client.get("/sequence/find/" + sequence.name)
+        self.assert_template_used('sequence.html')
+        self.assert200(response)
+
+        response = self.client.get("/sequence/view/a")
+        self.assert404(response)
 
     def test_species(self):
         """
@@ -265,79 +262,74 @@ class WebsiteTest(TestCase):
 
         species = Species.query.first()
         sequence = species.sequences.first()
-        if species is not None:
-            response = self.client.get("/species/view/%d" % species.id)
-            self.assert_template_used('species.html')
-            self.assert200(response)
 
-            response = self.client.get("/species/sequences/%d/1" % species.id)
-            self.assert_template_used('pagination/sequences.html')
-            self.assert200(response)
+        response = self.client.get("/species/view/%d" % species.id)
+        self.assert_template_used('species.html')
+        self.assert200(response)
 
-            response = self.client.get("/species/download/coding/%d" % species.id)
-            self.assert200(response)
-            data = response.data.decode("utf-8").strip()
-            self.assertTrue(len(data.split('\n')) > 0)
-            self.assertEqual(data[0], '>')
-            self.assertTrue('>' + sequence.name + '\n' in data)
+        response = self.client.get("/species/sequences/%d/1" % species.id)
+        self.assert_template_used('pagination/sequences.html')
+        self.assert200(response)
 
-            response = self.client.get("/species/download/protein/%d" % species.id)
-            self.assert200(response)
-            data = response.data.decode("utf-8").strip()
-            self.assertTrue(len(data.split('\n')) > 0)
-            self.assertEqual(data[0], '>')
-            self.assertTrue('>' + sequence.name + '\n' in data)
+        response = self.client.get("/species/download/coding/%d" % species.id)
+        self.assert200(response)
+        data = response.data.decode("utf-8").strip()
+        self.assertTrue(len(data.split('\n')) > 0)
+        self.assertEqual(data[0], '>')
+        self.assertTrue('>' + sequence.name + '\n' in data)
 
-            response = self.client.get("/species/stream/coding/%d" % species.id)
-            self.assert200(response)
-            data = response.data.decode("utf-8").strip()
-            self.assertTrue(len(data.split('\n')) > 0)
-            self.assertEqual(data[0], '>')
-            self.assertTrue('>' + sequence.name + '\n' in data)
+        response = self.client.get("/species/download/protein/%d" % species.id)
+        self.assert200(response)
+        data = response.data.decode("utf-8").strip()
+        self.assertTrue(len(data.split('\n')) > 0)
+        self.assertEqual(data[0], '>')
+        self.assertTrue('>' + sequence.name + '\n' in data)
 
-            response = self.client.get("/species/stream/protein/%d" % species.id)
-            self.assert200(response)
-            data = response.data.decode("utf-8").strip()
-            self.assertTrue(len(data.split('\n')) > 0)
-            self.assertEqual(data[0], '>')
-            self.assertTrue('>' + sequence.name + '\n' in data)
-        else:
-            print('  * test_species: No species found, skipping test...', file=sys.stderr)
+        response = self.client.get("/species/stream/coding/%d" % species.id)
+        self.assert200(response)
+        data = response.data.decode("utf-8").strip()
+        self.assertTrue(len(data.split('\n')) > 0)
+        self.assertEqual(data[0], '>')
+        self.assertTrue('>' + sequence.name + '\n' in data)
+
+        response = self.client.get("/species/stream/protein/%d" % species.id)
+        self.assert200(response)
+        data = response.data.decode("utf-8").strip()
+        self.assertTrue(len(data.split('\n')) > 0)
+        self.assertEqual(data[0], '>')
+        self.assertTrue('>' + sequence.name + '\n' in data)
 
     def test_interpro(self):
         """
         Test for routes associated with an InterPro domain
         """
         interpro = Interpro.query.first()
-        if interpro is not None:
-            response = self.client.get("/interpro/view/%d" % interpro.id)
-            self.assert_template_used('interpro.html')
-            self.assert200(response)
 
-            response = self.client.get("/interpro/find/" + interpro.label)
-            self.assert_template_used('interpro.html')
-            self.assert200(response)
+        response = self.client.get("/interpro/view/%d" % interpro.id)
+        self.assert_template_used('interpro.html')
+        self.assert200(response)
 
-            response = self.client.get("/interpro/sequences/%d/1" % interpro.id)
-            self.assert_template_used('pagination/sequences.html')
-            self.assert200(response)
+        response = self.client.get("/interpro/find/" + interpro.label)
+        self.assert_template_used('interpro.html')
+        self.assert200(response)
 
-            response = self.client.get("/interpro/sequences/table/%d" % interpro.id)
-            self.assert_template_used('tables/sequences.csv')
-            self.assert200(response)
+        response = self.client.get("/interpro/sequences/%d/1" % interpro.id)
+        self.assert_template_used('pagination/sequences.html')
+        self.assert200(response)
 
-            response = self.client.get("/interpro/json/species/%d" % interpro.id)
-            self.assert200(response)
+        response = self.client.get("/interpro/sequences/table/%d" % interpro.id)
+        self.assert_template_used('tables/sequences.csv')
+        self.assert200(response)
 
-            data = json.loads(response.data.decode('utf-8'))
+        response = self.client.get("/interpro/json/species/%d" % interpro.id)
+        self.assert200(response)
 
-            self.assertTrue('highlight' in data[0].keys())
-            self.assertTrue('color' in data[0].keys())
-            self.assertTrue('value' in data[0].keys())
-            self.assertTrue('label' in data[0].keys())
+        data = json.loads(response.data.decode('utf-8'))
 
-        else:
-            print('  * test_interpro: No interpro domain found, skipping test...', file=sys.stderr)
+        self.assertTrue('highlight' in data[0].keys())
+        self.assertTrue('color' in data[0].keys())
+        self.assertTrue('value' in data[0].keys())
+        self.assertTrue('label' in data[0].keys())
 
     def test_go(self):
         """
@@ -345,39 +337,36 @@ class WebsiteTest(TestCase):
         """
         go = GO.query.first()
 
-        if go is not None:
-            response = self.client.get("/go/view/%d" % go.id)
-            self.assert_template_used('go.html')
-            self.assert200(response)
+        response = self.client.get("/go/view/%d" % go.id)
+        self.assert_template_used('go.html')
+        self.assert200(response)
 
-            response = self.client.get("/go/find/" + go.label)
-            self.assertRedirects(response, "/go/view/%d" % go.id)
+        response = self.client.get("/go/find/" + go.label)
+        self.assertRedirects(response, "/go/view/%d" % go.id)
 
-            response = self.client.get("/go/sequences/%d/1" % go.id)
-            self.assert_template_used('pagination/sequences.html')
-            self.assert200(response)
+        response = self.client.get("/go/sequences/%d/1" % go.id)
+        self.assert_template_used('pagination/sequences.html')
+        self.assert200(response)
 
-            response = self.client.get("/go/sequences/table/%d" % go.id)
-            self.assert_template_used('tables/sequences.csv')
-            self.assert200(response)
+        response = self.client.get("/go/sequences/table/%d" % go.id)
+        self.assert_template_used('tables/sequences.csv')
+        self.assert200(response)
 
-            response = self.client.get("/go/json/species/%d" % go.id)
-            self.assert200(response)
+        response = self.client.get("/go/json/species/%d" % go.id)
+        self.assert200(response)
 
-            data = json.loads(response.data.decode('utf-8'))
+        data = json.loads(response.data.decode('utf-8'))
 
-            self.assertTrue('highlight' in data[0].keys())
-            self.assertTrue('color' in data[0].keys())
-            self.assertTrue('value' in data[0].keys())
-            self.assertTrue('label' in data[0].keys())
+        self.assertTrue('highlight' in data[0].keys())
+        self.assertTrue('color' in data[0].keys())
+        self.assertTrue('value' in data[0].keys())
+        self.assertTrue('label' in data[0].keys())
 
-            response = self.client.get("/go/json/genes/" + go.label)
-            self.assert200(response)
+        response = self.client.get("/go/json/genes/" + go.label)
+        self.assert200(response)
 
-            data = json.loads(response.data.decode('utf-8'))
-            self.assertTrue(1 in data)
-        else:
-            print('  * test_go: No go label found, skipping test...', file=sys.stderr)
+        data = json.loads(response.data.decode('utf-8'))
+        self.assertTrue(1 in data)
 
     def test_family(self):
         """
@@ -385,114 +374,111 @@ class WebsiteTest(TestCase):
         """
         family = GeneFamily.query.first()
 
-        if family is not None:
-            response = self.client.get("/family/view/%d" % family.id)
-            self.assert_template_used('family.html')
-            self.assert200(response)
+        response = self.client.get("/family/view/%d" % family.id)
+        self.assert_template_used('family.html')
+        self.assert200(response)
 
-            response = self.client.get("/family/find/" + family.name)
-            self.assert_template_used('family.html')
-            self.assert200(response)
+        response = self.client.get("/family/find/" + family.name)
+        self.assert_template_used('family.html')
+        self.assert200(response)
 
-            response = self.client.get("/family/sequences/%d/1" % family.id)
-            self.assert_template_used('pagination/sequences.html')
-            self.assert200(response)
+        response = self.client.get("/family/sequences/%d/1" % family.id)
+        self.assert_template_used('pagination/sequences.html')
+        self.assert200(response)
 
-            response = self.client.get("/family/sequences/table/%d" % family.id)
-            self.assert_template_used('tables/sequences.csv')
-            self.assert200(response)
+        response = self.client.get("/family/sequences/table/%d" % family.id)
+        self.assert_template_used('tables/sequences.csv')
+        self.assert200(response)
 
-            response = self.client.get("/family/json/species/%d" % family.id)
-            self.assert200(response)
+        response = self.client.get("/family/json/species/%d" % family.id)
+        self.assert200(response)
 
-            data = json.loads(response.data.decode('utf-8'))
+        data = json.loads(response.data.decode('utf-8'))
 
-            self.assertTrue('highlight' in data[0].keys())
-            self.assertTrue('color' in data[0].keys())
-            self.assertTrue('value' in data[0].keys())
-            self.assertTrue('label' in data[0].keys())
-        else:
-            print('  * test_family: No family found, skipping test...', file=sys.stderr)
+        self.assertTrue('highlight' in data[0].keys())
+        self.assertTrue('color' in data[0].keys())
+        self.assertTrue('value' in data[0].keys())
+        self.assertTrue('label' in data[0].keys())
+
 
     def test_profile(self):
         """
         Test for routes associated with an ExpressionProfile
         """
         profile = ExpressionProfile.query.first()
-        if profile is not None:
-            response = self.client.get("/profile/view/%d" % profile.id)
-            self.assert_template_used('expression_profile.html')
-            self.assert200(response)
 
-            response = self.client.get("/profile/modal/%d" % profile.id)
-            self.assert_template_used('modals/expression_profile.html')
-            self.assert200(response)
+        response = self.client.get("/profile/view/%d" % profile.id)
+        self.assert_template_used('expression_profile.html')
+        self.assert200(response)
 
-            response = self.client.get("/profile/find/" + profile.probe)
-            self.assert_template_used('expression_profile.html')
-            self.assert200(response)
+        response = self.client.get("/profile/modal/%d" % profile.id)
+        self.assert_template_used('modals/expression_profile.html')
+        self.assert200(response)
 
-            response = self.client.get("/profile/find/%s/%d" % (profile.probe, 2))
-            self.assert404(response)
+        response = self.client.get("/profile/find/" + profile.probe)
+        self.assert_template_used('expression_profile.html')
+        self.assert200(response)
 
-            response = self.client.get("/profile/compare/%d/%d" % (profile.id, profile.id))
-            self.assert_template_used('compare_profiles.html')
-            self.assert200(response)
+        response = self.client.get("/profile/find/%s/%d" % (profile.probe, 2))
+        self.assert404(response)
 
-            response = self.client.get("/profile/compare_probes/%s/%s/%d" % (profile.probe, profile.probe, 1))
-            self.assert_template_used('compare_profiles.html')
-            self.assert200(response)
+        response = self.client.get("/profile/compare/%d/%d" % (profile.id, profile.id))
+        self.assert_template_used('compare_profiles.html')
+        self.assert200(response)
 
-            response = self.client.get("/profile/compare_probes/%s/%s/%d" % (profile.probe, profile.probe, 2))
-            self.assert404(response)
+        response = self.client.get("/profile/compare_probes/%s/%s/%d" % (profile.probe, profile.probe, 1))
+        self.assert_template_used('compare_profiles.html')
+        self.assert200(response)
 
-            response = self.client.get("/profile/json/radar/%d" % profile.id)
-            self.assert200(response)
-            data = json.loads(response.data.decode('utf-8'))
-            self.assertTrue('labels' in data.keys())
-            self.assertTrue('datasets' in data.keys())
-            self.assertTrue('strokeColor' in data['datasets'][0].keys())
-            self.assertTrue('data' in data['datasets'][0].keys())
-            self.assertTrue('pointStrokeColor' in data['datasets'][0].keys())
-            self.assertTrue('fillColor' in data['datasets'][0].keys())
-            self.assertTrue('label' in data['datasets'][0].keys())
-            self.assertTrue('pointHighlightStroke' in data['datasets'][0].keys())
-            self.assertTrue('pointColor' in data['datasets'][0].keys())
-            self.assertTrue('pointHighlightFill' in data['datasets'][0].keys())
+        response = self.client.get("/profile/compare_probes/%s/%s/%d" % (profile.probe, profile.probe, 2))
+        self.assert404(response)
 
-            response = self.client.get("/profile/json/plot/%d" % profile.id)
-            self.assert200(response)
+        response = self.client.get("/profile/json/radar/%d" % profile.id)
+        self.assert200(response)
+        data = json.loads(response.data.decode('utf-8'))
+        self.assertTrue('labels' in data.keys())
+        self.assertTrue('datasets' in data.keys())
+        self.assertTrue('strokeColor' in data['datasets'][0].keys())
+        self.assertTrue('data' in data['datasets'][0].keys())
+        self.assertTrue('pointStrokeColor' in data['datasets'][0].keys())
+        self.assertTrue('fillColor' in data['datasets'][0].keys())
+        self.assertTrue('label' in data['datasets'][0].keys())
+        self.assertTrue('pointHighlightStroke' in data['datasets'][0].keys())
+        self.assertTrue('pointColor' in data['datasets'][0].keys())
+        self.assertTrue('pointHighlightFill' in data['datasets'][0].keys())
 
-            data = json.loads(response.data.decode('utf-8'))
-            self.assertTrue('labels' in data.keys())
-            self.assertTrue('datasets' in data.keys())
-            for i in range(3):
-                self.assertTrue('strokeColor' in data['datasets'][i].keys())
-                self.assertTrue('data' in data['datasets'][i].keys())
-                self.assertTrue('pointStrokeColor' in data['datasets'][i].keys())
-                self.assertTrue('fillColor' in data['datasets'][i].keys())
-                self.assertTrue('label' in data['datasets'][i].keys())
-                self.assertTrue('pointHighlightStroke' in data['datasets'][i].keys())
-                self.assertTrue('pointColor' in data['datasets'][i].keys())
-                self.assertTrue('pointHighlightFill' in data['datasets'][i].keys())
+        response = self.client.get("/profile/json/plot/%d" % profile.id)
+        self.assert200(response)
 
-            response = self.client.get("/profile/json/compare_plot/%d/%d" % (profile.id, profile.id))
-            self.assert200(response)
+        data = json.loads(response.data.decode('utf-8'))
+        self.assertTrue('labels' in data.keys())
+        self.assertTrue('datasets' in data.keys())
+        for i in range(3):
+            self.assertTrue('strokeColor' in data['datasets'][i].keys())
+            self.assertTrue('data' in data['datasets'][i].keys())
+            self.assertTrue('pointStrokeColor' in data['datasets'][i].keys())
+            self.assertTrue('fillColor' in data['datasets'][i].keys())
+            self.assertTrue('label' in data['datasets'][i].keys())
+            self.assertTrue('pointHighlightStroke' in data['datasets'][i].keys())
+            self.assertTrue('pointColor' in data['datasets'][i].keys())
+            self.assertTrue('pointHighlightFill' in data['datasets'][i].keys())
 
-            data = json.loads(response.data.decode('utf-8'))
-            self.assertTrue('labels' in data.keys())
-            self.assertTrue('datasets' in data.keys())
-            for i in range(2):
-                self.assertTrue('strokeColor' in data['datasets'][i].keys())
-                self.assertTrue('data' in data['datasets'][i].keys())
-                self.assertTrue('pointStrokeColor' in data['datasets'][i].keys())
-                self.assertTrue('fillColor' in data['datasets'][i].keys())
-                self.assertTrue('label' in data['datasets'][i].keys())
-                self.assertTrue('pointHighlightStroke' in data['datasets'][i].keys())
-                self.assertTrue('pointColor' in data['datasets'][i].keys())
-                self.assertTrue('pointHighlightFill' in data['datasets'][i].keys())
-        else:
-            print('  * test_profile: No profile found, skipping test...', file=sys.stderr)
+        response = self.client.get("/profile/json/compare_plot/%d/%d" % (profile.id, profile.id))
+        self.assert200(response)
+
+        data = json.loads(response.data.decode('utf-8'))
+        self.assertTrue('labels' in data.keys())
+        self.assertTrue('datasets' in data.keys())
+        for i in range(2):
+            self.assertTrue('strokeColor' in data['datasets'][i].keys())
+            self.assertTrue('data' in data['datasets'][i].keys())
+            self.assertTrue('pointStrokeColor' in data['datasets'][i].keys())
+            self.assertTrue('fillColor' in data['datasets'][i].keys())
+            self.assertTrue('label' in data['datasets'][i].keys())
+            self.assertTrue('pointHighlightStroke' in data['datasets'][i].keys())
+            self.assertTrue('pointColor' in data['datasets'][i].keys())
+            self.assertTrue('pointHighlightFill' in data['datasets'][i].keys())
+
 
     def test_help(self):
         """
