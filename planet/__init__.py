@@ -95,10 +95,10 @@ def create_app(config):
     from planet.controllers.help import help
     from planet.controllers.heatmap import heatmap
     from planet.controllers.profile_comparison import profile_comparison
+    from planet.controllers.custom_network import custom_network
     from planet.controllers.graph_comparison import graph_comparison
     from planet.controllers.clade import clade
     from planet.controllers.ecc import ecc
-
 
     app.register_blueprint(main)
     if LOGIN_ENABLED:
@@ -119,6 +119,7 @@ def create_app(config):
     app.register_blueprint(help, url_prefix='/help')
     app.register_blueprint(heatmap, url_prefix='/heatmap')
     app.register_blueprint(profile_comparison, url_prefix='/profile_comparison')
+    app.register_blueprint(custom_network, url_prefix='/custom_network')
     app.register_blueprint(graph_comparison, url_prefix='/graph_comparison')
     app.register_blueprint(clade, url_prefix='/clade')
     app.register_blueprint(ecc, url_prefix='/ecc')
