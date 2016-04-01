@@ -194,6 +194,7 @@ class WebsiteTest(TestCase):
                 self.assertTrue('family_clade_count' in node['data'].keys())
                 self.assertTrue('gene_id' in node['data'].keys())
                 self.assertTrue('family_id' in node['data'].keys())
+                self.assertTrue('family_url' in node['data'].keys())
                 self.assertTrue('family_clade' in node['data'].keys())
                 self.assertTrue('family_shape' in node['data'].keys())
                 if not ecc_graph:

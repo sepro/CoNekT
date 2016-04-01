@@ -97,6 +97,7 @@ class CytoscapeHelper:
                     node["data"]["interpro"] = data[node["data"]["gene_id"]]["interpro"]
                 node["data"]["family_name"] = data[node["data"]["gene_id"]]["name"]
                 node["data"]["family_id"] = data[node["data"]["gene_id"]]["id"]
+                node["data"]["family_url"] = data[node["data"]["gene_id"]]["url"]
                 node["data"]["family_clade"] = data[node["data"]["gene_id"]]["clade"]
                 node["data"]["family_clade_count"] = data[node["data"]["gene_id"]]["clade_count"]
             else:
