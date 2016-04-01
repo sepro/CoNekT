@@ -78,7 +78,7 @@
                             <table class="table  table-striped" id="SimilarClusters">
                                 <thead>
                                     <tr>
-                                        <th data-sort="string-ins">Source</th>
+                                        <th data-sort="string-ins">Cluster</th>
                                         <th data-sort="string-ins">Target</th>
                                         <th data-sort="float">jaccard index</th>
                                         <th data-sort="string-ins">Gene Family Method</th>
@@ -88,8 +88,13 @@
                                 <tbody>
                                     {% for sc in similar_clusters %}
                                         <tr>
-                                            <td>{{ sc.source.name }}</td>
-                                            <td>{{ sc.target.name }}</td>
+                                            {% if sc.target.name == cluster.name %}
+                                                <td>{{ sc.source.method.method }}</td>
+                                                <td>{{ sc.source.name }}</td>
+                                            {% else %}
+                                                <td>{{ sc.target.method.method }}</td>
+                                                <td>{{ sc.target.name }}</td>
+                                            {% endif %}
                                             <td>{{ sc.jaccard_index|round(3) }}</td>
                                             <td>{{ sc.gene_family_method.method }}</td>
                                             <td><a href="{{ url_for('graph_comparison.graph_comparison_cluster', one=sc.source_id, two=sc.target_id, family_method_id=sc.gene_family_method_id) }}">Compare</a></td>
