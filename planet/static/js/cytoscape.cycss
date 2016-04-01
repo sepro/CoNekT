@@ -113,6 +113,10 @@ edge.default {
         line-color: data(color);
 }
 
+edge.default_width {
+        width: 1;
+}
+
 edge.depth {
         width: mapData(depth, 0, 2, 3, 1);
 }
