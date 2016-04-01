@@ -232,7 +232,7 @@ $('#cy-edge-score').on("slide", function(slideEvt) {
 {% if graph_data %}
 <script>
 $(function(){
-    graph_data = {{ graph_data|safe }};
+    graph_data = {{ graph_data }};
     console.log(graph_data);
 });
 </script>

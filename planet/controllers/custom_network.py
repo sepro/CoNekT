@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, Response
+from flask import Blueprint, request, render_template, Response, Markup
 
 from planet.models.expression_networks import ExpressionNetwork
 from planet.forms.custom_network import CustomNetworkForm
@@ -29,7 +29,7 @@ def custom_network_main():
         network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
         network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
 
-        return render_template("expression_graph.html", graph_data=json.dumps(network_cytoscape))
+        return render_template("expression_graph.html", graph_data=Markup(json.dumps(network_cytoscape)))
     else:
         return render_template("custom_network.html", form=form)
 
