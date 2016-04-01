@@ -18,7 +18,7 @@ $(function() {
         svg_legend.find('[edge_color="color"]').attr('style', 'opacity:100')
 
         svg_legend.find('[edge_width]').attr('style', 'opacity:0');
-        svg_legend.find('[edge_width="default"]').attr('style', 'opacity:100')
+        svg_legend.find('[edge_width="default_width"]').attr('style', 'opacity:100')
 
         svg_legend.find('[node_color]').attr('style', 'opacity:0');
         svg_legend.find('[node_color="color"]').attr('style', 'opacity:100')
