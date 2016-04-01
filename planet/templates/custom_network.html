@@ -11,7 +11,7 @@
             <div class="panel-body">
                 <form method="POST"  action="{{ url_for('custom_network.custom_network_main') }}"  role="form">
                     {{ form.csrf_token }}
-                    {{form.species_id(class_="form-control") }}<br />
+                    {{form.method_id(class_="form-control") }}<br />
                     {{form.probes(class_="form-control") }}<br />
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>

@@ -9,7 +9,7 @@ var cycss_url = $('#cy').attr( "cycss" );
 cy = cytoscape({
   container: document.getElementById('cy'),
   style: $.get(cycss_url),
-  elements: $.getJSON(url),
+  elements: url !== undefined ? $.getJSON(url) : graph_data,
   layout: {
     name: 'concentric',
     padding: 30,

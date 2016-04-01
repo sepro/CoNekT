@@ -203,6 +203,9 @@
            {% elif sequence %}
             <h1><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr> network: <strong>{{ sequence.name }}</strong><br /><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
             <div id="cy" json="{{ url_for('ecc.ecc_graph_json', sequence=sequence.id, network=network_method_id, family=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
+           {% elif graph_data %}
+            <h1>Custom network <button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            <div id="cy" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% endif %}
             <div id="loading"><span class="fa fa-refresh fa-spin"></span></div>
             <div id="legend" url="{{ url_for('static', filename='svg/legend.svg') }}"></div>
@@ -226,6 +229,14 @@ $('#cy-edge-score').on("slide", function(slideEvt) {
     $("#cy-edge-score-value").text(slideEvt.value);
 });
 </script>
+{% if graph_data %}
+<script>
+$(function(){
+    graph_data = {{ graph_data|safe }};
+    console.log(graph_data);
+});
+</script>
+{% endif %}
 <script src="{{ url_for('static', filename='js/pablo.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/planet_svg_legend.js') }}"></script>
 <script src="{{ url_for('static', filename='js/XMLWriter-1.0.0-min.js') }}"></script>

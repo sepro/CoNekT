@@ -347,6 +347,51 @@ class ExpressionNetwork(db.Model):
         return {"nodes": nodes, "edges": edges}
 
     @staticmethod
+    def get_custom_network(method_id, probes):
+        nodes = []
+        edges = []
+
+        probes = ExpressionNetwork.query.filter(ExpressionNetwork.method_id == method_id).\
+            filter(ExpressionNetwork.probe.in_(probes)).all()
+
+        valid_nodes = []
+
+        for p in probes:
+            node = {"id": p.probe,
+                    "name": p.probe,
+                    "probe_id": p.id,
+                    "gene_id": int(p.sequence_id) if p.sequence_id is not None else None,
+                    "gene_name": p.sequence.name if p.sequence_id is not None else p.probe,
+                    "node_type": "query",
+                    "depth": 0}
+
+            valid_nodes.append(p.probe)
+            nodes.append(node)
+
+        existing_edges = []
+
+        for p in probes:
+            source = p.probe
+            neighborhood = json.loads(p.network)
+            for n in neighborhood:
+                if n["probe_name"] in valid_nodes:
+                    if [source, n["probe_name"]] not in existing_edges:
+                        edges.append({"source": source,
+                                      "target": n["probe_name"],
+                                      "profile_comparison":
+                                          url_for('expression_profile.expression_profile_compare_probes',
+                                                  probe_a=source,
+                                                  probe_b=n["probe_name"],
+                                                  species_id=p.method.species.id),
+                                      "depth": 0,
+                                      "link_score": n["link_score"],
+                                      "edge_type": p.method.edge_type})
+                        existing_edges.append([source, n["probe_name"]])
+                        existing_edges.append([n["probe_name"], source])
+
+        return {"nodes": nodes, "edges": edges}
+
+    @staticmethod
     def __process_link(linked_probe, depth):
         """
         Internal function that processes a linked probe (from the ExpressionNetwork.network field) to a data entry
