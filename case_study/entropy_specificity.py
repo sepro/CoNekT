@@ -7,7 +7,7 @@ from sqlalchemy.orm import joinedload
 app = create_app('config')
 
 with app.app_context():
-    profiles = ExpressionProfile.all()
+    profiles = ExpressionProfile.query.all()
 
     with open("./data/entropy_specificity.txt", "w") as f_out:
         for p in profiles:
