@@ -18,6 +18,7 @@ from planet.models.species import Species
 from planet.models.clades import Clade
 from planet.models.go import GO
 from planet.models.expression_specificity import ExpressionSpecificityMethod
+from planet.models.expression_profiles import ExpressionProfile
 
 from planet.ftp import export_ftp_data
 
@@ -175,6 +176,8 @@ with app.app_context():
         if 'profile' in data.keys() and 'profile_conversion' in data.keys():
             parse_expression_plot(data['profile'], data['profile_conversion'], data['code'])
 
+
+    ExpressionProfile.calculate_entropy()
 
     print("Adding Expression Networks")
     print("==========================")
