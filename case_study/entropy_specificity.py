@@ -7,11 +7,11 @@ from sqlalchemy.orm import joinedload
 app = create_app('config')
 
 with app.app_context():
-    profiles = ExpressionProfile.query.all()
+    profiles = ExpressionProfile.all()
 
     with open("./data/entropy_specificity.txt", "w") as f_out:
         for p in profiles:
-            s = p.specificities.filter(ExpressionSpecificity.condition == 'Condition specificity').order_by(ExpressionSpecificity.score.desc()).first()
+            s = p.specificities.filter(ExpressionSpecificity.method.has(description='Condition specificity')).order_by(ExpressionSpecificity.score.desc()).first()
             if s is not None:
                 spm = s.score
                 method = s.method.description
