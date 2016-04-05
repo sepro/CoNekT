@@ -139,7 +139,38 @@ SPECIES = {
         'clusters': 'data/hrr/Osa.S=3R=50.hcca',
         'clusters_description': 'Osa HCCA',
         'id': 2,
-        'network_id': 5
+        'network_id': 5,
+        'tissues': {
+                        "stigma": "spikelet",
+                        "Ovary": "spikelet",
+                        "Suspension cell": "spikelet",
+                        "Shoot": "shoot",
+                        "Root": "root",
+                        "Anther": "spikelet",
+                        "Embryo": "seed",
+                        "Endosperm": "seed",
+                        "5d-seed": "seed",
+                        "Root, 7d Seedling": "root", # remove this one ?
+                        "Mature leaf": "leaf",
+                        "Y Leaf": "leaf",
+                        "SAM": "shoot",
+                        "Young inflorescence (P1, upto 3 cm)": "spikelet",
+                        "Inflorescence (P2, 3 - 5 cm)": "spikelet",
+                        "Inflorescence (P3, 5 - 10 cm)": "spikelet",
+                        "Inflorescence (P4, 10 - 15 cm)": "spikelet",
+                        "Inflorescence (P5, 15 - 22 cm)": "spikelet",
+                        "Inflorescence (P6, 22 - 30 cm)": "spikelet",
+                        "Seed (S1, 0 - 2 dap)": "seed",
+                        "Seed (S2, 3 - 4 dap)": "seed",
+                        "Seed (S3, 5 - 10 dap)": "seed",
+                        "Seed (S4, 11 - 20 dap)": "seed",
+                        "Seed (S5, 21 - 29 dap)": "seed",
+                        "7d Seedling": "seedling",
+                        "7d Seedling, Drought stress": "seedling",
+                        "7d Seedling, Salt stress": "seedling",
+                        "7d Seedling, Cold stress": "seedling",
+                        "Coleoptiles, 4 d aerobic": "coleoptile",
+                        "Coleoptiles, 4 d anoxic": "coleoptile"}
     }
 }
 
