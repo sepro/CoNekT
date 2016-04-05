@@ -143,7 +143,6 @@ def search_enriched_clusters():
 
 
 @search.route('/specific/profiles', methods=['GET', 'POST'])
-@cache.cached()
 def search_specific_profiles():
     """
     Controller that shows the search form to find condition/tissue specific expressed genes
@@ -169,7 +168,6 @@ def search_specific_profiles():
 
 
 @search.route('/specific/profiles/json')
-@cache.cached()
 def search_specific_profiles_json():
     """
     Controller that fetches the data for available methods
@@ -191,7 +189,6 @@ def search_specific_profiles_json():
 
 
 @search.route('/specific/profiles/methods/<int:species_id>')
-@cache.cached()
 def search_specific_profiles_methods(species_id):
     """
     Controller that fetches the data for available methods
