@@ -10,6 +10,10 @@
     <h1>Expression profile for: <strong>{{ profile.probe }}</strong></h1>
     {% endif %}
 
+    {% if  profile.entropy %}
+    <span>Profiles entropy: <strong>{{ profile.entropy|round(2) }}</strong></span><br />
+    {% endif %}
+
     {% for s in profile.specificities %}
     <span>{{ s.method.description }}: <strong>{{ s.condition }}</strong> (<abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr>: {{ s.score|round(2) }})</span><br />
     {% endfor %}
