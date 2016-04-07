@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template, Response, Markup
 
 from planet.models.expression_networks import ExpressionNetwork
+from planet.models.sequences import Sequence
 from planet.forms.custom_network import CustomNetworkForm
 
 from planet.helpers.cytoscape import CytoscapeHelper
@@ -19,8 +20,20 @@ def custom_network_main():
     form.populate_method()
 
     if request.method == 'POST':
-        probes = request.form.get('probes').split()
+        terms = request.form.get('probes').split()
         method_id = request.form.get('method_id')
+
+        probes = terms
+
+        # also do search by gene ID
+        sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
+
+        for s in sequences:
+            for ep in s.expression_profiles:
+                probes.append(ep.probe)
+
+        #make probe list unique
+        probes = list(set(probes))
 
         network = ExpressionNetwork.get_custom_network(method_id, probes)
 

@@ -177,7 +177,7 @@ SPECIES = {
         'fasta': 'data/cds/bdi.clean.tfa',
         'profile': 'data/profiles/Bdi.plot.txt',
         'profile_conversion': 'data/profiles/bdi_probe_conversion.txt',
-        'network': 'data/hrr/BdiPfamPlazaGO.clean.hrr',
+        'network': 'data/hrr/BdiPfamPlazaGO.hrr',
         'network_description': 'HQ Network for Brachypodium distachyon',
         'clusters': 'data/hrr/Bdi.S=3R=30.hcca',
         'clusters_description': 'Bdi HCCA',
