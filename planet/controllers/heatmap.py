@@ -4,6 +4,7 @@ from planet import cache
 from planet.models.expression_profiles import ExpressionProfile
 from planet.models.relationships import SequenceCoexpressionClusterAssociation
 from planet.models.coexpression_clusters import CoexpressionCluster
+from planet.models.sequences import Sequence
 from planet.forms.heatmap import HeatmapForm
 
 heatmap = Blueprint('heatmap', __name__)
@@ -40,8 +41,20 @@ def heatmap_main():
     form.populate_species()
 
     if request.method == 'POST':
-        probes = request.form.get('probes').split()
+        terms = request.form.get('probes').split()
         species_id = request.form.get('species_id')
+
+        probes = terms
+
+        # also do search by gene ID
+        sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
+
+        for s in sequences:
+            for ep in s.expression_profiles:
+                probes.append(ep.probe)
+
+        # make probe list unique
+        probes = list(set(probes))
 
         current_heatmap = ExpressionProfile.get_heatmap(species_id, probes)
 

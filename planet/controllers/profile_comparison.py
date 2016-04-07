@@ -54,9 +54,21 @@ def profile_comparison_main():
     form.populate_species()
 
     if request.method == 'POST':
-        probes = request.form.get('probes').split()
+        terms = request.form.get('probes').split()
         species_id = request.form.get('species_id')
         normalize = True if request.form.get('normalize') == 'y' else False
+
+        probes = terms
+
+        # also do search by gene ID
+        sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
+
+        for s in sequences:
+            for ep in s.expression_profiles:
+                probes.append(ep.probe)
+
+        # make probe list unique
+        probes = list(set(probes))
 
         # get max 51 profiles, only show the first 50 (the extra one is fetched to throw the warning)
         profiles = ExpressionProfile.get_profiles(species_id, probes, limit=51)

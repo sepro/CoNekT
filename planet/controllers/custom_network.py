@@ -32,7 +32,7 @@ def custom_network_main():
             for ep in s.expression_profiles:
                 probes.append(ep.probe)
 
-        #make probe list unique
+        # make probe list unique
         probes = list(set(probes))
 
         network = ExpressionNetwork.get_custom_network(method_id, probes)
