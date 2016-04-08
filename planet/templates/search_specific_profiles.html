@@ -59,7 +59,7 @@
             {% endfor %}
             </tbody>
         </table>
-
+        <a id="DownloadTable" href="#" class="btn btn-primary">Download table</a><br /><br />
         </div>
     {% endif %}
 </div>
@@ -67,6 +67,7 @@
 
 {% block extrajs %}
 <script src="{{ url_for('static', filename='js/bootstrap-slider.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/table2CSV.js') }}" > </script>
 <script>
 $(function () {
 
@@ -147,6 +148,13 @@ $(function () {
       formdata = json;
       populate_species(formdata);
     });
+
+    var csv_data = $("#results_table").table2CSV({delivery:'value'});
+    csv_data = csv_data.replace(/,"Action"\n/,'\n');
+    csv_data = csv_data.replace(/,"view profile"\n/gi,'\n');
+    csv_data = csv_data.replace(/,"view profile"$/gi,'\n');
+    $("#DownloadTable").attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv_data));
+    $("#DownloadTable").attr('download', "table.csv");
 
 });
 </script>
