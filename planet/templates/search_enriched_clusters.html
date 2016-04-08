@@ -128,7 +128,6 @@ $(function () {
     csv_data = csv_data.replace(/,"Action"\n/,'\n');
     csv_data = csv_data.replace(/,"\s+"\n/gi,'\n');
     csv_data = csv_data.replace(/,"\s+"$/gi,'\n');
-    console.log(csv_data);
 
     $("#DownloadTable").attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv_data));
     $("#DownloadTable").attr('download', "table.csv");
