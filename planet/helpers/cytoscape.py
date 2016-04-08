@@ -255,7 +255,6 @@ class CytoscapeHelper:
 
         probes = [node['data']['id'] for node in colored_network['nodes'] if 'id' in node['data']]
 
-
         sequence_cluster_ass = SequenceCoexpressionClusterAssociation.query.filter(SequenceCoexpressionClusterAssociation.probe.in_(probes))\
             .filter(SequenceCoexpressionClusterAssociation.coexpression_cluster.has(method_id=cluster_method_id)).all()
 
@@ -267,10 +266,10 @@ class CytoscapeHelper:
     
         for node in colored_network["nodes"]:
             if node['data']['id'] in data.keys():
-                node['cluster_id'] = data[node['data']['id']]['cluster_id']
-                node['cluster_name'] = data[node['data']['id']]['cluster_name']
-                node['cluster_url'] = url_for('expression_cluster.expression_cluster_view', cluster_id=node['cluster_id'])
-                node['cluster_color'] = string_to_hex_color(node['cluster_name'])
+                node['data']['cluster_id'] = data[node['data']['id']]['cluster_id']
+                node['data']['cluster_name'] = data[node['data']['id']]['cluster_name']
+                node['data']['cluster_url'] = url_for('expression_cluster.expression_cluster_view', cluster_id=node['data']['cluster_id'])
+                node['data']['cluster_color'] = string_to_hex_color(node['data']['cluster_name'])
 
         return colored_network
 
