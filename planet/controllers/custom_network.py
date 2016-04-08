@@ -23,6 +23,10 @@ def custom_network_main():
         terms = request.form.get('probes').split()
         method_id = request.form.get('method_id')
 
+        family_method_id = request.form.get('family_method')
+        cluster_method_id = request.form.get('cluster_method')
+        specificity_method_id = request.form.get('specificity_method')
+
         probes = terms
 
         # also do search by gene ID
@@ -41,6 +45,7 @@ def custom_network_main():
         network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, 1)
         network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
         network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
+        network_cytoscape = CytoscapeHelper.add_cluster_data_nodes(network_cytoscape, cluster_method_id)
 
         return render_template("expression_graph.html", graph_data=Markup(json.dumps(network_cytoscape)))
     else:
@@ -52,8 +57,24 @@ def custom_network_json():
     """
     Profile comparison tool, accepts a species and a list of probes and plots the profiles for the selected
     """
-    probes = request.form.get('probes').split()
+    terms = request.form.get('probes').split()
     method_id = request.form.get('method_id')
+
+    family_method_id = request.form.get('family_method')
+    cluster_method_id = request.form.get('cluster_method')
+    specificity_method_id = request.form.get('specificity_method')
+
+    probes = terms
+
+    # also do search by gene ID
+    sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
+
+    for s in sequences:
+        for ep in s.expression_profiles:
+            probes.append(ep.probe)
+
+    # make probe list unique
+    probes = list(set(probes))
 
     network = ExpressionNetwork.get_custom_network(method_id, probes)
 
@@ -61,6 +82,7 @@ def custom_network_json():
     network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, 1)
     network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
     network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
+    network_cytoscape = CytoscapeHelper.add_cluster_data_nodes(network_cytoscape, cluster_method_id)
 
     return Response(json.dumps(network_cytoscape), mimetype='application/json')
 

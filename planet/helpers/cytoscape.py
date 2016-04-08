@@ -2,10 +2,12 @@ from flask import url_for
 from sqlalchemy.orm import joinedload
 
 from planet.models.relationships import SequenceFamilyAssociation, SequenceInterproAssociation
+from planet.models.relationships import SequenceCoexpressionClusterAssociation
+from planet.models.coexpression_clusters import CoexpressionCluster
 from planet.models.sequences import Sequence
 from planet.models.species import Species
 
-from utils.color import family_to_shape_and_color
+from utils.color import family_to_shape_and_color, string_to_hex_color
 from copy import deepcopy
 
 
@@ -244,6 +246,31 @@ class CytoscapeHelper:
         for node in colored_network["nodes"]:
             if "data" in node.keys() and "species_id" in node["data"].keys():
                 node["data"]["species_color"] = colors[node["data"]["species_id"]]
+
+        return colored_network
+
+    @staticmethod
+    def add_cluster_data_nodes(network, cluster_method_id):
+        colored_network = deepcopy(network)
+
+        probes = [node['data']['id'] for node in colored_network['nodes'] if 'id' in node['data']]
+
+
+        sequence_cluster_ass = SequenceCoexpressionClusterAssociation.query.filter(SequenceCoexpressionClusterAssociation.probe.in_(probes))\
+            .filter(SequenceCoexpressionClusterAssociation.coexpression_cluster.has(method_id=cluster_method_id)).all()
+
+        data = {}
+        for sca in sequence_cluster_ass:
+            data[sca.probe] = {}
+            data[sca.probe]['cluster_id'] = sca.coexpression_cluster_id
+            data[sca.probe]['cluster_name'] = sca.coexpression_cluster.name
+    
+        for node in colored_network["nodes"]:
+            if node['data']['id'] in data.keys():
+                node['cluster_id'] = data[node['data']['id']]['cluster_id']
+                node['cluster_name'] = data[node['data']['id']]['cluster_name']
+                node['cluster_url'] = url_for('expression_cluster.expression_cluster_view', cluster_id=node['cluster_id'])
+                node['cluster_color'] = string_to_hex_color(node['cluster_name'])
 
         return colored_network
 
