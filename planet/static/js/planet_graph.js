@@ -43,7 +43,7 @@ cy = cytoscape({
         }
 
         if (typeof n.data('cluster_id') !== 'undefined') {
-            content.push({value: 'Cluster : <a href="' + n.data('cluster_url') + '">' + n.data('cluster_id') + '</a>'});
+            content.push({value: 'Cluster : <a href="' + n.data('cluster_url') + '">' + n.data('cluster_name') + '</a>'});
         }
 
         if (typeof n.data('spm_condition') !== 'undefined') {
@@ -169,6 +169,10 @@ $('.cy-node-color').click(function(ev) {
     $('.cy-node-shape[attr="family_shape"]').click();
  } else if ($( this ).attr( 'attr' ) === 'lc_color' ) {
     $('.cy-node-shape[attr="lc_shape"]').click();
+ } else if ($( this ).attr( 'attr' ) === 'spm_color' ) {
+    $('.cy-node-shape[attr="spm_shape"]').click();
+ } else if ($( this ).attr( 'attr' ) === 'cluster_color' ) {
+    $('.cy-node-shape[attr="cluster_shape"]').click();
  } else {
     $('.cy-node-shape[attr="shape"]').click();
  }

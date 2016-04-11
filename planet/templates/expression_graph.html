@@ -58,8 +58,14 @@
                     </button>
                     <ul class="dropdown-menu  cy-option-menu">
                         <li><a href="#" class="cy-node-shape" attr="shape">Default</a></li>
+                        {% if graph_data %}
+                        <li><a href="#" class="cy-node-shape" attr="cluster_shape">Cluster</a></li>
+                        {% endif %}
                         <li><a href="#" class="cy-node-shape" attr="family_shape">Family</a></li>
                         <li><a href="#" class="cy-node-shape" attr="lc_shape">Label Co-occ.</a></li>
+                        {% if graph_data %}
+                        <li><a href="#" class="cy-node-shape" attr="spm_shape">Specificity</a></li>
+                        {% endif %}
                     </ul>
                     </div>
                 </div>

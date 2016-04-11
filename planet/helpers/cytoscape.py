@@ -272,13 +272,17 @@ class CytoscapeHelper:
             data[sca.probe] = {}
             data[sca.probe]['cluster_id'] = sca.coexpression_cluster_id
             data[sca.probe]['cluster_name'] = sca.coexpression_cluster.name
-    
+
+        color_shapes = family_to_shape_and_color({p: [v['cluster_name']] for p, v in data.items()})
+
         for node in colored_network["nodes"]:
             if node['data']['id'] in data.keys():
                 node['data']['cluster_id'] = data[node['data']['id']]['cluster_id']
                 node['data']['cluster_name'] = data[node['data']['id']]['cluster_name']
                 node['data']['cluster_url'] = url_for('expression_cluster.expression_cluster_view', cluster_id=node['data']['cluster_id'])
-                node['data']['cluster_color'] = string_to_hex_color(node['data']['cluster_name'])
+                if node['data']['id'] in color_shapes.keys():
+                    node['data']['cluster_color'] = color_shapes[node['data']['id']][1]
+                    node['data']['cluster_shape'] = color_shapes[node['data']['id']][0]
 
         return colored_network
 
@@ -288,7 +292,7 @@ class CytoscapeHelper:
         Adds profile specificity information to a cytoscape compatible network (dict)
 
         :param network: dict containing the network
-        :param cluster_method_id: specificity method which should be used
+        :param specificity_method_id: specificity method which should be used
         :return: Network dict completed with cluster info
         """
         colored_network = deepcopy(network)
@@ -309,11 +313,15 @@ class CytoscapeHelper:
                 data[s.profile.probe]['score'] = s.score
                 data[s.profile.probe]['condition'] = s.condition
 
+        color_shapes = family_to_shape_and_color({p: [v['condition']] for p, v in data.items()})
+
         for node in colored_network["nodes"]:
             if node['data']['id'] in data.keys():
                 node['data']['spm_score'] = data[node['data']['id']]['score']
                 node['data']['spm_condition'] = data[node['data']['id']]['condition']
-                node['data']['spm_condition_color'] = string_to_hex_color(node['data']['spm_condition'])
+                if node['data']['id'] in color_shapes.keys():
+                    node['data']['spm_condition_color'] = color_shapes[node['data']['id']][1]
+                    node['data']['spm_condition_shape'] = color_shapes[node['data']['id']][0]
 
         return colored_network
 

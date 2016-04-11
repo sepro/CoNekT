@@ -87,6 +87,14 @@ node.shape {
         shape: data(shape);
 }
 
+node.spm_shape {
+        shape: data(spm_condition_shape);
+}
+
+node.cluster_shape {
+        shape: data(cluster_shape);
+}
+
 edge.color {
         line-color: data(color);
 }
