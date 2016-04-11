@@ -46,6 +46,7 @@ def custom_network_main():
         network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
         network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
         network_cytoscape = CytoscapeHelper.add_cluster_data_nodes(network_cytoscape, cluster_method_id)
+        network_cytoscape = CytoscapeHelper.add_specificity_data_nodes(network_cytoscape, specificity_method_id)
 
         return render_template("expression_graph.html", graph_data=Markup(json.dumps(network_cytoscape)))
     else:
@@ -79,10 +80,11 @@ def custom_network_json():
     network = ExpressionNetwork.get_custom_network(method_id, probes)
 
     network_cytoscape = CytoscapeHelper.parse_network(network)
-    network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, 1)
+    network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, family_method_id)
     network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
     network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
     network_cytoscape = CytoscapeHelper.add_cluster_data_nodes(network_cytoscape, cluster_method_id)
+    network_cytoscape = CytoscapeHelper.add_specificity_data_nodes(network_cytoscape, specificity_method_id)
 
     return Response(json.dumps(network_cytoscape), mimetype='application/json')
 

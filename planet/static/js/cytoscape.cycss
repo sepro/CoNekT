@@ -71,6 +71,10 @@ node.cluster_color {
         background-color: data(cluster_color);
 }
 
+node.spm_color {
+        background-color: data(spm_condition_color);
+}
+
 node.lc_shape {
         shape: data(lc_shape);
 }

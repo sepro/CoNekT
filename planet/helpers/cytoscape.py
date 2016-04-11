@@ -6,6 +6,8 @@ from planet.models.relationships import SequenceCoexpressionClusterAssociation
 from planet.models.coexpression_clusters import CoexpressionCluster
 from planet.models.sequences import Sequence
 from planet.models.species import Species
+from planet.models.expression_profiles import ExpressionProfile
+from planet.models.expression_specificity import ExpressionSpecificity
 
 from utils.color import family_to_shape_and_color, string_to_hex_color
 from copy import deepcopy
@@ -270,6 +272,36 @@ class CytoscapeHelper:
                 node['data']['cluster_name'] = data[node['data']['id']]['cluster_name']
                 node['data']['cluster_url'] = url_for('expression_cluster.expression_cluster_view', cluster_id=node['data']['cluster_id'])
                 node['data']['cluster_color'] = string_to_hex_color(node['data']['cluster_name'])
+
+        return colored_network
+
+    @staticmethod
+    def add_specificity_data_nodes(network, specificity_method_id):
+        colored_network = deepcopy(network)
+
+        probes = [node['data']['id'] for node in colored_network['nodes'] if 'id' in node['data']]
+
+        print(probes)
+
+        spm = ExpressionSpecificity.query.filter(ExpressionSpecificity.method_id == specificity_method_id).filter(ExpressionSpecificity.profile.has(ExpressionProfile.probe.in_(probes))).all();
+
+        data = {}
+
+        for s in spm:
+            if s.profile.probe in data.keys():
+                if s.score > data[s.profile.probe]['score']:
+                    data[s.profile.probe]['score'] = s.score
+                    data[s.profile.probe]['condition'] = s.condition
+            else:
+                data[s.profile.probe] = {}
+                data[s.profile.probe]['score'] = s.score
+                data[s.profile.probe]['condition'] = s.condition
+
+        for node in colored_network["nodes"]:
+            if node['data']['id'] in data.keys():
+                node['data']['spm_score'] = data[node['data']['id']]['score']
+                node['data']['spm_condition'] = data[node['data']['id']]['condition']
+                node['data']['spm_condition_color'] = string_to_hex_color(node['data']['spm_condition'])
 
         return colored_network
 
