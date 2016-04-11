@@ -253,6 +253,13 @@ class CytoscapeHelper:
 
     @staticmethod
     def add_cluster_data_nodes(network, cluster_method_id):
+        """
+        Adds co-expression cluster information to a cytoscape compatible network (dict)
+
+        :param network: dict containing the network
+        :param cluster_method_id: internal id for the clustering method to use
+        :return: Network dict completed with cluster info
+        """
         colored_network = deepcopy(network)
 
         probes = [node['data']['id'] for node in colored_network['nodes'] if 'id' in node['data']]
@@ -277,11 +284,16 @@ class CytoscapeHelper:
 
     @staticmethod
     def add_specificity_data_nodes(network, specificity_method_id):
+        """
+        Adds profile specificity information to a cytoscape compatible network (dict)
+
+        :param network: dict containing the network
+        :param cluster_method_id: specificity method which should be used
+        :return: Network dict completed with cluster info
+        """
         colored_network = deepcopy(network)
 
         probes = [node['data']['id'] for node in colored_network['nodes'] if 'id' in node['data']]
-
-        print(probes)
 
         spm = ExpressionSpecificity.query.filter(ExpressionSpecificity.method_id == specificity_method_id).filter(ExpressionSpecificity.profile.has(ExpressionProfile.probe.in_(probes))).all();
 
