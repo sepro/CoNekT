@@ -41,6 +41,15 @@ cy = cytoscape({
         if (typeof n.data('profile_link') !== 'undefined') {
             content.push({value: 'Profile : <a href="' + n.data('profile_link') + '">' + n.data('id') + '</a>'});
         }
+
+        if (typeof n.data('cluster_id') !== 'undefined') {
+            content.push({value: 'Cluster : <a href="' + n.data('cluster_url') + '">' + n.data('cluster_id') + '</a>'});
+        }
+
+        if (typeof n.data('spm_condition') !== 'undefined') {
+            content.push({value: 'Expression specificity : ' + n.data('spm_condition') + '(' + n.data('spm_score').toFixed(2) + ')'});
+        }
+
         content.push(
         {
           value: n.data('family_name') !== null ? 'Family : <a href="' + n.data('family_url') + '">' + n.data('family_name') + '</a>' : '<span class="text-muted">No family found</span>'
