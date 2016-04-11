@@ -119,41 +119,77 @@ cy = cytoscape({
   }); // end cy.edges.forEach...
 
         // Fill data for legend
-        svg_families = [];
-        svg_labels = [];
-        svg_species = [];
+        var svg_families = [];
+        var svg_labels = [];
+        var svg_species = [];
+        var svg_spm = [];
+        var svg_clusters = [];
         cy.nodes('[^compound]').forEach(function(n){
             family_color = n.data('family_color');
             family_shape = n.data('family_shape');
-            family = n.data('family_name')
+            family = n.data('family_name');
+
             lc_color = n.data('lc_color');
             lc_shape = n.data('lc_shape');
             lc_label = n.data('lc_label');
+
+            spm_color = n.data('spm_condition_color');
+            spm_shape = n.data('spm_condition_shape');
+            spm = n.data('spm_condition');
+
+            cluster_color = n.data('cluster_color');
+            cluster_shape = n.data('cluster_shape');
+            cluster = n.data('cluster_name');
 
             species = n.data('species_name');
             species_color = n.data('species_color');
             species_shape = 'ellipse';
 
-            if (!(species_color in svg_species)) {
-                svg_species[species_color] = []
+            if (species_color !== undefined) {
+                if (!(species_color in svg_species)) {
+                    svg_species[species_color] = []
+                }
+                svg_species[species_color][species_shape] = species;
             }
-            svg_species[species_color][species_shape] = species;
 
-            if (!(family_color in svg_families)) {
-                svg_families[family_color] = []
+            if (family_color !== undefined){
+                if (!(family_color in svg_families)) {
+                    svg_families[family_color] = []
+                }
+                svg_families[family_color][family_shape] = family;
             }
-            svg_families[family_color][family_shape] = family;
 
-            if (!(lc_color in svg_labels)) {
-                svg_labels[lc_color] = []
+            if (lc_color !== undefined){
+                if (!(lc_color in svg_labels)) {
+                    svg_labels[lc_color] = []
+                }
+                svg_labels[lc_color][lc_shape] = lc_label;
             }
-            svg_labels[lc_color][lc_shape] = lc_label;
+
+            if (cluster_color !== undefined){
+                if (!(cluster_color in svg_clusters)) {
+                    svg_clusters[cluster_color] = []
+                }
+                svg_clusters[cluster_color][cluster_shape] = cluster;
+            }
+
+            if (spm_color !== undefined){
+                if (!(spm_color in svg_spm)) {
+                    svg_spm[spm_color] = []
+                }
+                svg_spm[spm_color][spm_shape] = spm;
+            }
+
 
         }); //end cy.nodes.forEach
 
-        generate_legend(svg_labels, 'lc_color');
-        generate_legend(svg_families, 'family_color');
-        generate_legend(svg_species, 'species_color');
+        if (Object.keys(svg_labels) !== ["undefined"]) {generate_legend(svg_labels, 'lc_color');}
+        if (Object.keys(svg_families) !== ["undefined"]) { generate_legend(svg_families, 'family_color');}
+        if (Object.keys(svg_clusters) !== ["undefined"]) { generate_legend(svg_clusters, 'cluster_color');}
+        if (Object.keys(svg_spm) !== ["undefined"]) { generate_legend(svg_spm, 'spm_color');}
+        if (Object.keys(svg_species) !== ["undefined"]) { generate_legend(svg_species, 'species_color'); }
+
+        console.log("Successfully generated legend...");
   }
 });
 
