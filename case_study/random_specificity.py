@@ -8,7 +8,7 @@ from utils.expression import max_spm
 
 import json
 from statistics import mean, stdev
-from random import normalvariate
+from random import lognormalvariate
 from sys import argv
 
 
@@ -31,9 +31,9 @@ def write_random_spms(species_id, filename):
                         random_values = []
 
                         while len(random_values) < len(values):
-                            r = normalvariate(mean_value, sd)
-                            # if r >= 0:
-                            random_values.append(r)
+                            r = lognormalvariate(mean_value, sd)
+                            if r >= 0:
+                                random_values.append(r)
 
                         rand_mean = mean(random_values)
                         rand_sd = stdev(random_values)
