@@ -32,8 +32,8 @@ def write_random_spms(species_id, filename):
 
                         while len(random_values) < len(values):
                             r = normalvariate(mean_value, sd)
-                            if r >= 0:
-                                random_values.append(r)
+                            # if r >= 0:
+                            random_values.append(r)
 
                         rand_mean = mean(random_values)
                         rand_sd = stdev(random_values)
