@@ -17,7 +17,7 @@ class ExpressionSpecificityMethod(db.Model):
     specificities = db.relationship('ExpressionSpecificity', backref='method', lazy='dynamic')
 
     @staticmethod
-    def calculate_specificities(species_id, description):
+    def calculate_specificities(species_id, description, remove_background=False):
         """
         Function that calculates condition specificities for each profile. No grouping is applied, each condition is
         used as is
@@ -42,10 +42,10 @@ class ExpressionSpecificityMethod(db.Model):
 
         # convert list into dictionary and run function
         conditions_dict = {k: k for k in conditions}
-        ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description, conditions_dict)
+        ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description, conditions_dict, remove_background=remove_background)
 
     @staticmethod
-    def calculate_tissue_specificities(species_id, description, condition_to_tissue):
+    def calculate_tissue_specificities(species_id, description, condition_to_tissue, remove_background=False):
         """
         Function calculates tissue specific genes based on the expression conditions. A dict is required to link
         specific conditions to the correct tissues. This also allows conditions to be excluded in case they are
@@ -88,6 +88,14 @@ class ExpressionSpecificityMethod(db.Model):
                         total_sum += sum(v)
 
                 profile_means[t] = total_sum/count if count != 0 else 0
+
+            # substract minimum value to remove background
+            # experimental code !
+            if remove_background:
+                minimum = min([v for k,v in profile_means.items()])
+
+                for k in profile_means.keys():
+                    profile_means[k] -= minimum
 
             # determine spm score for each condition
             profile_specificities = []

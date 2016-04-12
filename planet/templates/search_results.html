@@ -82,7 +82,6 @@
     {% endif %}
 
     {% if profiles %}
-    <h2></h2>
     <div class="col-md-4 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">Found <strong>{{ profiles|length }}</strong> expression profiles</div>
@@ -92,7 +91,7 @@
                     <tbody>
                         {% for p in profiles %}
                             <tr><td><a href="{{ url_for('expression_profile.expression_profile_view', profile_id=p.id)}}">{{ p.probe }}</a>
-                                {% if p.gene.name %}: {{ p.gene.name }} {% endif %}</td></tr>
+                                {% if p.sequence %}: {{ p.sequence.name }} {% endif %}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>

@@ -8,11 +8,11 @@ from utils.expression import max_spm
 
 import json
 from statistics import mean, stdev
-from random import lognormvariate
+from random import normalvariate
 from sys import argv
 
 
-def write_random_spms(species_id, filename):
+def write_random_spms(species_id, filename, substract_background=False):
     app = create_app('config')
 
     with app.app_context():
@@ -24,6 +24,12 @@ def write_random_spms(species_id, filename):
                     profile_data = json.loads(p.profile)
 
                     values = [float(sum(v)) for k, v in profile_data['data'].items()]
+
+                    if substract_background:
+                        minimum = min(values)
+                        for i in range(len(values)):
+                            values[i] -= minimum
+
                     mean_value = mean(values)
                     sd = stdev(values)
 
@@ -31,16 +37,13 @@ def write_random_spms(species_id, filename):
                         random_values = []
 
                         while len(random_values) < len(values):
-                            r = lognormvariate(mean_value, sd)
+                            r = normalvariate(mean_value, sd)
                             if r >= 0:
                                 random_values.append(r)
-
-                        rand_mean = mean(random_values)
-                        rand_sd = stdev(random_values)
 
                         rand_max_spm = max_spm({c: v for c, v in enumerate(random_values)})['score']
 
                         print(rand_max_spm, file=f)
 
 if __name__ == "__main__":
-    write_random_spms(int(argv[1]), argv[2])
+    write_random_spms(int(argv[1]), argv[2], substract_background=True)

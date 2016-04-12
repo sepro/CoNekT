@@ -12,8 +12,13 @@ def expression_specificity(condition, profile):
     return dot_product/mul_len if mul_len != 0 else 0
 
 
-def max_spm(profile):
+def max_spm(profile, substract_background=False):
     conditions = [k for k, v in profile.items()]
+
+    if substract_background:
+        minimum = min(list(profile.values()))
+        for k in profile.keys():
+            profile[k] -= minimum
 
     spm_values = [{'condition': c, 'score': expression_specificity(c, profile)} for c in conditions]
 
