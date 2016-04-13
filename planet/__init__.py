@@ -73,6 +73,7 @@ def create_app(config):
     from planet.models.expression_profiles import ExpressionProfile
     from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
     from planet.models.expression_specificity import ExpressionSpecificityMethod, ExpressionSpecificity
+    from planet.models.condition_tissue import ConditionTissue
     from planet.models.clades import Clade
     from planet.models.xrefs import XRef
 

@@ -19,6 +19,7 @@ from planet.models.clades import Clade
 from planet.models.go import GO
 from planet.models.expression_specificity import ExpressionSpecificityMethod
 from planet.models.expression_profiles import ExpressionProfile
+from planet.models.condition_tissue import ConditionTissue
 
 from planet.ftp import export_ftp_data
 
@@ -181,7 +182,7 @@ SPECIES = {
         'network_description': 'HQ Network for Brachypodium distachyon',
         'clusters': 'data/hrr/Bdi.S=3R=30.hcca',
         'clusters_description': 'Bdi HCCA',
-        'id': None,
+        'id': 6,
         'network_id': None,
         'tissues': {
             "P: Coleoptile (10 DAG)": "coleoptile",
@@ -314,6 +315,7 @@ with app.app_context():
         ExpressionSpecificityMethod.calculate_specificities(data['id'], s + " condition specific profiles")
         if 'tissues' in data:
             ExpressionSpecificityMethod.calculate_tissue_specificities(data['id'], s + " tissue specific profiles", data['tissues'])
+            ConditionTissue.add(data['id'], s + " tissue specific profiles", data['tissues'])
 
     #
     # print("Adding XRefs")
@@ -323,7 +325,7 @@ with app.app_context():
     # # create_plaza_xref_genes(ptr_id)
     # create_plaza_xref_families(1)
     #
-    print("Building FTP data")
-    print("=================")
-    export_ftp_data()
+    # print("Building FTP data")
+    # print("=================")
+    # export_ftp_data()
 
