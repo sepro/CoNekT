@@ -1,5 +1,5 @@
 from planet import db
-from planet.models.sequences import Sequence
+from planet.models.condition_tissue import ConditionTissue
 
 from utils.entropy import entropy
 
@@ -28,6 +28,29 @@ class ExpressionProfile(db.Model):
         self.probe = probe
         self.sequence_id = sequence_id
         self.profile = profile
+
+    def tissue_profile(self, condition_tissue_id):
+        ct = ConditionTissue.query.get(condition_tissue_id)
+
+        condition_to_tissue = json.loads(ct.data)
+        profile_data = json.loads(self.profile)
+
+        tissues = list(set(condition_to_tissue.values()))
+
+        output = {}
+
+        for t in tissues:
+            count = 0
+            total_sum = 0
+            valid_conditions = [k for k in profile_data['data'] if k in condition_to_tissue and condition_to_tissue[k] == t]
+            for k, v in profile_data['data'].items():
+                if k in valid_conditions:
+                    count += len(v)
+                    total_sum += sum(v)
+
+            output[t] = [total_sum/count if count != 0 else 0]
+
+        return {'order': tissues, 'data': output}
 
     @staticmethod
     def get_heatmap(species_id, probes):

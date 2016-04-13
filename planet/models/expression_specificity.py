@@ -92,7 +92,7 @@ class ExpressionSpecificityMethod(db.Model):
             # substract minimum value to remove background
             # experimental code !
             if remove_background:
-                minimum = min([v for k,v in profile_means.items()])
+                minimum = min([v for k, v in profile_means.items()])
 
                 for k in profile_means.keys():
                     profile_means[k] -= minimum

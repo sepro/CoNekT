@@ -3,6 +3,7 @@ from sqlalchemy.orm import undefer
 
 from planet import cache
 from planet.models.expression_profiles import ExpressionProfile
+from planet.models.condition_tissue import ConditionTissue
 
 import json
 from statistics import mean
@@ -29,7 +30,14 @@ def expression_profile_view(profile_id):
     """
     current_profile = ExpressionProfile.query.get_or_404(profile_id)
 
-    return render_template("expression_profile.html", profile=current_profile)
+    condition_tissue = ConditionTissue.query.filter(ConditionTissue.species_id == current_profile.species_id).all()
+
+    tissues = []
+
+    for ct in condition_tissue:
+        tissues.append({'id': ct.id, 'name': ct.name})
+
+    return render_template("expression_profile.html", profile=current_profile, tissues=tissues)
 
 
 @expression_profile.route('/modal/<profile_id>')
@@ -170,6 +178,36 @@ def expression_profile_plot_json(profile_id):
                     "pointHighlightFill": "#fff",
                     "pointHighlightStroke": "rgba(220,220,220,1)",
                     "data": list([processed_maxs[c] for c in data["order"]])}]}
+
+    return Response(json.dumps(output), mimetype='application/json')
+
+
+@expression_profile.route('/json/plot/<profile_id>/<condition_tissue_id>')
+@cache.cached()
+def expression_profile_plot_tissue_json(profile_id, condition_tissue_id):
+    """
+    Generates a JSON object that can be rendered using Chart.js line plots
+
+    :param profile_id: ID of the profile to render
+    """
+    current_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(profile_id)
+    data = current_profile.tissue_profile(condition_tissue_id)
+
+    processed_means = {}
+
+    for key, expression_values in data["data"].items():
+        processed_means[key] = mean(expression_values)
+
+    output = {"labels": list(data["order"]),
+              "datasets": [{
+                    "label": "Mean",
+                    "fillColor": "rgba(220,220,220,0.2)",
+                    "strokeColor": "rgba(175,175,175,1)",
+                    "pointColor": "rgba(220,220,220,1)",
+                    "pointStrokeColor": "#fff",
+                    "pointHighlightFill": "#fff",
+                    "pointHighlightStroke": "rgba(220,220,220,1)",
+                    "data": list([processed_means[c] for c in data["order"]])}]}
 
     return Response(json.dumps(output), mimetype='application/json')
 

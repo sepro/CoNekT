@@ -23,12 +23,25 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="canvas-holder2" class="center-block">
+                    <h2>All conditions</h2>
+                    <div id="canvas-holder" class="center-block">
                         <canvas id="chart-area" class="center-block" width="800" height="600"/>
                     </div>
                 </div>
             </div>
         </div>
+        {% for t in tissues %}
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h2>{{t.name}}</h2>
+                    <div id="canvas-holder-{{ t.id }}" class="center-block">
+                        <canvas id="chart-area-{{ t.id }}" class="center-block" width="800" height="600"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
     {% endif %}
 </div>
@@ -44,5 +57,12 @@
 				window.myPie = new Chart(ctx).Line(data, { animation: false,
 				multiTooltipTemplate: "<%if (datasetLabel){{ '{%' }}><%=datasetLabel%>: <{{ '%}' }}%><%= value.toFixed(2) %>"});
 			});
+			{% for t in tissues %}
+			$.getJSON( "{{ url_for('expression_profile.expression_profile_plot_tissue_json', profile_id=profile.id, condition_tissue_id=t.id) }}", function( data ) {
+				var ctx = document.getElementById("chart-area-{{t.id}}").getContext("2d");
+				window.myPie = new Chart(ctx).Line(data, { animation: false,
+				multiTooltipTemplate: "<%if (datasetLabel){{ '{%' }}><%=datasetLabel%>: <{{ '%}' }}%><%= value.toFixed(2) %>"});
+			});
+			{% endfor %}
 	</script>
 {% endblock %}
