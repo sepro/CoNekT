@@ -23,17 +23,8 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="canvas-holder" class="center-block">
-                        <canvas id="chart-area" class="center-block" width="800" height="600"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
                     <div id="canvas-holder2" class="center-block">
-                        <canvas id="chart-area2" class="center-block" width="800" height="600"/>
+                        <canvas id="chart-area" class="center-block" width="800" height="600"/>
                     </div>
                 </div>
             </div>
@@ -48,12 +39,8 @@
 {% block extrajs %}
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 	<script>
-			$.getJSON( "{{ url_for('expression_profile.expression_profile_radar_json', profile_id=profile.id) }}", function( data ) {
-				var ctx = document.getElementById("chart-area").getContext("2d");
-				window.myPie = new Chart(ctx).Radar(data, { pointDot: false, animation: false });
-			});
 			$.getJSON( "{{ url_for('expression_profile.expression_profile_plot_json', profile_id=profile.id) }}", function( data ) {
-				var ctx = document.getElementById("chart-area2").getContext("2d");
+				var ctx = document.getElementById("chart-area").getContext("2d");
 				window.myPie = new Chart(ctx).Line(data, { animation: false,
 				multiTooltipTemplate: "<%if (datasetLabel){{ '{%' }}><%=datasetLabel%>: <{{ '%}' }}%><%= value.toFixed(2) %>"});
 			});
