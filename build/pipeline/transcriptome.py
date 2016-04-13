@@ -3,6 +3,7 @@ import time
 import subprocess
 
 from utils.cluster import wait_for_job
+from utils.cluster.templates import bowtie_build_template
 
 
 class TranscriptomePipeline:
@@ -18,31 +19,9 @@ class TranscriptomePipeline:
         genomes = self.cp['DEFAULT']['genomes'].split(';')
         email = None if self.cp['DEFAULT']['email'] == 'None' else self.cp['DEFAULT']['email']
 
-        load_module = "" if bowtie_module is None else "module load " + bowtie_module
-        include_email = "" if email is None else "#$ -m bea\n#$ -M " + email
-
         filename = "bowtie_build_%d.sh" % int(time.time())
 
-        template = """#!/bin/bash
-#
-
-#$ -N %s
-#$ -cwd
-#$ -j y
-#$ -S /bin/bash
-#$ -o OUT_$JOB_NAME.$JOB_ID
-#$ -e ERR_$JOB_NAME.$JOB_ID
-
-#email
-%s
-
-#
-%s
-date
-hostname
-%s ${in} ${out}
-date
-""" % ("bowtie build", include_email, load_module, bowtie_build_cmd)
+        template = bowtie_build_template("bowtie build", email, bowtie_module, bowtie_build_cmd)
 
         with open(filename, "w") as f:
             print(template, file=f)
