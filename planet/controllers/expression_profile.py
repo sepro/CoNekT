@@ -60,7 +60,7 @@ def expression_profile_find(probe, species_id=None):
     """
     Gets expression profile data from the database and renders it.
 
-    :param profile_id: ID of the profile to show
+    :param probe: Name of the probe
     :param species_id: Species ID is required to ensure a unique hit
     """
     current_profile = ExpressionProfile.query.filter_by(probe=probe)
@@ -68,7 +68,9 @@ def expression_profile_find(probe, species_id=None):
     if species_id is not None:
         current_profile = current_profile.filter_by(species_id=species_id)
 
-    return render_template("expression_profile.html", profile=current_profile.first_or_404())
+    first_profile = current_profile.first_or_404()
+
+    return redirect(url_for('expression_profile.expression_profile_view', profile_id=first_profile.id))
 
 
 @expression_profile.route('/compare/<first_profile_id>/<second_profile_id>')

@@ -21,6 +21,7 @@ hostname
 date
 """
 
+
 def bowtie_build_template(name, email, module, bowtie_build_cmd):
     include_email = "" if email is None else "#$ -m bea\n#$ -M " + email
     load_module = "" if module is None else "module load " + module
