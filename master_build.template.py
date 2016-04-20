@@ -1,5 +1,7 @@
 from planet import create_app
 
+from build.sanity import check_sanity_species_data
+
 from build.db.species import add_species_from_fasta
 from build.db.go import add_go_from_plaza
 from build.db.go import populate_go
@@ -176,6 +178,8 @@ SPECIES = {
     'Brachypodium distachyon': {
         'code': 'bdi',
         'fasta': 'data/cds/bdi.clean.tfa',
+        'go': None,
+        'interpro': None,
         'profile': 'data/profiles/Bdi.plot.txt',
         'profile_conversion': 'data/profiles/bdi_probe_conversion.txt',
         'network': 'data/hrr/BdiPfamPlazaGO.hrr',
@@ -235,6 +239,15 @@ SPECIES = {
 
 
 with app.app_context():
+    print("Checking input")
+    print("==============")
+
+    if not all([check_sanity_species_data(SPECIES[s], name=s) for s in SPECIES.keys()]):
+        print("Check failed ... quiting ... bye!")
+        quit()
+    else:
+        print("All checks passed, starting to add data")
+
     print("Adding species")
     print("==============")
 
