@@ -13,6 +13,15 @@ from sys import argv
 
 
 def write_random_spms(species_id, filename, condition_tissue_id, substract_background=False):
+    """
+    Generates a set of random max SPM values for a given species (based on the tissues, using the desired
+    conversion table).
+
+    :param species_id: internal id of the species to analyze
+    :param filename: file to write output to
+    :param condition_tissue_id: Conversion data, id from table condition_tissue
+    :param substract_background: Flag if the background (as in the lowest value) should be substracted or not.
+    """
     app = create_app('config')
 
     with app.app_context():

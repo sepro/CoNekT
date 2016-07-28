@@ -13,6 +13,13 @@ from sys import argv
 
 
 def write_random_spms(species_id, filename, substract_background=False):
+    """
+    Generates a set of random max SPM values for a given species (based on all conditions).
+
+    :param species_id: internal ID of the species to analyze
+    :param filename: file to write output to
+    :param substract_background: Flag if the background (as in the lowest value) should be substracted or not.
+    """
     app = create_app('config')
 
     with app.app_context():

@@ -6,6 +6,12 @@ from sys import argv
 
 
 def write_entropy_specificity(method_id, filename):
+    """
+    Dumps the spm values and corresponding entropy value for a given profile
+
+    :param method_id: Method ID of the method used to calculate the spm value (Table expression_specificity_method)
+    :param filename: file to write output to
+    """
     app = create_app('config')
 
     with app.app_context():
