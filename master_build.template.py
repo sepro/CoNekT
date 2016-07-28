@@ -178,8 +178,6 @@ SPECIES = {
     'Brachypodium distachyon': {
         'code': 'bdi',
         'fasta': 'data/cds/bdi.clean.tfa',
-        'go': None,
-        'interpro': None,
         'profile': 'data/profiles/Bdi.plot.txt',
         'profile_conversion': 'data/profiles/bdi_probe_conversion.txt',
         'network': 'data/hrr/BdiPfamPlazaGO.hrr',
@@ -315,12 +313,12 @@ with app.app_context():
 
     print("Calculate GO enrichment for clusters and similarities")
     print("=====================================================")
-    CoexpressionCluster.calculate_enrichment()
-    CoexpressionCluster.calculate_similarities(gene_family_method_id=1)
+    # CoexpressionCluster.calculate_enrichment()
+    # CoexpressionCluster.calculate_similarities(gene_family_method_id=1)
 
     print("Calculate ECC scores for homologous genes")
     print("=====================================================")
-    ExpressionNetworkMethod.calculate_ecc(list(range(1, 6)), 1)
+    # ExpressionNetworkMethod.calculate_ecc(list(range(1, 6)), 1)
 
     print("Calculate conditions specific profiles")
     print("=========================================")
