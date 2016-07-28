@@ -178,6 +178,8 @@ SPECIES = {
     'Brachypodium distachyon': {
         'code': 'bdi',
         'fasta': 'data/cds/bdi.clean.tfa',
+        'go': None,
+        'interpro': None,
         'profile': 'data/profiles/Bdi.plot.txt',
         'profile_conversion': 'data/profiles/bdi_probe_conversion.txt',
         'network': 'data/hrr/BdiPfamPlazaGO.hrr',
@@ -261,10 +263,10 @@ with app.app_context():
     print("Adding Functional Annotation")
     print("============================")
     for species, data in SPECIES.items():
-        if 'go' in data.keys():
+        if data['go'] is not None:
             add_go_from_plaza(data['go'])
 
-        if 'interpro' in data.keys():
+        if data['interpro'] is not None:
             add_interpro_from_plaza(data['interpro'])
 
     print("Adding Families")
