@@ -100,6 +100,7 @@ def create_app(config):
     from planet.controllers.graph_comparison import graph_comparison
     from planet.controllers.clade import clade
     from planet.controllers.ecc import ecc
+    from planet.controllers.specificity_comparison import specificity_comparison
 
     app.register_blueprint(main)
     if LOGIN_ENABLED:
@@ -124,6 +125,7 @@ def create_app(config):
     app.register_blueprint(graph_comparison, url_prefix='/graph_comparison')
     app.register_blueprint(clade, url_prefix='/clade')
     app.register_blueprint(ecc, url_prefix='/ecc')
+    app.register_blueprint(specificity_comparison, url_prefix='/specificity_comparison')
 
 
     # Admin panel

@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<div class="top-pad">
+
+    <h1>Compare: Specific Profiles</h1>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><strong>Options</strong></div>
+                    <div class="panel-body">
+                        <form method="POST"  action="{{ url_for('specificity_comparison.specificity_comparison_main') }}"  role="form">
+                            {{ form.csrf_token }}
+                            <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                            <label>Species A</label>
+                            {{form.speciesa(class_="form-control")}}<br/>
+                            <label>Method</label>
+                            {{form.methodsa(class_="form-control", disabled=True)}}<br/>
+                            <label>Condition</label>
+                            {{form.conditionsa(class_="form-control", disabled=True)}}<br/>
+                            <label><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr> cutoff :</label>
+                            {{form.cutoffa(class_="form-control", **{'data-provide':"slider",
+                                                                    'data-slider-id':"cutoffSlider",
+                                                                    'data-slider-min':"0.5",
+                                                                    'data-slider-max':"1",
+                                                                    'data-slider-step': "0.01",
+                                                                    'data-slider-value': "0.85"})}}<br/>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                            <label>Species B</label>
+                            {{form.speciesb(class_="form-control")}}<br/>
+                            <label>Method</label>
+                            {{form.methodsb(class_="form-control", disabled=True)}}<br/>
+                            <label>Condition</label>
+                            {{form.conditionsb(class_="form-control", disabled=True)}}<br/>
+                            <label><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr> cutoff :</label>
+                            {{form.cutoffb(class_="form-control", **{'data-provide':"slider",
+                                                                    'data-slider-id':"cutoffSlider",
+                                                                    'data-slider-min':"0.5",
+                                                                    'data-slider-max':"1",
+                                                                    'data-slider-step': "0.01",
+                                                                    'data-slider-value': "0.85"})}}<br/>
+                            </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{{ url_for('static', filename='js/bootstrap-slider.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/table2CSV.js') }}" > </script>
+<script>
+$(function () {
+
+    $('#cutoffa').slider({
+        formatter: function(value) {
+            return 'Cutoff: ' + value;
+        }
+    });
+    $('#cutoffb').slider({
+        formatter: function(value) {
+            return 'Cutoff: ' + value;
+        }
+    });
+
+    $("#results_table").stupidtable();
+
+    var formdata;
+    var selectedSpeciesa = [];
+    var selectedSpeciesb = [];
+
+    var populate_species = function(data) {
+        $('#speciesa').find('option').remove();
+        $.each(data, function () {
+            $('#speciesa').append($("<option />").val(this.id).text(this.name));
+        });
+        $('#speciesa').trigger('change');
+
+        $('#speciesb').find('option').remove();
+        $.each(data, function () {
+            $('#speciesb').append($("<option />").val(this.id).text(this.name));
+        });
+        $('#speciesb').trigger('change');
+    };
+
+    var populate_methodsa = function(data) {
+        $('#methodsa').find('option').remove();
+        $.each(data, function () {
+            $('#methodsa').append($("<option />").val(this.id).text(this.description));
+        });
+
+        if ($('#methodsa').find('option').length > 0) {
+            $('#methodsa').prop('disabled', false);
+        } else {
+            $('#methodsa').prop('disabled', 'disabled');
+            $('#methodsa').append($("<option />").val(0).text("Not available"));
+        }
+        $('#methodsa').trigger('change');
+    }
+
+    var populate_methodsb = function(data) {
+        $('#methodsb').find('option').remove();
+        $.each(data, function () {
+            $('#methodsb').append($("<option />").val(this.id).text(this.description));
+        });
+
+        if ($('#methodsb').find('option').length > 0) {
+            $('#methodsb').prop('disabled', false);
+        } else {
+            $('#methodsb').prop('disabled', 'disabled');
+            $('#methodsb').append($("<option />").val(0).text("Not available"));
+        }
+        $('#methodsb').trigger('change');
+    }
+
+    var populate_conditionsa = function(data) {
+        $('#conditionsa').find('option').remove();
+        $.each(data, function () {
+            $('#conditionsa').append($("<option />").val(this).text(this));
+        });
+
+        if ($('#conditionsa').find('option').length > 0) {
+            $('#conditionsa').prop('disabled', false);
+        } else {
+            $('#conditionsa').prop('disabled', 'disabled');
+            $('#conditionsa').append($("<option />").val(0).text("Not available"));
+        }
+
+        $('#conditionsa').trigger('change');
+    }
+
+    var populate_conditionsb = function(data) {
+        $('#conditionsb').find('option').remove();
+        $.each(data, function () {
+            $('#conditionsb').append($("<option />").val(this).text(this));
+        });
+
+        if ($('#conditionsb').find('option').length > 0) {
+            $('#conditionsb').prop('disabled', false);
+        } else {
+            $('#conditionsb').prop('disabled', 'disabled');
+            $('#conditionsb').append($("<option />").val(0).text("Not available"));
+        }
+
+        $('#conditionsb').trigger('change');
+    }
+
+    $('#speciesa').change(function(ev) {
+        var valueSelected = this.value;
+         $.each(formdata, function () {
+
+          if (this.id == valueSelected) {
+            selectedSpeciesa = this;
+            populate_methodsa(this.methods);
+          }
+
+         });
+    });
+
+    $('#speciesb').change(function(ev) {
+        var valueSelected = this.value;
+         $.each(formdata, function () {
+
+          if (this.id == valueSelected) {
+            selectedSpeciesb = this;
+            populate_methodsb(this.methods);
+          }
+
+         });
+    });
+
+    $('#methodsa').change(function(ev) {
+        var valueSelected = this.value;
+         $.each(selectedSpeciesa.methods, function () {
+
+          if (this.id == valueSelected) {
+            populate_conditionsa(this.conditions);
+          }
+
+         });
+    });
+
+    $('#methodsb').change(function(ev) {
+        var valueSelected = this.value;
+         $.each(selectedSpeciesb.methods, function () {
+
+          if (this.id == valueSelected) {
+            populate_conditionsb(this.conditions);
+          }
+
+         });
+    });
+
+    $.getJSON("{{ url_for('search.search_specific_profiles_json') }}", function(json) {
+      formdata = json;
+      populate_species(formdata);
+    });
+
+    var csv_data = $("#results_table").table2CSV({delivery:'value'});
+    csv_data = csv_data.replace(/,"Action"\n/,'\n');
+    csv_data = csv_data.replace(/,"view profile"\n/gi,'\n');
+    csv_data = csv_data.replace(/,"view profile"$/gi,'\n');
+    $("#DownloadTable").attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv_data));
+    $("#DownloadTable").attr('download', "table.csv");
+
+});
+</script>
+{% endblock %}

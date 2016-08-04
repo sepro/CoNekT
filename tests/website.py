@@ -180,23 +180,13 @@ class WebsiteTest(TestCase):
             compound = node['data']['compound'] if 'compound' in node['data'].keys() else False
 
             if not compound:
+                required_keys = ['family_color', 'lc_label', 'lc_color', 'lc_shape', 'family_name',
+                                 'shape', 'description', 'name', 'gene_name', 'tokens', 'family_clade_count',
+                                 'gene_id', 'family_id', 'family_url', 'family_clade', 'family_shape']
+
                 self.assertTrue('data' in node.keys())
-                self.assertTrue('family_color' in node['data'].keys())
-                self.assertTrue('lc_label' in node['data'].keys())
-                self.assertTrue('lc_color' in node['data'].keys())
-                self.assertTrue('lc_shape' in node['data'].keys())
-                self.assertTrue('family_name' in node['data'].keys())
-                self.assertTrue('shape' in node['data'].keys())
-                self.assertTrue('description' in node['data'].keys())
-                self.assertTrue('name' in node['data'].keys())
-                self.assertTrue('gene_name' in node['data'].keys())
-                self.assertTrue('tokens' in node['data'].keys())
-                self.assertTrue('family_clade_count' in node['data'].keys())
-                self.assertTrue('gene_id' in node['data'].keys())
-                self.assertTrue('family_id' in node['data'].keys())
-                self.assertTrue('family_url' in node['data'].keys())
-                self.assertTrue('family_clade' in node['data'].keys())
-                self.assertTrue('family_shape' in node['data'].keys())
+                self.assertTrue(all([k in node['data'].keys() for k in required_keys]))
+
                 if not ecc_graph:
                     self.assertTrue('depth' in node['data'].keys())
                     self.assertTrue('profile_link' in node['data'].keys())
@@ -401,7 +391,6 @@ class WebsiteTest(TestCase):
         self.assertTrue('value' in data[0].keys())
         self.assertTrue('label' in data[0].keys())
 
-
     def test_profile(self):
         """
         Test for routes associated with an ExpressionProfile
@@ -416,9 +405,9 @@ class WebsiteTest(TestCase):
         self.assert_template_used('modals/expression_profile.html')
         self.assert200(response)
 
-        response = self.client.get("/profile/find/" + profile.probe)
-        self.assert_template_used('expression_profile.html')
+        response = self.client.get("/profile/find/" + profile.probe, follow_redirects=True)
         self.assert200(response)
+        self.assert_template_used('expression_profile.html')
 
         response = self.client.get("/profile/find/%s/%d" % (profile.probe, 2))
         self.assert404(response)
