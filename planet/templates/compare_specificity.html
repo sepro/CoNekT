@@ -4,6 +4,7 @@
 <div class="top-pad">
 
     <h1>Compare: Specific Profiles</h1>
+    {% if form %}
         <div class="row">
             <div class="col-md-10 col-md-offset-1 col-sm-12">
                 <div class="panel panel-default">
@@ -50,6 +51,25 @@
             </div>
         </div>
     </div>
+    {% else %}
+        <div class="row">
+            <div class="col-md-4">
+                {% for f in a_only %}
+                <p>{{f.sequence.name}} ( {{f.family.name}} )</p>
+                {% endfor %}
+            </div>
+            <div class="col-md-4">
+                {% for f in intersection %}
+                <p>{{f.sequence.name}} ( {{f.family.name}} )</p>
+                {% endfor %}
+            </div>
+            <div class="col-md-4">
+                {% for f in b_only %}
+                <p>{{f.sequence.name}} ( {{f.family.name}} )</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
 
