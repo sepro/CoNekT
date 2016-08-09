@@ -59,6 +59,9 @@
         </div>
         <div class="row">
             <div class="col-md-4">
+                <h3>{{ labels.left_species }}</h3>
+                <p>{{ labels.left_condition }} ({{ labels.left_method }})</p>
+                <hr />
                 {% for f in a_only %}
                 <p><a href="{{ url_for('family.family_view', family_id=f.id) }}">{{f.name}}</a> (
                     {% for s in f.sequences %}
@@ -68,6 +71,9 @@
                 {% endfor %}
             </div>
             <div class="col-md-4">
+                <h3>Intersection</h3>
+                <p>&nbsp;</p>
+                <hr />
                 {% for f in intersection %}
                 <p><a href="{{ url_for('family.family_view', family_id=f.id) }}">{{f.name}}</a> (
                     {% for s in f.sequences %}
@@ -77,6 +83,9 @@
                 {% endfor %}
             </div>
             <div class="col-md-4">
+                <h3>{{ labels.right_species }}</h3>
+                <p>{{ labels.right_condition }} ({{ labels.right_method }})</p>
+                <hr />
                 {% for f in b_only %}
                 <p><a href="{{ url_for('family.family_view', family_id=f.id) }}">{{f.name}}</a> (
                     {% for s in f.sequences %}

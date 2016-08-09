@@ -32,9 +32,9 @@ def specificity_comparison_main():
 
         # Check if things that should exist do
         species_a = Species.query.get_or_404(species_a_id)
-        ExpressionSpecificityMethod.query.get_or_404(method_a_id)
+        method_a = ExpressionSpecificityMethod.query.get_or_404(method_a_id)
         species_b = Species.query.get_or_404(species_b_id)
-        ExpressionSpecificityMethod.query.get_or_404(method_b_id)
+        method_b = ExpressionSpecificityMethod.query.get_or_404(method_b_id)
 
         # Fetch results
         results_a = ExpressionSpecificity.query.filter_by(method_id=method_a_id, condition=condition_a).filter(ExpressionSpecificity.score>=cutoff_a)
@@ -58,4 +58,10 @@ def specificity_comparison_main():
         intersection = [{'id': f, 'name': famID_to_name[f],  'sequences': fam_to_data[f]} for f in families_a.intersection(families_b)]
         b_only = [{'id': f, 'name': famID_to_name[f], 'sequences': fam_to_data[f]} for f in families_b.difference(families_a)]
 
-        return render_template('compare_specificity.html', a_only=a_only, b_only=b_only, intersection=intersection, a_label=species_a.name, b_label=species_b.name)
+        return render_template('compare_specificity.html', a_only=a_only, b_only=b_only, intersection=intersection,
+                               labels = {'left_species': species_a.name,
+                                         'right_species': species_b.name,
+                                         'left_method': method_a.description,
+                                         'right_method': method_b.description,
+                                         'left_condition': condition_a,
+                                         'right_condition': condition_b})
