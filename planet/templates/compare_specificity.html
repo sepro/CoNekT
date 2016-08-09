@@ -53,19 +53,36 @@
     </div>
     {% else %}
         <div class="row">
+            <div class="col-lg-12">
+                <div id="venn" url="{{ url_for('static', filename='svg/venn.svg') }}"></div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-4">
                 {% for f in a_only %}
-                <p>{{f.sequence.name}} ( {{f.family.name}} )</p>
+                <p><a href="{{ url_for('family.family_view', family_id=f.id) }}">{{f.name}}</a> (
+                    {% for s in f.sequences %}
+                        <a href="{{ url_for('sequence.sequence_view', sequence_id=s.id) }}">{{s.name}}</a>
+                    {% endfor %}
+                    )</p>
                 {% endfor %}
             </div>
             <div class="col-md-4">
                 {% for f in intersection %}
-                <p>{{f.sequence.name}} ( {{f.family.name}} )</p>
+                <p><a href="{{ url_for('family.family_view', family_id=f.id) }}">{{f.name}}</a> (
+                    {% for s in f.sequences %}
+                        <a href="{{ url_for('sequence.sequence_view', sequence_id=s.id) }}">{{s.name}}</a>
+                    {% endfor %}
+                    )</p>
                 {% endfor %}
             </div>
             <div class="col-md-4">
                 {% for f in b_only %}
-                <p>{{f.sequence.name}} ( {{f.family.name}} )</p>
+                <p><a href="{{ url_for('family.family_view', family_id=f.id) }}">{{f.name}}</a> (
+                    {% for s in f.sequences %}
+                        <a href="{{ url_for('sequence.sequence_view', sequence_id=s.id) }}">{{s.name}}</a>
+                    {% endfor %}
+                    )</p>
                 {% endfor %}
             </div>
         </div>
@@ -76,6 +93,7 @@
 {% block extrajs %}
 <script src="{{ url_for('static', filename='js/bootstrap-slider.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/table2CSV.js') }}" > </script>
+{% if form %}
 <script>
 $(function () {
 
@@ -232,4 +250,20 @@ $(function () {
 
 });
 </script>
+{% else %}
+<script src="{{ url_for('static', filename='js/pablo.min.js') }}" > </script>
+<script>
+
+$(function() {
+     var svg_file  = $('#venn').attr( "url" );
+     svg_venn = Pablo.load(svg_file, function(){
+        this.appendTo($('#venn'));
+        this.addClass('center-block');
+        svg_venn.find('#left_value').firstChild().content("{{ a_only|length }}");
+        svg_venn.find('#intersect_value').firstChild().content("{{ intersection|length }}");
+        svg_venn.find('#right_value').firstChild().content("{{ b_only|length }}");
+    });
+});
+</script>
+{% endif %}
 {% endblock %}

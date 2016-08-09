@@ -7,6 +7,8 @@ from planet.models.relationships import SequenceFamilyAssociation
 
 from planet.forms.compare_specificity import CompareSpecificityForm
 
+from collections import defaultdict
+
 specificity_comparison = Blueprint('specificity_comparison', __name__)
 
 
@@ -29,9 +31,9 @@ def specificity_comparison_main():
         cutoff_b = request.form.get('cutoffb')
 
         # Check if things that should exist do
-        Species.query.get_or_404(species_a_id)
+        species_a = Species.query.get_or_404(species_a_id)
         ExpressionSpecificityMethod.query.get_or_404(method_a_id)
-        Species.query.get_or_404(species_b_id)
+        species_b = Species.query.get_or_404(species_b_id)
         ExpressionSpecificityMethod.query.get_or_404(method_b_id)
 
         # Fetch results
@@ -42,13 +44,18 @@ def specificity_comparison_main():
 
         family_associations = SequenceFamilyAssociation.query.filter(SequenceFamilyAssociation.family.has(method_id=1)).filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids))
         seq_to_fam = {f.sequence_id: f.gene_family_id for f in family_associations}
-        fam_to_data = {f.gene_family_id: f for f in family_associations}
+        fam_to_data = defaultdict(list)
+        famID_to_name = {}
+
+        for f in family_associations:
+            fam_to_data[f.gene_family_id].append({'id': f.sequence_id, 'name': f.sequence.name})
+            famID_to_name[f.gene_family_id] = f.family.name
 
         families_a = set([seq_to_fam[r.profile.sequence_id] for r in results_a if r.profile.sequence_id in seq_to_fam.keys()])
         families_b = set([seq_to_fam[r.profile.sequence_id] for r in results_b if r.profile.sequence_id in seq_to_fam.keys()])
 
-        a_only = [fam_to_data[f] for f in families_a.difference(families_b)]
-        intersection = [f for f in family_associations if f.gene_family_id in families_a.intersection(families_b)]
-        b_only = [fam_to_data[f] for f in families_b.difference(families_a)]
+        a_only = [{'id': f, 'name': famID_to_name[f], 'sequences': fam_to_data[f]} for f in families_a.difference(families_b)]
+        intersection = [{'id': f, 'name': famID_to_name[f],  'sequences': fam_to_data[f]} for f in families_a.intersection(families_b)]
+        b_only = [{'id': f, 'name': famID_to_name[f], 'sequences': fam_to_data[f]} for f in families_b.difference(families_a)]
 
-        return render_template('compare_specificity.html', a_only=a_only, b_only=b_only, intersection=intersection)
+        return render_template('compare_specificity.html', a_only=a_only, b_only=b_only, intersection=intersection, a_label=species_a.name, b_label=species_b.name)
