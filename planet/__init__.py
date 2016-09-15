@@ -132,7 +132,8 @@ def create_app(config):
     if LOGIN_ENABLED:
         from planet.admin.views import MyAdminIndexView
         from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
-            CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView
+            CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView, \
+            ConditionTissueAdminView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'))
         admin.add_view(SpeciesAdminView(Species, db.session, url='species/'))
@@ -144,6 +145,8 @@ def create_app(config):
                                                              category="Methods"))
         admin.add_view(ExpressionSpecificityMethodAdminView(ExpressionSpecificityMethod, db.session, url='specificity/',
                                                              category="Methods"))
+        admin.add_view(ConditionTissueAdminView(ConditionTissue, db.session, url='condition_tissue/',
+                                                             category="Conversion"))
 
 
 

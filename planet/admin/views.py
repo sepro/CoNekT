@@ -78,6 +78,7 @@ class ExpressionNetworkMethodAdminView(MyModelView):
 
     can_create = False
 
+
 class ExpressionSpecificityMethodAdminView(MyModelView):
     """
     ExpressionNetworkMethod view for admins, specifies what is available in CRUD
@@ -87,6 +88,7 @@ class ExpressionSpecificityMethodAdminView(MyModelView):
     column_display_pk = True
 
     can_create = False
+
 
 class CoexpressionClusteringMethodAdminView(MyModelView):
     """
@@ -98,9 +100,19 @@ class CoexpressionClusteringMethodAdminView(MyModelView):
 
     can_create = False
 
+
+class ConditionTissueAdminView(MyModelView):
+    """
+    ConditionTissue view for admins, specifies what is available in CRUD
+    """
+    column_display_pk = True
+
+    can_create = False
+
+
 class CladesAdminView(MyModelView):
     """
-    CoexpressionClusteringMethod view for admins, specifies what is available in CRUD
+    Clades view for admins, specifies what is available in CRUD
     """
     form_columns = ('id', 'name', 'species', 'newick_tree')
 

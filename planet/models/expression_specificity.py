@@ -45,7 +45,7 @@ class ExpressionSpecificityMethod(db.Model):
         ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description, conditions_dict, remove_background=remove_background)
 
     @staticmethod
-    def calculate_tissue_specificities(species_id, description, condition_to_tissue, remove_background=False):
+    def calculate_tissue_specificities(species_id, description, condition_to_tissue, remove_background=False, use_max=False):
         """
         Function calculates tissue specific genes based on the expression conditions. A dict is required to link
         specific conditions to the correct tissues. This also allows conditions to be excluded in case they are
@@ -55,6 +55,8 @@ class ExpressionSpecificityMethod(db.Model):
         :param species_id: internal species ID
         :param description: description for the method to determine the specificity
         :param condition_to_tissue: dict to connect a condition to a tissue
+        :param remove_background: substracts the lowest value to correct for background noise
+        :param use_max: uses the maximum value instead of the mean
         """
         new_method = ExpressionSpecificityMethod()
         new_method.species_id = species_id
@@ -79,15 +81,18 @@ class ExpressionSpecificityMethod(db.Model):
             profile_data = json.loads(profile)
             profile_means = {}
             for t in tissues:
-                count = 0
-                total_sum = 0
+                values = []
+                means = []
                 valid_conditions = [k for k in profile_data['data'] if k in condition_to_tissue and condition_to_tissue[k] == t]
                 for k, v in profile_data['data'].items():
                     if k in valid_conditions:
-                        count += len(v)
-                        total_sum += sum(v)
+                        values += v
+                        means.append(mean(v))
 
-                profile_means[t] = total_sum/count if count != 0 else 0
+                if not use_max:
+                    profile_means[t] = mean(values) if len(values) > 0 else 0
+                else:
+                    profile_means[t] = max(means) if len(means) > 0 else 0
 
             # substract minimum value to remove background
             # experimental code !
@@ -111,10 +116,10 @@ class ExpressionSpecificityMethod(db.Model):
 
                 profile_specificities.append(new_specificity)
 
-            # sort conditions and add top 2 to array
+            # sort conditions and add top one
             profile_specificities = sorted(profile_specificities, key=lambda x: x['score'], reverse=True)
 
-            specificities += profile_specificities[:2]
+            specificities += profile_specificities[0]
 
             # write specificities to db if there are more than 400 (ORM free for speed)
             if len(specificities) > 400:
