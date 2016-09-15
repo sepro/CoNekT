@@ -56,7 +56,7 @@ class ExpressionSpecificityMethod(db.Model):
         :param description: description for the method to determine the specificity
         :param condition_to_tissue: dict to connect a condition to a tissue
         :param remove_background: substracts the lowest value to correct for background noise
-        :param use_max: uses the maximum value instead of the mean
+        :param use_max: uses the maximum of mean values instead of the mean of all values
         """
         new_method = ExpressionSpecificityMethod()
         new_method.species_id = species_id
@@ -119,7 +119,7 @@ class ExpressionSpecificityMethod(db.Model):
             # sort conditions and add top one
             profile_specificities = sorted(profile_specificities, key=lambda x: x['score'], reverse=True)
 
-            specificities += profile_specificities[0]
+            specificities.append(profile_specificities[0])
 
             # write specificities to db if there are more than 400 (ORM free for speed)
             if len(specificities) > 400:
