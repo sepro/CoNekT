@@ -28,13 +28,39 @@ def prepare_profiles(profiles, normalize=False):
 
         datasets.append({
             'label': p.probe if p.sequence_id is None else p.sequence.name + " (" + p.probe + ")",
-            'strokeColor': 'rgba(175,175,175,0.2)',
-            'pointStrokeColor': 'rgba(220,220,220,0)',
-            'fillColor': 'rgba(220,220,220,0.1)',
-            'pointHighlightStroke': 'rgba(220,220,220,0)',
-            'pointColor': 'rgba(220,220,220,0)',
-            'pointHighlightFill': 'rgba(220,220,220,0)',
+            'fill': True,
+            'showLine': True,
+            'backgroundColor': "rgba(220,220,220,0.1)",
+            'borderColor': "rgba(175,175,175,0.2)",
+            'pointRadius': 0,
             'data': expression_values
         })
 
-    return {'labels': labels, 'datasets': datasets}
+    output = {
+        'type': 'line',
+        'data': {
+            'labels': labels,
+            'datasets': datasets
+        },
+        "options": {
+          "legend": {
+            "display": False
+          },
+          "scales": {
+              "xAxes": [{
+                "gridLines": {
+                    "display": False
+                }
+              }
+              ],
+              "yAxes": [{
+                "ticks": {
+                    "beginAtZero": True
+                }
+              }
+              ]
+          }
+        }
+    }
+
+    return output

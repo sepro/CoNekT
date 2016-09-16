@@ -17,8 +17,7 @@
         $( document ).ready(function() {
             $.getJSON( "{{ url_for('expression_profile.expression_profile_plot_json', profile_id=profile.id) }}", function( data ) {
                 var ctx = document.getElementById("profile-chart").getContext("2d");
-                window.myPie = new Chart(ctx).Line(data, { animation: false,
-                multiTooltipTemplate: "<%if (datasetLabel){{ '{%' }}><%=datasetLabel%>: <{{ '%}' }}%><%= value.toFixed(2) %>"});
+                var myChart = new Chart(ctx, data);
             });
         });
 </script>

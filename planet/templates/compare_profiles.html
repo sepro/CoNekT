@@ -23,9 +23,7 @@
 	<script>
 			$.getJSON( "{{ url_for('expression_profile.expression_profile_compare_plot_json', first_profile_id=first_profile.id, second_profile_id=second_profile.id) }}", function( data ) {
 				var ctx = document.getElementById("chart-area").getContext("2d");
-				window.myPie = new Chart(ctx).Line(data, { animation: false,
-				multiTooltipTemplate: "<%if (datasetLabel){{ '{%' }}><%=datasetLabel%>: <{{ '%}' }}%><%= value.toFixed(2) %>"
- });
+				var myChart = new Chart(ctx, data);
 			});
 	</script>
 {% endblock %}

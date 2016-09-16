@@ -40,8 +40,7 @@
 	$(function () {
         var data = {{ profiles|safe }};
         var ctx = document.getElementById("chart-line").getContext("2d");
-        window.myPie = new Chart(ctx).Line(data, { animation: false, pointDot : false,
-        multiTooltipTemplate: "<%if (datasetLabel){{ '{%' }}><%=datasetLabel%>: <{{ '%}' }}%><%= value.toFixed(2) %>"});
+        var myChart = new Chart(ctx, data);
     });
 	</script>
 {% endblock %}

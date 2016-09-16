@@ -423,51 +423,27 @@ class WebsiteTest(TestCase):
         response = self.client.get("/profile/compare_probes/%s/%s/%d" % (profile.probe, profile.probe, 2))
         self.assert404(response)
 
-        response = self.client.get("/profile/json/radar/%d" % profile.id)
-        self.assert200(response)
-        data = json.loads(response.data.decode('utf-8'))
-        self.assertTrue('labels' in data.keys())
-        self.assertTrue('datasets' in data.keys())
-        self.assertTrue('strokeColor' in data['datasets'][0].keys())
-        self.assertTrue('data' in data['datasets'][0].keys())
-        self.assertTrue('pointStrokeColor' in data['datasets'][0].keys())
-        self.assertTrue('fillColor' in data['datasets'][0].keys())
-        self.assertTrue('label' in data['datasets'][0].keys())
-        self.assertTrue('pointHighlightStroke' in data['datasets'][0].keys())
-        self.assertTrue('pointColor' in data['datasets'][0].keys())
-        self.assertTrue('pointHighlightFill' in data['datasets'][0].keys())
-
         response = self.client.get("/profile/json/plot/%d" % profile.id)
         self.assert200(response)
 
         data = json.loads(response.data.decode('utf-8'))
-        self.assertTrue('labels' in data.keys())
-        self.assertTrue('datasets' in data.keys())
-        for i in range(3):
-            self.assertTrue('strokeColor' in data['datasets'][i].keys())
-            self.assertTrue('data' in data['datasets'][i].keys())
-            self.assertTrue('pointStrokeColor' in data['datasets'][i].keys())
-            self.assertTrue('fillColor' in data['datasets'][i].keys())
-            self.assertTrue('label' in data['datasets'][i].keys())
-            self.assertTrue('pointHighlightStroke' in data['datasets'][i].keys())
-            self.assertTrue('pointColor' in data['datasets'][i].keys())
-            self.assertTrue('pointHighlightFill' in data['datasets'][i].keys())
+        self.assertTrue('type' in data.keys())
+        self.assertTrue('data' in data.keys())
+        self.assertTrue('labels' in data['data'].keys())
+        self.assertTrue('datasets' in data['data'].keys())
+        for i in range(len(data['data']['datasets'])):
+            self.assertTrue('data' in data['data']['datasets'][i].keys())
 
         response = self.client.get("/profile/json/compare_plot/%d/%d" % (profile.id, profile.id))
         self.assert200(response)
 
         data = json.loads(response.data.decode('utf-8'))
-        self.assertTrue('labels' in data.keys())
-        self.assertTrue('datasets' in data.keys())
-        for i in range(2):
-            self.assertTrue('strokeColor' in data['datasets'][i].keys())
-            self.assertTrue('data' in data['datasets'][i].keys())
-            self.assertTrue('pointStrokeColor' in data['datasets'][i].keys())
-            self.assertTrue('fillColor' in data['datasets'][i].keys())
-            self.assertTrue('label' in data['datasets'][i].keys())
-            self.assertTrue('pointHighlightStroke' in data['datasets'][i].keys())
-            self.assertTrue('pointColor' in data['datasets'][i].keys())
-            self.assertTrue('pointHighlightFill' in data['datasets'][i].keys())
+        self.assertTrue('type' in data.keys())
+        self.assertTrue('data' in data.keys())
+        self.assertTrue('labels' in data['data'].keys())
+        self.assertTrue('datasets' in data['data'].keys())
+        for i in range(len(data['data']['datasets'])):
+            self.assertTrue('data' in data['data']['datasets'][i].keys())
 
 
     def test_help(self):
