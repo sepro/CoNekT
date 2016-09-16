@@ -190,6 +190,10 @@ def expression_profile_plot_json(profile_id):
                       "xAxes": [{
                         "gridLines": {
                             "display": False
+                        },
+                        "ticks": {
+                            "maxRotation": 90,
+                            "minRotation": 90
                         }
                       }
                       ],
@@ -264,6 +268,10 @@ def expression_profile_plot_tissue_json(profile_id, condition_tissue_id):
                       "xAxes": [{
                         "gridLines": {
                             "display": False
+                        },
+                        "ticks": {
+                            "maxRotation": 90,
+                            "minRotation": 90
                         }
                       }
                       ],
@@ -321,6 +329,10 @@ def expression_profile_compare_plot_json(first_profile_id, second_profile_id):
                       "xAxes": [{
                         "gridLines": {
                             "display": False
+                        },
+                        "ticks": {
+                            "maxRotation": 90,
+                            "minRotation": 90
                         }
                       }
                       ],

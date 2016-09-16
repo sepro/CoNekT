@@ -50,6 +50,10 @@ def prepare_profiles(profiles, normalize=False):
               "xAxes": [{
                 "gridLines": {
                     "display": False
+                },
+                "ticks": {
+                    "maxRotation": 90,
+                    "minRotation": 90
                 }
               }
               ],
