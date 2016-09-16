@@ -60,8 +60,7 @@
 			{% for t in tissues %}
 			$.getJSON( "{{ url_for('expression_profile.expression_profile_plot_tissue_json', profile_id=profile.id, condition_tissue_id=t.id) }}", function( data ) {
 				var ctx = document.getElementById("chart-area-{{t.id}}").getContext("2d");
-				window.myPie = new Chart(ctx).Line(data, { animation: false,
-				tooltipTemplate: "<%if (datasetLabel){{ '{%' }}><%=datasetLabel%>: <{{ '%}' }}%><%= value.toFixed(2) %>"});
+				var myChart = new Chart(ctx, data);
 			});
 			{% endfor %}
 	</script>

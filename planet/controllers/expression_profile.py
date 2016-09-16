@@ -196,20 +196,57 @@ def expression_profile_plot_tissue_json(profile_id, condition_tissue_id):
     data = current_profile.tissue_profile(condition_tissue_id)
 
     processed_means = {}
+    processed_maxs = {}
+    processed_mins = {}
 
     for key, expression_values in data["data"].items():
         processed_means[key] = mean(expression_values)
 
-    output = {"labels": list(data["order"]),
-              "datasets": [{
-                    "label": "Mean",
-                    "fillColor": "rgba(220,220,220,0.2)",
-                    "strokeColor": "rgba(175,175,175,1)",
-                    "pointColor": "rgba(220,220,220,1)",
-                    "pointStrokeColor": "#fff",
-                    "pointHighlightFill": "#fff",
-                    "pointHighlightStroke": "rgba(220,220,220,1)",
-                    "data": list([processed_means[c] for c in data["order"]])}]}
+        processed_maxs[key] = max(expression_values)
+        processed_mins[key] = min(expression_values)
+
+    output = {"type": "line",
+              "data": {
+                  "labels": list(data["order"]),
+                  "datasets": [{
+                        "label": "Mean",
+                        "fillColor": "rgba(220,220,220,0.2)",
+                        "strokeColor": "rgba(175,175,175,1)",
+                        "pointColor": "rgba(220,220,220,1)",
+                        "pointStrokeColor": "#fff",
+                        "pointHighlightFill": "#fff",
+                        "pointHighlightStroke": "rgba(220,220,220,1)",
+                        "data": list([processed_means[c] for c in data["order"]])},
+                                {
+                        "label": "Maximum",
+                        "fillColor": "rgba(220,220,220,0)",
+                        "strokeColor": "rgba(220,22,22,0)",
+                        "pointColor": "rgba(220,22,22,1)",
+                        "pointStrokeColor": "#fff",
+                        "pointHighlightFill": "#fff",
+                        "pointHighlightStroke": "rgba(220,220,220,1)",
+                        "data": list([processed_maxs[c] for c in data["order"]])},
+                                {
+                        "label": "Minimum",
+                        "fillColor": "rgba(220,220,220,0)",
+                        "strokeColor": "rgba(220,22,22,0)",
+                        "pointColor": "rgba(220,22,22,1)",
+                        "pointStrokeColor": "#fff",
+                        "pointHighlightFill": "#fff",
+                        "pointHighlightStroke": "rgba(220,220,220,1)",
+                        "data": list([processed_mins[c] for c in data["order"]])}]
+                  },
+              "options": {
+                  "scales": {
+                      "yAxes": [{
+                        "ticks": {
+                            "beginAtZero": True
+                        }
+                      }
+                      ]
+                  }
+              }
+              }
 
     return Response(json.dumps(output), mimetype='application/json')
 

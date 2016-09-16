@@ -40,15 +40,13 @@ class ExpressionProfile(db.Model):
         output = {}
 
         for t in tissues:
-            count = 0
-            total_sum = 0
             valid_conditions = [k for k in profile_data['data'] if k in condition_to_tissue and condition_to_tissue[k] == t]
+            valid_values = []
             for k, v in profile_data['data'].items():
                 if k in valid_conditions:
-                    count += len(v)
-                    total_sum += sum(v)
+                    valid_values += v
 
-            output[t] = [total_sum/count if count != 0 else 0]
+            output[t] = valid_values if len(valid_values) > 0 else [0]
 
         return {'order': tissues, 'data': output}
 
