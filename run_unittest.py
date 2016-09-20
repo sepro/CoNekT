@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
+from coverage import coverage
+
+cov = coverage(branch=True, omit=['virtualenv/*', 'tests/*'])
+cov.start()
+
 import unittest
 import os
 
 from tests.website import WebsiteTest
 from tests.utils import UtilsTest
-
-from coverage import coverage
-
-cov = coverage(branch=True, omit=['virtualenv/*', 'tests.py'])
-cov.start()
 
 if __name__ == '__main__':
     try:
