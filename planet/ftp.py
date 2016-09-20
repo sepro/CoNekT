@@ -14,6 +14,8 @@ from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
 from planet.models.gene_families import GeneFamilyMethod
 
+from utils.sequence import translate
+
 from flask import current_app
 from sqlalchemy.orm import joinedload, undefer, noload
 
@@ -47,16 +49,20 @@ def export_protein_sequences(SEQUENCE_PATH):
     if not os.path.exists(SEQUENCE_PATH):
         os.makedirs(SEQUENCE_PATH)
 
-    species = Species.query.options(undefer('coding_sequence')).all()
+    species = Species.query.all()
 
     for s in species:
         filename = s.code + ".aa.fasta.gz"
         filename = os.path.join(SEQUENCE_PATH, filename)
 
+        sequences = db.engine.execute(db.select([Sequence.__table__.c.name, Sequence.__table__.c.type, Sequence.__table__.c.coding_sequence]).
+                                      where(Sequence.__table__.c.species_id == s.id)
+                                      ).fetchall()
+
         with gzip.open(filename, 'wb') as f:
-            for sequence in s.sequences:
-                if sequence.type == "protein_coding":
-                    f.write(bytes(">" + sequence.name + '\n' + sequence.protein_sequence + '\n', 'UTF-8'))
+            for (name, sequence_type, sequence) in sequences:
+                if sequence_type == "protein_coding":
+                    f.write(bytes(">" + name + '\n' + translate(sequence) + '\n', 'UTF-8'))
 
 
 def export_go_annotation(ANNOTATION_PATH):
@@ -220,11 +226,11 @@ def export_expression_networks(EXPRESSION_PATH):
                     f.write(bytes(out, 'UTF-8'))
 
 
-def export_ftp_data():
+def export_ftp_data(configuration):
     """
     Export all data
     """
-    app = create_app('config')
+    app = create_app(configuration)
 
     with app.app_context():
 
