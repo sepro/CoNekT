@@ -212,6 +212,27 @@ class WebsiteTest(TestCase):
                 else:
                     self.assertTrue('ecc_score' in edge['data'].keys())
 
+    def test_main(self):
+        response = self.client.get("/")
+        self.assert_template_used('static_pages/main.html')
+        self.assert200(response)
+
+        response = self.client.get("/about")
+        self.assert_template_used('static_pages/about.html')
+        self.assert200(response)
+
+        response = self.client.get("/contact")
+        self.assert_template_used('static_pages/contact.html')
+        self.assert200(response)
+
+        response = self.client.get("/licence")
+        self.assert_template_used('static_pages/licence.html')
+        self.assert200(response)
+
+        response = self.client.get("/this_should_not_exist")
+        self.assert_template_used('error/404.html')
+        self.assert404(response)
+
     def test_sequence(self):
         """
         Test for routes associated with a Sequence

@@ -14,19 +14,12 @@ from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
 from planet.models.gene_families import GeneFamilyMethod
 
+from flask import current_app
 from sqlalchemy.orm import joinedload, undefer, noload
-
-from config import PLANET_FTP_DATA
-
-# Constants for the sub-folders
-SEQUENCE_PATH = os.path.join(PLANET_FTP_DATA, 'sequences')
-ANNOTATION_PATH = os.path.join(PLANET_FTP_DATA, 'annotation')
-FAMILIES_PATH = os.path.join(PLANET_FTP_DATA, 'families')
-EXPRESSION_PATH = os.path.join(PLANET_FTP_DATA, 'expression')
 
 
 # TODO: rewrite some of these methods using ORM free database interactions
-def export_coding_sequences():
+def export_coding_sequences(SEQUENCE_PATH):
     """
     Exports sequences for transcripts as gzipped fasta files to the desired path
     """
@@ -47,7 +40,7 @@ def export_coding_sequences():
                 f.write(bytes(">" + name + '\n' + coding_sequence + '\n', 'UTF-8'))
 
 
-def export_protein_sequences():
+def export_protein_sequences(SEQUENCE_PATH):
     """
     Exports amino acid sequences for protein_coding transcripts as gzipped fasta files to the desired path
     """
@@ -66,7 +59,7 @@ def export_protein_sequences():
                     f.write(bytes(">" + sequence.name + '\n' + sequence.protein_sequence + '\n', 'UTF-8'))
 
 
-def export_go_annotation():
+def export_go_annotation(ANNOTATION_PATH):
     """
     Export GO annotation for each sequence
     """
@@ -95,7 +88,7 @@ def export_go_annotation():
                                       go_association.source])
 
 
-def export_interpro_annotation():
+def export_interpro_annotation(ANNOTATION_PATH):
     """
     Export interpro annotation for each sequence
     """
@@ -123,7 +116,7 @@ def export_interpro_annotation():
                                       interpro_association.stop])
 
 
-def export_families():
+def export_families(FAMILIES_PATH):
     """
     Export gene families and an overview of the methods to generate them
     """
@@ -158,7 +151,7 @@ def export_families():
                 print(method, family, ";".join(members), file=f, sep='\t')
 
 
-def export_coexpression_clusters():
+def export_coexpression_clusters(EXPRESSION_PATH):
     """
     Export coexpression clusters and an overview of the methods to generate them
     """
@@ -198,7 +191,7 @@ def export_coexpression_clusters():
                 print(method, cluster, ";".join(members), file=f, sep='\t')
 
 
-def export_expression_networks():
+def export_expression_networks(EXPRESSION_PATH):
     """
     Export expression networks and an overview of the methods to generate them
     """
@@ -234,12 +227,21 @@ def export_ftp_data():
     app = create_app('config')
 
     with app.app_context():
-        export_coding_sequences()
-        export_protein_sequences()
 
-        export_go_annotation()
-        export_interpro_annotation()
+        PLANET_FTP_DATA = current_app.config['PLANET_FTP_DATA']
 
-        export_families()
-        export_coexpression_clusters()
-        export_expression_networks()
+        # Constants for the sub-folders
+        SEQUENCE_PATH = os.path.join(PLANET_FTP_DATA, 'sequences')
+        ANNOTATION_PATH = os.path.join(PLANET_FTP_DATA, 'annotation')
+        FAMILIES_PATH = os.path.join(PLANET_FTP_DATA, 'families')
+        EXPRESSION_PATH = os.path.join(PLANET_FTP_DATA, 'expression')
+
+        export_coding_sequences(SEQUENCE_PATH)
+        export_protein_sequences(SEQUENCE_PATH)
+
+        export_go_annotation(ANNOTATION_PATH)
+        export_interpro_annotation(ANNOTATION_PATH)
+
+        export_families(FAMILIES_PATH)
+        export_coexpression_clusters(EXPRESSION_PATH)
+        export_expression_networks(EXPRESSION_PATH)

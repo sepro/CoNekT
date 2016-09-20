@@ -1,7 +1,4 @@
 from flask import Blueprint, render_template
-from config import DEBUG
-from flask.ext.login import current_user
-
 
 main = Blueprint('main', __name__)
 
@@ -36,9 +33,3 @@ def licence():
     Shows the license
     """
     return render_template('static_pages/licence.html')
-
-
-@main.route('/kill')
-def kill():
-    if DEBUG:
-        quit()
