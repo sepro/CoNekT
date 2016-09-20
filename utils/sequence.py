@@ -36,7 +36,7 @@ def translate(sequence, trim=True, return_on_stop=True):
 
     if trim:
         start = sequence.find('ATG')
-        trimmed_sequence[start:]
+        trimmed_sequence = trimmed_sequence[start:]
 
     codons = [trimmed_sequence[i:i+3] for i in range(0, len(trimmed_sequence), 3)]
 
