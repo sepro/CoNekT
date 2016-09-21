@@ -1,31 +1,10 @@
 from planet import create_app
 
-from build.sanity import check_sanity_species_data
-
-from build.db.species import add_species_from_fasta
-from build.db.go import add_go_from_plaza
-from build.db.go import populate_go
-from build.db.interpro_xml import populate_interpro
-from build.db.interpro_data import add_interpro_from_plaza
-from build.db.families import add_families_from_plaza
-from build.db.expression import parse_expression_plot
-from build.db.expression import parse_expression_network
-from build.db.coexpression_clusters import add_planet_coexpression_clusters
-from build.db.xref import create_plaza_xref_families, create_plaza_xref_genes
-
-from planet.models.coexpression_clusters import CoexpressionClusteringMethod,CoexpressionCluster
-from planet.models.expression_networks import ExpressionNetworkMethod
-from planet.models.gene_families import GeneFamilyMethod
-from planet.models.species import Species
-from planet.models.clades import Clade
-from planet.models.go import GO
-from planet.models.expression_specificity import ExpressionSpecificityMethod
-from planet.models.expression_profiles import ExpressionProfile
-from planet.models.condition_tissue import ConditionTissue
-
-from planet.ftp import export_ftp_data
-
 app = create_app('config')
+
+
+
+
 
 CLADES = {
     'Arabidopsis': {
@@ -239,6 +218,32 @@ SPECIES = {
 
 
 with app.app_context():
+    # import of models need to happen after app is created !
+    from build.sanity import check_sanity_species_data
+
+    from build.db.species import add_species_from_fasta
+    from build.db.go import add_go_from_plaza
+    from build.db.go import populate_go
+    from build.db.interpro_xml import populate_interpro
+    from build.db.interpro_data import add_interpro_from_plaza
+    from build.db.families import add_families_from_plaza
+    from build.db.expression import parse_expression_plot
+    from build.db.expression import parse_expression_network
+    from build.db.coexpression_clusters import add_planet_coexpression_clusters
+    from build.db.xref import create_plaza_xref_families, create_plaza_xref_genes
+
+    from planet.models.coexpression_clusters import CoexpressionClusteringMethod,CoexpressionCluster
+    from planet.models.expression_networks import ExpressionNetworkMethod
+    from planet.models.gene_families import GeneFamilyMethod
+    from planet.models.species import Species
+    from planet.models.clades import Clade
+    from planet.models.go import GO
+    from planet.models.expression_specificity import ExpressionSpecificityMethod
+    from planet.models.expression_profiles import ExpressionProfile
+    from planet.models.condition_tissue import ConditionTissue
+
+    from planet.ftp import export_ftp_data
+
     print("Checking input")
     print("==============")
 

@@ -1,6 +1,8 @@
 from planet import db
 from planet.models.expression_profiles import ExpressionProfile
 from utils.expression import expression_specificity
+from utils.entropy import entropy_from_values
+from utils.tau import tau
 
 import json
 from statistics import mean
@@ -104,6 +106,8 @@ class ExpressionSpecificityMethod(db.Model):
 
             # determine spm score for each condition
             profile_specificities = []
+            profile_tau = tau([v for _, v in profile_means.items()])
+            profile_entropy = entropy_from_values([v for _, v in profile_means.items()])
 
             for t in tissues:
                 score = expression_specificity(t, profile_means)
@@ -111,6 +115,8 @@ class ExpressionSpecificityMethod(db.Model):
                     'profile_id': profile_id,
                     'condition': t,
                     'score': score,
+                    'entropy': profile_entropy,
+                    'tau': profile_tau,
                     'method_id': new_method.id,
                 }
 
@@ -137,4 +143,6 @@ class ExpressionSpecificity(db.Model):
     profile_id = db.Column(db.Integer, db.ForeignKey('expression_profiles.id'), index=True)
     condition = db.Column(db.String(255), index=True)
     score = db.Column(db.Float, index=True)
+    entropy = db.Column(db.Float, index=True)
+    tau = db.Column(db.Float, index=True)
     method_id = db.Column(db.Integer, db.ForeignKey('expression_specificity_method.id'), index=True)
