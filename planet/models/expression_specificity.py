@@ -111,6 +111,8 @@ class ExpressionSpecificityMethod(db.Model):
                     'profile_id': profile_id,
                     'condition': t,
                     'score': score,
+                    'entropy': 0,
+                    'tau': 0,
                     'method_id': new_method.id,
                 }
 
@@ -137,4 +139,6 @@ class ExpressionSpecificity(db.Model):
     profile_id = db.Column(db.Integer, db.ForeignKey('expression_profiles.id'), index=True)
     condition = db.Column(db.String(255), index=True)
     score = db.Column(db.Float, index=True)
+    entropy = db.Column(db.Float, index=True)
+    tau = db.Column(db.Float, index=True)
     method_id = db.Column(db.Integer, db.ForeignKey('expression_specificity_method.id'), index=True)

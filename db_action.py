@@ -1,17 +1,7 @@
 from migrate.versioning import api
 
-from config import SQLALCHEMY_DATABASE_URI
-from config import SQLALCHEMY_MIGRATE_REPO
-from config import ADMIN_PASSWORD
-from config import ADMIN_EMAIL
-
 from planet import create_app, db
 from planet.models.users import User
-
-from planet.models.coexpression_clusters import CoexpressionClusteringMethod
-from planet.models.expression_networks import ExpressionNetworkMethod
-from planet.models.gene_families import GeneFamilyMethod
-from planet.models.species import Species
 
 import imp
 
@@ -21,6 +11,11 @@ import os.path
 
 app = create_app('config')
 manager = Manager(app)
+
+SQLALCHEMY_DATABASE_URI = app.config['SQLALCHEMY_DATABASE_URI']
+SQLALCHEMY_MIGRATE_REPO = app.config['SQLALCHEMY_MIGRATE_REPO']
+ADMIN_PASSWORD = app.config['ADMIN_PASSWORD']
+ADMIN_EMAIL = app.config['ADMIN_EMAIL']
 
 
 @manager.command
@@ -70,6 +65,11 @@ def update():
 
 @manager.command
 def update_counts():
+    from planet.models.coexpression_clusters import CoexpressionClusteringMethod
+    from planet.models.expression_networks import ExpressionNetworkMethod
+    from planet.models.gene_families import GeneFamilyMethod
+    from planet.models.species import Species
+
     CoexpressionClusteringMethod.update_counts()
     ExpressionNetworkMethod.update_count()
     GeneFamilyMethod.update_count()

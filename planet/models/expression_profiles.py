@@ -20,7 +20,6 @@ class ExpressionProfile(db.Model):
     probe = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
     sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'), index=True)
     profile = db.deferred(db.Column(db.Text))
-    entropy = db.Column(db.Float, index=True)
 
     specificities = db.relationship('ExpressionSpecificity', backref=db.backref('profile', lazy='joined'), lazy='dynamic')
 
@@ -109,38 +108,39 @@ class ExpressionProfile(db.Model):
 
         return profiles
 
-    @staticmethod
-    def calculate_entropy():
-        num_bins = 20
-        bins = [b/num_bins for b in range(0, num_bins)]
-
-        profiles = ExpressionProfile.query.all()
-
-        for c, p in enumerate(profiles):
-            data = json.loads(p.profile)['data']
-
-            # convert profile to list of (mean) values and normalize for max
-            values = [mean(v) for k, v in data.items()]
-            v_max = max(values)
-            if v_max > 0:
-                n_values = [v/v_max for v in values]
-                hist = [0] * num_bins
-
-                for v in n_values:
-                    b = bisect(bins, v)
-                    hist[b-1] += 1
-
-                e = entropy(hist)
-
-                p.entropy = e
-
-                if e < 0:
-                    print(c, p.probe, p.profile, n_values, hist, sep='\n')
-            else:
-                print("Probe %s not expressed, cannot calculate entropy. Setting entropy to 0!" % p.probe)
-                p.entropy = 0.0
-
-            if c % 400 == 0:
-                db.session.commit()
-
-        db.session.commit()
+    # Entropy no longer connected with profile !
+    # @staticmethod
+    # def calculate_entropy():
+    #     num_bins = 20
+    #     bins = [b/num_bins for b in range(0, num_bins)]
+    #
+    #     profiles = ExpressionProfile.query.all()
+    #
+    #     for c, p in enumerate(profiles):
+    #         data = json.loads(p.profile)['data']
+    #
+    #         # convert profile to list of (mean) values and normalize for max
+    #         values = [mean(v) for k, v in data.items()]
+    #         v_max = max(values)
+    #         if v_max > 0:
+    #             n_values = [v/v_max for v in values]
+    #             hist = [0] * num_bins
+    #
+    #             for v in n_values:
+    #                 b = bisect(bins, v)
+    #                 hist[b-1] += 1
+    #
+    #             e = entropy(hist)
+    #
+    #             p.entropy = e
+    #
+    #             if e < 0:
+    #                 print(c, p.probe, p.profile, n_values, hist, sep='\n')
+    #         else:
+    #             print("Probe %s not expressed, cannot calculate entropy. Setting entropy to 0!" % p.probe)
+    #             p.entropy = 0.0
+    #
+    #         if c % 400 == 0:
+    #             db.session.commit()
+    #
+    #     db.session.commit()
