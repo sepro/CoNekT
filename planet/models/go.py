@@ -1,9 +1,10 @@
 from planet import db
 from planet.models.relationships import sequence_go, SequenceGOAssociation
-from config import SQL_COLLATION
 from planet.models.sequences import Sequence
 
 import json
+
+SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
 class GO(db.Model):

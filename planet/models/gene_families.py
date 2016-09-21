@@ -2,9 +2,10 @@ from planet import db
 from planet.models.relationships import sequence_family, family_xref
 from planet.models.sequences import Sequence
 from planet.models.xrefs import XRef
-from config import SQL_COLLATION
 
 from sqlalchemy.orm import joinedload
+
+SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
 class GeneFamilyMethod(db.Model):

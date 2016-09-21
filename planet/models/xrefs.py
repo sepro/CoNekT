@@ -1,5 +1,6 @@
 from planet import db
-from config import SQL_COLLATION
+
+SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
 class XRef(db.Model):

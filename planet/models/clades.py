@@ -1,9 +1,10 @@
 from planet import db
 from planet.models.gene_families import GeneFamily
 from planet.models.interpro import Interpro
-from config import SQL_COLLATION
 
 import json
+
+SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
 class Clade(db.Model):

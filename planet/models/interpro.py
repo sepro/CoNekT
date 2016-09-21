@@ -1,8 +1,10 @@
 from planet import db
 from planet.models.relationships import sequence_interpro
-from config import SQL_COLLATION
 
 from sqlalchemy.orm import joinedload
+
+SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
+
 
 class Interpro(db.Model):
     __tablename__ = 'interpro'

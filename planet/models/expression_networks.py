@@ -1,5 +1,4 @@
 from flask import url_for
-from config import SQL_COLLATION
 from planet import db
 from planet.models.relationships import SequenceFamilyAssociation, SequenceSequenceECCAssociation
 from planet.models.gene_families import GeneFamily
@@ -10,6 +9,8 @@ from utils.benchmark import benchmark
 import random
 import json
 from sqlalchemy import and_
+
+SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
 class ExpressionNetworkMethod(db.Model):

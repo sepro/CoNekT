@@ -3,14 +3,14 @@ from planet.models.condition_tissue import ConditionTissue
 
 from utils.entropy import entropy
 
-from config import SQL_COLLATION
-
 import json
 from bisect import bisect
 from statistics import mean
 from math import log
 
 from sqlalchemy.orm import joinedload, undefer, noload
+
+SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
 class ExpressionProfile(db.Model):

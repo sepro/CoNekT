@@ -24,8 +24,6 @@ SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'migration')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = DEBUG
 
-# Collation type, NOCASE for sqlite, '' for MySQL
-SQL_COLLATION = 'NOCASE' if SQLALCHEMY_DATABASE_URI.startswith('sqlite') else ''
 
 # Settings for the FTP/bulk data
 PLANET_FTP_DATA = os.path.join(basedir, 'ftp')

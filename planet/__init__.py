@@ -39,6 +39,7 @@ def create_app(config):
 
     app.config.from_object(config)
 
+    db.app = app
     db.init_app(app)
 
     # Enable login manager

@@ -3,7 +3,8 @@ from planet import db
 from planet.models.relationships import sequence_go, sequence_interpro, sequence_family, sequence_coexpression_cluster
 from planet.models.relationships import sequence_xref, sequence_sequence_ecc
 from utils.sequence import translate
-from config import SQL_COLLATION
+
+SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
 class Sequence(db.Model):
