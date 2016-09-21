@@ -103,7 +103,20 @@ def go_json_species(go_id):
         else:
             counts[s.species.code]["value"] += 1
 
-    return Response(json.dumps([counts[s] for s in counts.keys()]), mimetype='application/json')
+    output = {
+        "data": {
+            "labels": [counts[s]["label"] for s in counts.keys()],
+            "datasets": [{
+                "data": [counts[s]["value"] for s in counts.keys()],
+                "backgroundColor": [counts[s]["color"] for s in counts.keys()],
+                "hoverBackgroundColor": [counts[s]["color"] for s in counts.keys()]
+            }]
+        }
+        ,
+        "type": "doughnut"
+    }
+
+    return Response(json.dumps(output), mimetype='application/json')
 
 
 @go.route('/json/genes/<go_label>')

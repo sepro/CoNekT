@@ -74,7 +74,7 @@
 	<script>
 			$.getJSON( "{{ url_for('family.family_json_species', family_id=family.id) }}", function( data ) {
 				var ctx = document.getElementById("chart-area").getContext("2d");
-				window.myPie = new Chart(ctx).Doughnut(data, {animateRotate : false});
+				var myPie = new Chart(ctx, data);
 			});
 	</script>
     {% endif %}

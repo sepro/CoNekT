@@ -161,6 +161,10 @@ class WebsiteTest(TestCase):
 
         ExpressionSpecificityMethod.calculate_specificities(test_species.id, "Specificity description")
 
+        test_species.update_counts()
+        clade.update_clades()
+        clade.update_clades_interpro()
+
     def tearDown(self):
         """
         Removes test database again, so the next test can start with a clean slate
@@ -271,6 +275,7 @@ class WebsiteTest(TestCase):
         """
         from planet.models.species import Species
 
+        # Should have a main page
         response = self.client.get("/species/")
         self.assert_template_used('species.html')
         self.assert200(response)
@@ -278,14 +283,20 @@ class WebsiteTest(TestCase):
         species = Species.query.first()
         sequence = species.sequences.first()
 
+        # Should respresent itself as a string
+        self.assertEqual(str(species), str(species.id) + '. ' + species.name)
+
+        # Should have a detailed page for each species
         response = self.client.get("/species/view/%d" % species.id)
         self.assert_template_used('species.html')
         self.assert200(response)
 
+        # Should have a paginated page with the sequences
         response = self.client.get("/species/sequences/%d/1" % species.id)
         self.assert_template_used('pagination/sequences.html')
         self.assert200(response)
 
+        # Should have allow downloading coding sequences as a fasta file
         response = self.client.get("/species/download/coding/%d" % species.id)
         self.assert200(response)
         data = response.data.decode("utf-8").strip()
@@ -293,6 +304,7 @@ class WebsiteTest(TestCase):
         self.assertEqual(data[0], '>')
         self.assertTrue('>' + sequence.name + '\n' in data)
 
+        # Should have allow downloading protein sequences as a fasta file
         response = self.client.get("/species/download/protein/%d" % species.id)
         self.assert200(response)
         data = response.data.decode("utf-8").strip()
@@ -300,6 +312,7 @@ class WebsiteTest(TestCase):
         self.assertEqual(data[0], '>')
         self.assertTrue('>' + sequence.name + '\n' in data)
 
+        # Should have allow streaming coding sequences as a fasta file
         response = self.client.get("/species/stream/coding/%d" % species.id)
         self.assert200(response)
         data = response.data.decode("utf-8").strip()
@@ -307,6 +320,7 @@ class WebsiteTest(TestCase):
         self.assertEqual(data[0], '>')
         self.assertTrue('>' + sequence.name + '\n' in data)
 
+        # Should have allow streaming protein sequences as a fasta file
         response = self.client.get("/species/stream/protein/%d" % species.id)
         self.assert200(response)
         data = response.data.decode("utf-8").strip()
@@ -320,39 +334,52 @@ class WebsiteTest(TestCase):
         """
         from planet.models.interpro import Interpro
 
+        # Should redirect to main page as there is no overview
+        response = self.client.get('/interpro/')
+        self.assertRedirects(response, "/")
+
         interpro = Interpro.query.first()
 
+        # Should show page for each domain
         response = self.client.get("/interpro/view/%d" % interpro.id)
         self.assert_template_used('interpro.html')
         self.assert200(response)
 
+        # Should find domains based on their label
         response = self.client.get("/interpro/find/" + interpro.label)
         self.assert_template_used('interpro.html')
         self.assert200(response)
 
+        # Should show sequences that have the domain
         response = self.client.get("/interpro/sequences/%d/1" % interpro.id)
         self.assert_template_used('pagination/sequences.html')
         self.assert200(response)
 
+        # Should allow downloading sequences that have the domain as csv
         response = self.client.get("/interpro/sequences/table/%d" % interpro.id)
         self.assert_template_used('tables/sequences.csv')
         self.assert200(response)
 
+        # Should return phylogenetic profile compatible with charts.js
         response = self.client.get("/interpro/json/species/%d" % interpro.id)
         self.assert200(response)
 
         data = json.loads(response.data.decode('utf-8'))
 
-        self.assertTrue('highlight' in data[0].keys())
-        self.assertTrue('color' in data[0].keys())
-        self.assertTrue('value' in data[0].keys())
-        self.assertTrue('label' in data[0].keys())
+        self.assertTrue('data' in data.keys())
+        self.assertTrue('type' in data.keys())
+
+        self.assertTrue('labels' in data['data'].keys())
+        self.assertTrue('datasets' in data['data'].keys())
 
     def test_go(self):
         """
         Test for routes associated with a GO label
         """
         from planet.models.go import GO
+
+        response = self.client.get('/go/')
+        self.assertRedirects(response, "/")
 
         go = GO.query.first()
 
@@ -376,10 +403,11 @@ class WebsiteTest(TestCase):
 
         data = json.loads(response.data.decode('utf-8'))
 
-        self.assertTrue('highlight' in data[0].keys())
-        self.assertTrue('color' in data[0].keys())
-        self.assertTrue('value' in data[0].keys())
-        self.assertTrue('label' in data[0].keys())
+        self.assertTrue('data' in data.keys())
+        self.assertTrue('type' in data.keys())
+
+        self.assertTrue('labels' in data['data'].keys())
+        self.assertTrue('datasets' in data['data'].keys())
 
         response = self.client.get("/go/json/genes/" + go.label)
         self.assert200(response)
@@ -387,11 +415,20 @@ class WebsiteTest(TestCase):
         data = json.loads(response.data.decode('utf-8'))
         self.assertTrue(1 in data)
 
+        response = self.client.get("/go/json/genes/" + 'no_label')
+        self.assert200(response)
+
+        data = json.loads(response.data.decode('utf-8'))
+        self.assertTrue(data == [])
+
     def test_family(self):
         """
         Test for routes associated with a GeneFamily
         """
         from planet.models.gene_families import GeneFamily
+
+        response = self.client.get('/family/')
+        self.assertRedirects(response, "/")
 
         family = GeneFamily.query.first()
 
@@ -416,16 +453,21 @@ class WebsiteTest(TestCase):
 
         data = json.loads(response.data.decode('utf-8'))
 
-        self.assertTrue('highlight' in data[0].keys())
-        self.assertTrue('color' in data[0].keys())
-        self.assertTrue('value' in data[0].keys())
-        self.assertTrue('label' in data[0].keys())
+        self.assertTrue('data' in data.keys())
+        self.assertTrue('type' in data.keys())
+
+        self.assertTrue('labels' in data['data'].keys())
+        self.assertTrue('datasets' in data['data'].keys())
+
 
     def test_profile(self):
         """
         Test for routes associated with an ExpressionProfile
         """
         from planet.models.expression_profiles import ExpressionProfile
+
+        response = self.client.get('/profile/')
+        self.assertRedirects(response, "/")
 
         profile = ExpressionProfile.query.first()
 
@@ -485,6 +527,9 @@ class WebsiteTest(TestCase):
             response = self.client.get("/help/%s" % k)
             self.assert_template_used(v)
             self.assert200(response)
+
+        response = self.client.get("/help/%s" % 'term_does_not_exist')
+        self.assert404(response)
 
     def test_search(self):
         """
@@ -720,6 +765,9 @@ class WebsiteTest(TestCase):
         family = GeneFamily.query.first()
         interpro = Interpro.query.first()
 
+        response = self.client.get('/clade/')
+        self.assertRedirects(response, "/")
+
         response = self.client.get('/clade/view/%d' % clade.id)
         self.assert200(response)
         self.assert_template_used('clade.html')
@@ -746,6 +794,9 @@ class WebsiteTest(TestCase):
         from planet.models.relationships import SequenceSequenceECCAssociation
 
         ecc = SequenceSequenceECCAssociation.query.first()
+
+        response = self.client.get('/ecc/')
+        self.assertRedirects(response, "/")
 
         response = self.client.get('/ecc/graph/%d/%d/%d' % (ecc.query_id, ecc.query_network_method_id, ecc.gene_family_method.id))
         self.assert200(response)

@@ -82,7 +82,7 @@
 	        $('[data-toggle="tooltip"]').tooltip();
 			$.getJSON( "{{ url_for('go.go_json_species', go_id=go.id) }}", function( data ) {
 				var ctx = document.getElementById("chart-area").getContext("2d");
-				window.myPie = new Chart(ctx).Doughnut(data, {animateRotate : false});
+				var myPie = new Chart(ctx, data);
 			});
 	});
 	</script>
