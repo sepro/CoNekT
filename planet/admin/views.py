@@ -1,7 +1,7 @@
-from flask.ext.admin.contrib.sqla import ModelView
-from flask.ext.admin import AdminIndexView
+from flask_admin.contrib.sqla import ModelView
+from flask_admin import AdminIndexView
 
-from flask.ext.login import current_user
+from flask_login import current_user
 
 
 class MyAdminIndexView(AdminIndexView):

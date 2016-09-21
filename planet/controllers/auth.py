@@ -1,5 +1,5 @@
 from flask import g, Blueprint, flash, redirect, url_for, render_template, request
-from flask.ext.login import current_user, login_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user, login_required
 
 from planet import login_manager
 from planet.models.users import User

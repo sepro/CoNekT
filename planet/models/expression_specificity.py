@@ -47,7 +47,7 @@ class ExpressionSpecificityMethod(db.Model):
         ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description, conditions_dict, remove_background=remove_background)
 
     @staticmethod
-    def calculate_tissue_specificities(species_id, description, condition_to_tissue, remove_background=False, use_max=False):
+    def calculate_tissue_specificities(species_id, description, condition_to_tissue, remove_background=False, use_max=True):
         """
         Function calculates tissue specific genes based on the expression conditions. A dict is required to link
         specific conditions to the correct tissues. This also allows conditions to be excluded in case they are

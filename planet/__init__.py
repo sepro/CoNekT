@@ -12,9 +12,9 @@ Everything that needs to be set up to get flask running is initialized in this f
   * set up global things like the search form and custom 403/404 error messages
 """
 from flask import Flask, render_template, g
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import LoginManager
-from flask.ext.cache import Cache
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from flask_cache import Cache
 
 from flask_admin import Admin
 from flask_htmlmin import HTMLMIN

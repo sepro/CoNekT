@@ -2,7 +2,7 @@
 from planet import create_app, db
 from planet.controllers.help import __TOPICS as topics
 
-from flask.ext.testing import TestCase
+from flask_testing import TestCase
 
 from tests.config import LOGIN_ENABLED, BLAST_ENABLED
 
@@ -458,7 +458,6 @@ class WebsiteTest(TestCase):
 
         self.assertTrue('labels' in data['data'].keys())
         self.assertTrue('datasets' in data['data'].keys())
-
 
     def test_profile(self):
         """
