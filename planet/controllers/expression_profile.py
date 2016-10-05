@@ -158,12 +158,7 @@ def expression_profile_plot_json(profile_id):
                       "labels": list(data["order"]),
                       "datasets": [{
                             "label": "Mean",
-                            "fillColor": "rgba(220,220,220,0.2)",
-                            "strokeColor": "rgba(175,175,175,1)",
-                            "pointColor": "rgba(220,220,220,1)",
-                            "pointStrokeColor": "#fff",
-                            "pointHighlightFill": "#fff",
-                            "pointHighlightStroke": "rgba(220,220,220,1)",
+                            "backgroundColor": "rgba(175,175,175,0.2)",
                             "data": list([processed_means[c] for c in data["order"]])},
                           {
                             "type": "line",
@@ -236,12 +231,7 @@ def expression_profile_plot_tissue_json(profile_id, condition_tissue_id):
                   "labels": list(data["order"]),
                   "datasets": [{
                         "label": "Mean",
-                        "fillColor": "rgba(220,220,220,0.2)",
-                        "strokeColor": "rgba(175,175,175,1)",
-                        "pointColor": "rgba(220,220,220,1)",
-                        "pointStrokeColor": "#fff",
-                        "pointHighlightFill": "#fff",
-                        "pointHighlightStroke": "rgba(220,220,220,1)",
+                        "backgroundColor": "rgba(175,175,175,0.2)",
                         "data": list([processed_means[c] for c in data["order"]])},
                                 {
                         "type": "line",

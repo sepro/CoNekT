@@ -2,12 +2,13 @@ from planet import db
 
 from planet.models.species import Species
 from planet.models.sequences import Sequence
+from planet.models.expression_profiles import ExpressionProfile
 
 from collections import defaultdict
 import json
 
 
-def add_profile_from_lstrap(matrix_file, annotation, species_code):
+def add_profile_from_lstrap(matrix_file, annotation, species_code, order=None):
     """
     Function to convert an (normalized) expression matrix (lstrap output) into a profile
 
@@ -15,6 +16,7 @@ def add_profile_from_lstrap(matrix_file, annotation, species_code):
     :param annotation: dict that converts the header (htseq filename) into the condition, replicates should have the
     same name, sample to be omitted from the profile should not be included.
     :param species_code: three letter code of the species the profiles are from
+    :param order: list of strings with order of conditions, None will sort alphabetically
     """
 
     # get species data, the ID is required later
@@ -36,17 +38,21 @@ def add_profile_from_lstrap(matrix_file, annotation, species_code):
         # read header
         _, *colnames = fin.readline().rstrip().split()
 
-        # determine order after annotation
-        order = []
+        colnames = [c.replace('.htseq', '') for c in colnames]
 
-        for c in colnames:
-            if c in annotation.keys():
-                if annotation[c] not in order:
-                    order.append(c)
+        # determine order after annotation is not defined
+        if order is None:
+            order = []
 
-        order.sort()
+            for c in colnames:
+                if c in annotation.keys():
+                    if annotation[c] not in order:
+                        order.append(annotation[c])
+
+            order.sort()
 
         # read each line and build profile
+        new_probes = []
         for line in fin:
             transcript, *values = line.rstrip().split()
             profile = defaultdict(list)
@@ -56,10 +62,18 @@ def add_profile_from_lstrap(matrix_file, annotation, species_code):
                     condition = annotation[c]
                     profile[condition].append(float(v))
 
+            sequence_id, transcript_id = transcript.split('.')
+
             new_probe = {"species_id": species.id,
                          "probe": transcript,
-                         "sequence_id": sequence_dict[transcript.upper()] if transcript.upper() in sequence_dict.keys() else None,
+                         "sequence_id": sequence_dict[sequence_id.upper()] if sequence_id.upper() in sequence_dict.keys() else None,
                          "profile": json.dumps({"order": order, "data": profile})
                          }
 
-            print(new_probe)
+            new_probes.append(new_probe)
+
+            if len(new_probes) > 400:
+                db.engine.execute(ExpressionProfile.__table__.insert(), new_probes)
+                new_probes = []
+
+        db.engine.execute(ExpressionProfile.__table__.insert(), new_probes)
