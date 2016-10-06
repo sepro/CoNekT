@@ -159,10 +159,7 @@ def expression_profile_plot_json(profile_id):
     output = {"type": "bar",
               "data": {
                       "labels": list(data["order"]),
-                      "datasets": [{
-                            "label": "Mean",
-                            "backgroundColor": background_color,
-                            "data": list([processed_means[c] for c in data["order"]])},
+                      "datasets": [
                           {
                             "type": "line",
                             "label": "Minimum",
@@ -178,7 +175,11 @@ def expression_profile_plot_json(profile_id):
                             "showLine": False,
                             "pointBorderColor": point_color,
                             "pointBackgroundColor": point_color,
-                            "data": list([processed_maxs[c] for c in data["order"]])}]
+                            "data": list([processed_maxs[c] for c in data["order"]])},
+                          {
+                            "label": "Mean",
+                            "backgroundColor": background_color,
+                            "data": list([processed_means[c] for c in data["order"]])}]
                       },
               "options": {
                   "legend": {
@@ -215,6 +216,7 @@ def expression_profile_plot_tissue_json(profile_id, condition_tissue_id):
     Generates a JSON object that can be rendered using Chart.js line plots
 
     :param profile_id: ID of the profile to render
+    :param condition_tissue_id: ID of the condition to tissue conversion to be used
     """
     current_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(profile_id)
     data = current_profile.tissue_profile(condition_tissue_id)
@@ -232,26 +234,25 @@ def expression_profile_plot_tissue_json(profile_id, condition_tissue_id):
     output = {"type": "bar",
               "data": {
                   "labels": list(data["order"]),
-                  "datasets": [{
-                        "label": "Mean",
-                        "backgroundColor": "rgba(175,175,175,0.2)",
-                        "data": list([processed_means[c] for c in data["order"]])},
-                                {
-                        "type": "line",
-                        "label": "Maximum",
-                        "fill": False,
-                        "showLine": False,
-                        "pointBorderColor": "rgba(220,22,22,1)",
-                        "pointBackgroundColor": "rgba(220,22,22,1)",
-                        "data": list([processed_maxs[c] for c in data["order"]])},
-                                {
-                        "type": "line",
-                        "label": "Minimum",
-                        "fill": False,
-                        "showLine": False,
-                        "pointBorderColor": "rgba(220,22,22,1)",
-                        "pointBackgroundColor": "rgba(220,22,22,1)",
-                        "data": list([processed_mins[c] for c in data["order"]])}]
+                  "datasets": [{"type": "line",
+                                "label": "Maximum",
+                                "fill": False,
+                                "showLine": False,
+                                "pointBorderColor": "rgba(220,22,22,1)",
+                                "pointBackgroundColor": "rgba(220,22,22,1)",
+                                "data": list([processed_maxs[c] for c in data["order"]])},
+                               {
+                                "type": "line",
+                                "label": "Minimum",
+                                "fill": False,
+                                "showLine": False,
+                                "pointBorderColor": "rgba(220,22,22,1)",
+                                "pointBackgroundColor": "rgba(220,22,22,1)",
+                                "data": list([processed_mins[c] for c in data["order"]])},
+                               {
+                                "label": "Mean",
+                                "backgroundColor": "rgba(175,175,175,0.2)",
+                                "data": list([processed_means[c] for c in data["order"]])}]
                   },
               "options": {
                   "legend": {
