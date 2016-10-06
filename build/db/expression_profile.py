@@ -8,7 +8,7 @@ from collections import defaultdict
 import json
 
 
-def add_profile_from_lstrap(matrix_file, annotation, species_code, order=None):
+def add_profile_from_lstrap(matrix_file, annotation, species_code, order=None, colors=None):
     """
     Function to convert an (normalized) expression matrix (lstrap output) into a profile
 
@@ -17,6 +17,7 @@ def add_profile_from_lstrap(matrix_file, annotation, species_code, order=None):
     same name, sample to be omitted from the profile should not be included.
     :param species_code: three letter code of the species the profiles are from
     :param order: list of strings with order of conditions, None will sort alphabetically
+    :param colors: list that specifies a color for each of the bars (best used in combination with order)
     """
 
     # get species data, the ID is required later
@@ -67,7 +68,9 @@ def add_profile_from_lstrap(matrix_file, annotation, species_code, order=None):
             new_probe = {"species_id": species.id,
                          "probe": transcript,
                          "sequence_id": sequence_dict[sequence_id.upper()] if sequence_id.upper() in sequence_dict.keys() else None,
-                         "profile": json.dumps({"order": order, "data": profile})
+                         "profile": json.dumps({"order": order,
+                                                "colors": colors,
+                                                "data": profile})
                          }
 
             new_probes.append(new_probe)
