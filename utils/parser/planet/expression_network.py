@@ -53,3 +53,4 @@ class Parser:
                 linked_probe["gene_name"] = self.network[linked_probe["probe_name"]]["gene_name"]
                 linked_probe.pop("link_id", None)
 
+

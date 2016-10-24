@@ -282,6 +282,7 @@ class ExpressionNetwork(db.Model):
                                       species_id=node.method.species.id),
                           "depth": 0,
                           "link_score": link["link_score"],
+                          "link_pcc": link["link_pcc"] if "link_pcc" in link.keys() else None,
                           "edge_type": edge_type})
             additional_nodes.append(link["probe_name"])
             existing_edges.append([node.probe, link["probe_name"]])
@@ -315,6 +316,7 @@ class ExpressionNetwork(db.Model):
                                                       species_id=node.method.species.id),
                                           "depth": i,
                                           "link_score": link["link_score"],
+                                          "link_pcc": link["link_pcc"] if "link_pcc" in link.keys() else None,
                                           "edge_type": edge_type})
                             existing_edges.append([new_node.probe, link["probe_name"]])
                             existing_edges.append([link["probe_name"], new_node.probe])
@@ -341,6 +343,7 @@ class ExpressionNetwork(db.Model):
                                                   species_id=node.method.species.id),
                                       "depth": depth+1,
                                       "link_score": link["link_score"],
+                                      "link_pcc": link["link_pcc"] if "link_pcc" in link.keys() else None,
                                       "edge_type": edge_type})
                         existing_edges.append([new_node.probe, link["probe_name"]])
                         existing_edges.append([link["probe_name"], new_node.probe])
@@ -386,6 +389,7 @@ class ExpressionNetwork(db.Model):
                                                   species_id=p.method.species.id),
                                       "depth": 0,
                                       "link_score": n["link_score"],
+                                      "link_pcc": n["link_pcc"] if "link_pcc" in n.keys() else None,
                                       "edge_type": p.method.edge_type})
                         existing_edges.append([source, n["probe_name"]])
                         existing_edges.append([n["probe_name"], source])

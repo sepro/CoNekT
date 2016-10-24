@@ -100,6 +100,7 @@ class CoexpressionCluster(db.Model):
                                               species_id=node.method.species.id),
                                   "depth": 0,
                                   "link_score": link["link_score"],
+                                  "link_pcc": link["link_pcc"] if "link_pcc" in link.keys() else None,
                                   "edge_type": cluster.method.network_method.edge_type})
                     existing_edges.append([node.probe, link["probe_name"]])
                     existing_edges.append([link["probe_name"], node.probe])

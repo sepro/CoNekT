@@ -74,3 +74,68 @@ def add_planet_coexpression_clusters(hrr_file, hcca_file, description, network):
         print(e)
 
     return clustering_method.id
+
+
+def add_lstrap_coexpression_clusters(cluster_file, description, network, prefix='cluster_'):
+    # check if network exists
+    network_method = ExpressionNetworkMethod.query.get(network)
+    if network_method is None:
+        print("ERROR: network not found.")
+        quit()
+
+    # get all sequences from the database and create a dictionary
+    sequences = Sequence.query.all()
+
+    sequence_dict = {}
+    for member in sequences:
+        sequence_dict[member.name.upper()] = member
+
+    # add coexpression clustering method to the database
+    clustering_method = CoexpressionClusteringMethod()
+
+    clustering_method.network_method_id = network_method.id
+    clustering_method.method = description
+
+    try:
+        db.session.add(clustering_method)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(e)
+        quit()
+
+    with open(cluster_file) as f:
+        for i, line in enumerate(f, start=1):
+            cluster_id = "%s%04d" % (prefix, i)
+
+            new_cluster = CoexpressionCluster()
+            new_cluster.method_id = clustering_method.id
+            new_cluster.name = cluster_id
+
+            db.session.add(new_cluster)
+
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+                continue
+
+            probes = [p for p in line.strip().split()]
+            genes = [p.replace('.1', '') for p in probes]
+
+            for p, g in zip(probes, genes):
+                new_association = SequenceCoexpressionClusterAssociation()
+                new_association.probe = p
+                new_association.sequence_id = None
+                if g.upper() in sequence_dict.keys():
+                    new_association.sequence_id = sequence_dict[g.upper()].id
+                new_association.coexpression_cluster_id = new_cluster.id
+                db.session.add(new_association)
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+
+    return clustering_method.id

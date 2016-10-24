@@ -91,6 +91,12 @@ cy = cytoscape({
     content.push({ value: 'Link Score: ' + e.data('link_score') });
     }
 
+    if (typeof e.data('link_pcc') !== 'undefined') {
+        if (e.data('link_pcc') !== null) {
+            content.push({ value: 'PCC: ' + e.data('link_pcc').toFixed(3) });
+        }
+    }
+
     if (typeof e.data('depth') !== 'undefined') {
     content.push({ value: 'Depth: ' + e.data('depth') });
     }

@@ -88,9 +88,10 @@ def expression_profile_compare(first_profile_id, second_profile_id):
                            second_profile=second_profile)
 
 
-@expression_profile.route('/compare_probes/<probe_a>/<probe_b>/<species_id>')
+@expression_profile.route('/compare_probes/<probe_a>/<probe_b>/<int:species_id>')
+@expression_profile.route('/compare_probes/<probe_a>/<probe_b>/<int:species_id>/<int:normalize>')
 @cache.cached()
-def expression_profile_compare_probes(probe_a, probe_b, species_id):
+def expression_profile_compare_probes(probe_a, probe_b, species_id, normalize=0):
     """
     Gets expression profile data from the database and renders it.
 
@@ -100,37 +101,7 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id):
     second_profile = ExpressionProfile.query.filter_by(probe=probe_b).filter_by(species_id=species_id).first_or_404()
 
     return render_template("compare_profiles.html", first_profile=first_profile,
-                           second_profile=second_profile)
-
-# DEPRICATED
-# NOT USED + INCOMPATIBLE WITH Charts.js 2.2.2.
-# @expression_profile.route('/json/radar/<profile_id>')
-# @cache.cached()
-# def expression_profile_radar_json(profile_id):
-#     """
-#     Generates a JSON object that can be rendered using Chart.js radar plots
-#
-#     :param profile_id: ID of the profile to render
-#     """
-#     current_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(profile_id)
-#     data = json.loads(current_profile.profile)
-#
-#     processed_data = {}
-#     for key, expression_values in data["data"].items():
-#         processed_data[key] = mean(expression_values)
-#
-#     output = {"labels": list(data["order"]),
-#               "datasets": [{
-#                     "label": "Expression Profile for " + current_profile.probe,
-#                     "fillColor": "rgba(220,220,220,0.2)",
-#                     "strokeColor": "rgba(220,220,220,1)",
-#                     "pointColor": "rgba(220,220,220,1)",
-#                     "pointStrokeColor": "#fff",
-#                     "pointHighlightFill": "#fff",
-#                     "pointHighlightStroke": "rgba(220,220,220,1)",
-#                     "data": list([processed_data[c] for c in data["order"]])}]}
-#
-#     return Response(json.dumps(output), mimetype='application/json')
+                           second_profile=second_profile, normalize=False if normalize == 0 else True)
 
 
 @expression_profile.route('/json/plot/<profile_id>')
