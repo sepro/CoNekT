@@ -100,8 +100,13 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id, normalize=0)
     first_profile = ExpressionProfile.query.filter_by(probe=probe_a).filter_by(species_id=species_id).first_or_404()
     second_profile = ExpressionProfile.query.filter_by(probe=probe_b).filter_by(species_id=species_id).first_or_404()
 
-    return render_template("compare_profiles.html", first_profile=first_profile,
-                           second_profile=second_profile, normalize=False if normalize == 0 else True)
+    return render_template("compare_profiles.html",
+                           probe_a=probe_a,
+                           probe_b=probe_b,
+                           first_profile=first_profile,
+                           second_profile=second_profile,
+                           species_id=species_id,
+                           normalize=normalize)
 
 
 @expression_profile.route('/json/plot/<profile_id>')
@@ -254,8 +259,9 @@ def expression_profile_plot_tissue_json(profile_id, condition_tissue_id):
 
 
 @expression_profile.route('/json/compare_plot/<first_profile_id>/<second_profile_id>')
+@expression_profile.route('/json/compare_plot/<first_profile_id>/<second_profile_id>/<int:normalize>')
 @cache.cached()
-def expression_profile_compare_plot_json(first_profile_id, second_profile_id):
+def expression_profile_compare_plot_json(first_profile_id, second_profile_id, normalize=0):
     """
     Generates a JSON object with two profiles that can be rendered using Chart.js line plots
 
@@ -273,6 +279,16 @@ def expression_profile_compare_plot_json(first_profile_id, second_profile_id):
         processed_first_means[key] = mean(expression_values)
     for key, expression_values in data_second["data"].items():
         processed_second_means[key] = mean(expression_values)
+
+    first_max = max([v for _, v in processed_first_means.items()])
+    second_max = max([v for _, v in processed_second_means.items()])
+
+    if normalize == 1:
+        for k, v in processed_first_means.items():
+            processed_first_means[k] = v/first_max
+
+        for k, v in processed_second_means.items():
+            processed_second_means[k] = v/second_max
 
     output = {"type": "bar",
               "data": {

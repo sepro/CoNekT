@@ -3,6 +3,12 @@
 {% block container %}
 <div class="top-pad">
     <h1>Comparing profiles of <strong>{{ first_profile.probe }}</strong> and <strong>{{ second_profile.probe }}</strong></h1>
+    {% if normalize == 1 %}
+        <a href="{{ url_for('expression_profile.expression_profile_compare_probes', probe_a=probe_a, probe_b=probe_b, species_id=species_id, normalize=0)}}">Disable normalization</a>
+    {% else %}
+        <a href="{{ url_for('expression_profile.expression_profile_compare_probes', probe_a=probe_a, probe_b=probe_b, species_id=species_id, normalize=1)}}">Enable normalization</a>
+    {% endif %}
+    <p></p>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="panel panel-default">
@@ -21,7 +27,7 @@
 {% block extrajs %}
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 	<script>
-			$.getJSON( "{{ url_for('expression_profile.expression_profile_compare_plot_json', first_profile_id=first_profile.id, second_profile_id=second_profile.id) }}", function( data ) {
+			$.getJSON( "{{ url_for('expression_profile.expression_profile_compare_plot_json', first_profile_id=first_profile.id, second_profile_id=second_profile.id, normalize=normalize) }}", function( data ) {
 				var ctx = document.getElementById("chart-area").getContext("2d");
 				var myChart = new Chart(ctx, data);
 			});
