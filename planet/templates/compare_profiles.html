@@ -3,10 +3,18 @@
 {% block container %}
 <div class="top-pad">
     <h1>Comparing profiles of <strong>{{ first_profile.probe }}</strong> and <strong>{{ second_profile.probe }}</strong></h1>
-    {% if normalize == 1 %}
-        <a href="{{ url_for('expression_profile.expression_profile_compare_probes', probe_a=probe_a, probe_b=probe_b, species_id=species_id, normalize=0)}}">Disable normalization</a>
+    {% if species_id %}
+        {% if normalize == 1 %}
+            <span class="text-muted">Normalization: <strong>Enabled</strong></span> | (<a href="{{ url_for('expression_profile.expression_profile_compare_probes', probe_a=probe_a, probe_b=probe_b, species_id=species_id, normalize=0)}}">disable</a>)
+        {% else %}
+            <span class="text-muted">Normalization: <strong>Disabled</strong></span> | (<a href="{{ url_for('expression_profile.expression_profile_compare_probes', probe_a=probe_a, probe_b=probe_b, species_id=species_id, normalize=1)}}">enable</a>)
+        {% endif %}
     {% else %}
-        <a href="{{ url_for('expression_profile.expression_profile_compare_probes', probe_a=probe_a, probe_b=probe_b, species_id=species_id, normalize=1)}}">Enable normalization</a>
+        {% if normalize == 1 %}
+            <span class="text-muted">Normalization: <strong>Enabled</strong></span> | (<a href="{{ url_for('expression_profile.expression_profile_compare', first_profile_id=first_profile.id, second_profile_id=second_profile.id, normalize=0)}}">disable</a>)
+        {% else %}
+            <span class="text-muted">Normalization: <strong>Disabled</strong></span> | (<a href="{{ url_for('expression_profile.expression_profile_compare', first_profile_id=first_profile.id, second_profile_id=second_profile.id, normalize=1)}}">enable</a>)
+        {% endif %}
     {% endif %}
     <p></p>
     <div class="row">

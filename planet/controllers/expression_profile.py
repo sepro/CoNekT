@@ -74,18 +74,24 @@ def expression_profile_find(probe, species_id=None):
 
 
 @expression_profile.route('/compare/<first_profile_id>/<second_profile_id>')
+@expression_profile.route('/compare/<first_profile_id>/<second_profile_id>/<int:normalize>')
 @cache.cached()
-def expression_profile_compare(first_profile_id, second_profile_id):
+def expression_profile_compare(first_profile_id, second_profile_id, normalize=0):
     """
     Gets expression profile data from the database and renders it.
 
-    :param profile_id: ID of the profile to show
+    :param first_profile_id: internal ID of the first profile
+    :param second_profile_id: internal ID of the second profile
+    :param normalize: 1 to normalize profiles (to max value), 0 to disable
+    :return:
     """
     first_profile = ExpressionProfile.query.get_or_404(first_profile_id)
     second_profile = ExpressionProfile.query.get_or_404(second_profile_id)
 
-    return render_template("compare_profiles.html", first_profile=first_profile,
-                           second_profile=second_profile)
+    return render_template("compare_profiles.html",
+                           first_profile=first_profile,
+                           second_profile=second_profile,
+                           normalize=normalize)
 
 
 @expression_profile.route('/compare_probes/<probe_a>/<probe_b>/<int:species_id>')
@@ -95,7 +101,11 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id, normalize=0)
     """
     Gets expression profile data from the database and renders it.
 
-    :param profile_id: ID of the profile to show
+    :param probe_a: name of the first probe
+    :param probe_b: name of the second probe
+    :param species_id: internal id of the species the probes are linked with
+    :param normalize: 1 to normalize profiles (to max value), 0 to disable
+    :return:
     """
     first_profile = ExpressionProfile.query.filter_by(probe=probe_a).filter_by(species_id=species_id).first_or_404()
     second_profile = ExpressionProfile.query.filter_by(probe=probe_b).filter_by(species_id=species_id).first_or_404()
