@@ -42,6 +42,8 @@
                 <th data-sort="string-ins">Gene</th>
                 <th data-sort="string-ins">Condition</th>
                 <th data-sort="float"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr> score</th>
+                <th data-sort="float"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='entropy') }}" data-target="#helpModal">Entropy</abbr> score</th>
+                <th data-sort="float"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='tau') }}" data-target="#helpModal">Tau</abbr> score</th>
                 <th data-sort="float">Action</th>
             </tr>
             </thead>
@@ -52,7 +54,9 @@
                         <td>{{ r.id }}</td>
                         <td><a href="{{url_for('sequence.sequence_view', sequence_id=r.profile.sequence.id)}}">{{ r.profile.sequence.name }}</a></td>
                         <td>{{ r.condition }}</td>
-                        <td>{{ r.score }}</td>
+                        <td>{{ r.score|round(2) }}</td>
+                        <td>{{ r.entropy|round(2) }}</td>
+                        <td>{% if r.tau %}{{ r.tau|round(2) }}{% else %}<span class="text-muted">None</span>{% endif %}</td>
                         <td><a href="{{url_for('expression_profile.expression_profile_view', profile_id=r.profile_id)}}">view profile</a></td>
                     </tr>
                 {% endif %}
