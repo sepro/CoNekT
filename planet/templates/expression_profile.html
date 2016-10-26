@@ -50,15 +50,10 @@
 {% block extrajs %}
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 	<script>
-			$.getJSON( "{{ url_for('expression_profile.expression_profile_plot_json', profile_id=profile.id) }}", function( data ) {
-				var ctx = document.getElementById("chart-area").getContext("2d");
-				var myChart = new Chart(ctx, data);
-			});
-			{% for t in tissues %}
-			$.getJSON( "{{ url_for('expression_profile.expression_profile_plot_tissue_json', profile_id=profile.id, condition_tissue_id=t.id) }}", function( data ) {
-				var ctx = document.getElementById("chart-area-{{t.id}}").getContext("2d");
-				var myChart = new Chart(ctx, data);
-			});
-			{% endfor %}
+	{% import "macros/chartjs.html" as chartjs %}
+    {{ chartjs.expression_profile("chart-area", url_for('expression_profile.expression_profile_plot_json', profile_id=profile.id)) }}
+    {% for t in tissues %}
+        {{ chartjs.expression_profile("chart-area-" + t.id|string, url_for('expression_profile.expression_profile_plot_tissue_json', profile_id=profile.id, condition_tissue_id=t.id)) }}
+    {% endfor %}
 	</script>
 {% endblock %}

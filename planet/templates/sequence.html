@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block container %}
-{% import 'macros/cluster_actions.html' as ca %}
+{% import "macros/cluster_actions.html" as ca %}
 <div class="top-pad">
 
     {% if sequence %}
@@ -344,17 +344,12 @@ $("#go_toggle").click(function(ev) {
     $(".parent_term").toggle();
 });
 })
+
+{% import "macros/chartjs.html" as chartjs %}
 {% if expression_profiles|count > 0 %}
         {% for profile in expression_profiles %}
             {% if loop.first %}
-                Chart.defaults.global.responsive = true;
-                Chart.defaults.global.maintainAspectRatio = false;
-                $( document ).ready(function() {
-                    $.getJSON( "{{ url_for('expression_profile.expression_profile_plot_json', profile_id=profile.id) }}", function( data ) {
-                        var ctx = document.getElementById("expression-profile").getContext("2d");
-                        var myChart = new Chart(ctx, data);
-                    });
-                });
+                {{ chartjs.expression_profile("expression-profile", url_for('expression_profile.expression_profile_plot_json', profile_id=profile.id)) }}
             {% endif %}
         {% endfor %}
 {% endif %}
