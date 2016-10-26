@@ -2,6 +2,7 @@
 
 {% block container %}
 {% import "macros/cluster_actions.html" as ca %}
+{% import "macros/neighborhood_actions.html" as na %}
 <div class="top-pad">
 
     {% if sequence %}
@@ -25,12 +26,14 @@
     {% endif %}
 
     <br />
+    <div>
     <p>Sequence: <a href="{{ url_for('sequence.sequence_modal_coding', sequence_id=sequence.id) }}" data-target="#profileModal">coding</a> (<a href="{{ url_for('sequence.sequence_fasta_coding', sequence_id=sequence.id) }}">download</a>) {%- if sequence.type == 'protein_coding' -%}, <a href="{{ url_for('sequence.sequence_modal_protein', sequence_id=sequence.id) }}" data-target="#profileModal">protein</a> (<a href="{{ url_for('sequence.sequence_fasta_protein', sequence_id=sequence.id) }}">download</a>) {% endif %}</p>
+    </div>
 
     {% if expression_profiles|count > 0 %}
         {% for profile in expression_profiles %}
             {% if loop.first %}
-                <h3>Expression profile <small>(<a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">view details</a>)</small></h3>
+                <h3>Expression Profile <small>(<a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">view details</a>)</small></h3>
                 <div style="height:350px; max-height:350px; margin-top:30px">
                     <canvas id="expression-profile" class="center-block" height="350"/>
                 </div>
@@ -58,22 +61,91 @@
             </div>
         {% endif %}
     {% else %}
-        <h3>Expression profile</h3>
+        <h3>Expression Profile</h3>
         <p><span class="text-muted"><em>No expression profile available</em></span></p>
     {% endif %}
     <br />
-    <h3>Sequence details</h3>
-    <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr> annotation <span class="text-muted">(<a href="#" id="go_toggle">Toggle parental</a>)</span></div>
+    <div>
+    <h3>Co-expression Networks</h3>
+    {% if network_nodes|count > 0 or coexpression_clusters|count > 0 %}
+    <div class="table-responsive">
+        <table class="table  table-striped" id="coexpression_table">
+            <thead>
+                <tr>
+                    <th data-sort="string-ins">Type</th>
+                    <th data-sort="string-ins">Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for network in network_nodes %}
+                <tr>
+                    <td><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='neighborhood') }}" data-target="#helpModal">Neighborhood</abbr></td>
+                    <td>{{ network.method.description }}: <strong>{{ network.probe }}</strong></td>
+                    <td>{{ na.neighborhood_actions(network.id) }}</td>
+                </tr>
+                {% endfor %}
+                {% for cluster in coexpression_clusters %}
+                <tr>
+                    <td><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='cluster') }}" data-target="#helpModal">Cluster</abbr></td>
+                    <td>{{ cluster.method.method }}: <strong>{{ cluster.name }}</strong></td>
+                    <td>{{ ca.cluster_actions(cluster.id) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p><span class="text-muted"><em>No co-expressed genes found</em></span></p>
+    {% endif %}
+    </div>
+    <br />
+    <h3>Expression Context Conservation (<abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr>)</h3>
+    <div class="table-responsive">
+        <table class="table  table-striped" id="ecc_hits_table">
+            <thead>
+                <tr>
+                    <!--<th data-sort="string-ins">Query</th>-->
+                    <th data-sort="string-ins">Target</th>
+                    <th data-sort="float"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr> score</th>
+                    <th data-sort="float">p-Value</th>
+                    <th data-sort="float">p-Value <span class="text-muted">(adjusted)</span></th>
+                    <th data-sort="string-ins">Gene Family Method</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ecc_query_association in sequence.ecc_query_associations %}
+                <tr>
+                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.target_id) }}">{{ ecc_query_association.target_sequence.name }}</a></td>
+                    <td>{{ ecc_query_association.ecc|round(2) }}</td>
+                    <td>{% if ecc_query_association.p_value %}{{ ecc_query_association.p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
+                    <td>{% if ecc_query_association.corrected_p_value %}{{ ecc_query_association.corrected_p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
+                    <td>{{ ecc_query_association.gene_family_method.method }}</td>
+                    <td><a href="{{ url_for('ecc.ecc_graph', sequence=sequence.id, network=ecc_query_association.query_network_method_id, family=ecc_query_association.gene_family_method_id) }}" data-toggle="tooltip"  data-placement="top" title="View ECC as graph"><i class="fa fa-share-alt"></i></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <h3>Functional Annotation</h3>
+    <div class="panel with-nav-tabs panel-default">
+    <div class="panel-heading">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab1default" data-toggle="tab">GO</a></li>
+                <li><a href="#tab2default" data-toggle="tab">InterPro</a></li>
+            </ul>
+    </div>
+    <div class="panel-body">
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="tab1default">
                 {% if go_associations|count > 0 %}
-                <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table  table-striped" id="go_table">
                         <thead>
                             <tr>
-                                <th data-sort="string-ins">Label</th>
+                                <th data-sort="string-ins"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr> Term</th>
                                 <th data-sort="string-ins">Name</th>
                                 <th data-sort="string-ins">Evidence</th>
                             </tr>
@@ -94,25 +166,18 @@
                         </tbody>
                     </table>
                 </div>
-                </div>
+                <a href="#" id="go_toggle">Toggle parental</a>
                 {% else %}
-                <div class="panel-body panel-scroll">
                     <p>No GO annotation available for this sequence</p>
-                </div>
                 {% endif %}
             </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='interpro_domain') }}" data-target="#helpModal">InterPro domains</abbr></a></sup></div>
+            <div class="tab-pane fade" id="tab2default">
                 {% if interpro_associations|count > 0 %}
-                <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped" id="interpro_table">
                         <thead>
                             <tr>
-                                <th data-sort="string-ins">Label</th>
+                                <th data-sort="string-ins"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='interpro_domain') }}" data-target="#helpModal">InterPro domains</abbr></th>
                                 <th data-sort="string-ins">Description</th>
                                 <th data-sort="int">Start</th>
                                 <th data-sort="int">Stop</th>
@@ -140,14 +205,13 @@
                         </tbody>
                     </table>
                 </div>
-                </div>
                 {% else %}
-                <div class="panel-body panel-scroll">
                     <p>No InterPro domains available for this sequence</p>
-                </div>
                 {% endif %}
             </div>
-        </div> <!-- end col -->
+        </div>
+    </div>
+    </div>
 
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
@@ -180,58 +244,8 @@
                 {% endif %}
             </div>
         </div> <!-- end col -->
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Networks</div>
-                {% if network_nodes|count > 0 %}
-                <div class="panel-scroll">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <tbody>
-                            {% for network in network_nodes %}
-                            <tr>
-                                <td>{{ network.method.description }}: <a href="{{ url_for('expression_network.expression_network_graph', node_id=network.id) }}">{{ network.probe }}</a></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                </div>
-                {% else %}
-                <div class="panel-body panel-scroll">
-                    <p>This sequence isn't included in a network</p>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Coexpression Clusters</div>
-                {% if coexpression_clusters|count > 0 %}
-                <div class="panel-scroll">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <tbody>
-                            {% for cluster in coexpression_clusters %}
-                            <tr>
-                                <td><strong data-toggle="tooltip"
-                                       data-placement="top" title="{{ cluster.method.method }}">{{ cluster.name }}</strong></td>
-                                <td>
-                                        {{ ca.cluster_actions(cluster.id) }}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                </div>
-                {% else %}
-                <div class="panel-body panel-scroll">
-                    <p>This sequence isn't included in a network</p>
-                </div>
-                {% endif %}
-            </div>
-        </div>
+
+
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">External Links</div>
@@ -263,42 +277,6 @@
                 {% endif %}
             </div>
         </div>
-        <div class="col-lg-8 col-md-12 col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr></div>
-                <div class="panel-scroll">
-                <div class="table-responsive">
-                    <table class="table  table-striped" id="ecc_hits_table">
-                        <thead>
-                            <tr>
-                                <!--<th data-sort="string-ins">Query</th>-->
-                                <th data-sort="string-ins">Target</th>
-                                <th data-sort="float"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr> score</th>
-                                <th data-sort="float">p-value</th>
-                                <th data-sort="float">corrected p-value</th>
-                                <th data-sort="string-ins">gene family method</th>
-                                <th>action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for ecc_query_association in sequence.ecc_query_associations %}
-                            <tr>
-                                <!--<td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.query_id) }}">{{ ecc_query_association.query.name }}</a></td>-->
-                                <td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.target_id) }}">{{ ecc_query_association.target_sequence.name }}</a></td>
-                                <td>{{ ecc_query_association.ecc|round(2) }}</td>
-                                <td>{% if ecc_query_association.p_value %}{{ ecc_query_association.p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
-                                <td>{% if ecc_query_association.corrected_p_value %}{{ ecc_query_association.corrected_p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
-                                <td>{{ ecc_query_association.gene_family_method.method }}</td>
-                                <td><a href="{{ url_for('ecc.ecc_graph', sequence=sequence.id, network=ecc_query_association.query_network_method_id, family=ecc_query_association.gene_family_method_id) }}" data-toggle="tooltip"
-   data-placement="top" title="View ECC as graph"><i class="fa fa-share-alt"></i></a></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                </div>
-            </div>
-        </div>
     </div>
 
 <div class="modal" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel">
@@ -328,6 +306,7 @@ $(function () {
   $("#interpro_table").stupidtable();
   $("#family_table").stupidtable();
   $("#ecc_hits_table").stupidtable();
+  $("#coexpression_table").stupidtable();
 
   $('[data-toggle="tooltip"]').tooltip();
   $('a[data-target=#profileModal]').click(function(ev) {

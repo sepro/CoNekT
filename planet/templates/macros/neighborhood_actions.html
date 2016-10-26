@@ -1,0 +1,10 @@
+{% macro neighborhood_actions(network_id) -%}
+<span class="text-muted" data-toggle="tooltip"
+   data-placement="top" title="Disabled for neighborhoods" disabled><i class="fa fa-list"></i></span>
+<a href="{{ url_for('expression_network.expression_network_graph', node_id=network_id) }}" data-toggle="tooltip"
+   data-placement="top" title="View neighborhood as graph"><i class="fa fa-share-alt"></i></a>
+<span class="text-muted" data-toggle="tooltip"
+   data-placement="top" title="Disabled for neighborhoods"><i class="fa fa-area-chart"></i></span>
+<span class="text-muted" data-toggle="tooltip"
+   data-placement="top" title="Disabled for neighborhoods"><i class="fa fa-table"></i></span>
+{%- endmacro %}
