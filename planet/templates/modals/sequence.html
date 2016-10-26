@@ -1,0 +1,14 @@
+<div class="modal-header">
+    {% if  coding %}
+    <h4 class="modal-title" id="myModalLabel"><strong>{{ sequence.name }}</strong> coding sequence<small>(length: {{ sequence.coding_sequence|length }} bp)</small></h4>
+    {% else %}
+    <h4 class="modal-title" id="myModalLabel"><strong>{{ sequence.name }}</strong> protein sequence<small>(length: {{ sequence.protein_sequence|length }} aa)</small></h4>
+    {% endif %}
+
+</div>
+<div class="modal-body" syle="width:400px">
+    <div class="well sequence">{%- if coding -%}{{ sequence.coding_sequence }}{% else %}{{ sequence.protein_sequence }}{% endif %}</div>
+</div>
+<div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>

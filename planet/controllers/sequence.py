@@ -45,7 +45,7 @@ def sequence_view(sequence_id):
 
     :param sequence_id: ID of the sequence
     """
-    current_sequence = Sequence.query.options(undefer('coding_sequence')).get_or_404(sequence_id)
+    current_sequence = Sequence.query.get_or_404(sequence_id)
 
     return render_template('sequence.html',
                            sequence=current_sequence,
@@ -56,6 +56,38 @@ def sequence_view(sequence_id):
                            network_nodes=current_sequence.network_nodes.all(),
                            coexpression_clusters=current_sequence.coexpression_clusters.all()
                            )
+
+
+@sequence.route('/modal/coding/<sequence_id>')
+def sequence_modal_coding(sequence_id):
+    """
+    Returns the coding sequence in a modal
+
+    :param sequence_id: ID of the sequence
+    :return: Response with the fasta file
+    """
+    current_sequence = Sequence.query\
+        .options(undefer('coding_sequence'))\
+        .options(noload('xrefs'))\
+        .get_or_404(sequence_id)
+
+    return render_template('modals/sequence.html', sequence=current_sequence, coding=True)
+
+
+@sequence.route('/modal/protein/<sequence_id>')
+def sequence_modal_protein(sequence_id):
+    """
+    Returns the protein sequence in a modal
+
+    :param sequence_id: ID of the sequence
+    :return: Response with the fasta file
+    """
+    current_sequence = Sequence.query\
+        .options(undefer('coding_sequence'))\
+        .options(noload('xrefs'))\
+        .get_or_404(sequence_id)
+
+    return render_template('modals/sequence.html', sequence=current_sequence, coding=False)
 
 
 @sequence.route('/fasta/coding/<sequence_id>')

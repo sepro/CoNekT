@@ -5,33 +5,26 @@
 <div class="top-pad">
 
     {% if sequence %}
-    <h1>Sequence: <strong>{{ sequence.name }}</strong> <small>({{ sequence.type }})</small></h1>
-
-    Species: <em><a href="{{ url_for('species.species_view', species_id=sequence.species.id) }}">{{ sequence.species.name }}</a></em>
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li><a href="{{ url_for('species.species_view', species_id=sequence.species.id) }}"><em>{{ sequence.species.name }}</em></a></li>
+        <li class="active">Sequence: <strong>{{ sequence.name }}</strong></li>
+    </ol>
+    <h1><strong>{{ sequence.name }}</strong> <small>({{ sequence.type }})</small></h1>
     <br />
 
     {% if sequence.description %}
 
     <strong>Description: </strong> {{sequence.description}}
 
+    {% else %}
+
+    <span class="text-muted"><em>No description available</em></span>
+
     {% endif %}
-
-    <h3>Coding Sequence <small>(length: {{ sequence.coding_sequence|length }} bp)
-        <a href="{{ url_for('sequence.sequence_fasta_coding', sequence_id=sequence.id) }}" data-toggle="tooltip" data-placement="top" title="Download coding sequence">
-            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-        </a></small></h3>
-    <div class="well sequence">{{ sequence.coding_sequence }}</div>
-
     <br />
-    {% if sequence.type == 'protein_coding' %}
-    <h3>Protein Sequence <small>(length: {{ sequence.protein_sequence|length }} aa)
-            <a href="{{ url_for('sequence.sequence_fasta_protein', sequence_id=sequence.id) }}" data-toggle="tooltip" data-placement="top" title="Download protein sequence">
-            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-        </a></small></h3>
-    <div class="well sequence">{{ sequence.protein_sequence }}</div>
+    <p>Sequence: <a href="{{ url_for('sequence.sequence_modal_coding', sequence_id=sequence.id) }}" data-target="#profileModal">coding</a> (<a href="{{ url_for('sequence.sequence_fasta_coding', sequence_id=sequence.id) }}">download</a>) {%- if sequence.type == 'protein_coding' -%}, <a href="{{ url_for('sequence.sequence_modal_protein', sequence_id=sequence.id) }}" data-target="#profileModal">protein</a> (<a href="{{ url_for('sequence.sequence_fasta_protein', sequence_id=sequence.id) }}">download</a>) {% endif %}</p>
 
-    <br />
-    {% endif %}
     <h3>Sequence details</h3>
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12">
