@@ -8,7 +8,8 @@
     <ol class="breadcrumb">
         <li><a href="{{ url_for('main.screen') }}">Home</a></li>
         <li><a href="{{ url_for('species.species_view', species_id=sequence.species.id) }}"><em>{{ sequence.species.name }}</em></a></li>
-        <li class="active">Sequence: <strong>{{ sequence.name }}</strong></li>
+        <li>Sequence</li>
+        <li class="active"><strong>{{ sequence.name }}</strong></li>
     </ol>
     <h1><strong>{{ sequence.name }}</strong> <small>({{ sequence.readable_type }})</small></h1>
     <br />
@@ -36,12 +37,25 @@
             {% endif %}
         {% endfor %}
         {% if expression_profiles|count > 1 %}
-            <p>All profiles  </p>
-            <ul>
-            {% for profile in expression_profiles %}
-                <li><a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">{{ profile.probe }}</a> | <a href="{{ url_for('expression_profile.expression_profile_modal', profile_id=profile.id) }}" data-target="#profileModal">Show profile</a></li>
-            {% endfor %}
-            </ul>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        All profiles <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        {% for profile in expression_profiles %}
+                            <li class="dropdown-header">{{ profile.probe }}</li>
+                            <li><a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">View details</a></li>
+                            <li><a href="{{ url_for('expression_profile.expression_profile_modal', profile_id=profile.id) }}" data-target="#profileModal">Show</a></li>
+                              {% if not loop.last %}
+                                <li role="separator" class="divider"></li>
+                              {% endif %}
+                        {% endfor %}
+                      </ul>
+                    </div>
+                </div>
+            </div>
         {% endif %}
     {% else %}
         <h3>Expression profile</h3>
@@ -166,31 +180,6 @@
                 {% endif %}
             </div>
         </div> <!-- end col -->
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Expression Profiles</div>
-                {% if expression_profiles|count > 0 %}
-                <div class="panel-scroll">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <tbody>
-                            {% for profile in expression_profiles %}
-                            <tr>
-                                <td><a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">{{ profile.probe }}</a></td>
-                                <td><a href="{{ url_for('expression_profile.expression_profile_modal', profile_id=profile.id) }}" data-target="#profileModal">Show profile</a></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                </div>
-                {% else %}
-                <div class="panel-body panel-scroll">
-                    <p>This sequence doens't have an expression profile associated with it</p>
-                </div>
-                {% endif %}
-            </div>
-        </div>
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Networks</div>
