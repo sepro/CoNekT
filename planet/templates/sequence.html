@@ -10,21 +10,44 @@
         <li><a href="{{ url_for('species.species_view', species_id=sequence.species.id) }}"><em>{{ sequence.species.name }}</em></a></li>
         <li class="active">Sequence: <strong>{{ sequence.name }}</strong></li>
     </ol>
-    <h1><strong>{{ sequence.name }}</strong> <small>({{ sequence.type }})</small></h1>
+    <h1><strong>{{ sequence.name }}</strong> <small>({{ sequence.readable_type }})</small></h1>
     <br />
 
     {% if sequence.description %}
 
-    <strong>Description: </strong> {{sequence.description}}
+    <p><strong>Description: </strong> {{sequence.description}}</p>
 
     {% else %}
 
-    <span class="text-muted"><em>No description available</em></span>
+    <p><span class="text-muted"><em>No description available</em></span></p>
 
     {% endif %}
+
     <br />
     <p>Sequence: <a href="{{ url_for('sequence.sequence_modal_coding', sequence_id=sequence.id) }}" data-target="#profileModal">coding</a> (<a href="{{ url_for('sequence.sequence_fasta_coding', sequence_id=sequence.id) }}">download</a>) {%- if sequence.type == 'protein_coding' -%}, <a href="{{ url_for('sequence.sequence_modal_protein', sequence_id=sequence.id) }}" data-target="#profileModal">protein</a> (<a href="{{ url_for('sequence.sequence_fasta_protein', sequence_id=sequence.id) }}">download</a>) {% endif %}</p>
 
+    {% if expression_profiles|count > 0 %}
+        {% for profile in expression_profiles %}
+            {% if loop.first %}
+                <h3>Expression profile <small>(<a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">view details</a>)</small></h3>
+                <div style="height:350px; max-height:350px; margin-top:30px">
+                    <canvas id="expression-profile" class="center-block" height="350"/>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% if expression_profiles|count > 1 %}
+            <p>All profiles  </p>
+            <ul>
+            {% for profile in expression_profiles %}
+                <li><a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">{{ profile.probe }}</a> | <a href="{{ url_for('expression_profile.expression_profile_modal', profile_id=profile.id) }}" data-target="#profileModal">Show profile</a></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        <h3>Expression profile</h3>
+        <p><span class="text-muted"><em>No expression profile available</em></span></p>
+    {% endif %}
+    <br />
     <h3>Sequence details</h3>
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12">
@@ -308,6 +331,7 @@
     {% endblock %}
 </div>
 {% block extrajs %}
+<script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 <script>
 
 $(function () {
@@ -331,7 +355,21 @@ $("#go_toggle").click(function(ev) {
     $(".parent_term").toggle();
 });
 })
+{% if expression_profiles|count > 0 %}
+        {% for profile in expression_profiles %}
+            {% if loop.first %}
+                Chart.defaults.global.responsive = true;
+                Chart.defaults.global.maintainAspectRatio = false;
+                $( document ).ready(function() {
+                    $.getJSON( "{{ url_for('expression_profile.expression_profile_plot_json', profile_id=profile.id) }}", function( data ) {
+                        var ctx = document.getElementById("expression-profile").getContext("2d");
+                        var myChart = new Chart(ctx, data);
+                    });
+                });
+            {% endif %}
+        {% endfor %}
+{% endif %}
 
 </script>
-<script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+
 {% endblock %}

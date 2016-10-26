@@ -75,4 +75,15 @@ class Sequence(db.Model):
 
         return ", ".join(t) if len(t) > 0 else None
 
+    @property
+    def readable_type(self):
+        conversion = {'protein_coding': 'protein coding',
+                      'TE': 'transposable element',
+                      'RNA': 'RNA'}
+
+        if self.type in conversion.keys():
+            return conversion[self.type]
+        else:
+            return 'other'
+
 
