@@ -2,6 +2,7 @@ from flask import Blueprint, url_for, render_template, flash, redirect, Response
 
 from planet import cache
 from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
+from planet.models.species import Species
 from planet.helpers.cytoscape import CytoscapeHelper
 
 import json
@@ -27,8 +28,9 @@ def expression_network_species(species_id):
     Overview of all networks in the current database with basic information
     """
     networks = ExpressionNetworkMethod.query.filter_by(species_id=species_id).all()
+    species = Species.query.get_or_404(species_id)
 
-    return render_template("expression_network.html", networks=networks)
+    return render_template("expression_network.html", networks=networks, species=species)
 
 
 @expression_network.route('/graph/<node_id>')

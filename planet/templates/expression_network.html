@@ -4,6 +4,12 @@
 <div class="top-pad">
 
     {% if networks %}
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li><a href="{{ url_for('species.species_overview') }}">Species</a></li>
+        <li><em><a href="{{ url_for('species.species_view', species_id=species.id) }}">{{ species.name }}</a></em></li>
+        <li class="active"><strong>Network Overview</strong></li>
+    </ol>
     <h1>Network Overview</h1>
      <div class="table-responsive">
         <table class="table">

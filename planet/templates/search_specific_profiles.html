@@ -4,7 +4,12 @@
 <div class="top-pad">
 
     {% if form %}
-    <h1>Search: Specific Profiles</h1>
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li>Search</li>
+        <li class="active"><strong>Specific Profiles</strong></li>
+    </ol>
+    <h1>Specific Profiles</h1>
         <div class="row">
             <div class="col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">
                 <div class="panel panel-default">
@@ -32,13 +37,18 @@
             </div>
         </div>
     {% elif results %}
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li>Search</li>
+        <li>Specific Profiles</li>
+        <li class="active"><strong><em>{{species.name}}</em>: {{condition}}</strong> ({{method.description}})</li>
+    </ol>
     <h1><em>{{species.name}}</em> profiles specific for <strong>{{condition}}</strong><br /><small>Method: {{method.description}}</small></h1>
-        <div class="row">
+    <div class="row">
+        <div class="col-lg-12">
         <table class="table table-striped" id="results_table">
             <thead>
             <tr>
-                <th data-sort="int">ID</th>
-
                 <th data-sort="string-ins">Gene</th>
                 <th data-sort="string-ins">Condition</th>
                 <th data-sort="float"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr> score</th>
@@ -51,7 +61,6 @@
             {% for r in results %}
                 {% if r.profile.sequence %}
                     <tr>
-                        <td>{{ r.id }}</td>
                         <td><a href="{{url_for('sequence.sequence_view', sequence_id=r.profile.sequence.id)}}">{{ r.profile.sequence.name }}</a></td>
                         <td>{{ r.condition }}</td>
                         <td>{{ r.score|round(2) }}</td>
@@ -64,6 +73,7 @@
             </tbody>
         </table>
         <a id="DownloadTable" href="#" class="btn btn-primary">Download table</a><br /><br />
+        </div>
         </div>
     {% endif %}
 </div>

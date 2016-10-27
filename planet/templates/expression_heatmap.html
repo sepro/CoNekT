@@ -2,7 +2,11 @@
 
 {% block container %}
 <div class="top-pad">
-
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li>Tools</li>
+        <li class="active"><strong>Expression Heatmap</strong></li>
+    </ol>
     <h1>Heatmap</h1>
     {% if order %}
      <div class="table-responsive">

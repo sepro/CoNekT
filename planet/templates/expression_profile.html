@@ -5,8 +5,18 @@
 
     {% if profile %}
     {% if  profile.sequence %}
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li>Expression Profile</li>
+        <li class="active"><strong>{{ profile.sequence.name }}</strong></li>
+    </ol>
     <h1>Expression profile for: <strong><a href="{{url_for('sequence.sequence_view', sequence_id=profile.sequence.id)}}">{{ profile.sequence.name }}</a></strong> <small>({{ profile.probe }})</small></h1>
     {% else %}
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li>Expression Profile</li>
+        <li class="active"><strong>{{ profile.probe }}</strong></li>
+    </ol>
     <h1>Expression profile for: <strong>{{ profile.probe }}</strong></h1>
     {% endif %}
 

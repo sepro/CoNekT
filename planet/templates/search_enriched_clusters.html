@@ -6,6 +6,12 @@
 
 
     {% if results%}
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li>Search</li>
+        <li>Enriched Clusters</li>
+        <li class="active"><strong>Results</strong></li>
+    </ol>
     <h1>Search results</h1>
     <div class="table-responsive">
         <table class="table table-striped" id="results_table">
@@ -44,7 +50,12 @@
         <a id="DownloadTable" href="#" class="btn btn-primary">Download table</a><br /><br />
     </div>
     {% elif form %}
-    <h1>Search: Enriched Clusters</h1>
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li>Search</li>
+        <li class="active"><strong>Enriched Clusters</strong></li>
+    </ol>
+    <h1>Enriched Clusters</h1>
         <div class="row">
             <div class="col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">
                 <div class="panel panel-default">

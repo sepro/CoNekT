@@ -2,6 +2,11 @@
 
 {% block container %}
 <div class="top-pad">
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li>Tools</li>
+        <li class="active"><strong>Compare Profiles</strong></li>
+    </ol>
     <h1>Comparing profiles of <strong>{{ first_profile.probe }}</strong> and <strong>{{ second_profile.probe }}</strong></h1>
     {% if species_id %}
         {% if normalize == 1 %}

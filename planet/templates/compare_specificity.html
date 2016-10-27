@@ -2,8 +2,12 @@
 
 {% block container %}
 <div class="top-pad">
-
-    <h1>Compare: Specific Profiles</h1>
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li>Tools</li>
+        <li class="active"><strong>Compare Specific Profiles</strong></li>
+    </ol>
+    <h1>Compare Specific Profiles</h1>
     {% if form %}
         <div class="row">
             <div class="col-md-10 col-md-offset-1 col-sm-12">
