@@ -5,31 +5,46 @@
 <div class="top-pad">
 
     {% if family %}
-    <h1><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='gene_family') }}" data-target="#helpModal">Gene Family</abbr>: <strong>{{ family.name }}</strong></h1>
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='gene_family') }}" data-target="#helpModal">Gene Family</abbr></li>
+        <li class="active"><strong>{{ family.name }}</strong></li>
+    </ol>
+
+    <h1><strong>{{ family.name }}</strong> <small>({{ family.method.method }})</small></h1>
 
     {% if family.clade_id %}
     <p>Specific for <strong><a href="{{ url_for('clade.clade_view', clade_id=family.clade_id) }}">{{ family.clade.name}}</a></strong></p>
     {% endif %}
-    <p>{{ family.method.method }}</p>
+
     <br />
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <p>There are <strong>{{ count }}</strong> sequences with this label.</p>
                     {% if count > 0 %}
-                    <div id="canvas-holder" class="center-block">
+                    <div id="canvas-holder" class="center-block" style="height:300px;max-height:300px">
                         <canvas id="chart-area" class="center-block" width="300" height="300"/>
                     </div>
                     {% endif %}
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12">
+
+    </div>
+
+    {{ macro.pagination(
+        'Sequences',
+        url_for('family.family_sequences', family_id=family.id),
+        count,
+        url_for('family.family_sequences_table', family_id=family.id)
+    ) }}
+
+    <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">External Links</div>
-                {% if xrefs|count > 0 %}
-                <div class="panel-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <tbody>
@@ -40,27 +55,20 @@
                                     <a href="{{ xref.url }}">{{ xref.name }} <i class="fa fa-external-link"></i></a>
                                 </td>
                             </tr>
+                            {% else %}
+                            <tr>
+                                <td>
+                                    <p>No external references for this sequences in the database.</p>
+                                </td>
+                                <td></td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                </div>
-                {% else %}
-                <div class="panel-body panel-scroll">
-                    <p>No external references for this sequences in the database.</p>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
-
-    {{ macro.pagination(
-        'Sequences',
-        url_for('family.family_sequences', family_id=family.id),
-        count,
-        url_for('family.family_sequences_table', family_id=family.id)
-    ) }}
-
     {% endif %}
 </div>
 
@@ -72,10 +80,8 @@
     {% if count > 0 %}
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 	<script>
-			$.getJSON( "{{ url_for('family.family_json_species', family_id=family.id) }}", function( data ) {
-				var ctx = document.getElementById("chart-area").getContext("2d");
-				var myPie = new Chart(ctx, data);
-			});
+	{% import "macros/chartjs.html" as chartjs %}
+	{{ chartjs.pie_chart("chart-area", url_for('family.family_json_species', family_id=family.id)) }}
 	</script>
     {% endif %}
 {% endblock %}

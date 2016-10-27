@@ -5,7 +5,12 @@
 <div class="top-pad">
 
     {% if species %}
-        <h1>Species: <strong>{{ species.name }}</strong> <small>({{ species.code }})</small></h1>
+        <ol class="breadcrumb">
+            <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+            <li><a href="{{ url_for('species.species_overview') }}">Species</a></li>
+            <li class="active"><strong><em>{{ species.name }}</em></strong></li>
+        </ol>
+        <h1><strong>{{ species.name }}</strong> <small>({{ species.code }})</small></h1>
 
         Transcripts: {{ species.sequence_count }}
         <br />
@@ -37,6 +42,10 @@
         {{ macro.pagination('Sequences', url_for('species.species_sequences', species_id=species.id), species.sequence_count, none) }}
 
     {% elif all_species %}
+        <ol class="breadcrumb">
+            <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+            <li class="active"><strong>Species</strong></li>
+        </ol>
          <h1>Species Overview</h1>
          <div class="table-responsive">
             <table class="table" style="margin-bottom:100px;" id="species_table">

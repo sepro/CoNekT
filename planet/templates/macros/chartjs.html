@@ -28,3 +28,16 @@ $( document ).ready(function() {
     });
 });
 {%- endmacro %}
+
+{% macro pie_chart(target, url) -%}
+$( document ).ready(function() {
+    $.getJSON( "{{ url}}", function( data ) {
+        var ctx = document.getElementById("{{ target }}").getContext("2d");
+        data['options'] = {
+            'responsive': true,
+            'maintainAspectRatio': false
+        }
+        var myChart = new Chart(ctx, data);
+    });
+});
+{%- endmacro %}

@@ -33,7 +33,8 @@ def sequence_find(sequence_name):
                            families=current_sequence.families.all(),
                            expression_profiles=current_sequence.expression_profiles.all(),
                            network_nodes=current_sequence.network_nodes.all(),
-                           coexpression_clusters=current_sequence.coexpression_clusters.all()
+                           coexpression_clusters=current_sequence.coexpression_clusters.all(),
+                           ecc_query_associations=current_sequence.ecc_query_associations.all()
                            )
 
 
@@ -54,7 +55,8 @@ def sequence_view(sequence_id):
                            families=current_sequence.families.all(),
                            expression_profiles=current_sequence.expression_profiles.all(),
                            network_nodes=current_sequence.network_nodes.all(),
-                           coexpression_clusters=current_sequence.coexpression_clusters.all()
+                           coexpression_clusters=current_sequence.coexpression_clusters.all(),
+                           ecc_query_associations=current_sequence.ecc_query_associations.all()
                            )
 
 
