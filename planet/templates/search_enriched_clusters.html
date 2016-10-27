@@ -8,7 +8,7 @@
     {% if results%}
     <ol class="breadcrumb">
         <li><a href="{{ url_for('main.screen') }}">Home</a></li>
-        <li>Search</li>
+        <li><a href="{{ url_for('main.features') }}">Search</a></li>
         <li>Enriched Clusters</li>
         <li class="active"><strong>Results</strong></li>
     </ol>
@@ -52,7 +52,7 @@
     {% elif form %}
     <ol class="breadcrumb">
         <li><a href="{{ url_for('main.screen') }}">Home</a></li>
-        <li>Search</li>
+        <li><a href="{{ url_for('main.features') }}">Search</a></li>
         <li class="active"><strong>Enriched Clusters</strong></li>
     </ol>
     <h1>Enriched Clusters</h1>

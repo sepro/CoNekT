@@ -7,7 +7,7 @@
     {% if profiles %}
     <ol class="breadcrumb">
         <li><a href="{{ url_for('main.screen') }}">Home</a></li>
-        <li>Tools</li>
+        <li><a href="{{ url_for('main.features') }}">Tools</a></li>
         <li>Compare Profiles</li>
         <li class="active"><strong>Results</strong></li>
     </ol>
@@ -18,7 +18,7 @@
     {% else %}
     <ol class="breadcrumb">
         <li><a href="{{ url_for('main.screen') }}">Home</a></li>
-        <li>Tools</li>
+        <li><a href="{{ url_for('main.features') }}">Tools</a></li>
         <li class="active"><strong>Compare Profiles</strong></li>
     </ol>
 

@@ -232,6 +232,10 @@ class WebsiteTest(TestCase):
         self.assert_template_used('static_pages/license.html')
         self.assert200(response)
 
+        response = self.client.get("/features")
+        self.assert_template_used('static_pages/features.html')
+        self.assert200(response)
+
         response = self.client.get("/this_should_not_exist")
         self.assert_template_used('error/404.html')
         self.assert404(response)

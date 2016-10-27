@@ -11,6 +11,14 @@ def screen():
     return render_template('static_pages/main.html')
 
 
+@main.route('/features')
+def features():
+    """
+    Shows overview of features
+    """
+    return render_template('static_pages/features.html')
+
+
 @main.route('/about')
 def about():
     """

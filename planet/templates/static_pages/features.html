@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<div class="top-pad">
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li class="active"><strong>Features</strong></li>
+    </ol>
+    <h1>PlaNet 2.0 Features</h1>
+
+    <h3 class="banner-blue" >Search</h3>
+
+    <p>PlaNet 2.0 comes packed with functions to quickly find relevant data. A general keyword search is available on
+    each page (search box top right corner), though for more complex searches users have the tools below at their
+    disposal.</p>
+
+    <ul>
+        <li><a href="{{ url_for('blast.blast_main') }}">BLAST</a>: Find <strong>sequences</strong> in PlaNet 2.0 similar to a query sequence</li>
+        <li><a href="{{ url_for('search.search_enriched_clusters') }}">Enriched clusters</a>: Find <strong>clusters</strong> enriched for a selected GO-term</li>
+        <li><a href="{{ url_for('search.search_specific_profiles') }}">Specific profiles</a>: Find <strong>sequences</strong> which are expressed specifically in certain conditions or tissues</li>
+    </ul>
+
+    <h3 class="banner-blue" >Tools</h3>
+
+    <p>Tools allow users to either compare data included in PlaNet 2.0 or create plots using a custom set of genes.</p>
+
+    <ul>
+        <li><a href="{{ url_for('profile_comparison.profile_comparison_main') }}">Compare profiles</a>: Allows users to <strong>compare the expression profiles</strong> from a custom set of genes in a graph</li>
+        <li><a href="{{ url_for('specificity_comparison.specificity_comparison_main') }}">Conserved specificity</a>: <strong>Compare genes specifically expressed</strong> in a certain conditions in two species</li>
+        <li><a href="{{ url_for('custom_network.custom_network_main') }}">Custom network</a>: <strong>Show co-expression network</strong> only taking a custom set of genes into account</li>
+        <li><a href="{{ url_for('heatmap.heatmap_main') }}">Heatmap</a>: Allows users to <strong>compare the expression profiles</strong> from a custom set of genes in a heatmap</li>
+    </ul>
+
+</div>
+
+</div>
+{% endblock %}
