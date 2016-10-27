@@ -34,8 +34,11 @@ $( document ).ready(function() {
     $.getJSON( "{{ url}}", function( data ) {
         var ctx = document.getElementById("{{ target }}").getContext("2d");
         data['options'] = {
-            'responsive': true,
-            'maintainAspectRatio': false
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'bottom'
+            }
         }
         var myChart = new Chart(ctx, data);
     });

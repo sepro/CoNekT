@@ -5,39 +5,26 @@
 <div class="top-pad">
 
     {% if clade %}
-        <h1>Clade: <strong>{{ clade.name }}</strong></h1>
-
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Species in this clade: <strong>{{ clade.species_count }}</strong></div>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <tbody>
-                                {% for s in species %}
-                                <tr><td><a href="{{ url_for('species.species_view', species_id=s.id) }}">{{ s.name }}</a></td></tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li>Clade</li>
+        <li class="active"><strong>{{ clade.name }}</strong></li>
+    </ol>
+        <h1><strong>{{ clade.name }}</strong></h1>
 
 
         {% if clade.species_count > 1 %}
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Species Tree</div>
-                    <div class="panel-body" id="tree_panel">
-                        <div id='phylogram'></div>
-                    </div>
-                </div>
-            </div>
+        <h3 class="banner-blue">Species Tree</h3>
+        <div id="tree_panel">
+        <div id='phylogram'></div>
         </div>
         {% endif %}
+        {% set comma = joiner(", ") %}
+        <p>Species in this clade ({{ clade.species_count }}):&nbsp;
+        {%- for s in species -%}
+        {{ comma() }}<em><a href="{{ url_for('species.species_view', species_id=s.id) }}">{{ s.name }}</a> ({{ s.code }})</em>
+        {% endfor %}</p><br />
+
 
     {{ macro.pagination('Families', url_for('clade.clade_families', clade_id=clade.id), families_count, url_for('clade.clade_families_table', clade_id=clade.id)) }}
     {{ macro.pagination('Interpro domains', url_for('clade.clade_interpro', clade_id=clade.id), interpro_count, url_for('clade.clade_interpro_table', clade_id=clade.id)) }}
