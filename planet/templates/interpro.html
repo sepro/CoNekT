@@ -5,18 +5,23 @@
 <div class="top-pad">
 
     {% if interpro %}
-    <h1><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='interpro_domain') }}" data-target="#helpModal">InterPro</abbr>:{{ interpro.label }}: <strong>{{ interpro.description }}</strong></h1>
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='interpro_domain') }}" data-target="#helpModal">InterPro</abbr></li>
+        <li class="active"><strong>{{ interpro.label }}</strong></li>
+    </ol>
+    <h1>{{ interpro.label }}: <strong>{{ interpro.description }}</strong></h1>
     <br/>
     {% if interpro.clade_id %}
     <p>Specific for <strong><a href="{{ url_for('clade.clade_view', clade_id=interpro.clade_id) }}">{{ interpro.clade.name}}</a></strong></p>
     {% endif %}
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <p>There are <strong>{{ count }}</strong> sequences with this label.</p>
                     {% if count > 0 %}
-                    <div id="canvas-holder" class="center-block">
+                    <div id="canvas-holder" class="center-block"  style="height:300px;max-height:300px">
                         <canvas id="chart-area" class="center-block" width="300" height="300"/>
                     </div>
                     {% endif %}
@@ -42,10 +47,8 @@
     {% if count > 0 %}
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 	<script>
-			$.getJSON( "{{ url_for('interpro.interpro_json_species', interpro_id=interpro.id) }}", function( data ) {
-				var ctx = document.getElementById("chart-area").getContext("2d");
-				var myPie = new Chart(ctx, data);
-			});
+		{% import "macros/chartjs.html" as chartjs %}
+	    {{ chartjs.pie_chart("chart-area", url_for('interpro.interpro_json_species', interpro_id=interpro.id)) }}
 	</script>
     {% endif %}
 {% endblock %}
