@@ -8,13 +8,16 @@
     {% if sequence %}
     <ol class="breadcrumb">
         <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li><a href="{{ url_for('species.species_overview') }}">Species</a></li>
         <li><a href="{{ url_for('species.species_view', species_id=sequence.species.id) }}"><em>{{ sequence.species.name }}</em></a></li>
         <li>Sequence</li>
         <li class="active"><strong>{{ sequence.name }}</strong></li>
     </ol>
     <h1><strong>{{ sequence.name }}</strong> <small>({{ sequence.readable_type }})</small></h1>
     <br />
-
+    {%- if sequence.aliases -%}
+    <p><strong>Aliases : </strong>{{sequence.aliases}}</p>
+    {%endif%}
     {% if sequence.description %}
 
     <p><strong>Description: </strong> {{sequence.description}}</p>
@@ -27,16 +30,21 @@
 
     <br />
     <div>
-    <p>Sequence: <a href="{{ url_for('sequence.sequence_modal_coding', sequence_id=sequence.id) }}" data-target="#profileModal">coding</a> (<a href="{{ url_for('sequence.sequence_fasta_coding', sequence_id=sequence.id) }}">download</a>) {%- if sequence.type == 'protein_coding' -%}, <a href="{{ url_for('sequence.sequence_modal_protein', sequence_id=sequence.id) }}" data-target="#profileModal">protein</a> (<a href="{{ url_for('sequence.sequence_fasta_protein', sequence_id=sequence.id) }}">download</a>) {% endif %}</p>
+    <p><strong><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='gene_family') }}" data-target="#helpModal">Gene families</abbr>: </strong>{%- if families|count > 0 -%}{%- for family in families -%}
+        <a href="{{ url_for('family.family_view', family_id=family.id) }}">{{ family.name }}</a> ({{ family.method.method }}) {%- if not loop.last -%}, {% endif %}
+                            {% endfor %} {% else %}<em>No families found for this sequence</em>{% endif %}</p>
+    <p><strong>Sequence:</strong> <a href="{{ url_for('sequence.sequence_modal_coding', sequence_id=sequence.id) }}" data-target="#profileModal">coding</a> (<a href="{{ url_for('sequence.sequence_fasta_coding', sequence_id=sequence.id) }}">download</a>) {%- if sequence.type == 'protein_coding' -%}, <a href="{{ url_for('sequence.sequence_modal_protein', sequence_id=sequence.id) }}" data-target="#profileModal">protein</a> (<a href="{{ url_for('sequence.sequence_fasta_protein', sequence_id=sequence.id) }}">download</a>) {% endif %}</p>
     </div>
 
     {% if expression_profiles|count > 0 %}
+    <h3 class="banner-blue">Expression Profile</h3>
         {% for profile in expression_profiles %}
             {% if loop.first %}
-                <h3>Expression Profile <small>(<a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">view details</a>)</small></h3>
                 <div style="height:350px; max-height:350px; margin-top:30px">
                     <canvas id="expression-profile" class="center-block" height="350"/>
                 </div>
+                <br />
+                <p><strong>Note:</strong>Only the main profile, including all conditions, is shown. Additional statistics and tissue specific profiles are available <a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">here</a>.</p>
             {% endif %}
         {% endfor %}
         {% if expression_profiles|count > 1 %}
@@ -61,12 +69,11 @@
             </div>
         {% endif %}
     {% else %}
-        <h3>Expression Profile</h3>
         <p><span class="text-muted"><em>No expression profile available</em></span></p>
     {% endif %}
     <br />
     <div>
-    <h3>Co-expression Networks</h3>
+    <h3 class="banner-blue">Co-expression Networks</h3>
     {% if network_nodes|count > 0 or coexpression_clusters|count > 0 %}
     <div class="table-responsive">
         <table class="table  table-striped" id="coexpression_table">
@@ -100,7 +107,7 @@
     {% endif %}
     </div>
     <br />
-    <h3>Expression Context Conservation (<abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr>)</h3>
+    <h3 class="banner-blue">Expression Context Conservation (<abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr>)</h3>
     <div class="table-responsive">
         <table class="table  table-striped" id="ecc_hits_table">
             <thead>
@@ -129,7 +136,7 @@
         </table>
     </div>
     <br />
-    <h3>Functional Annotation</h3>
+    <h3 class="banner-blue">Functional Annotation</h3>
     <div class="panel with-nav-tabs panel-default">
     <div class="panel-heading">
             <ul class="nav nav-tabs">
@@ -137,7 +144,7 @@
                 <li><a href="#tab2default" data-toggle="tab">InterPro</a></li>
             </ul>
     </div>
-    <div class="panel-body">
+    <div>
         <div class="tab-content">
             <div class="tab-pane fade in active" id="tab1default">
                 {% if go_associations|count > 0 %}
@@ -166,7 +173,9 @@
                         </tbody>
                     </table>
                 </div>
-                <a href="#" id="go_toggle">Toggle parental</a>
+                <div class="panel-body">
+                    <a href="#" id="go_toggle">Toggle parental</a>
+                </div>
                 {% else %}
                     <p>No GO annotation available for this sequence</p>
                 {% endif %}
@@ -212,41 +221,8 @@
         </div>
     </div>
     </div>
-
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='gene_family') }}" data-target="#helpModal">Gene Families</abbr></div>
-                {% if families|count > 0 %}
-                <div class="panel-scroll">
-                <div class="table-responsive">
-                    <table class="table table-striped" id="family_table">
-                        <thead>
-                            <tr>
-                                <th data-sort="string-ins">Name</th>
-                                <th data-sort="string-ins">Method</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for family in families %}
-                            <tr>
-                                <td><a href="{{ url_for('family.family_view', family_id=family.id) }}">{{ family.name }}</a></td>
-                                <td>{{ family.method.method }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                </div>
-                {% else %}
-                <div class="panel-body panel-scroll">
-                    <p>This sequence isn't a member of any gene families</p>
-                </div>
-                {% endif %}
-            </div>
-        </div> <!-- end col -->
-
-
-        <div class="col-lg-4 col-md-6 col-sm-12">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">External Links</div>
                 {% if sequence.xrefs|count > 0 %}
@@ -304,7 +280,6 @@
 $(function () {
   $("#go_table").stupidtable();
   $("#interpro_table").stupidtable();
-  $("#family_table").stupidtable();
   $("#ecc_hits_table").stupidtable();
   $("#coexpression_table").stupidtable();
 

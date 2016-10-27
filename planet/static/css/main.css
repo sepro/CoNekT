@@ -72,6 +72,9 @@ textarea.form-control {
     margin-top: 5px;
 }
 
+/*
+  Cytoscape
+*/
 
 #cy {
   min-height: 800px;
@@ -87,6 +90,12 @@ textarea.form-control {
   left: 1em;
   top: 1em;
 }
+
+#legend {
+    display:none;
+    margin-top:800px;
+}
+
 
 .panel-scroll { height:250px; max-height: 250px; width: 100%; margin: 0; overflow-y: auto; }
 
@@ -302,11 +311,18 @@ submenu
     border-radius: 6px 0 6px 6px;
 }
 
-#legend {
-    display:none;
-    margin-top:800px;
-}
-
+/* Breadcrumb */
 .breadcrumb {
     margin-top:15px
+}
+
+/* Headers */
+
+.banner-blue {
+    color: white;
+    padding: 8px 15px;
+    margin-bottom: 15px;
+    list-style: none;
+    background-color: #428bca;
+    border-radius: 4px;
 }
