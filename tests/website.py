@@ -228,8 +228,8 @@ class WebsiteTest(TestCase):
         self.assert_template_used('static_pages/contact.html')
         self.assert200(response)
 
-        response = self.client.get("/licence")
-        self.assert_template_used('static_pages/licence.html')
+        response = self.client.get("/license")
+        self.assert_template_used('static_pages/license.html')
         self.assert200(response)
 
         response = self.client.get("/this_should_not_exist")

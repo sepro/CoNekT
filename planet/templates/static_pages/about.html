@@ -2,7 +2,10 @@
 
 {% block container %}
 <div class="top-pad">
-
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li class="active"><strong>About</strong></li>
+    </ol>
     <h1>About PlaNet 2.0<br /></h1>
 
     <div class="row">

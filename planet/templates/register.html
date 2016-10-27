@@ -2,7 +2,10 @@
 
 {% block container %}
 <div class="top-pad">
-    <br />
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li class="active"><strong>Register</strong></li>
+    </ol>
     <div class="row">
         <div class="col-md-4 col-md-offset-4 col-xs-8 col-xs-offset-2">
             <div class="panel panel-default">
