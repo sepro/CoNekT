@@ -6,24 +6,29 @@
 <div class="top-pad">
 
     {% if go %}
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr></li>
+        <li class="active"><strong>{{ go.label }}</strong></li>
+    </ol>
     <h1>{{ go.label }}: <strong>{{ go.name }}</strong> <small>({{ go.type }})</small></h1>
 
     <p>{{ go.description }}</p>
     <br />
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <p>There are <strong>{{ count }}</strong> sequences with this label.</p>
                     {% if count > 0 %}
-                    <div id="canvas-holder" class="center-block">
+                    <div id="canvas-holder" class="center-block"  style="height:300px;max-height:300px">
                         <canvas id="chart-area" class="center-block" width="300" height="300"/>
                     </div>
                     {% endif %}
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Enriched clusters</div>
                 <div class="panel-scroll">
@@ -80,11 +85,10 @@
 	$( document ).ready(function() {
 	        $("#enriched_clusters").stupidtable();
 	        $('[data-toggle="tooltip"]').tooltip();
-			$.getJSON( "{{ url_for('go.go_json_species', go_id=go.id) }}", function( data ) {
-				var ctx = document.getElementById("chart-area").getContext("2d");
-				var myPie = new Chart(ctx, data);
-			});
 	});
+	{% import "macros/chartjs.html" as chartjs %}
+	   {{ chartjs.pie_chart("chart-area", url_for('go.go_json_species', go_id=go.id)) }}
+
 	</script>
     {% endif %}
 {% endblock %}

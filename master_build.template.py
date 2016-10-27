@@ -284,9 +284,6 @@ with app.app_context():
         if 'profile' in data.keys() and 'profile_conversion' in data.keys():
             parse_expression_plot(data['profile'], data['profile_conversion'], data['code'])
 
-
-    ExpressionProfile.calculate_entropy()
-
     print("Adding Expression Networks")
     print("==========================")
     for species, data in SPECIES.items():

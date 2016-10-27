@@ -44,10 +44,10 @@ class ExpressionSpecificityMethod(db.Model):
 
         # convert list into dictionary and run function
         conditions_dict = {k: k for k in conditions}
-        ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description, conditions_dict, remove_background=remove_background)
+        ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description, conditions_dict, conditions, remove_background=remove_background)
 
     @staticmethod
-    def calculate_tissue_specificities(species_id, description, condition_to_tissue, remove_background=False, use_max=True):
+    def calculate_tissue_specificities(species_id, description, condition_to_tissue, order, remove_background=False, use_max=True):
         """
         Function calculates tissue specific genes based on the expression conditions. A dict is required to link
         specific conditions to the correct tissues. This also allows conditions to be excluded in case they are
@@ -57,13 +57,19 @@ class ExpressionSpecificityMethod(db.Model):
         :param species_id: internal species ID
         :param description: description for the method to determine the specificity
         :param condition_to_tissue: dict to connect a condition to a tissue
+        :param order: preferred order of the conditions, will match tissues to it
         :param remove_background: substracts the lowest value to correct for background noise
         :param use_max: uses the maximum of mean values instead of the mean of all values
         """
         new_method = ExpressionSpecificityMethod()
         new_method.species_id = species_id
         new_method.description = description
-        tissues = list(set(condition_to_tissue.values()))
+        tissues = []
+        for c in order:
+            if c in condition_to_tissue.keys():
+                v = condition_to_tissue[c]
+                if v not in tissues:
+                    tissues.append(v)
 
         # get profile from the database (ORM free for speed)
         profiles = db.engine.execute(db.select([ExpressionProfile.__table__.c.id, ExpressionProfile.__table__.c.profile]).
