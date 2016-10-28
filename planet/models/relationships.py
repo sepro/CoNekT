@@ -1,3 +1,5 @@
+import json
+
 from planet import db
 
 from sqlalchemy import and_
@@ -218,6 +220,121 @@ class SequenceSequenceECCAssociation(db.Model):
                                   "edge_type": 1})
 
         return {"nodes": nodes, "edges": edges}
+
+    @staticmethod
+    def get_ecc_pair_network(ecc_id):
+        """
+        Get all data for an SequenceSequenceECCAssociation to make a ECC graph
+
+
+        :param ecc_id: interal id of the SequenceSequenceECCAssociation
+        :return: ecc pair with neighborhood as graph dict
+        """
+
+        association = SequenceSequenceECCAssociation.query.get_or_404(ecc_id)
+
+        nodes = [{"id": association.query_sequence.name,
+                  "name": association.query_sequence.name,
+                  "species_id": association.query_sequence.species_id,
+                  "species_name": association.query_sequence.species.name,
+                  "gene_id": association.query_id,
+                  "gene_name": association.query_sequence.name,
+                  "network_method_id": association.query_network_method_id,
+                  "node_type": "query"},
+                 {"id": association.target_sequence.name,
+                  "name": association.target_sequence.name,
+                  "species_id": association.target_sequence.species_id,
+                  "species_name": association.target_sequence.species.name,
+                  "gene_id": association.target_id,
+                  "gene_name": association.target_sequence.name,
+                  "network_method_id": association.target_network_method_id,
+                  "node_type": "query"},
+                 ]
+
+        edges = [{"source": association.query_sequence.name,
+                  "target": association.target_sequence.name,
+                  "ecc_score": association.ecc,
+                  "edge_type": 1}]
+
+        query_network = association.query_sequence.network_nodes.filter_by(method_id=association.query_network_method_id).first_or_404().network
+        target_network = association.target_sequence.network_nodes.filter_by(method_id=association.target_network_method_id).first_or_404().network
+
+        query_network_data = json.loads(query_network)
+        target_network_data = json.loads(target_network)
+
+        # print(query_network_data)
+
+        sequences = [association.query_sequence.id, association.target_sequence.id]
+
+        for n in query_network_data:
+            gene_id = n['gene_id'] if 'gene_id' in n.keys() else None
+            gene_name = n['gene_name'] if 'gene_name' in n.keys() else None
+            nodes.append({
+                "id": gene_name,
+                "name": gene_name,
+                "species_id": association.query_sequence.species_id,
+                "species_name": association.query_sequence.species.name,
+                "gene_id": gene_id,
+                "gene_name": gene_name,
+                "network_method_id": association.query_network_method_id,
+                "node_type": "target"
+            })
+
+            if gene_id not in sequences:
+                sequences.append(gene_id)
+
+            edges.append({"source": association.query_sequence.name,
+                          "target": gene_name,
+                          "link_score": n['link_score'] if 'link_score' in n else 0})
+
+        for n in target_network_data:
+            gene_id = n['gene_id'] if 'gene_id' in n.keys() else None
+            gene_name = n['gene_name'] if 'gene_name' in n.keys() else None
+            nodes.append({
+                "id": gene_name,
+                "name": gene_name,
+                "species_id": association.target_sequence.species_id,
+                "species_name": association.target_sequence.species.name,
+                "gene_id": gene_id,
+                "gene_name": gene_name,
+                "network_method_id": association.target_network_method_id,
+                "node_type": "target"
+            })
+
+            if gene_id not in sequences:
+                sequences.append(gene_id)
+
+            edges.append({"source": association.target_sequence.name,
+                          "target": gene_name,
+                          "link_score": n['link_score'] if 'link_score' in n else 0})
+
+        """
+        Add gene families to sequences
+        """
+        seq_fams = SequenceFamilyAssociation.query.filter(and_(SequenceFamilyAssociation.sequence_id.in_(sequences),
+                                                                 SequenceFamilyAssociation.family.has(method_id=association.gene_family_method_id)
+                                                                 )).all()
+
+        seq_to_fam = {sf.sequence_id: sf.gene_family_id for sf in seq_fams}
+
+        for i, node in enumerate(nodes):
+            nodes[i]['family_id'] = seq_to_fam[node['gene_id']] if node['gene_id'] in seq_to_fam.keys() else None
+
+        """
+        Add edges between homologous genes from different targets
+        """
+
+        for i in range(len(nodes) - 1):
+            for j in range(i + 1, len(nodes)):
+                if nodes[i]['family_id'] == nodes[j]['family_id'] and nodes[i]['family_id'] is not None:
+                    edges.append(
+                        {'source': nodes[i]['id'],
+                         'target': nodes[j]['id'],
+                         'color': "#33D",
+                         'homology': True}
+                    )
+
+        return {"nodes": nodes, "edges": edges}, association.gene_family_method_id
 
 
 class ClusterGOEnrichment(db.Model):

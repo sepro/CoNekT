@@ -142,7 +142,8 @@
                     <td>{% if ecc_query_association.p_value %}{{ ecc_query_association.p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
                     <td>{% if ecc_query_association.corrected_p_value %}{{ ecc_query_association.corrected_p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
                     <td>{{ ecc_query_association.gene_family_method.method }}</td>
-                    <td><a href="{{ url_for('ecc.ecc_graph', sequence=sequence.id, network=ecc_query_association.query_network_method_id, family=ecc_query_association.gene_family_method_id) }}" data-toggle="tooltip"  data-placement="top" title="View ECC as graph"><i class="fa fa-share-alt"></i></a></td>
+                    <td><a href="{{ url_for('ecc.ecc_graph_pair', ecc_id=ecc_query_association.id) }}" data-toggle="tooltip"  data-placement="top" title="View ECC pair as graph"><i class="fa fa-eye"></i></a>
+                        <a href="{{ url_for('ecc.ecc_graph', sequence=sequence.id, network=ecc_query_association.query_network_method_id, family=ecc_query_association.gene_family_method_id) }}" data-toggle="tooltip"  data-placement="top" title="View ECC as graph"><i class="fa fa-share-alt"></i></a></td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -218,6 +218,9 @@
            {% elif graph_data %}
             <h1>Custom network <button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
             <div id="cy" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
+           {% elif ecc_pair %}
+            <h1>ECC pair <button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            <div id="cy" json="{{ url_for('ecc.ecc_graph_pair_json', ecc_id = ecc_pair.id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% endif %}
             <div id="loading"><span class="fa fa-refresh fa-spin"></span></div>
             <div id="legend" url="{{ url_for('static', filename='svg/legend.svg') }}"></div>

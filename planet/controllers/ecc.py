@@ -36,6 +36,14 @@ def ecc_graph(sequence, network, family):
                            family_method_id=family)
 
 
+@ecc.route('/graph_pair/<int:ecc_id>')
+def ecc_graph_pair(ecc_id):
+    ecc_pair = SequenceSequenceECCAssociation.query.get_or_404(ecc_id)
+
+    return render_template("expression_graph.html",
+                           ecc_pair=ecc_pair)
+
+
 @ecc.route('/json/<int:sequence>/<int:network>/<int:family>')
 def ecc_graph_json(sequence, network, family):
     """
@@ -48,6 +56,19 @@ def ecc_graph_json(sequence, network, family):
     """
 
     network = SequenceSequenceECCAssociation.get_ecc_network(sequence, network, family)
+
+    network_cytoscape = CytoscapeHelper.parse_network(network)
+    network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
+    network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, family)
+    network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
+    network_cytoscape = CytoscapeHelper.add_species_data_nodes(network_cytoscape)
+
+    return json.dumps(network_cytoscape)
+
+
+@ecc.route('/pair_json/<int:ecc_id>')
+def ecc_graph_pair_json(ecc_id):
+    network, family = SequenceSequenceECCAssociation.get_ecc_pair_network(ecc_id)
 
     network_cytoscape = CytoscapeHelper.parse_network(network)
     network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
