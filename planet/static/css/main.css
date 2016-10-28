@@ -170,7 +170,39 @@ textarea.form-control {
   }
 }
 
+/* Hide for mobile, show later */
+.sidebar-sequence {
+  display: none;
+}
+@media (min-width: 1570px) {
+  .sidebar-sequence {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
+    min-width:200px;
+    max-width:200px;
+    width:200px;
+  }
+}
 
+.sidebar-sequence > p {
+   margin-top: 25px;
+   padding: 15px;
+   color: #fff;
+   background-color: #428bca;
+   font-weight: bold;
+}
+
+#navbar-side {
+    padding: 20px;
+}
 
 /* Sidebar navigation */
 .nav-sidebar {
@@ -225,6 +257,7 @@ body {
   border-top-style: solid;
   border-top-width: 1px;
   padding-top:10px;
+  z-index:2;
 }
 
 
