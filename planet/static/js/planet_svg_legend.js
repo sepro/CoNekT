@@ -120,10 +120,10 @@ function generate_legend(label_set, attribute) {
 
             for(var i = 0; i < labels.length; i++) {
                 var y = 15*i;
-                label_group.text({y:y, fill:"none", stroke:'#888888'}).content(labels[i])
+                label_group.text({y:y, fill:"none", stroke:'#fff'}).content(labels[i])
                     .attr('text-anchor', 'middle')
                     .attr('font-family', 'sans-serif');
-                label_group.text({y:y, fill:"white"}).content(labels[i])
+                label_group.text({y:y, fill:"black"}).content(labels[i])
                     .attr('text-anchor', 'middle')
                     .attr('font-family', 'sans-serif');
                 label_group.attr('height', y+15)
