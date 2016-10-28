@@ -22,7 +22,9 @@ class Search:
         """
         terms = term_string.upper().split()
 
-        sequences = Sequence.query.filter(or_(Sequence.name.in_(terms),
+        sequences = Sequence.query.filter(or_(or_(*[Sequence.name.ilike(term+"%") for term in terms
+                                                    if len(term) > 5]),
+                                              Sequence.name.in_(terms),
                                               and_(*[Sequence.description.ilike("%"+term+"%") for term in terms
                                                      if len(term) > 3]),
                                               *[Sequence.xrefs.any(name=term) for term in terms]
@@ -47,7 +49,7 @@ class Search:
 
     @staticmethod
     def keyword(keyword):
-        sequences = Sequence.query.filter(or_(Sequence.name == keyword,
+        sequences = Sequence.query.filter(or_(Sequence.name.ilike(keyword+"%"),
                                               Sequence.description.ilike("%"+keyword+"%"),
                                               Sequence.xrefs.any(name=keyword)
                                               )
