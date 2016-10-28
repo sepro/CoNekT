@@ -213,9 +213,13 @@ class ExpressionNetworkMethod(db.Model):
             for j in range(max_size):
                 scores = []
                 for iterations in range(iterations):
-                    i_fams = random.sample(families_a, i+1)
-                    j_fams = random.sample(families_b, j+1)
-                    scores.append(jaccard(i_fams, j_fams))
+                    if i+1 < len(families_a) and j+1 < len(families_b):
+                        i_fams = random.sample(families_a, i+1)
+                        j_fams = random.sample(families_b, j+1)
+                        scores.append(jaccard(i_fams, j_fams))
+                    else:
+                        # Cannot calculate threshold with these families, add 1
+                        scores.append(1)
 
                 scores = sorted(scores)
                 # TODO (maybe?): cutoff is hard coded here, replace ?

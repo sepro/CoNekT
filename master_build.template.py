@@ -329,7 +329,7 @@ with app.app_context():
     for s, data in SPECIES.items():
         ExpressionSpecificityMethod.calculate_specificities(data['id'], s + " condition specific profiles")
         if 'tissues' in data:
-            ExpressionSpecificityMethod.calculate_tissue_specificities(data['id'], s + " tissue specific profiles", data['tissues'])
+            ExpressionSpecificityMethod.calculate_tissue_specificities(data['id'], s + " tissue specific profiles", data['tissues'], data['tissues'].keys())
             ConditionTissue.add(data['id'], s + " tissue specific profiles", data['tissues'])
 
     #
