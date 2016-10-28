@@ -77,7 +77,7 @@ class BlastThread(Thread):
             os.rename(job['out'] + '.tmp', job['out'])
             os.remove(job['in'])
         else:
-            print('  * Blast tread : job type "' + job['type'] + '" unknown !', file=sys.stderr)
+            print(' * Blast tread : job type "' + job['type'] + '" unknown !', file=sys.stderr)
 
     def run(self):
         """

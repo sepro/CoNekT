@@ -26,16 +26,7 @@ def sequence_find(sequence_name):
     """
     current_sequence = Sequence.query.filter_by(name=sequence_name).first_or_404()
 
-    return render_template('sequence.html',
-                           sequence=current_sequence,
-                           go_associations=current_sequence.go_associations.all(),
-                           interpro_associations=current_sequence.interpro_associations.all(),
-                           families=current_sequence.families.all(),
-                           expression_profiles=current_sequence.expression_profiles.all(),
-                           network_nodes=current_sequence.network_nodes.all(),
-                           coexpression_clusters=current_sequence.coexpression_clusters.all(),
-                           ecc_query_associations=current_sequence.ecc_query_associations.all()
-                           )
+    return redirect(url_for('sequence.sequence_view', sequence_id=current_sequence.id))
 
 
 @sequence.route('/view/<sequence_id>')

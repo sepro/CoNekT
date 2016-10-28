@@ -27,9 +27,8 @@ def family_find(family_name):
     :param family_name: Name of the gene family
     """
     current_family = GeneFamily.query.filter_by(name=family_name).first_or_404()
-    sequence_count = len(current_family.sequences.with_entities(Sequence.id).all())
 
-    return render_template('family.html', family=current_family, count=sequence_count, xrefs=current_family.xrefs.all())
+    return redirect(url_for('family.family_view', family_id=current_family.id))
 
 
 @family.route('/view/<family_id>')

@@ -4,12 +4,19 @@
 <div class="top-pad">
 
     {% if networks %}
+    {% if species %}
     <ol class="breadcrumb">
         <li><a href="{{ url_for('main.screen') }}">Home</a></li>
         <li><a href="{{ url_for('species.species_overview') }}">Species</a></li>
         <li><em><a href="{{ url_for('species.species_view', species_id=species.id) }}">{{ species.name }}</a></em></li>
         <li class="active"><strong>Network Overview</strong></li>
     </ol>
+    {% else %}
+     <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li class="active"><strong>Network Overview</strong></li>
+    </ol>
+    {% endif%}
     <h1>Network Overview</h1>
      <div class="table-responsive">
         <table class="table">

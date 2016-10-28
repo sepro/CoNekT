@@ -15,7 +15,9 @@
     disposal.</p>
 
     <ul>
+        {% if g.blast_enabled %}
         <li><a href="{{ url_for('blast.blast_main') }}">BLAST</a>: Find <strong>sequences</strong> in PlaNet 2.0 similar to a query sequence</li>
+        {% endif %}
         <li><a href="{{ url_for('search.search_enriched_clusters') }}">Enriched clusters</a>: Find <strong>clusters</strong> enriched for a selected GO-term</li>
         <li><a href="{{ url_for('search.search_specific_profiles') }}">Specific profiles</a>: Find <strong>sequences</strong> which are expressed specifically in certain conditions or tissues</li>
     </ul>

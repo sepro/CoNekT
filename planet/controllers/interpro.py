@@ -27,15 +27,8 @@ def interpro_find(interpro_domain):
     :param interpro_domain: Name of the interpro domain
     """
     current_interpro = Interpro.query.filter_by(label=interpro_domain).first_or_404()
-    seqIDs = {}
-    sequences = current_interpro.sequences.with_entities(Sequence.id).all()
 
-    for s in sequences:
-        seqIDs[s.id] = ""
-
-    sequence_count = len(seqIDs)
-
-    return render_template('interpro.html', interpro=current_interpro, count=sequence_count)
+    return redirect(url_for('interpro.interpro_view', interpro_id=current_interpro.id))
 
 
 @interpro.route('/view/<interpro_id>')

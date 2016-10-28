@@ -266,7 +266,7 @@ class WebsiteTest(TestCase):
         self.assertEqual(data[0], '>')
         self.assertTrue('>' + sequence.name + '\n' in data)
 
-        response = self.client.get("/sequence/find/" + sequence.name)
+        response = self.client.get("/sequence/find/" + sequence.name, follow_redirects=True)
         self.assert_template_used('sequence.html')
         self.assert200(response)
 
@@ -350,7 +350,7 @@ class WebsiteTest(TestCase):
         self.assert200(response)
 
         # Should find domains based on their label
-        response = self.client.get("/interpro/find/" + interpro.label)
+        response = self.client.get("/interpro/find/" + interpro.label, follow_redirects=True)
         self.assert_template_used('interpro.html')
         self.assert200(response)
 
@@ -440,7 +440,7 @@ class WebsiteTest(TestCase):
         self.assert_template_used('family.html')
         self.assert200(response)
 
-        response = self.client.get("/family/find/" + family.name)
+        response = self.client.get("/family/find/" + family.name, follow_redirects=True)
         self.assert_template_used('family.html')
         self.assert200(response)
 
