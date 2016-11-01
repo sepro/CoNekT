@@ -269,18 +269,18 @@ class SequenceSequenceECCAssociation(db.Model):
         for n in query_network_data:
             gene_id = n['gene_id'] if 'gene_id' in n.keys() else None
             gene_name = n['gene_name'] if 'gene_name' in n.keys() else None
-            nodes.append({
-                "id": gene_name,
-                "name": gene_name,
-                "species_id": association.query_sequence.species_id,
-                "species_name": association.query_sequence.species.name,
-                "gene_id": gene_id,
-                "gene_name": gene_name,
-                "network_method_id": association.query_network_method_id,
-                "node_type": "target"
-            })
 
             if gene_id not in sequences:
+                nodes.append({
+                    "id": gene_name,
+                    "name": gene_name,
+                    "species_id": association.query_sequence.species_id,
+                    "species_name": association.query_sequence.species.name,
+                    "gene_id": gene_id,
+                    "gene_name": gene_name,
+                    "network_method_id": association.query_network_method_id,
+                    "node_type": "target"
+                })
                 sequences.append(gene_id)
 
             edges.append({"source": association.query_sequence.name,
@@ -290,19 +290,19 @@ class SequenceSequenceECCAssociation(db.Model):
         for n in target_network_data:
             gene_id = n['gene_id'] if 'gene_id' in n.keys() else None
             gene_name = n['gene_name'] if 'gene_name' in n.keys() else None
-            nodes.append({
-                "id": gene_name,
-                "name": gene_name,
-                "species_id": association.target_sequence.species_id,
-                "species_name": association.target_sequence.species.name,
-                "gene_id": gene_id,
-                "gene_name": gene_name,
-                "network_method_id": association.target_network_method_id,
-                "node_type": "target"
-            })
 
             if gene_id not in sequences:
                 sequences.append(gene_id)
+                nodes.append({
+                    "id": gene_name,
+                    "name": gene_name,
+                    "species_id": association.target_sequence.species_id,
+                    "species_name": association.target_sequence.species.name,
+                    "gene_id": gene_id,
+                    "gene_name": gene_name,
+                    "network_method_id": association.target_network_method_id,
+                    "node_type": "target"
+                })
 
             edges.append({"source": association.target_sequence.name,
                           "target": gene_name,

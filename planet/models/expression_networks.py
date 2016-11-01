@@ -135,7 +135,9 @@ class ExpressionNetworkMethod(db.Model):
                         ecc, significant = ExpressionNetworkMethod.__ecc(sequence_network[query],
                                                                          sequence_network[target],
                                                                          sequence_family,
-                                                                         thresholds[sequence_network_method[query]][sequence_network_method[target]], max_size=30)
+                                                                         thresholds[sequence_network_method[query]][sequence_network_method[target]],
+                                                                         family,
+                                                                         max_size=30)
                         if significant:
                             new_ecc_scores.append({
                                 'query_id': query,
@@ -162,7 +164,7 @@ class ExpressionNetworkMethod(db.Model):
         db.engine.execute(SequenceSequenceECCAssociation.__table__.insert(), new_ecc_scores)
 
     @staticmethod
-    def __ecc(q_network, t_network, families, thresholds, max_size=30):
+    def __ecc(q_network, t_network, families, thresholds, query_family, max_size=30):
         """
         Takes the networks neighborhoods (as stored in the databases), extracts the genes and find the families for
         each gene. Next the ECC score is calculated
@@ -170,6 +172,8 @@ class ExpressionNetworkMethod(db.Model):
         :param q_network: network for the query gene
         :param t_network: network for the target gene
         :param families: dictionary that links a sequence (key) to a family (value)
+        :param thresholds:
+        :param query_family: name of the input gene family
         :return: the ECC score for the two input neighborhoods given the families, a boolean flag if this is significant
         """
         q_data = json.loads(q_network)
@@ -178,8 +182,10 @@ class ExpressionNetworkMethod(db.Model):
         q_genes = [t['gene_id'] for t in q_data if t['gene_id'] is not None]
         t_genes = [t['gene_id'] for t in t_data if t['gene_id'] is not None]
 
-        q_families = [families[q] for q in q_genes if q in families.keys()]
-        t_families = [families[t] for t in t_genes if t in families.keys()]
+        q_families = [families[q] for q in q_genes if q in families.keys() and families[q] != query_family]
+        t_families = [families[t] for t in t_genes if t in families.keys() and families[t] != query_family]
+
+        # print("***\nQuery %d\n%s\n%s" % (query_family, ','.join([str(q) for q in q_families]), ','.join([str(t) for t in t_families])))
 
         if len(q_families) == 0 or len(t_families) == 0:
             return 0.0, False
