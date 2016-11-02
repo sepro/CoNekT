@@ -49,6 +49,12 @@ class Search:
 
     @staticmethod
     def keyword(keyword):
+        """
+        Keyword search, this is potentially faster than the simple search
+
+        :param keyword: single word
+        :return: dict with results per type
+        """
         sequences = Sequence.query.filter(or_(Sequence.name.ilike(keyword+"%"),
                                               Sequence.description.ilike("%"+keyword+"%"),
                                               Sequence.xrefs.any(name=keyword)

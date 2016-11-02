@@ -369,28 +369,3 @@ class ClusterGOEnrichment(db.Model):
     @property
     def genome_percentage(self):
         return self.go_count*100/self.go_size
-
-
-# class ProbeGOEnrichment(db.Model):
-#     __tablename__ = 'probe_go_enrichment'
-#
-#     id = db.Column(db.Integer, primary_key=True)
-#     probe_id = db.Column(db.Integer, db.ForeignKey('expression_network.id'), index=True)
-#     go_id = db.Column(db.Integer, db.ForeignKey('go.id'), index=True)
-#
-#     """
-#     Counts required to calculate the enrichment,
-#     store here for quick access
-#     """
-#     cluster_count = db.Column(db.Integer)
-#     cluster_size = db.Column(db.Integer)
-#     go_count = db.Column(db.Integer)
-#     go_size = db.Column(db.Integer)
-#
-#     """
-#     Enrichment score (log-transformed), p-value and corrected p-value. Calculated using the hypergeometric
-#     distribution and applying FDR correction (aka. BH)
-#     """
-#     enrichment = db.Column(db.Float)
-#     p_value = db.Column(db.Float)
-#     corrected_p_value = db.Column(db.Float)

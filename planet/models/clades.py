@@ -34,6 +34,7 @@ class Clade(db.Model):
 
         :param name: name of the clade
         :param species: list with codes (!) of the species in the clade
+        :param tree: newick tree for this clade. Will be stored in the database and used for visualizations
         """
         new_clade = Clade(name, species, tree)
         db.session.add(new_clade)

@@ -38,6 +38,12 @@ def ecc_graph(sequence, network, family):
 
 @ecc.route('/graph_pair/<int:ecc_id>')
 def ecc_graph_pair(ecc_id):
+    """
+    Returns a page rendering the ECC graph for a specific pair of sequences
+
+    :param ecc_id: internal ID of the sequence to sequence ECC relationship
+    :return: Response with html page that shows the pairwise ECC network
+    """
     ecc_pair = SequenceSequenceECCAssociation.query.get_or_404(ecc_id)
 
     return render_template("expression_graph.html",
@@ -68,6 +74,12 @@ def ecc_graph_json(sequence, network, family):
 
 @ecc.route('/pair_json/<int:ecc_id>')
 def ecc_graph_pair_json(ecc_id):
+    """
+    Returns a JSON object compatible with cytoscape.js that contains the ECC graph for a specific pair of sequences
+
+    :param ecc_id: internal ID of the sequence to sequence ECC relationship
+    :return: JSON object compatible with cytoscape.js
+    """
     network, family = SequenceSequenceECCAssociation.get_ecc_pair_network(ecc_id)
 
     network_cytoscape = CytoscapeHelper.parse_network(network)

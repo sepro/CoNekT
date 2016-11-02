@@ -14,6 +14,13 @@ class ConditionTissue(db.Model):
 
     @staticmethod
     def add(species_id, name, data):
+        """
+        Add conversion table to the database for a species
+
+        :param species_id: internal id for the species
+        :param name: name of the conversion table (will be shown on profile pages)
+        :param data: dict with the conversion (key = condition, value = more general feature (e.g. tissue))
+        """
         new_ct = ConditionTissue()
 
         new_ct.species_id = species_id

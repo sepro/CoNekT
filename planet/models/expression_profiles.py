@@ -29,6 +29,12 @@ class ExpressionProfile(db.Model):
         self.profile = profile
 
     def tissue_profile(self, condition_tissue_id):
+        """
+        Applies a conversion to the profile, grouping several condition into one more general feature (e.g. tissue).
+
+        :param condition_tissue_id: identifier of the conversion table
+        :return: parsed profile
+        """
         ct = ConditionTissue.query.get(condition_tissue_id)
 
         condition_to_tissue = json.loads(ct.data)

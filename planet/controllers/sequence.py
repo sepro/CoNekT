@@ -39,6 +39,7 @@ def sequence_view(sequence_id):
     """
     current_sequence = Sequence.query.get_or_404(sequence_id)
 
+    # to avoid running long count queries, fetch relations here and pass to template
     return render_template('sequence.html',
                            sequence=current_sequence,
                            go_associations=current_sequence.go_associations.all(),

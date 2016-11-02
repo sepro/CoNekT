@@ -77,6 +77,11 @@ class Sequence(db.Model):
 
     @property
     def readable_type(self):
+        """
+        Converts the type table to a readable string
+
+        :return: string with readable version of the sequence type
+        """
         conversion = {'protein_coding': 'protein coding',
                       'TE': 'transposable element',
                       'RNA': 'RNA'}

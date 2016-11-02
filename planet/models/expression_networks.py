@@ -171,7 +171,7 @@ class ExpressionNetworkMethod(db.Model):
 
         :param q_network: network for the query gene
         :param t_network: network for the target gene
-        :param families: dictionary that links a sequence (key) to a family (value)
+        :param families: dictionary that links a sequence id (key) to a family id (value)
         :param thresholds:
         :param query_family: name of the input gene family
         :return: the ECC score for the two input neighborhoods given the families, a boolean flag if this is significant
@@ -205,8 +205,8 @@ class ExpressionNetworkMethod(db.Model):
         """
         Empirically determine (permutation test) thresholds for ECC
 
-        :param families_a: families of species_a
-        :param families_b: families of species_b
+        :param families_a: families of species_a (list of internal family ids)
+        :param families_b: families of species_b (list of internal family ids)
         :param max_size: maximum number of families (default = 30)
         :param iterations: number of permutations done
         :return: matrix (list of lists) with the thresholds at various family sizes

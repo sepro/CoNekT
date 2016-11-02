@@ -65,6 +65,7 @@ class CoexpressionCluster(db.Model):
         Returns the network for a whole cluster (reporting edges only between members of the cluster !)
 
         :param cluster_id: internal ID of the cluster
+        :return network for the selected cluster (dict with nodes and edges)
         """
         cluster = CoexpressionCluster.query.get(cluster_id)
 
@@ -168,7 +169,6 @@ class CoexpressionCluster(db.Model):
         Static method to calculate the enrichment for all cluster in the database
 
         :param empty: empty table cluster_go_enrichment first
-        :return:
         """
         # If required empty the table first
         if empty:

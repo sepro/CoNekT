@@ -14,6 +14,11 @@ specificity_comparison = Blueprint('specificity_comparison', __name__)
 
 @specificity_comparison.route('/', methods=['GET', 'POST'])
 def specificity_comparison_main():
+    """
+    For to compare tissue/condition specific gene across species
+
+    :return: search form (GET) or results (POST)
+    """
     form = CompareSpecificityForm(request.form)
     form.populate_form()
 
@@ -59,9 +64,9 @@ def specificity_comparison_main():
         b_only = [{'id': f, 'name': famID_to_name[f], 'sequences': fam_to_data[f]} for f in families_b.difference(families_a)]
 
         return render_template('compare_specificity.html', a_only=a_only, b_only=b_only, intersection=intersection,
-                               labels = {'left_species': species_a.name,
-                                         'right_species': species_b.name,
-                                         'left_method': method_a.description,
-                                         'right_method': method_b.description,
-                                         'left_condition': condition_a,
-                                         'right_condition': condition_b})
+                               labels={'left_species': species_a.name,
+                                        'right_species': species_b.name,
+                                        'left_method': method_a.description,
+                                        'right_method': method_b.description,
+                                        'left_condition': condition_a,
+                                        'right_condition': condition_b})

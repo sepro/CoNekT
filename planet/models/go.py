@@ -45,6 +45,12 @@ class GO(db.Model):
         self.species_counts = ""
 
     def species_occurrence(self, species_id):
+        """
+        count how many genes have the current GO term in a given species
+
+        :param species_id: internal id of the selected species
+        :return: count of sequences with this term associated
+        """
         count = 0
         sequences = self.sequences.all()
 
