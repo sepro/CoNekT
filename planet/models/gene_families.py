@@ -1,9 +1,10 @@
 from planet import db
-from planet.models.relationships import sequence_family, family_xref
+from planet.models.relationships import sequence_family, family_xref, SequenceSequenceECCAssociation
 from planet.models.sequences import Sequence
 from planet.models.xrefs import XRef
 
 from sqlalchemy.orm import joinedload
+from sqlalchemy.sql import or_, and_
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
@@ -84,5 +85,17 @@ class GeneFamily(db.Model):
                 output[s.species.code] = 1
             else:
                 output[s.species.code] += 1
+
+        return output
+
+    @property
+    def ecc_associations(self):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        output = SequenceSequenceECCAssociation.query\
+            .filter_by(gene_family_method_id=self.method_id)\
+            .filter(or_(*[SequenceSequenceECCAssociation.query_id == s for s in sequence_ids],
+                        *[SequenceSequenceECCAssociation.target_id == s for s in sequence_ids]))\
+            .all()
 
         return output

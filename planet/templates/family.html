@@ -34,12 +34,48 @@
 
     </div>
 
+
+
     {{ macro.pagination(
         'Sequences',
         url_for('family.family_sequences', family_id=family.id),
         count,
         url_for('family.family_sequences_table', family_id=family.id)
     ) }}
+
+        <br />
+    <h3 class="banner-blue" id="expression_conservation">Expression Context Conservation (<abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr>)</h3>
+    {% if ecc_associations|count > 0 %}
+    <div class="table-responsive">
+        <table class="table  table-striped" id="ecc_hits_table">
+            <thead>
+                <tr>
+                    <th data-sort="string-ins">Query</th>
+                    <th data-sort="string-ins">Target</th>
+                    <th data-sort="float"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr> score</th>
+                    <th data-sort="float">p-Value</th>
+                    <th data-sort="float">p-Value <span class="text-muted">(adjusted)</span></th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ecc_association in ecc_associations %}
+                <tr>
+                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_association.query_id) }}">{{ ecc_association.query_sequence.name }}</a></td>
+                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_association.target_id) }}">{{ ecc_association.target_sequence.name }}</a></td>
+                    <td>{{ ecc_association.ecc|round(2) }}</td>
+                    <td>{% if ecc_association.p_value %}{{ ecc_association.p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
+                    <td>{% if ecc_association.corrected_p_value %}{{ ecc_association.corrected_p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
+                    <td><a href="{{ url_for('ecc.ecc_graph_pair', ecc_id=ecc_association.id) }}" data-toggle="tooltip"  data-placement="top" title="View ECC pair as graph"><i class="fa fa-eye"></i></a>
+                        <a href="{{ url_for('ecc.ecc_graph', sequence=ecc_association.query_id, network=ecc_association.query_network_method_id, family=ecc_association.gene_family_method_id) }}" data-toggle="tooltip"  data-placement="top" title="View ECC as graph"><i class="fa fa-share-alt"></i></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p><span class="text-muted"><em>No conserved co-expression found</em></span></p>
+    {% endif %}
 
     <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">

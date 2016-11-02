@@ -42,7 +42,10 @@ def family_view(family_id):
     current_family = GeneFamily.query.get_or_404(family_id)
     sequence_count = len(current_family.sequences.with_entities(Sequence.id).all())
 
-    return render_template('family.html', family=current_family, count=sequence_count, xrefs=current_family.xrefs.all())
+    return render_template('family.html', family=current_family,
+                           count=sequence_count,
+                           xrefs=current_family.xrefs.all(),
+                           ecc_associations=current_family.ecc_associations)
 
 
 @family.route('/sequences/<family_id>/')
