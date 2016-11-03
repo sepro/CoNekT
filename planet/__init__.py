@@ -102,14 +102,19 @@ def create_app(config):
     from planet.controllers.clade import clade
     from planet.controllers.ecc import ecc
     from planet.controllers.specificity_comparison import specificity_comparison
+    from planet.controllers.admin_controls import admin_controls
 
     app.register_blueprint(main)
     if LOGIN_ENABLED:
         app.register_blueprint(auth, url_prefix='/auth')
+        app.register_blueprint(admin_controls, url_prefix='/admin_controls')
     else:
         app.register_blueprint(no_login, url_prefix='/auth')
+        app.register_blueprint(no_login, url_prefix='/admin_controls')
+
     if BLAST_ENABLED:
         app.register_blueprint(blast, url_prefix='/blast')
+
     app.register_blueprint(sequence, url_prefix='/sequence')
     app.register_blueprint(species, url_prefix='/species')
     app.register_blueprint(go, url_prefix='/go')
@@ -134,9 +139,10 @@ def create_app(config):
         from planet.admin.views import MyAdminIndexView
         from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
             CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView, \
-            ConditionTissueAdminView
+            ConditionTissueAdminView, ControlsView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'))
+        admin.add_view(ControlsView(name='Controls', endpoint='admin.controls', url='controls/'))
         admin.add_view(SpeciesAdminView(Species, db.session, url='species/'))
         admin.add_view(CladesAdminView(Clade, db.session, url='clades/'))
         admin.add_view(GeneFamilyMethodAdminView(GeneFamilyMethod, db.session, url='families/', category="Methods"))
@@ -145,11 +151,9 @@ def create_app(config):
         admin.add_view(CoexpressionClusteringMethodAdminView(CoexpressionClusteringMethod, db.session, url='clusters/',
                                                              category="Methods"))
         admin.add_view(ExpressionSpecificityMethodAdminView(ExpressionSpecificityMethod, db.session, url='specificity/',
-                                                             category="Methods"))
+                                                            category="Methods"))
         admin.add_view(ConditionTissueAdminView(ConditionTissue, db.session, url='condition_tissue/',
-                                                             category="Conversion"))
-
-
+                                                category="Conversion"))
 
     #  ______________________________
     # < Beware, code overrides below >

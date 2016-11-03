@@ -1,5 +1,5 @@
 from flask_admin.contrib.sqla import ModelView
-from flask_admin import AdminIndexView
+from flask_admin import AdminIndexView, expose, BaseView
 
 from flask_login import current_user
 
@@ -119,3 +119,9 @@ class CladesAdminView(MyModelView):
     column_display_pk = True
 
     can_create = True
+
+
+class ControlsView(BaseView):
+    @expose('/')
+    def index(self):
+        return self.render('admin/controls.html')
