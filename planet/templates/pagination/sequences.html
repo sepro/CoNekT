@@ -9,6 +9,10 @@
                     <td>{% if sequence.description %}{{ sequence.description|truncate(60) }}{% else %}<span class="text-muted">No description available</span>{% endif %}</td>
                     <td>{{ sequence.readable_type }}</td>
                 </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5"><em>No sequences associated with this term</em></td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>

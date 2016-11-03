@@ -53,10 +53,13 @@
                                     <td>{{ cluster.cluster_percentage|round(2) }} %</td>
                                     <td>{{ cluster.p_value|round(6) }}</td>
                                     <td>{{ cluster.corrected_p_value|round(6) }}</td>
-                                    <td>{{ ca.cluster_actions(cluster.cluster.id) }}
-                                    </td>
+                                    <td>{{ ca.cluster_actions(cluster.cluster.id) }}</td>
                                 </tr>
                                 {% endif %}
+                            {% else %}
+                                 <tr>
+                                    <td colspan="6"><em>No clusters are enriched for this term</em></td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
