@@ -50,3 +50,16 @@ def update_clades():
 @login_required
 def add_species():
     return Response("HELLO")
+
+
+@admin_controls.route('/add/xrefs', methods=['POST'])
+@login_required
+def add_xrefs():
+    return Response("HELLO")
+
+
+@admin_controls.route('/add/descriptions', methods=['POST'])
+@login_required
+def add_descriptions():
+    return Response("HELLO")
+
