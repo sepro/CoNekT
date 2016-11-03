@@ -6,7 +6,7 @@
 {% block body %}
 <h1>Add Species</h1>
 <p>Use the panel below to add a new species</p>
-<form method="POST"  action="{{ url_for('main.screen') }}"  role="form">
+<form method="POST"  action="{{ url_for('admin_controls.add_species') }}"  role="form">
    <div class="form-group">
        <label for="speciesNameInput">Species Name</label>
        <input type="text" class="form-control" id="speciesNameInput" placeholder="Species Name">

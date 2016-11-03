@@ -44,3 +44,9 @@ def update_clades():
         return Response(json.dumps({'status': 'failed', 'message': 'Unable to update clades'}))
     else:
         return Response(json.dumps({'status': 'success', 'message': 'Updated all clades'}))
+
+
+@admin_controls.route('/add/species', methods=['POST'])
+@login_required
+def add_species():
+    return Response("HELLO")
