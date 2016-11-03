@@ -139,10 +139,16 @@ def create_app(config):
         from planet.admin.views import MyAdminIndexView
         from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
             CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView, \
-            ConditionTissueAdminView, ControlsView
+            ConditionTissueAdminView, ControlsView, AddSpeciesView
 
-        admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'))
+        admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'), template_mode='bootstrap3')
+        # Control panel
         admin.add_view(ControlsView(name='Controls', endpoint='admin.controls', url='controls/'))
+
+        # Add views used to build the database
+        admin.add_view(AddSpeciesView(name='Species', endpoint='admin.add.species', url='add/species/', category='Add'))
+
+        # CRUD for various database tables
         admin.add_view(SpeciesAdminView(Species, db.session, url='species/'))
         admin.add_view(CladesAdminView(Clade, db.session, url='clades/'))
         admin.add_view(GeneFamilyMethodAdminView(GeneFamilyMethod, db.session, url='families/', category="Methods"))

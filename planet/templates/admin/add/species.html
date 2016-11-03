@@ -1,0 +1,56 @@
+{% extends 'admin/master.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<h1>Add Species</h1>
+<p>Use the panel below to add a new species</p>
+<form method="POST"  action="{{ url_for('main.screen') }}"  role="form">
+   <div class="form-group">
+       <label for="speciesNameInput">Species Name</label>
+       <input type="text" class="form-control" id="speciesNameInput" placeholder="Species Name">
+  </div>
+   <div class="form-group">
+    <label class="control-label"  for="speciesCodeInput">Species code</label>
+    <input type="text"  class="form-control" id="speciesCodeInput" placeholder="3 letter code">
+  </div>
+  <div class="form-group">
+    <div class="radio-inline">
+      <label>
+        <input type="radio" name="speciesDataType" id="dataTypeRadio1" value="genome" checked>
+        Genome
+      </label>
+    </div>
+    <div class="radio-inline">
+      <label>
+        <input type="radio" name="speciesDataType" id="dataTypeRadio2" value="transcriptome">
+        Transcriptome
+      </label>
+    </div>
+
+  </div>
+  <div class="form-group">
+      <label class="control-label"  for="colorInput">Color</label>
+      <input type="text" class="jscolor form-control" id="colorInput" placeholder="CDCDCD" value="cdcdcd">
+  </div>
+  <div class="form-group">
+      <label class="control-label"  for="highlightColorInput">Highlight Color</label>
+      <input type="text" class="jscolor form-control" id="highlightColorInput" placeholder="EEEEEE" value="eeeeee">
+  </div>
+<div class="form-group">
+<label class="btn btn-default" for="my-file-selector" id="my-file-button">
+    <input id="my-file-selector" type="file" style="display:none;" onchange="$('#file-selector-text').html($(this).val().replace(/^.*\\/, '') + ' selected');$('#my-file-button').toggleClass('btn-default btn-success');">
+    <span id="file-selector-text">Select Fasta File</span>
+</label>
+</div>
+<button type="submit" class="btn btn-primary">Add species</button>
+
+</form>
+
+
+{% endblock %}
+
+{% block tail %}
+<script src="{{ url_for('static', filename='js/jscolor.min.js') }}"></script>
+{% endblock%}

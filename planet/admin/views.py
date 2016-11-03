@@ -125,3 +125,9 @@ class ControlsView(BaseView):
     @expose('/')
     def index(self):
         return self.render('admin/controls.html')
+
+
+class AddSpeciesView(BaseView):
+    @expose('/')
+    def index(self):
+        return self.render('admin/add/species.html')
