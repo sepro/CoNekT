@@ -282,10 +282,24 @@ body {
  * Rotated table header
  */
 
-.rotated {
-  -webkit-transform: rotate(-90deg);
-  transform: rotate(-90deg);
-  white-space:nowrap;
+th.rotated {
+  /* Something you can count on */
+  height: 200px;
+  white-space: nowrap;
+}
+
+th.rotated > div {
+  transform:
+    /* Magic Numbers */
+    translate(25px, 0px)
+    /* 45 is really 360 - 45 */
+    rotate(315deg);
+  width: 30px;
+}
+
+th.rotated > div > span {
+  border-bottom: 1px solid #ccc;
+  padding: 5px 10px;
 }
 
 .fa-small {

@@ -50,8 +50,8 @@ class WebsiteTest(TestCase):
 
         test_species = Species('tst', 'Unittest species')
         test_interpro = Interpro('IPR_TEST', 'Test label')
-        test_go = GO('GO:TEST', 'test_process', 'biological_process',  'Test label', False, None, None)
-        test_go2 = GO('GO:TEST2', 'test2', 'biological_process',  'Test', False, None, None)
+        test_go = GO('GO:TEST', 'test_process', 'biological_process',  'Test label', 0, None, None)
+        test_go2 = GO('GO:TEST2', 'test2', 'biological_process',  'Test', 0, None, None)
 
         test_gf_method = GeneFamilyMethod('test_gf_method')
         test_gf = GeneFamily('test_gf')
@@ -541,10 +541,14 @@ class WebsiteTest(TestCase):
         from planet.models.sequences import Sequence
         from planet.models.interpro import Interpro
         from planet.models.go import GO
+        from planet.models.gene_families import GeneFamily
+        from planet.models.expression_profiles import ExpressionProfile
 
         sequence = Sequence.query.first()
         interpro = Interpro.query.first()
         go = GO.query.first()
+        family = GeneFamily.query.first()
+        expression_profile = ExpressionProfile.query.first()
 
         response = self.client.get('/search/keyword/%s' % sequence.name)
         self.assertRedirects(response, '/sequence/view/%d' % sequence.id)
@@ -555,11 +559,40 @@ class WebsiteTest(TestCase):
         response = self.client.get('/search/keyword/%s' % go.label)
         self.assertRedirects(response, '/go/view/%d' % go.id)
 
+        response = self.client.get('/search/keyword/%s' % family.name)
+        self.assertRedirects(response, '/family/view/%d' % family.id)
+
+        response = self.client.get('/search/keyword/%s' % expression_profile.probe)
+        self.assertRedirects(response, '/profile/view/%d' % expression_profile.id)
+
+        response = self.client.get('/search/keyword/%s' % 't')
+        self.assert_template_used('search_results.html')
+        self.assert200(response)
+
         response = self.client.get('/search/')
         self.assertRedirects(response, '/')
 
         response = self.client.post('/search/', data=dict(terms="TEST_SEQ_01"))
         self.assertRedirects(response, '/sequence/view/%d' % sequence.id)
+
+        response = self.client.post('/search/', data=dict(terms=family.name))
+        self.assertRedirects(response, '/family/view/%d' % family.id)
+
+        response = self.client.post('/search/', data=dict(terms=go.label))
+        self.assertRedirects(response, '/go/view/%d' % go.id)
+
+        response = self.client.post('/search/', data=dict(terms=interpro.label))
+        self.assertRedirects(response, '/interpro/view/%d' % interpro.id)
+
+        response = self.client.post('/search/', data=dict(terms=expression_profile.probe))
+        self.assertRedirects(response, '/profile/view/%d' % expression_profile.id)
+
+        response = self.client.post('/search/', data=dict(terms=' '.join([family.name,
+                                                                          sequence.name,
+                                                                          interpro.label,
+                                                                          expression_profile.probe])))
+        self.assert_template_used('search_results.html')
+        self.assert200(response)
 
         response = self.client.post('/search/', data=dict(terms='Test label'))
         self.assert_template_used('search_results.html')
