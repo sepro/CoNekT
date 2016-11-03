@@ -48,25 +48,24 @@
                                         <li><a href="{{ url_for('custom_network.custom_network_main') }}">Custom network</a></li>
                                     </ul>
                                 </li>
-                                <li class="divider"></li>
-                                <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="#">Search</a>
-                                    <ul class="dropdown-menu">
-                                        <li class="disabled"><a href="#">Search <span class="text-muted">(advanced)</span></a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="{{ url_for('search.search_enriched_clusters') }}">Enriched clusters</a></li>
-                                        <li><a href="{{ url_for('search.search_specific_profiles') }}">Specific profiles</a></li>
-                                    </ul>
-                                </li>
                             </ul>
                         </li>
-                        {% if g.blast_enabled %}
-                        <li><a href="{{ url_for('blast.blast_main') }}">BLAST</a></li>
-                        {% endif %}
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Search <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li class="disabled"><a href="#">Search <span class="text-muted">(advanced)</span></a></li>
+                                <li class="divider"></li>
+                                <li><a href="{{ url_for('search.search_enriched_clusters') }}">Enriched clusters</a></li>
+                                <li><a href="{{ url_for('search.search_specific_profiles') }}">Specific profiles</a></li>
+                            </ul>
+                        </li>
+
                     </ul>
 
-
                     <ul class="nav navbar-nav navbar-right">
+                        {% if g.blast_enabled %}
+                            <li><a href="{{ url_for('blast.blast_main') }}">BLAST</a></li>
+                        {% endif %}
                         <li>
                             <form class="navbar-form"  role="search" method="post" id="search-form" name="search-form" action="{{ url_for('search.simple') }}">
                                 {{ g.search_form.csrf_token }}
