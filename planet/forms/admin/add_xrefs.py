@@ -8,7 +8,9 @@ from planet.models.species import Species
 
 class AddXRefsForm(Form):
     species_id = SelectField('species', coerce=int)
-    platforms = SelectField('Platform', choices=[('plaza_3_dicots', 'PLAZA 3.0 Dicots'), ('custom', 'Custom')])
+    platforms = SelectField('Platform', choices=[('plaza_3_dicots', 'PLAZA 3.0 Dicots'),
+                                                 ('evex', 'EVEX'),
+                                                 ('custom', 'Custom')])
 
     file = FileField()
 

@@ -14,6 +14,7 @@ from planet.models.xrefs import XRef
 
 from planet.forms.admin.add_species import AddSpeciesForm
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
+from planet.forms.admin.add_xrefs import AddXRefsForm
 
 
 import json
@@ -144,4 +145,27 @@ def add_functional_data():
 @admin_controls.route('/add/xrefs', methods=['POST'])
 @login_required
 def add_xrefs():
-    return Response("HELLO")
+    form = AddXRefsForm(request.form)
+
+    if request.method == 'POST':
+        species_id = int(request.form.get('species_id'))
+        platform = request.form.get('platforms')
+
+        if platform == 'plaza_3_dicots':
+            XRef.create_plaza_xref_genes(species_id)
+            flash('Added XRefs to PLAZA 3.0 dicots for species id %d' % species_id, 'success')
+            return redirect(url_for('admin.index'))
+        elif platform == 'evex':
+            XRef.create_evex_xref_genes(species_id)
+            flash('Added XRefs to EVEX dicots for species id %d' % species_id, 'success')
+            return redirect(url_for('admin.index'))
+        else:
+            flash('This platform is not implemented, nothing added/changed/deleted from the database', 'warning')
+            return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
+

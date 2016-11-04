@@ -227,7 +227,7 @@ with app.app_context():
     from build.db.expression import parse_expression_plot
     from build.db.expression import parse_expression_network
     from build.db.coexpression_clusters import add_planet_coexpression_clusters
-    from build.db.xref import create_plaza_xref_families, create_plaza_xref_genes
+    from build.db.xref import create_plaza_xref_families
 
     from planet.models.coexpression_clusters import CoexpressionClusteringMethod,CoexpressionCluster
     from planet.models.expression_networks import ExpressionNetworkMethod
@@ -236,6 +236,7 @@ with app.app_context():
     from planet.models.sequences import Sequence
     from planet.models.clades import Clade
     from planet.models.go import GO
+    from planet.models.xrefs import XRef
     from planet.models.interpro import Interpro
     from planet.models.expression_specificity import ExpressionSpecificityMethod
     from planet.models.expression_profiles import ExpressionProfile
@@ -336,8 +337,7 @@ with app.app_context():
     # print("Adding XRefs")
     # print("============")
     # for i in range(1, 6):
-    #     create_plaza_xref_genes(i)
-    # # create_plaza_xref_genes(ptr_id)
+        # XRef.create_plaza_xref_genes(i)
     # create_plaza_xref_families(1)
     #
     # print("Building FTP data")

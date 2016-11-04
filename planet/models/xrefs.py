@@ -13,7 +13,7 @@ class XRef(db.Model):
     url = db.Column(db.Text())
 
     @staticmethod
-    def create_plaza_xref_genes(species_id):
+    def __create_xref_genes(species_id, platform, url):
         """
         Creates xrefs to PLAZA 3.0 Dicots
 
@@ -26,10 +26,28 @@ class XRef(db.Model):
         for s in sequences:
             xref = XRef()
             xref.name = s.name
-            xref.platform = "PLAZA 3.0 Dicots"
-            xref.url = "http://bioinformatics.psb.ugent.be/plaza/versions/plaza_v3_dicots/genes/view/" + s.name.upper()
+            xref.platform = platform
+            xref.url = url % s.name.upper()
             s.xrefs.append(xref)
         try:
             db.session.commit()
         except Exception as e:
             db.session.rollback()
+
+    @staticmethod
+    def create_plaza_xref_genes(species_id):
+        """
+        Creates xrefs to PLAZA 3.0 Dicots
+
+        :param species_id: species ID of the species to process
+        """
+        XRef.__create_xref_genes(species_id, "PLAZA 3.0 Dicots", "http://bioinformatics.psb.ugent.be/plaza/versions/plaza_v3_dicots/genes/view/%s")
+
+    @staticmethod
+    def create_evex_xref_genes(species_id):
+        """
+        Creates xrefs to EVEX
+
+        :param species_id: species ID of the species to process
+        """
+        XRef.__create_xref_genes(species_id, "EVEX", "http://www.evexdb.org/search/?search=%s")
