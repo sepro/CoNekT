@@ -1,13 +1,19 @@
-from flask import Blueprint, current_app, Response, redirect, url_for, request, render_template, flash
+from flask import Blueprint, current_app, Response, redirect, url_for, request, render_template, flash, abort
 from flask_login import login_required
+from werkzeug.utils import secure_filename
 
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 from planet.models.expression_networks import ExpressionNetworkMethod
 from planet.models.gene_families import GeneFamilyMethod
 from planet.models.species import Species
+from planet.models.sequences import Sequence
 from planet.models.clades import Clade
 
+from planet.forms.admin.add_species import AddSpeciesForm
+
 import json
+import os
+from tempfile import mkstemp
 
 admin_controls = Blueprint('admin_controls', __name__)
 
@@ -49,7 +55,32 @@ def update_clades():
 @admin_controls.route('/add/species', methods=['POST'])
 @login_required
 def add_species():
-    return Response("HELLO")
+    form = AddSpeciesForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        # Add species (or return id of existing species)
+        species_id = Species.add(request.form.get('code'),
+                                 request.form.get('name'),
+                                 data_type=request.form.get('data_type'),
+                                 color=request.form.get('color'),
+                                 highlight=request.form.get('highlight'))
+
+        # Add Sequences
+        fd, temp_path = mkstemp()
+
+        fasta_data = request.files[form.fasta.name].read()
+
+        open(temp_path, 'wb').write(fasta_data)
+        Sequence.add_from_fasta(temp_path, species_id)
+
+        os.close(fd)
+        os.remove(temp_path)
+        return Response("HELLO")
+    else:
+        if not form.validate():
+            return Response(form.errors)
+        else:
+            abort(405)
 
 
 @admin_controls.route('/add/xrefs', methods=['POST'])

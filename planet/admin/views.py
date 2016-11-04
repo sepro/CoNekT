@@ -3,6 +3,8 @@ from flask_admin import AdminIndexView, expose, BaseView
 
 from flask_login import current_user
 
+from planet.forms.admin.add_species import AddSpeciesForm
+
 
 class MyAdminIndexView(AdminIndexView):
     def is_accessible(self):
@@ -130,4 +132,6 @@ class ControlsView(BaseView):
 class AddSpeciesView(BaseView):
     @expose('/')
     def index(self):
-        return self.render('admin/add/species.html')
+        form = AddSpeciesForm()
+
+        return self.render('admin/add/species.html', form=form)

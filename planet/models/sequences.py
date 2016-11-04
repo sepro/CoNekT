@@ -3,6 +3,7 @@ from planet import db
 from planet.models.relationships import sequence_go, sequence_interpro, sequence_family, sequence_coexpression_cluster
 from planet.models.relationships import sequence_xref, sequence_sequence_ecc
 from utils.sequence import translate
+from utils.parser.fasta import Fasta
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
@@ -91,4 +92,29 @@ class Sequence(db.Model):
         else:
             return 'other'
 
+    @staticmethod
+    def add_from_fasta(filename, species_id):
+        fasta_data = Fasta()
+        fasta_data.readfile(filename)
 
+        new_sequences = []
+
+        for name, sequence in fasta_data.sequences.items():
+            print(name, sequence)
+            new_sequence = {"species_id": species_id,
+                            "name": name,
+                            "description": None,
+                            "coding_sequence": sequence,
+                            "type": "protein_coding",
+                            "is_mitochondrial": False,
+                            "is_chloroplast": False}
+
+            new_sequences.append(new_sequence)
+
+            # add 400 sequences at the time, more can cause problems with some database engines
+            if len(new_sequences) > 400:
+                db.engine.execute(Sequence.__table__.insert(), new_sequences)
+                new_sequences = []
+
+        # add the last set of sequences
+        db.engine.execute(Sequence.__table__.insert(), new_sequences)

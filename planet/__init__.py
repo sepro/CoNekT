@@ -186,12 +186,16 @@ def create_app(config):
 
     # Custom error handler for 404 errors
 
+    @app.errorhandler(405)
+    def method_not_allowed(e):
+        return render_template('error/405.html'), 405
+
     @app.errorhandler(404)
     def page_not_found(e):
         return render_template('error/404.html'), 404
 
     @app.errorhandler(403)
-    def page_not_found(e):
+    def access_denied(e):
         return render_template('error/403.html'), 403
 
     # Register form for basic searches, needs to be done here as it is included on every page!

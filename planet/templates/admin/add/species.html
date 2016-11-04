@@ -4,53 +4,60 @@
 {% endblock %}
 
 {% block body %}
+{% if form %}
 <h1>Add Species</h1>
 <p>Use the panel below to add a new species</p>
-<form method="POST"  action="{{ url_for('admin_controls.add_species') }}"  role="form">
-   <div class="form-group">
-       <label for="speciesNameInput">Species Name</label>
-       <input type="text" class="form-control" id="speciesNameInput" placeholder="Species Name">
-  </div>
-   <div class="form-group">
-    <label class="control-label"  for="speciesCodeInput">Species code</label>
-    <input type="text"  class="form-control" id="speciesCodeInput" placeholder="3 letter code">
-  </div>
-  <div class="form-group">
-    <div class="radio-inline">
-      <label>
-        <input type="radio" name="speciesDataType" id="dataTypeRadio1" value="genome" checked>
-        Genome
-      </label>
+<form method="POST"  action="{{ url_for('admin_controls.add_species') }}"  role="form" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        <label>{{ form.name.label }}</label>
+        {{form.name(class_="form-control", placeholder="Species Name") }}
     </div>
-    <div class="radio-inline">
-      <label>
-        <input type="radio" name="speciesDataType" id="dataTypeRadio2" value="transcriptome">
-        Transcriptome
-      </label>
+    <div class="form-group">
+        <label>{{ form.code.label }}</label>
+        {{form.code(class_="form-control", placeholder="three letter code") }}
+    </div>
+    <div class="form-group">
+        <label>{{ form.data_type.label }}</label><br />
+        {% for option in form.data_type %}
+            <div class="radio-inline">
+                <label>
+                {{ option }}
+                {{ option.label }}
+                </label>
+            </div>
+        {% endfor %}
     </div>
 
-  </div>
-  <div class="form-group">
-      <label class="control-label"  for="colorInput">Color</label>
-      <input type="text" class="jscolor form-control" id="colorInput" placeholder="CDCDCD" value="cdcdcd">
-  </div>
-  <div class="form-group">
-      <label class="control-label"  for="highlightColorInput">Highlight Color</label>
-      <input type="text" class="jscolor form-control" id="highlightColorInput" placeholder="EEEEEE" value="eeeeee">
-  </div>
-<div class="form-group">
-<label class="btn btn-default" for="my-file-selector" id="my-file-button">
-    <input id="my-file-selector" type="file" style="display:none;" onchange="$('#file-selector-text').html($(this).val().replace(/^.*\\/, '') + ' selected');$('#my-file-button').toggleClass('btn-default btn-success');">
-    <span id="file-selector-text">Select Fasta File</span>
-</label>
-</div>
+    <div class="form-group">
+        <label>{{ form.color.label }}</label>
+        {{form.color(class_="form-control jscolor", placeholder="CDCDCD", value="CDCDCD") }}
+    </div>
+    <div class="form-group">
+        <label>{{ form.highlight.label }}</label>
+        {{form.highlight(class_="form-control jscolor", placeholder="DDDDDD", value="DDDDDD") }}
+    </div>
+    <div class="form-group">
+        <label class="btn btn-default" for="fasta" id="my-file-button">
+            {{ form.fasta(style="display:none;", onchange="")}}
+            <span id="file-selector-text">Select Fasta File</span>
+        </label>
+    </div>
+
 <button type="submit" class="btn btn-primary">Add species</button>
 
 </form>
-
+{% endif %}
 
 {% endblock %}
 
 {% block tail %}
 <script src="{{ url_for('static', filename='js/jscolor.min.js') }}"></script>
+<script>
+$(function() {
+    $("#fasta").change(function() {
+        $('#file-selector-text').html($(this).val().replace(/^.*\\/, '') + ' selected');$('#my-file-button').toggleClass('btn-default btn-success');
+    });
+});
+</script>
 {% endblock%}

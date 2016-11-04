@@ -41,6 +41,27 @@ class Species(db.Model):
         return str(self.id) + ". " + self.name
 
     @staticmethod
+    def add(code, name, data_type='genome', ncbi_tax_id=None, pubmed_id=None, project_page=None,
+            color="#C7C7C7", highlight="#DEDEDE"):
+
+        new_species = Species(code, name, data_type=data_type, ncbi_tax_id=ncbi_tax_id, pubmed_id=pubmed_id,
+                              project_page=project_page, color=color, highlight=highlight)
+
+        species = Species.query.filter_by(code=code).first()
+
+        # species is not in the DB yet, add it
+        if species is None:
+            try:
+                db.session.add(new_species)
+                db.session.commit()
+            except:
+                db.rollback()
+
+            return new_species.id
+        else:
+            return species.id
+
+    @staticmethod
     def update_counts():
         """
         To avoid long counts the number of sequences, profiles and networks can be precalculated and stored in the
