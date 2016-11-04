@@ -1,0 +1,41 @@
+{% extends 'admin/master.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+{% if form %}
+<h1>Add XRefs</h1>
+
+<form method="POST"  action="{{ url_for('admin_controls.add_xrefs') }}"  role="form" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.species_id.label }}
+        {{ form.species_id(class_="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.platforms.label }}
+        {{ form.platforms(class_="form-control") }}
+    </div>
+    <div class="form-group">
+        <label class="btn btn-default" for="file" id="my-file-button">
+            {{ form.file(style="display:none;", onchange="")}}
+            <span id="file-selector-text">Select Fasta File</span>
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add XRefs</button>
+</form>
+{% endif %}
+
+{% endblock %}
+
+{% block tail %}
+<script>
+    $(function() {
+        $("#file").change(function() {
+            $('#file-selector-text').html($(this).val().replace(/^.*\\/, '') + ' selected');$('#my-file-button').toggleClass('btn-default btn-success');
+        });
+    });
+</script>
+{% endblock%}

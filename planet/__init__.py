@@ -139,7 +139,7 @@ def create_app(config):
         from planet.admin.views import MyAdminIndexView
         from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
             CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView, \
-            ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView
+            ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView, AddXRefsView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'), template_mode='bootstrap3')
 
@@ -148,6 +148,9 @@ def create_app(config):
         admin.add_view(AddFunctionalDataView(name='Functional Data',
                                              endpoint='admin.add.functional_data',
                                              url='add/functional_data/', category='Add'))
+        admin.add_view(AddXRefsView(name='XRefs',
+                                    endpoint='admin.add.xrefs',
+                                    url='add/xrefs/', category='Add'))
 
         # Control panel
         admin.add_view(ControlsView(name='Controls', endpoint='admin.controls', url='controls/'))

@@ -1,4 +1,6 @@
 from planet import db
+from planet.models.species import Species
+
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
@@ -10,3 +12,24 @@ class XRef(db.Model):
     name = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
     url = db.Column(db.Text())
 
+    @staticmethod
+    def create_plaza_xref_genes(species_id):
+        """
+        Creates xrefs to PLAZA 3.0 Dicots
+
+        :param species_id: species ID of the species to process
+        """
+        species = Species.query.get(species_id)
+
+        sequences = species.sequences.all()
+
+        for s in sequences:
+            xref = XRef()
+            xref.name = s.name
+            xref.platform = "PLAZA 3.0 Dicots"
+            xref.url = "http://bioinformatics.psb.ugent.be/plaza/versions/plaza_v3_dicots/genes/view/" + s.name.upper()
+            s.xrefs.append(xref)
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()

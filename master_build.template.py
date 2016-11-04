@@ -221,10 +221,7 @@ with app.app_context():
     # import of models need to happen after app is created !
     from build.sanity import check_sanity_species_data
 
-    from build.db.species import add_species_from_fasta
     from build.db.go import add_go_from_plaza
-    from build.db.go import populate_go
-    from build.db.interpro_xml import populate_interpro
     from build.db.interpro_data import add_interpro_from_plaza
     from build.db.families import add_families_from_plaza
     from build.db.expression import parse_expression_plot
@@ -236,8 +233,10 @@ with app.app_context():
     from planet.models.expression_networks import ExpressionNetworkMethod
     from planet.models.gene_families import GeneFamilyMethod
     from planet.models.species import Species
+    from planet.models.sequences import Sequence
     from planet.models.clades import Clade
     from planet.models.go import GO
+    from planet.models.interpro import Interpro
     from planet.models.expression_specificity import ExpressionSpecificityMethod
     from planet.models.expression_profiles import ExpressionProfile
     from planet.models.condition_tissue import ConditionTissue
@@ -258,12 +257,13 @@ with app.app_context():
 
     for species, data in SPECIES.items():
         print("\tAdding", species)
-        data['id'] = add_species_from_fasta(data['fasta'], data['code'], species)
+        data['id'] = Species.add(data['code'], species)
+        Sequence.add_from_fasta(data['fasta'], data['id'])
 
     print("Populating GO and InterPro")
     print("==========================")
-    populate_go("data/go.obo")
-    populate_interpro("data/interpro.xml")
+    GO.add_from_obo("data/go.obo")
+    Interpro.add_from_xml("data/interpro.xml")
 
     print("Adding Functional Annotation")
     print("============================")

@@ -10,9 +10,11 @@ from planet.models.sequences import Sequence
 from planet.models.clades import Clade
 from planet.models.go import GO
 from planet.models.interpro import Interpro
+from planet.models.xrefs import XRef
 
 from planet.forms.admin.add_species import AddSpeciesForm
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
+
 
 import json
 import os
@@ -92,12 +94,6 @@ def add_species():
             abort(405)
 
 
-@admin_controls.route('/add/xrefs', methods=['POST'])
-@login_required
-def add_xrefs():
-    return Response("HELLO")
-
-
 @admin_controls.route('/add/descriptions', methods=['POST'])
 @login_required
 def add_descriptions():
@@ -143,3 +139,9 @@ def add_functional_data():
             return redirect(url_for('admin.index'))
         else:
             abort(405)
+
+
+@admin_controls.route('/add/xrefs', methods=['POST'])
+@login_required
+def add_xrefs():
+    return Response("HELLO")
