@@ -41,9 +41,11 @@ def update_counts():
         GeneFamilyMethod.update_count()
         Species.update_counts()
     except:
-        return Response(json.dumps({'status': 'failed', 'message': 'Unable to update counts'}))
+        flash('An error occurred while re-doing counts', 'danger')
     else:
-        return Response(json.dumps({'status': 'success', 'message': 'Updated all counts'}))
+        flash('All count updated', 'success')
+
+    return redirect(url_for('admin.index'))
 
 
 @admin_controls.route('/update/clades')
@@ -53,9 +55,11 @@ def update_clades():
         Clade.update_clades()
         Clade.update_clades_interpro()
     except:
-        return Response(json.dumps({'status': 'failed', 'message': 'Unable to update clades'}))
+        flash('An error occurred while updating clades', 'danger')
     else:
-        return Response(json.dumps({'status': 'success', 'message': 'Updated all clades'}))
+        flash('All clades updated', 'success')
+
+    return redirect(url_for('admin.index'))
 
 
 @admin_controls.route('/add/species', methods=['POST'])
