@@ -21,6 +21,7 @@ MarkupSafe==0.23
 mpmath==0.19
 pbr==1.10.0
 python-editor==1.0.1
+python-magic==0.4.12
 six==1.10.0
 SQLAlchemy==1.0.15
 sqlalchemy-migrate==0.10.0

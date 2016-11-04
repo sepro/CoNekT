@@ -2,6 +2,8 @@ from planet import db
 from planet.models.relationships import sequence_go, SequenceGOAssociation
 from planet.models.sequences import Sequence
 
+from utils.parser.obo import Parser as OBOParser
+
 import json
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
@@ -95,3 +97,37 @@ class GO(db.Model):
             db.engine.execute(db.update(GO.__table__)
                               .where(GO.__table__.c.id == go_id)
                               .values(species_counts=json.dumps(data)))
+
+    @staticmethod
+    def add_from_obo(filename, empty=True, compressed=False):
+        """
+        Parses GeneOntology's OBO file and adds it to the database
+
+        :param filename: Path to the OBO file to parse
+        :param empty: Empty the database first (yes if True)
+        """
+        # If required empty the table first
+        if empty:
+            try:
+                db.session.query(GO).delete()
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+
+        obo_parser = OBOParser()
+        obo_parser.readfile(filename, compressed=compressed)
+
+        obo_parser.extend_go()
+
+        for term in obo_parser.terms:
+            go = GO(term.id, term.name, term.namespace, term.definition, term.is_obsolete, ";".join(term.is_a),
+                    ";".join(term.extended_go))
+
+            db.session.add(go)
+
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(e)

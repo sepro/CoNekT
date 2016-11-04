@@ -3,6 +3,8 @@ Parser class for obo files (ontology structure files).
 """
 from copy import deepcopy
 
+import gzip
+
 
 class OboEntry:
     """
@@ -97,13 +99,20 @@ class Parser:
         for term in self.terms:
             term.print()
 
-    def readfile(self, filename):
+    def readfile(self, filename, compressed=False):
         """
         Reads an OBO file (from filename) and stores the terms as OBOEntry objects
         """
         self.terms = []
 
-        with open(filename, "r") as f:
+        if compressed:
+            load = gzip.open
+            load_type = 'rt'
+        else:
+            load = open
+            load_type = 'r'
+
+        with load(filename, load_type) as f:
             current_term = None
 
             for line in f:

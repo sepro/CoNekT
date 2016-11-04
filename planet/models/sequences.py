@@ -93,14 +93,13 @@ class Sequence(db.Model):
             return 'other'
 
     @staticmethod
-    def add_from_fasta(filename, species_id):
+    def add_from_fasta(filename, species_id, compressed=False):
         fasta_data = Fasta()
-        fasta_data.readfile(filename)
+        fasta_data.readfile(filename, compressed=compressed)
 
         new_sequences = []
 
         for name, sequence in fasta_data.sequences.items():
-            print(name, sequence)
             new_sequence = {"species_id": species_id,
                             "name": name,
                             "description": None,
@@ -118,3 +117,5 @@ class Sequence(db.Model):
 
         # add the last set of sequences
         db.engine.execute(Sequence.__table__.insert(), new_sequences)
+
+        return len(fasta_data.sequences.keys())

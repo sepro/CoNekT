@@ -1,5 +1,5 @@
 import sys
-
+import gzip
 
 class Fasta:
     def __init__(self):
@@ -20,7 +20,7 @@ class Fasta:
 
         return output
 
-    def readfile(self, filename):
+    def readfile(self, filename, compressed=False):
         """
         Reads a fasta file to the dictionary
 
@@ -34,7 +34,10 @@ class Fasta:
         count = 1
 
         # open file
-        f = open(filename, 'r')
+        if compressed:
+            f = gzip.open(filename, 'rt')
+        else:
+            f = open(filename, 'r')
 
         for line in f:
             line = line.rstrip()

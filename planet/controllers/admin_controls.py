@@ -8,8 +8,11 @@ from planet.models.gene_families import GeneFamilyMethod
 from planet.models.species import Species
 from planet.models.sequences import Sequence
 from planet.models.clades import Clade
+from planet.models.go import GO
+from planet.models.interpro import Interpro
 
 from planet.forms.admin.add_species import AddSpeciesForm
+from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
 
 import json
 import os
@@ -70,15 +73,21 @@ def add_species():
 
         fasta_data = request.files[form.fasta.name].read()
 
+        print(request.files[form.fasta.name].content_type)
+
+        compressed = 'gzip' in request.files[form.fasta.name].content_type
+
         open(temp_path, 'wb').write(fasta_data)
-        Sequence.add_from_fasta(temp_path, species_id)
+        sequence_count = Sequence.add_from_fasta(temp_path, species_id, compressed=compressed)
 
         os.close(fd)
         os.remove(temp_path)
-        return Response("HELLO")
+        flash('Addes species %s and %d sequences' % (request.form.get('name'), sequence_count), 'success')
+        return redirect(url_for('admin.index'))
     else:
         if not form.validate():
-            return Response(form.errors)
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
         else:
             abort(405)
 
@@ -94,3 +103,43 @@ def add_xrefs():
 def add_descriptions():
     return Response("HELLO")
 
+
+@admin_controls.route('/add/functional_data', methods=['POST'])
+@login_required
+def add_functional_data():
+    form = AddFunctionalDataForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        # Add GO
+        go_data = request.files[form.go.name].read()
+        go_compressed = 'gzip' in request.files[form.go.name].content_type
+        if go_data != b'':
+            fd, temp_path = mkstemp()
+            open(temp_path, 'wb').write(go_data)
+            GO.add_from_obo(temp_path, empty=True,compressed=go_compressed)
+
+            os.close(fd)
+            os.remove(temp_path)
+            flash('GO data added.', 'success')
+        else:
+            flash('No GO data selected, skipping ...', 'warning')
+
+        # Add InterPro
+        interpro_data = request.files[form.interpro.name].read()
+        if interpro_data != b'':
+            fd, temp_path = mkstemp()
+            open(temp_path, 'wb').write(interpro_data)
+            Interpro.add_from_xml(temp_path, empty=True)
+
+            os.close(fd)
+            os.remove(temp_path)
+            flash('InterPro data added.', 'success')
+        else:
+            flash('No InterPro data selected, skipping ...', 'warning')
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
