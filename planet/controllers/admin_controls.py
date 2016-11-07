@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 from planet.models.expression_networks import ExpressionNetworkMethod
+from planet.models.expression_profiles import ExpressionProfile
 from planet.models.gene_families import GeneFamilyMethod, GeneFamily
 from planet.models.species import Species
 from planet.models.sequences import Sequence
@@ -16,6 +17,7 @@ from planet.forms.admin.add_species import AddSpeciesForm
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
 from planet.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
 from planet.forms.admin.add_family import AddFamiliesForm
+from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
 
 import json
 import os
@@ -239,8 +241,56 @@ def add_family():
             os.remove(temp_path)
 
         else:
-            flash('Empty file or no file provided, cannot add gene families', 'danger')
+            flash('Empty file or no file provided, cannot add gene families', 'warning')
 
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
+
+
+@admin_controls.route('/add/expression_profile', methods=['POST'])
+@login_required
+def add_expression_profiles():
+    form = AddExpressionProfilesForm()
+
+    if request.method == 'POST':
+        species_id = int(request.form.get('species_id'))
+        source = request.form.get('source')
+
+        matrix_file = request.files[form.matrix_file.name].read()
+        annotation_file = request.files[form.annotation_file.name].read()
+        order_colors_file = request.files[form.order_colors_file.name].read()
+        if matrix_file != b'' and annotation_file != b'':
+            fd_matrix, temp_matrix_path = mkstemp()
+            open(temp_matrix_path, 'wb').write(matrix_file)
+
+            fd_annotation, temp_annotation_path = mkstemp()
+            open(temp_annotation_path, 'wb').write(annotation_file)
+
+            if order_colors_file != b'':
+                fd_order_colors, temp_order_colors_path = mkstemp()
+                open(temp_order_colors_path, 'wb').write(order_colors_file)
+
+                ExpressionProfile.add_profile_from_lstrap(temp_matrix_path, temp_annotation_path, species_id,
+                                                          order_color_file=temp_order_colors_path)
+
+                os.close(fd_order_colors)
+                os.remove(temp_order_colors_path)
+            else:
+                ExpressionProfile.add_profile_from_lstrap(temp_matrix_path, temp_annotation_path, species_id)
+
+            os.close(fd_annotation)
+            os.remove(temp_annotation_path)
+            os.close(fd_matrix)
+            os.remove(temp_matrix_path)
+
+            flash('Added expression profiles for species %d' % species_id, 'success')
+        else:
+            flash('Empty file or no file provided, cannot add gene families', 'warning')
         return redirect(url_for('admin.index'))
     else:
         if not form.validate():

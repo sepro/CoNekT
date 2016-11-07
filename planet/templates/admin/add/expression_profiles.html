@@ -1,0 +1,72 @@
+{% extends 'admin/master.html' %}
+
+{% block brand %}
+<a class="navbar-brand" href="{{ url_for('main.screen') }}"><img src="{{ url_for('static', filename='img/icon-48x48.png') }}" style="max-width:100px;margin-left:-7px;margin-top: -13px;float:left;margin-right:5px;" width="48px"/></a>
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+{% if form %}
+<h1>Add Expression Profile</h1>
+
+<form method="POST"  action="{{ url_for('admin_controls.add_expression_profiles') }}"  role="form" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.species_id.label }}
+        {{ form.species_id(class_="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.source.label }}
+        {{ form.source(class_="form-control") }}
+    </div>
+    <div class="form-group">
+        <label>The normalized matrix file</label>
+        <p>Normalized expression matrix generated using LSTrAP, sequence names should match the names in the database</p>
+        <label class="btn btn-default" for="matrix_file" id="matrix-file-button">
+            {{ form.matrix_file(style="display:none;", onchange="")}}
+            <span id="matrix-file-selector-text">Select File</span>
+        </label>
+    </div>
+
+    <div class="form-group">
+        <label>Annotation file</label>
+        <p>Text file with two tab-delimited columns with one line header. The first is the sample name, the second a
+        condition. Samples with the same condition will be merged.</p>
+        <label class="btn btn-default" for="annotation_file" id="annotation-file-button">
+            {{ form.annotation_file(style="display:none;", onchange="")}}
+            <span id="annotation-file-selector-text">Select File</span>
+        </label>
+    </div>
+    <div class="form-group">
+        <label>The order and colors for the plot (optional)</label>
+        <p>Tab delimited file with the various conditions in order of desired appearance in the plots, here also colors
+        can be assigned to each condition in rgba(10,10,10,0.5) format</p>
+        <label class="btn btn-default" for="order_colors_file" id="order-colors-file-button">
+            {{ form.order_colors_file(style="display:none;", onchange="")}}
+            <span id="order-colors-file-selector-text">Select File</span>
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Expression Profiles</button>
+</form>
+{% endif %}
+
+{% endblock %}
+
+{% block tail %}
+<script>
+    $(function() {
+        $("#matrix_file").change(function() {
+            $('#matrix-file-selector-text').html($(this).val().replace(/^.*\\/, '') + ' selected');$('#matrix-file-button').toggleClass('btn-default btn-success');
+        });
+        $("#annotation_file").change(function() {
+            $('#annotation-file-selector-text').html($(this).val().replace(/^.*\\/, '') + ' selected');$('#annotation-file-button').toggleClass('btn-default btn-success');
+        });
+        $("#order_colors_file").change(function() {
+            $('#order-colors-file-selector-text').html($(this).val().replace(/^.*\\/, '') + ' selected');$('#order-colors-file-button').toggleClass('btn-default btn-success');
+        });
+    });
+</script>
+{% endblock%}

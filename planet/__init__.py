@@ -139,7 +139,7 @@ def create_app(config):
         from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
             CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView, \
             ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView, AddXRefsView, \
-            AddXRefsFamiliesView, AddFamiliesView
+            AddXRefsFamiliesView, AddFamiliesView, AddExpressionProfilesView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'), template_mode='bootstrap3')
 
@@ -149,6 +149,10 @@ def create_app(config):
                                              url='add/functional_data/', category='Add'))
 
         admin.add_view(AddSpeciesView(name='Species', endpoint='admin.add.species', url='add/species/', category='Add'))
+
+        admin.add_view(AddExpressionProfilesView(name='Expression profiles',
+                                                 endpoint='admin.add.expression_profiles',
+                                                 url='add/expression_profiles/', category='Add'))
 
         admin.add_view(AddFamiliesView(name='Gene Families',
                                        endpoint='admin.add.families',
