@@ -98,8 +98,7 @@ class GeneFamily(db.Model):
 
         output = SequenceSequenceECCAssociation.query\
             .filter_by(gene_family_method_id=self.method_id)\
-            .filter(or_(*[SequenceSequenceECCAssociation.query_id == s for s in sequence_ids],
-                        *[SequenceSequenceECCAssociation.target_id == s for s in sequence_ids]))\
+            .filter(or_(*[SequenceSequenceECCAssociation.query_id == s for s in sequence_ids], *[SequenceSequenceECCAssociation.target_id == s for s in sequence_ids]))\
             .all()
 
         return output

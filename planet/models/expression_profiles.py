@@ -1,14 +1,14 @@
 from planet import db
+from planet.models.species import Species
+from planet.models.sequences import Sequence
 from planet.models.condition_tissue import ConditionTissue
 
-from utils.entropy import entropy
-
 import json
-from bisect import bisect
+from collections import defaultdict
 from statistics import mean
 from math import log
 
-from sqlalchemy.orm import joinedload, undefer, noload
+from sqlalchemy.orm import joinedload, undefer
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
@@ -113,3 +113,86 @@ class ExpressionProfile(db.Model):
             limit(limit).all()
 
         return profiles
+
+    @staticmethod
+    def add_profile_from_lstrap(matrix_file, annotation_file, species_id, order_color_file=None):
+        """
+        Function to convert an (normalized) expression matrix (lstrap output) into a profile
+
+        :param matrix_file: path to the expression matrix
+        :param annotation_file: path to the file assigning samples to conditions
+        :param species_id: internal id of the species
+        :param order_color_file: tab delimited file that contains the order and color of conditions
+        """
+        annotation = {}
+
+        with open(annotation_file, 'r') as fin:
+            # get rid of the header
+            _ = fin.readline()
+
+            for line in fin:
+                parts = line.strip().split('\t')
+                if len(parts) > 1:
+                    run, description = parts
+                    annotation[run] = description
+
+        order, colors = [], []
+        if order_color_file is not None:
+            with open(order_color_file, 'r') as fin:
+                for line in fin:
+                    o, c = line.strip().split('\t')
+                    order.append(o)
+                    colors.append(c)
+
+        # build conversion table for sequences
+        sequences = Sequence.query.filter_by(species_id=species_id).all()
+
+        sequence_dict = {}  # key = sequence name uppercase, value internal id
+        for s in sequences:
+            sequence_dict[s.name.upper()] = s.id
+
+        with open(matrix_file) as fin:
+            # read header
+            _, *colnames = fin.readline().rstrip().split()
+
+            colnames = [c.replace('.htseq', '') for c in colnames]
+
+            # determine order after annotation is not defined
+            if order is None:
+                order = []
+
+                for c in colnames:
+                    if c in annotation.keys():
+                        if annotation[c] not in order:
+                            order.append(annotation[c])
+
+                order.sort()
+
+            # read each line and build profile
+            new_probes = []
+            for line in fin:
+                transcript, *values = line.rstrip().split()
+                profile = defaultdict(list)
+
+                for c, v in zip(colnames, values):
+                    if c in annotation.keys():
+                        condition = annotation[c]
+                        profile[condition].append(float(v))
+
+                sequence_id, transcript_id = transcript.split('.')
+
+                new_probe = {"species_id": species_id,
+                             "probe": transcript,
+                             "sequence_id": sequence_dict[sequence_id.upper()] if sequence_id.upper() in sequence_dict.keys() else None,
+                             "profile": json.dumps({"order": order,
+                                                    "colors": colors,
+                                                    "data": profile})
+                             }
+
+                new_probes.append(new_probe)
+
+                if len(new_probes) > 400:
+                    db.engine.execute(ExpressionProfile.__table__.insert(), new_probes)
+                    new_probes = []
+
+            db.engine.execute(ExpressionProfile.__table__.insert(), new_probes)
