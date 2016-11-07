@@ -5,6 +5,7 @@ from flask_login import current_user
 
 from planet.forms.admin.add_species import AddSpeciesForm
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
+from planet.forms.admin.add_go_sequences import AddGOForm
 from planet.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
 from planet.forms.admin.add_family import AddFamiliesForm
 from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
@@ -150,6 +151,13 @@ class AddFunctionalDataView(BaseView):
 
         return self.render('admin/add/functional_data.html', form=form)
 
+class AddGOView(BaseView):
+    @expose('/')
+    def index(self):
+        form = AddGOForm()
+        form.populate_species()
+
+        return self.render('admin/add/go.html', form=form)
 
 class AddXRefsView(BaseView):
     @expose('/')

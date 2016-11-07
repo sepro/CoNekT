@@ -218,7 +218,6 @@ with app.app_context():
     # import of models need to happen after app is created !
     from build.sanity import check_sanity_species_data
 
-    from build.db.go import add_go_from_plaza
     from build.db.interpro_data import add_interpro_from_plaza
     from build.db.expression import parse_expression_plot
     from build.db.expression import parse_expression_network
@@ -266,7 +265,8 @@ with app.app_context():
     print("============================")
     for species, data in SPECIES.items():
         if data['go'] is not None:
-            add_go_from_plaza(data['go'])
+            # TODO replace with load from tab
+            GO.add_go_from_plaza(data['go'])
 
         if data['interpro'] is not None:
             add_interpro_from_plaza(data['interpro'])

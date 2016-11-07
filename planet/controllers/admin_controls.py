@@ -14,12 +14,13 @@ from planet.models.xrefs import XRef
 
 from planet.forms.admin.add_species import AddSpeciesForm
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
+from planet.forms.admin.add_go_sequences import AddGOForm
 from planet.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
 from planet.forms.admin.add_family import AddFamiliesForm
 from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
 from planet.forms.admin.add_coexpression_network import AddCoexpressionNetworkForm
+from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClustersForm
 
-import json
 import os
 from tempfile import mkstemp
 
@@ -139,6 +140,38 @@ def add_functional_data():
             flash('InterPro data added.', 'success')
         else:
             flash('No InterPro data selected, skipping ...', 'warning')
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
+
+
+@admin_controls.route('/add/go', methods=['POST'])
+@login_required
+def add_go():
+    form = AddGOForm(request.form)
+    form.populate_species()
+
+    if request.method == 'POST':
+        species_id = int(request.form.get('species_id'))
+        source = request.form.get('source')
+
+        file = request.files[form.file.name].read()
+        if file != b'':
+            fd, temp_path = mkstemp()
+            open(temp_path, 'wb').write(file)
+
+            GO.add_go_from_tab(temp_path, species_id, source)
+
+            os.close(fd)
+            os.remove(temp_path)
+            flash('Added GO terms from file %s' % form.file.name, 'success')
+        else:
+            flash('Empty file or no file provided, cannot add GO terms to sequences', 'warning')
+
         return redirect(url_for('admin.index'))
     else:
         if not form.validate():
@@ -324,6 +357,39 @@ def add_coexpression_network():
             os.close(fd)
             os.remove(temp_path)
             flash('Added coexpression network for species %d' % species_id, 'success')
+        else:
+            flash('Empty or no file provided, cannot add coexpression network', 'warning')
+
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
+
+
+@admin_controls.route('/add/coexpression_clusters', methods=['POST'])
+@login_required
+def add_coexpression_clusters():
+    form = AddCoexpressionClustersForm(request.form)
+    form.populate_networks()
+
+    if request.method == 'POST' and form.validate():
+        network_id = int(request.form.get('network_id'))
+        description = request.form.get('description')
+
+        file = request.files[form.file.name].read()
+
+        if file != b'':
+            fd, temp_path = mkstemp()
+            open(temp_path, 'wb').write(file)
+
+            CoexpressionClusteringMethod.add_lstrap_coexpression_clusters(temp_path, description, network_id)
+
+            os.close(fd)
+            os.remove(temp_path)
+            flash('Added coexpression clusters for network method %d' % network_id, 'success')
         else:
             flash('Empty or no file provided, cannot add coexpression network', 'warning')
 

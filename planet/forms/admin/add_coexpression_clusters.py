@@ -7,7 +7,7 @@ from planet.models.expression_networks import ExpressionNetworkMethod
 
 class AddCoexpressionClustersForm(Form):
     network_id = SelectField('Network', coerce=int)
-    description = StringField('Description', [InputRequired])
+    description = StringField('Description', [InputRequired()])
 
     file = FileField()
 
