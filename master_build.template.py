@@ -3,9 +3,6 @@ from planet import create_app
 app = create_app('config')
 
 
-
-
-
 CLADES = {
     'Arabidopsis': {
         'species': ['ath'],
@@ -332,13 +329,6 @@ with app.app_context():
             ExpressionSpecificityMethod.calculate_tissue_specificities(data['id'], s + " tissue specific profiles", data['tissues'], data['tissues'].keys())
             ConditionTissue.add(data['id'], s + " tissue specific profiles", data['tissues'])
 
-    #
-    # print("Adding XRefs")
-    # print("============")
-    # for i in range(1, 6):
-        # XRef.create_plaza_xref_genes(i)
-    # create_plaza_xref_families(1)
-    #
     # print("Building FTP data")
     # print("=================")
     # export_ftp_data()
