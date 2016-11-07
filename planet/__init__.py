@@ -139,7 +139,8 @@ def create_app(config):
         from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
             CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView, \
             ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView, AddXRefsView, \
-            AddXRefsFamiliesView, AddFamiliesView, AddExpressionProfilesView
+            AddXRefsFamiliesView, AddFamiliesView, AddExpressionProfilesView, AddCoexpressionClustersView, \
+            AddCoexpressionNetworkView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'), template_mode='bootstrap3')
 
@@ -153,6 +154,14 @@ def create_app(config):
         admin.add_view(AddExpressionProfilesView(name='Expression profiles',
                                                  endpoint='admin.add.expression_profiles',
                                                  url='add/expression_profiles/', category='Add'))
+
+        admin.add_view(AddCoexpressionNetworkView(name='Coexpression network',
+                                                  endpoint='admin.add.coexpression_network',
+                                                  url='add/coexpression_network/', category='Add'))
+
+        admin.add_view(AddCoexpressionClustersView(name='Coexpression clusters',
+                                                   endpoint='admin.add.coexpression_clusters',
+                                                   url='add/coexpression_clusters/', category='Add'))
 
         admin.add_view(AddFamiliesView(name='Gene Families',
                                        endpoint='admin.add.families',

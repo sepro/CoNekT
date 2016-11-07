@@ -8,6 +8,8 @@ from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
 from planet.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
 from planet.forms.admin.add_family import AddFamiliesForm
 from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
+from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClustersForm
+from planet.forms.admin.add_coexpression_network import AddCoexpressionNetworkForm
 
 
 class MyAdminIndexView(AdminIndexView):
@@ -182,3 +184,21 @@ class AddExpressionProfilesView(BaseView):
         form.populate_species()
 
         return self.render('admin/add/expression_profiles.html', form=form)
+
+
+class AddCoexpressionNetworkView(BaseView):
+    @expose('/')
+    def index(self):
+        form = AddCoexpressionNetworkForm()
+        form.populate_species()
+
+        return self.render('admin/add/coexpression_network.html', form=form)
+
+
+class AddCoexpressionClustersView(BaseView):
+    @expose('/')
+    def index(self):
+        form = AddCoexpressionClustersForm()
+        form.populate_networks()
+
+        return self.render('admin/add/coexpression_clusters.html', form=form)

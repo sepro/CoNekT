@@ -1,9 +1,8 @@
-from flask import Blueprint, current_app, Response, redirect, url_for, request, render_template, flash, abort
+from flask import Blueprint, Response, redirect, url_for, request, flash, abort
 from flask_login import login_required
-from werkzeug.utils import secure_filename
 
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod
-from planet.models.expression_networks import ExpressionNetworkMethod
+from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
 from planet.models.expression_profiles import ExpressionProfile
 from planet.models.gene_families import GeneFamilyMethod, GeneFamily
 from planet.models.species import Species
@@ -18,6 +17,7 @@ from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
 from planet.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
 from planet.forms.admin.add_family import AddFamiliesForm
 from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
+from planet.forms.admin.add_coexpression_network import AddCoexpressionNetworkForm
 
 import json
 import os
@@ -255,7 +255,7 @@ def add_family():
 @admin_controls.route('/add/expression_profile', methods=['POST'])
 @login_required
 def add_expression_profiles():
-    form = AddExpressionProfilesForm()
+    form = AddExpressionProfilesForm(request.form)
 
     if request.method == 'POST':
         species_id = int(request.form.get('species_id'))
@@ -291,6 +291,42 @@ def add_expression_profiles():
             flash('Added expression profiles for species %d' % species_id, 'success')
         else:
             flash('Empty file or no file provided, cannot add gene families', 'warning')
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
+
+
+@admin_controls.route('/add/coexpression_network', methods=['POST'])
+@login_required
+def add_coexpression_network():
+    form = AddCoexpressionNetworkForm(request.form)
+
+    if request.method == 'POST':
+        species_id = int(request.form.get('species_id'))
+        description = request.form.get('description')
+        limit = int(request.form.get('limit'))
+        pcc_cutoff = float(request.form.get('pcc_cutoff'))
+
+        file = request.files[form.file.name].read()
+
+        if file != b'':
+            fd, temp_path = mkstemp()
+            open(temp_path, 'wb').write(file)
+
+            ExpressionNetwork.read_expression_network_lstrap(temp_path, species_id, description,
+                                                             pcc_cutoff=pcc_cutoff,
+                                                             limit=limit)
+
+            os.close(fd)
+            os.remove(temp_path)
+            flash('Added coexpression network for species %d' % species_id, 'success')
+        else:
+            flash('Empty or no file provided, cannot add coexpression network', 'warning')
+
         return redirect(url_for('admin.index'))
     else:
         if not form.validate():

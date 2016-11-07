@@ -6,7 +6,7 @@ from planet.models.species import Species
 
 
 class AddExpressionProfilesForm(Form):
-    species_id = SelectField('species', coerce=int)
+    species_id = SelectField('Species', coerce=int)
 
     source = SelectField('Source', choices=[('lstrap', 'LSTrAP Expression Matrix')])
 

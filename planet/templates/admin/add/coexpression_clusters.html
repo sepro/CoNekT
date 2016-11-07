@@ -1,0 +1,45 @@
+{% extends 'admin/master.html' %}
+
+{% block brand %}
+<a class="navbar-brand" href="{{ url_for('main.screen') }}"><img src="{{ url_for('static', filename='img/icon-48x48.png') }}" style="max-width:100px;margin-left:-7px;margin-top: -13px;float:left;margin-right:5px;" width="48px"/></a>
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+{% if form %}
+<h1>Add Coexpression Clusters</h1>
+
+<form method="POST"  action="{{ url_for('admin_controls.add_xrefs_family') }}"  role="form" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.network_id.label }}
+        {{ form.network_id(class_="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.description.label }}
+        {{ form.description(class_="form-control") }}
+    </div>
+    <div class="form-group">
+        <label class="btn btn-default" for="file" id="my-file-button">
+            {{ form.file(style="display:none;", onchange="")}}
+            <span id="file-selector-text">Select File</span>
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add XRefs</button>
+</form>
+{% endif %}
+
+{% endblock %}
+
+{% block tail %}
+<script>
+    $(function() {
+        $("#file").change(function() {
+            $('#file-selector-text').html($(this).val().replace(/^.*\\/, '') + ' selected');$('#my-file-button').toggleClass('btn-default btn-success');
+        });
+    });
+</script>
+{% endblock%}

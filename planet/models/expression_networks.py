@@ -2,12 +2,15 @@ from flask import url_for
 from planet import db
 from planet.models.relationships import SequenceFamilyAssociation, SequenceSequenceECCAssociation
 from planet.models.gene_families import GeneFamily
+from planet.models.species import Species
+from planet.models.sequences import Sequence
 
 from utils.jaccard import jaccard
 from utils.benchmark import benchmark
 
 import random
 import json
+import re
 from sqlalchemy import and_
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
@@ -431,7 +434,66 @@ class ExpressionNetwork(db.Model):
                     "depth": depth}
 
     @staticmethod
-    def calculate_enrichment():
-        # first get all GO info
-        # for each probe get neighborhood and calculate
-        pass
+    def read_expression_network_lstrap(network_file, species_id, description, score_type="rank", pcc_cutoff=0.7, limit=30):
+        # build conversion table for sequences
+        sequences = Sequence.query.filter_by(species_id=species_id).all()
+
+        sequence_dict = {}  # key = sequence name uppercase, value internal id
+        for s in sequences:
+            sequence_dict[s.name.upper()] = s.id
+
+        # Add network method first
+        network_method = ExpressionNetworkMethod(species_id, description, score_type)
+
+        db.session.add(network_method)
+
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(e)
+
+        network = {}
+
+        with open(network_file) as fin:
+            for line in fin:
+                query, hits = line.strip().split(' ')
+                query = query.replace(':', '')
+
+                sequence = re.sub('\.\d$', '', query)
+
+                network[query] = {
+                    "probe": query,
+                    "sequence_id": sequence_dict[sequence.upper()] if sequence.upper() in sequence_dict.keys() else None,
+                    "linked_probes": [],
+                    "total_count": 0,
+                    "method_id": network_method.id
+                }
+
+                for i, h in enumerate(hits.split('\t')):
+                    name, value = h.split('(')
+                    value = float(value.replace(')', ''))
+                    if value > pcc_cutoff:
+                        network[query]["total_count"] += 1
+                        if i < limit:
+                            s = re.sub('\.\d$', '', name)
+                            link = {"probe_name": name,
+                                    "gene_name": s,
+                                    "gene_id": sequence_dict[s.upper()] if s.upper() in sequence_dict.keys() else None,
+                                    "link_score": i,
+                                    "link_pcc": value}
+                            network[query]["linked_probes"].append(link)
+
+                network[query]["network"] = json.dumps(network[query]["linked_probes"])
+
+            # add nodes in sets of 400 to avoid sending to much in a single query
+        new_nodes = []
+        for _, n in network.items():
+            new_nodes.append(n)
+            if len(new_nodes) > 400:
+                db.engine.execute(ExpressionNetwork.__table__.insert(), new_nodes)
+                new_nodes = []
+
+        db.engine.execute(ExpressionNetwork.__table__.insert(), new_nodes)
+
+        return network_method.id
