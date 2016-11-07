@@ -5,7 +5,8 @@ from flask_login import current_user
 
 from planet.forms.admin.add_species import AddSpeciesForm
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
-from planet.forms.admin.add_xrefs import AddXRefsForm
+from planet.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
+from planet.forms.admin.add_family import AddFamiliesForm
 
 
 class MyAdminIndexView(AdminIndexView):
@@ -154,3 +155,20 @@ class AddXRefsView(BaseView):
         form.populate_species()
 
         return self.render('admin/add/xrefs.html', form=form)
+
+
+class AddXRefsFamiliesView(BaseView):
+    @expose('/')
+    def index(self):
+        form = AddXRefsFamiliesForm()
+        form.populate_methods()
+
+        return self.render('admin/add/xrefs_families.html', form=form)
+
+
+class AddFamiliesView(BaseView):
+    @expose('/')
+    def index(self):
+        form = AddFamiliesForm()
+
+        return self.render('admin/add/families.html', form=form)

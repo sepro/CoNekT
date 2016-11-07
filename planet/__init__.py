@@ -133,24 +133,34 @@ def create_app(config):
     app.register_blueprint(ecc, url_prefix='/ecc')
     app.register_blueprint(specificity_comparison, url_prefix='/specificity_comparison')
 
-
     # Admin panel
     if LOGIN_ENABLED:
         from planet.admin.views import MyAdminIndexView
         from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
             CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView, \
-            ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView, AddXRefsView
+            ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView, AddXRefsView, \
+            AddXRefsFamiliesView, AddFamiliesView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'), template_mode='bootstrap3')
 
         # Add views used to build the database
-        admin.add_view(AddSpeciesView(name='Species', endpoint='admin.add.species', url='add/species/', category='Add'))
         admin.add_view(AddFunctionalDataView(name='Functional Data',
                                              endpoint='admin.add.functional_data',
                                              url='add/functional_data/', category='Add'))
-        admin.add_view(AddXRefsView(name='XRefs',
+
+        admin.add_view(AddSpeciesView(name='Species', endpoint='admin.add.species', url='add/species/', category='Add'))
+
+        admin.add_view(AddFamiliesView(name='Gene Families',
+                                       endpoint='admin.add.families',
+                                       url='add/families/', category='Add'))
+
+        admin.add_view(AddXRefsView(name='XRefs Genes',
                                     endpoint='admin.add.xrefs',
                                     url='add/xrefs/', category='Add'))
+
+        admin.add_view(AddXRefsFamiliesView(name='XRefs Families',
+                                            endpoint='admin.add.xrefs_families',
+                                            url='add/xrefs_families/', category='Add'))
 
         # Control panel
         admin.add_view(ControlsView(name='Controls', endpoint='admin.controls', url='controls/'))

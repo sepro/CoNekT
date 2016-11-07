@@ -223,7 +223,6 @@ with app.app_context():
 
     from build.db.go import add_go_from_plaza
     from build.db.interpro_data import add_interpro_from_plaza
-    from build.db.families import add_families_from_plaza
     from build.db.expression import parse_expression_plot
     from build.db.expression import parse_expression_network
     from build.db.coexpression_clusters import add_planet_coexpression_clusters
@@ -231,7 +230,7 @@ with app.app_context():
 
     from planet.models.coexpression_clusters import CoexpressionClusteringMethod,CoexpressionCluster
     from planet.models.expression_networks import ExpressionNetworkMethod
-    from planet.models.gene_families import GeneFamilyMethod
+    from planet.models.gene_families import GeneFamilyMethod, GeneFamily
     from planet.models.species import Species
     from planet.models.sequences import Sequence
     from planet.models.clades import Clade
@@ -277,7 +276,7 @@ with app.app_context():
 
     print("Adding Families")
     print("===============")
-    families_id = add_families_from_plaza("data/genefamily_data.hom.csv", "PLAZA 2.5 Homologous gene families")
+    families_id = GeneFamily.add_families_from_plaza("data/genefamily_data.hom.csv", "PLAZA 2.5 Homologous gene families")
 
     print("Adding Expression Plots")
     print("=======================")

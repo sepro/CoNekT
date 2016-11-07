@@ -1,5 +1,6 @@
 from planet import db
 from planet.models.species import Species
+from planet.models.gene_families import GeneFamilyMethod
 
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
@@ -51,3 +52,52 @@ class XRef(db.Model):
         :param species_id: species ID of the species to process
         """
         XRef.__create_xref_genes(species_id, "EVEX", "http://www.evexdb.org/search/?search=%s")
+
+    @staticmethod
+    def add_xref_genes_from_file(species_id, filename):
+        species = Species.query.get(species_id)
+
+        sequences = species.sequences.all()
+        seq_dict = {s.name.upper(): s for s in sequences}
+
+        with open(filename, "r") as f:
+            for line in f:
+                sequence, name, platform, url = line.split('\t')
+
+                xref = XRef()
+                xref.name = name
+                xref.platform = platform
+                xref.url = url
+
+                if sequence.upper() in seq_dict.keys():
+                    s = seq_dict[sequence.upper()]
+                    s.xrefs.append(xref)
+                    try:
+                        db.session.commit()
+                    except Exception as e:
+                        db.session.rollback()
+
+    @staticmethod
+    def add_xref_families_from_file(gene_family_method_id, filename):
+        gf_method = GeneFamilyMethod.query.get(gene_family_method_id)
+
+        families = gf_method.families.all()
+
+        fam_dict = {f.name.upper(): f for f in families}
+
+        with open(filename, "r") as f:
+            for line in f:
+                family, name, platform, url = line.split('\t')
+
+                xref = XRef()
+                xref.name = name
+                xref.platform = platform
+                xref.url = url
+
+                if family.upper() in fam_dict.keys():
+                    f = fam_dict[family.upper()]
+                    f.xrefs.append(xref)
+                    try:
+                        db.session.commit()
+                    except Exception as e:
+                        db.session.rollback()

@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 from planet.models.expression_networks import ExpressionNetworkMethod
-from planet.models.gene_families import GeneFamilyMethod
+from planet.models.gene_families import GeneFamilyMethod, GeneFamily
 from planet.models.species import Species
 from planet.models.sequences import Sequence
 from planet.models.clades import Clade
@@ -14,8 +14,8 @@ from planet.models.xrefs import XRef
 
 from planet.forms.admin.add_species import AddSpeciesForm
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
-from planet.forms.admin.add_xrefs import AddXRefsForm
-
+from planet.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
+from planet.forms.admin.add_family import AddFamiliesForm
 
 import json
 import os
@@ -164,7 +164,19 @@ def add_xrefs():
             flash('Added XRefs to EVEX dicots for species id %d' % species_id, 'success')
             return redirect(url_for('admin.index'))
         else:
-            flash('This platform is not implemented, nothing added/changed/deleted from the database', 'warning')
+            xref_data = request.files[form.file.name].read()
+            if xref_data != b'':
+                fd, temp_path = mkstemp()
+                open(temp_path, 'wb').write(xref_data)
+
+                XRef.add_xref_genes_from_file(species_id, temp_path)
+
+                os.close(fd)
+                os.remove(temp_path)
+                flash('Added XRefs from file %s' % form.file.name, 'success')
+            else:
+                flash('Empty file or no file provided, cannot add XRefs', 'danger')
+
             return redirect(url_for('admin.index'))
     else:
         if not form.validate():
@@ -173,3 +185,66 @@ def add_xrefs():
         else:
             abort(405)
 
+
+@admin_controls.route('/add/xrefs_family', methods=['POST'])
+@login_required
+def add_xrefs_family():
+    form = AddXRefsFamiliesForm(request.form)
+
+    if request.method == 'POST':
+        gene_family_methods_id = int(request.form.get('gene_family_method_id'))
+
+        xref_data = request.files[form.file.name].read()
+        if xref_data != b'':
+            fd, temp_path = mkstemp()
+            open(temp_path, 'wb').write(xref_data)
+
+            XRef.add_xref_families_from_file(gene_family_methods_id, temp_path)
+
+            os.close(fd)
+            os.remove(temp_path)
+            flash('Added XRefs from file %s' % form.file.name, 'success')
+        else:
+            flash('Empty file or no file provided, cannot add XRefs', 'danger')
+
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
+
+
+@admin_controls.route('/add/family', methods=['POST'])
+@login_required
+def add_family():
+    form = AddFamiliesForm(request.form)
+
+    if request.method == 'POST':
+        method_description = request.form.get('method_description')
+        source = request.form.get('source')
+
+        family_data = request.files[form.file.name].read()
+        if family_data != b'':
+            fd, temp_path = mkstemp()
+            open(temp_path, 'wb').write(family_data)
+
+            if source == 'plaza':
+                GeneFamily.add_families_from_plaza(temp_path, method_description)
+                flash('Added Gene families from file %s' % form.file.name, 'success')
+            else:
+                flash('Method not implemented yet', 'danger')
+            os.close(fd)
+            os.remove(temp_path)
+
+        else:
+            flash('Empty file or no file provided, cannot add gene families', 'danger')
+
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
