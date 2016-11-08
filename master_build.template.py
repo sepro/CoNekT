@@ -324,9 +324,9 @@ with app.app_context():
     print("Calculate conditions specific profiles")
     print("=========================================")
     for s, data in SPECIES.items():
-        ExpressionSpecificityMethod.calculate_specificities(data['id'], s + " condition specific profiles")
+        ExpressionSpecificityMethod.calculate_specificities(data['id'], s + " condition specific profiles", False)
         if 'tissues' in data:
-            ExpressionSpecificityMethod.calculate_tissue_specificities(data['id'], s + " tissue specific profiles", data['tissues'], data['tissues'].keys())
+            ExpressionSpecificityMethod.calculate_tissue_specificities(data['id'], s + " tissue specific profiles", data['tissues'], use_max=True, remove_background=False)
             ConditionTissue.add(data['id'], s + " tissue specific profiles", data['tissues'])
 
     # print("Building FTP data")
