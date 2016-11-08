@@ -157,7 +157,21 @@ data and add everything to the database.
 ![Add expression profiles](./images/add_expression_profiles.png)
 
 
+#### Adding coexpression network
 
+*UNDER CONSTRUCTION*
+
+#### Adding coexpression clusters
+
+*UNDER CONSTRUCTION*
+
+### Adding external references
+
+*UNDER CONSTRUCTION*
+
+### Computing enrichments, similarities, and counts ... 
+
+*UNDER CONSTRUCTION*
 
 ## Using the build script
 
