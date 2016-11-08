@@ -12,6 +12,7 @@ from planet.forms.admin.add_family import AddFamiliesForm
 from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
 from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClustersForm
 from planet.forms.admin.add_coexpression_network import AddCoexpressionNetworkForm
+from planet.forms.admin.add_clades import AddCladesForm
 
 
 class MyAdminIndexView(AdminIndexView):
@@ -222,3 +223,11 @@ class AddCoexpressionClustersView(BaseView):
         form.populate_networks()
 
         return self.render('admin/add/coexpression_clusters.html', form=form)
+
+
+class AddCladesView(BaseView):
+    @expose('/')
+    def index(self):
+        form = AddCladesForm()
+
+        return self.render('admin/add/clades.html', form=form)

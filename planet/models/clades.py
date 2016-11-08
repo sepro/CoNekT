@@ -45,6 +45,11 @@ class Clade(db.Model):
             print(e)
 
     @staticmethod
+    def add_clades_from_json(data):
+        for c, data in data.items():
+            Clade.add_clade(c, data['species'], data['tree'])
+
+    @staticmethod
     def update_clades():
         """
         Loop over all families and determine what clade they belong too

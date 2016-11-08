@@ -21,8 +21,10 @@ from planet.forms.admin.add_family import AddFamiliesForm
 from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
 from planet.forms.admin.add_coexpression_network import AddCoexpressionNetworkForm
 from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClustersForm
+from planet.forms.admin.add_clades import AddCladesForm
 
 import os
+import json
 from tempfile import mkstemp
 
 admin_controls = Blueprint('admin_controls', __name__)
@@ -424,6 +426,25 @@ def add_coexpression_clusters():
             flash('Added coexpression clusters for network method %d' % network_id, 'success')
         else:
             flash('Empty or no file provided, cannot add coexpression network', 'warning')
+
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
+
+
+@admin_controls.route('/add/clades', methods=['POST'])
+@login_required
+def add_clades():
+    form = AddCladesForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        clades_json = json.loads(request.form.get('clades_json'))
+
+        Clade.add_clades_from_json(clades_json)
 
         return redirect(url_for('admin.index'))
     else:
