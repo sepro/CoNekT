@@ -446,6 +446,7 @@ def add_clades():
 
         Clade.add_clades_from_json(clades_json)
 
+        flash('Added clades %s to the database' % ', '.join(clades_json.keys()), 'success')
         return redirect(url_for('admin.index'))
     else:
         if not form.validate():
