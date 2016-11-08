@@ -61,13 +61,12 @@ Finally, select a fasta file with **coding sequences**, in the fasta
 headers the gene name (and only the name) needs to be present. These are
 the names genes will receive on the website.
 
-> \>Gene1
->
-> ATG...
->
-> \>Gene2
->
-> ATG... 
+```
+>Gene1
+ATG...
+>Gene2
+ATG... 
+```
 
 To upload the data and add the species to the database click 'Add species'
 
