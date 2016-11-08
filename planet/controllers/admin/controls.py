@@ -15,6 +15,7 @@ from planet.models.xrefs import XRef
 from planet.forms.admin.add_species import AddSpeciesForm
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
 from planet.forms.admin.add_go_sequences import AddGOForm
+from planet.forms.admin.add_interpro_sequences import AddInterProForm
 from planet.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
 from planet.forms.admin.add_family import AddFamiliesForm
 from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
@@ -164,13 +165,44 @@ def add_go():
             fd, temp_path = mkstemp()
             open(temp_path, 'wb').write(file)
 
-            GO.add_go_from_tab(temp_path, species_id, source)
+            GO.add_go_from_tab(temp_path, species_id)
 
             os.close(fd)
             os.remove(temp_path)
             flash('Added GO terms from file %s' % form.file.name, 'success')
         else:
             flash('Empty file or no file provided, cannot add GO terms to sequences', 'warning')
+
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
+
+
+@admin_controls.route('/add/interpro', methods=['POST'])
+@login_required
+def add_interpro():
+    form = AddInterProForm(request.form)
+    form.populate_species()
+
+    if request.method == 'POST':
+        species_id = int(request.form.get('species_id'))
+
+        file = request.files[form.file.name].read()
+        if file != b'':
+            fd, temp_path = mkstemp()
+            open(temp_path, 'wb').write(file)
+
+            Interpro.add_interpro_from_interproscan(temp_path, species_id)
+
+            os.close(fd)
+            os.remove(temp_path)
+            flash('Added InterPro terms from file %s' % form.file.name, 'success')
+        else:
+            flash('Empty file or no file provided, cannot add InterPro terms to sequences', 'warning')
 
         return redirect(url_for('admin.index'))
     else:

@@ -218,7 +218,6 @@ with app.app_context():
     # import of models need to happen after app is created !
     from build.sanity import check_sanity_species_data
 
-    from build.db.interpro_data import add_interpro_from_plaza
     from build.db.expression import parse_expression_plot
     from build.db.expression import parse_expression_network
     from build.db.coexpression_clusters import add_planet_coexpression_clusters
@@ -269,7 +268,8 @@ with app.app_context():
             GO.add_go_from_plaza(data['go'])
 
         if data['interpro'] is not None:
-            add_interpro_from_plaza(data['interpro'])
+            # TODO replace with load from interproscan
+            Interpro.add_interpro_from_plaza(data['interpro'])
 
     print("Adding Families")
     print("===============")

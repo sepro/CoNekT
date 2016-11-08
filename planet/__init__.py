@@ -12,14 +12,12 @@ Everything that needs to be set up to get flask running is initialized in this f
   * set up global things like the search form and custom 403/404 error messages
 """
 from flask import Flask, render_template, g
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from flask_cache import Cache
-
 from flask_admin import Admin
-from flask_htmlmin import HTMLMIN
-
+from flask_cache import Cache
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_htmlmin import HTMLMIN
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
 
 from planet.extensions.blast import BlastThread
 
@@ -102,7 +100,7 @@ def create_app(config):
     from planet.controllers.clade import clade
     from planet.controllers.ecc import ecc
     from planet.controllers.specificity_comparison import specificity_comparison
-    from planet.controllers.admin_controls import admin_controls
+    from planet.controllers.admin.controls import admin_controls
 
     app.register_blueprint(main)
     if LOGIN_ENABLED:
@@ -135,12 +133,12 @@ def create_app(config):
 
     # Admin panel
     if LOGIN_ENABLED:
-        from planet.admin.views import MyAdminIndexView
-        from planet.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
+        from planet.controllers.admin.views import MyAdminIndexView
+        from planet.controllers.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, ExpressionNetworkMethodAdminView, \
             CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView, \
             ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView, AddXRefsView, \
             AddXRefsFamiliesView, AddFamiliesView, AddExpressionProfilesView, AddCoexpressionClustersView, \
-            AddCoexpressionNetworkView, AddGOView
+            AddCoexpressionNetworkView, AddGOView, AddInterProView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'), template_mode='bootstrap3')
 
@@ -168,8 +166,12 @@ def create_app(config):
                                        url='add/families/', category='Add'))
 
         admin.add_view(AddGOView(name='GO Genes',
-                                 endpoint='admin.add.go_Sequences',
+                                 endpoint='admin.add.go_sequences',
                                  url='add/go/', category='Add'))
+
+        admin.add_view(AddInterProView(name='InterPro Genes',
+                                       endpoint='admin.add.interpro_sequences',
+                                       url='add/interpro/', category='Add'))
 
         admin.add_view(AddXRefsView(name='XRefs Genes',
                                     endpoint='admin.add.xrefs',
