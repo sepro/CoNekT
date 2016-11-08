@@ -1,7 +1,7 @@
-#PlaNet Windows Installation
+# PlaNet Windows Installation
 
-Getting Started
----------------
+## Getting Started
+
 
 Python >= 3.3 is required with virtualenv
 
@@ -39,4 +39,4 @@ Build initial database
 
     Scripts\python.exe db_action.py create
 
-You now have a fresh installation of PlaNet. Follow instructions below to fill the database
+You now have a fresh installation of PlaNet. How to fill it with your data is included in the section [Building PlaNet 2.0](./building_planet.md)

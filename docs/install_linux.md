@@ -1,7 +1,6 @@
-#PlaNet Linux Installation
+# PlaNet Linux Installation
 
-Getting Started
----------------
+## Getting Started
 
 Python >= 3.3 and pip3 are required
 
@@ -34,10 +33,10 @@ Copy the configuration template to config.py
 
     cp config.template.py config.py
 
-Change settings in config.py
+Change settings in config.py. **Apart from configuring paths, also change the secret key and the admin password !**
 
 Build initial database
 
     python db_action.py create
 
-You now have a fresh installation of PlaNet. Follow instructions below to fill the database
+You now have a fresh installation of PlaNet. How to fill it with your data is included in the section [Building PlaNet 2.0](./building_planet.md)

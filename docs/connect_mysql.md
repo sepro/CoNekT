@@ -14,7 +14,7 @@ In the config file the connection needs to be set up using :
 
 
 In case the **libraries cannot be installed** on the machine a pure python mysql connector can be used. Install this within
-the virtual environment
+the virtual environment. 
 
     pip install PyMySQL
 

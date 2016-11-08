@@ -20,11 +20,6 @@ Below are the instructions to set up a new PlaNet version.
 
 [Run website](docs/run_website.md)
 
-Case Studies
-------------
-
-How to generate data for case studies is described [here](docs/case_studies.md). These can only be started after the
-database is completed.
 
 Instructions for Developers
 ---------------------------

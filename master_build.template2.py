@@ -109,7 +109,6 @@ SPECIES = {
 with app.app_context():
     from build.sanity import check_sanity_species_data
 
-    from build.db.interpro_data import add_interpro_from_plaza
     from build.db.expression import parse_expression_plot
     from build.db.expression import parse_expression_network
     from build.db.coexpression_clusters import add_planet_coexpression_clusters

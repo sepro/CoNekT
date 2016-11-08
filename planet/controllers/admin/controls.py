@@ -165,7 +165,7 @@ def add_go():
             fd, temp_path = mkstemp()
             open(temp_path, 'wb').write(file)
 
-            GO.add_go_from_tab(temp_path, species_id)
+            GO.add_go_from_tab(temp_path, species_id, source=source)
 
             os.close(fd)
             os.remove(temp_path)
