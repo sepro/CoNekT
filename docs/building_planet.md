@@ -62,15 +62,14 @@ headers the gene name (and only the name) needs to be present. These are
 the names genes will receive on the website.
 
 '''
->Gene1
+\>Gene1
 ATG... 
->Gene2 
+\>Gene2 
 ATG... 
 '''
 
 To upload the data and add the species to the database click 'Add species'
 
-![Add species](./image/add_species.png "Adding a species through the GUI")
 
 #### Adding functional Annotation to sequences
 
