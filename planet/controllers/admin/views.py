@@ -13,6 +13,7 @@ from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
 from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClustersForm
 from planet.forms.admin.add_coexpression_network import AddCoexpressionNetworkForm
 from planet.forms.admin.add_clades import AddCladesForm
+from planet.forms.admin.add_expression_specificity import AddConditionSpecificityForm, AddTissueSpecificityForm
 
 
 class MyAdminIndexView(AdminIndexView):
@@ -214,6 +215,20 @@ class AddCoexpressionNetworkView(BaseView):
         form.populate_species()
 
         return self.render('admin/add/coexpression_network.html', form=form)
+
+
+class AddSpecificityView(BaseView):
+    @expose('/')
+    def index(self):
+        condition_form = AddConditionSpecificityForm()
+        condition_form.populate_species()
+
+        tissue_form = AddTissueSpecificityForm()
+        tissue_form.populate_species()
+
+        return self.render('admin/add/expression_specificity.html',
+                           condition_form=condition_form,
+                           tissue_form=tissue_form)
 
 
 class AddCoexpressionClustersView(BaseView):

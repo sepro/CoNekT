@@ -45,7 +45,7 @@ class CoexpressionClusteringMethod(db.Model):
             print(e)
 
     @staticmethod
-    def add_lstrap_coexpression_clusters(cluster_file, description, network_id, prefix='cluster_'):
+    def add_lstrap_coexpression_clusters(cluster_file, description, network_id, prefix='cluster_', min_size=10):
         # get all sequences from the database and create a dictionary
         sequences = Sequence.query.all()
 
@@ -68,38 +68,41 @@ class CoexpressionClusteringMethod(db.Model):
             quit()
 
         with open(cluster_file) as f:
-            for i, line in enumerate(f, start=1):
-                cluster_id = "%s%04d" % (prefix, i)
-
-                new_cluster = CoexpressionCluster()
-                new_cluster.method_id = clustering_method.id
-                new_cluster.name = cluster_id
-
-                db.session.add(new_cluster)
-
-                try:
-                    db.session.commit()
-                except Exception as e:
-                    db.session.rollback()
-                    print(e)
-                    continue
-
+            i = 1
+            for line in f:
                 probes = [p for p in line.strip().split()]
                 genes = [p.replace('.1', '') for p in probes]
+                cluster_id = "%s%04d" % (prefix, i)
 
-                for p, g in zip(probes, genes):
-                    new_association = SequenceCoexpressionClusterAssociation()
-                    new_association.probe = p
-                    new_association.sequence_id = None
-                    if g.upper() in sequence_dict.keys():
-                        new_association.sequence_id = sequence_dict[g.upper()].id
-                    new_association.coexpression_cluster_id = new_cluster.id
-                    db.session.add(new_association)
-                try:
-                    db.session.commit()
-                except Exception as e:
-                    db.session.rollback()
-                    print(e)
+                if len(probes) >= min_size:
+                    i += 1
+
+                    new_cluster = CoexpressionCluster()
+                    new_cluster.method_id = clustering_method.id
+                    new_cluster.name = cluster_id
+
+                    db.session.add(new_cluster)
+
+                    try:
+                        db.session.commit()
+                    except Exception as e:
+                        db.session.rollback()
+                        print(e)
+                        continue
+
+                    for p, g in zip(probes, genes):
+                        new_association = SequenceCoexpressionClusterAssociation()
+                        new_association.probe = p
+                        new_association.sequence_id = None
+                        if g.upper() in sequence_dict.keys():
+                            new_association.sequence_id = sequence_dict[g.upper()].id
+                        new_association.coexpression_cluster_id = new_cluster.id
+                        db.session.add(new_association)
+                    try:
+                        db.session.commit()
+                    except Exception as e:
+                        db.session.rollback()
+                        print(e)
 
         return clustering_method.id
 

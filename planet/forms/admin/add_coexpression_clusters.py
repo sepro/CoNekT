@@ -8,6 +8,7 @@ from planet.models.expression_networks import ExpressionNetworkMethod
 class AddCoexpressionClustersForm(Form):
     network_id = SelectField('Network', coerce=int)
     description = StringField('Description', [InputRequired()])
+    min_size = SelectField('Minimum cluster size', coerce=int, choices=[(i, i) for i in range(1, 11, 1)], default=10)
 
     file = FileField()
 

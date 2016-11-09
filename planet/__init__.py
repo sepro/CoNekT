@@ -138,7 +138,7 @@ def create_app(config):
             CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView, \
             ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView, AddXRefsView, \
             AddXRefsFamiliesView, AddFamiliesView, AddExpressionProfilesView, AddCoexpressionClustersView, \
-            AddCoexpressionNetworkView, AddGOView, AddInterProView, AddCladesView
+            AddCoexpressionNetworkView, AddGOView, AddInterProView, AddCladesView, AddSpecificityView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'), template_mode='bootstrap3')
 
@@ -160,6 +160,10 @@ def create_app(config):
         admin.add_view(AddCoexpressionClustersView(name='Coexpression clusters',
                                                    endpoint='admin.add.coexpression_clusters',
                                                    url='add/coexpression_clusters/', category='Add'))
+
+        admin.add_view(AddSpecificityView(name='Expression Specificity',
+                                          endpoint='admin.add.expression_specificity',
+                                          url='add/expression_specificity/', category='Add'))
 
         admin.add_view(AddFamiliesView(name='Gene Families',
                                        endpoint='admin.add.families',

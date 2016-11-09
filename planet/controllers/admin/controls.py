@@ -2,6 +2,8 @@ from flask import Blueprint, Response, redirect, url_for, request, flash, abort
 from flask_login import login_required
 
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod
+from planet.models.expression_specificity import ExpressionSpecificityMethod
+from planet.models.condition_tissue import ConditionTissue
 from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
 from planet.models.expression_profiles import ExpressionProfile
 from planet.models.gene_families import GeneFamilyMethod, GeneFamily
@@ -22,6 +24,7 @@ from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
 from planet.forms.admin.add_coexpression_network import AddCoexpressionNetworkForm
 from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClustersForm
 from planet.forms.admin.add_clades import AddCladesForm
+from planet.forms.admin.add_expression_specificity import AddTissueSpecificityForm, AddConditionSpecificityForm
 
 import os
 import json
@@ -412,6 +415,7 @@ def add_coexpression_clusters():
     if request.method == 'POST' and form.validate():
         network_id = int(request.form.get('network_id'))
         description = request.form.get('description')
+        min_size = int(request.form.get('min_size'))
 
         file = request.files[form.file.name].read()
 
@@ -419,7 +423,8 @@ def add_coexpression_clusters():
             fd, temp_path = mkstemp()
             open(temp_path, 'wb').write(file)
 
-            CoexpressionClusteringMethod.add_lstrap_coexpression_clusters(temp_path, description, network_id)
+            CoexpressionClusteringMethod.add_lstrap_coexpression_clusters(temp_path, description, network_id,
+                                                                          min_size=min_size)
 
             os.close(fd)
             os.remove(temp_path)
@@ -447,6 +452,77 @@ def add_clades():
         Clade.add_clades_from_json(clades_json)
 
         flash('Added clades %s to the database' % ', '.join(clades_json.keys()), 'success')
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
+
+
+@admin_controls.route('/add/condition_specificity', methods=['POST'])
+@login_required
+def add_condition_specificity():
+    form = AddConditionSpecificityForm(request.form)
+    form.populate_species()
+
+    if request.method == 'POST' and form.validate():
+        species_id = int(request.form.get('species_id'))
+        description = request.form.get('description')
+
+        ExpressionSpecificityMethod.calculate_specificities(species_id, description, False)
+
+        flash('Calculated condition specificities for species %d' % species_id, 'success')
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
+
+
+@admin_controls.route('/add/tissue_specificity', methods=['POST'])
+@login_required
+def add_tissue_specificity():
+    form = AddTissueSpecificityForm(request.form)
+    form.populate_species()
+
+    if request.method == 'POST' and form.validate():
+        species_id = int(request.form.get('species_id'))
+        description = request.form.get('description')
+
+        file = request.files[form.file.name].read()
+
+        if file != b'':
+            data = file.decode("utf-8").replace("\r\n", "\n").split('\n')
+
+            order = []
+            colors = []
+            conditions = []
+
+            condition_tissue = {}
+
+            for d in data:
+                condition, tissue, color = d.split("\t")
+
+                conditions.append(condition)
+
+                condition_tissue[condition] = tissue
+
+                if tissue not in order:
+                    order.append(tissue)
+                    colors.append(color)
+
+            ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description,
+                                                                       condition_tissue,
+                                                                       conditions,
+                                                                       use_max=True,
+                                                                       remove_background=False)
+            ConditionTissue.add(species_id, description, condition_tissue)
+
+        flash('Calculated tissue specificities for species %d' % species_id, 'success')
         return redirect(url_for('admin.index'))
     else:
         if not form.validate():
