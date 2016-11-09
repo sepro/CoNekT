@@ -13,7 +13,7 @@ class ConditionTissue(db.Model):
     data = db.Column(db.Text)
 
     @staticmethod
-    def add(species_id, name, data):
+    def add(species_id, name, data, order, colors):
         """
         Add conversion table to the database for a species
 
@@ -25,7 +25,9 @@ class ConditionTissue(db.Model):
 
         new_ct.species_id = species_id
         new_ct.name = name
-        new_ct.data = json.dumps(data)
+        new_ct.data = json.dumps({'order': order,
+                                  'colors': colors,
+                                  'conversion': data})
 
         db.session.add(new_ct)
         db.session.commit()

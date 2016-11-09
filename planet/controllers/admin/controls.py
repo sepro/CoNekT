@@ -520,7 +520,7 @@ def add_tissue_specificity():
                                                                        conditions,
                                                                        use_max=True,
                                                                        remove_background=False)
-            ConditionTissue.add(species_id, description, condition_tissue)
+            ConditionTissue.add(species_id, description, condition_tissue, order, colors)
 
         flash('Calculated tissue specificities for species %d' % species_id, 'success')
         return redirect(url_for('admin.index'))

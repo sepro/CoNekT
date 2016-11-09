@@ -40,12 +40,12 @@ class ExpressionProfile(db.Model):
         condition_to_tissue = json.loads(ct.data)
         profile_data = json.loads(self.profile)
 
-        tissues = list(set(condition_to_tissue.values()))
+        tissues = list(set(condition_to_tissue['conversion'].values()))
 
         output = {}
 
         for t in tissues:
-            valid_conditions = [k for k in profile_data['data'] if k in condition_to_tissue and condition_to_tissue[k] == t]
+            valid_conditions = [k for k in profile_data['data'] if k in condition_to_tissue['conversion'] and condition_to_tissue['conversion'][k] == t]
             valid_values = []
             for k, v in profile_data['data'].items():
                 if k in valid_conditions:
@@ -53,7 +53,9 @@ class ExpressionProfile(db.Model):
 
             output[t] = valid_values if len(valid_values) > 0 else [0]
 
-        return {'order': tissues, 'data': output}
+        return {'order': condition_to_tissue['order'],
+                'colors': condition_to_tissue['colors'],
+                'data': output}
 
     @staticmethod
     def get_heatmap(species_id, probes):

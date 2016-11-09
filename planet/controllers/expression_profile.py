@@ -217,6 +217,9 @@ def expression_profile_plot_tissue_json(profile_id, condition_tissue_id):
         processed_maxs[key] = max(expression_values)
         processed_mins[key] = min(expression_values)
 
+    background_color = data["colors"] if "colors" in data.keys() else "rgba(175,175,175,0.2)"
+    point_color = "rgba(55,55,55,0.8)" if "colors" in data.keys() else "rgba(220,22,22,1)"
+
     output = {"type": "bar",
               "data": {
                   "labels": list(data["order"]),
@@ -224,20 +227,20 @@ def expression_profile_plot_tissue_json(profile_id, condition_tissue_id):
                                 "label": "Maximum",
                                 "fill": False,
                                 "showLine": False,
-                                "pointBorderColor": "rgba(220,22,22,1)",
-                                "pointBackgroundColor": "rgba(220,22,22,1)",
+                                "pointBorderColor": point_color,
+                                "pointBackgroundColor": point_color,
                                 "data": list([processed_maxs[c] for c in data["order"]])},
                                {
                                 "type": "line",
                                 "label": "Minimum",
                                 "fill": False,
                                 "showLine": False,
-                                "pointBorderColor": "rgba(220,22,22,1)",
-                                "pointBackgroundColor": "rgba(220,22,22,1)",
+                                "pointBorderColor": point_color,
+                                "pointBackgroundColor": point_color,
                                 "data": list([processed_mins[c] for c in data["order"]])},
                                {
                                 "label": "Mean",
-                                "backgroundColor": "rgba(175,175,175,0.2)",
+                                "backgroundColor": background_color,
                                 "data": list([processed_means[c] for c in data["order"]])}]
                   },
               "options": {

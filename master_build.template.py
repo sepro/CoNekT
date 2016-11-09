@@ -327,7 +327,8 @@ with app.app_context():
         ExpressionSpecificityMethod.calculate_specificities(data['id'], s + " condition specific profiles", False)
         if 'tissues' in data:
             ExpressionSpecificityMethod.calculate_tissue_specificities(data['id'], s + " tissue specific profiles", data['tissues'], use_max=True, remove_background=False)
-            ConditionTissue.add(data['id'], s + " tissue specific profiles", data['tissues'])
+            # TODO needs to work with colors and order as well
+            # ConditionTissue.add(data['id'], s + " tissue specific profiles", data['tissues'])
 
     # print("Building FTP data")
     # print("=================")
