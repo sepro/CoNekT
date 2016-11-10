@@ -75,7 +75,8 @@ class GO(db.Model):
 
         sequence_to_species = {}
         for seq_id, species_id in sequences:
-            sequence_to_species[seq_id] = int(species_id)
+            if species_id is not None:
+                sequence_to_species[seq_id] = int(species_id)
 
         # get go for all genes
         associations = db.engine.execute(

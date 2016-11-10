@@ -6,13 +6,24 @@
 
 {% block body %}
 <h1>Controls</h1>
-<p>Using the buttons below data in the database can be re-calculated. Note that some operations might take some time,
-don't close the browser window and don't try to run multiple updates simultaniously!</p>
+<p>Using the buttons below data in the database can be re-calculated.</p>
 
 <h3>Update</h3>
 <div class="btn-group">
     <a class="btn btn-default" href="{{ url_for('admin_controls.update_counts') }}">Counts</a>
     <a class="btn btn-default" href="{{ url_for('admin_controls.update_clades') }}">Clades</a>
+</div>
+
+<h3>Co-expression clusters</h3>
+<div class="btn-group">
+    <a class="btn btn-default" href="{{ url_for('admin_controls.calculate_enrichment') }}">GO enrichment</a>
+</div>
+
+
+<h3>Export</h3>
+<p>This will export the data to the FTP folder sepcified in the configuration.</p>
+<div class="btn-group">
+    <a class="btn btn-default" href="{{ url_for('admin_controls.export_ftp') }}">FTP</a>
 </div>
 
 {% endblock %}

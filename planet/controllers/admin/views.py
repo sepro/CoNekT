@@ -1,3 +1,5 @@
+from flask import flash, Markup
+
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import AdminIndexView, expose, BaseView
 
@@ -136,6 +138,11 @@ class CladesAdminView(MyModelView):
 class ControlsView(BaseView):
     @expose('/')
     def index(self):
+        message = Markup('<strong>Note: </strong> some operations on this page can take a long time and slow down the '
+                         'database. This can effect the user-experience of others negatively.<br />Also avoid running '
+                         'multiple updates simultaniously.')
+        flash(message, 'danger')
+
         return self.render('admin/controls.html')
 
 

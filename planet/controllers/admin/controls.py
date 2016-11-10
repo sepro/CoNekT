@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, redirect, url_for, request, flash, abort
+from flask import Blueprint, Response, redirect, url_for, request, flash, abort, current_app
 from flask_login import login_required
 
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod
@@ -6,6 +6,7 @@ from planet.models.expression_specificity import ExpressionSpecificityMethod
 from planet.models.condition_tissue import ConditionTissue
 from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
 from planet.models.expression_profiles import ExpressionProfile
+from planet.models.coexpression_clusters import CoexpressionCluster
 from planet.models.gene_families import GeneFamilyMethod, GeneFamily
 from planet.models.species import Species
 from planet.models.sequences import Sequence
@@ -26,6 +27,9 @@ from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClusters
 from planet.forms.admin.add_clades import AddCladesForm
 from planet.forms.admin.add_expression_specificity import AddTissueSpecificityForm, AddConditionSpecificityForm
 
+from planet.ftp import export_coding_sequences, export_families, export_protein_sequences, export_go_annotation, \
+    export_interpro_annotation, export_coexpression_clusters, export_expression_networks
+
 import os
 import json
 from tempfile import mkstemp
@@ -33,23 +37,22 @@ from tempfile import mkstemp
 admin_controls = Blueprint('admin_controls', __name__)
 
 
-@admin_controls.route('/')
-@login_required
-def main():
-    flash('TEST Success', 'success')
-
-    return redirect(url_for('main.screen'))
-
-
 @admin_controls.route('/update/counts')
 @login_required
 def update_counts():
+    """
+    Controller that will update pre-computed counts in the database.
+
+    :return: Redirect to admin panel interface
+    """
     try:
         CoexpressionClusteringMethod.update_counts()
         ExpressionNetworkMethod.update_count()
         GeneFamilyMethod.update_count()
         Species.update_counts()
-    except:
+        GO.update_species_counts()
+    except Exception as e:
+        print(e)
         flash('An error occurred while re-doing counts', 'danger')
     else:
         flash('All count updated', 'success')
@@ -60,10 +63,16 @@ def update_counts():
 @admin_controls.route('/update/clades')
 @login_required
 def update_clades():
+    """
+    Controller that will update the clade information for gene families and interpro domains. It will detect in which
+    clade a family/domain originated and add that info to the database.
+
+    :return: Redirect to admin panel interface
+    """
     try:
         Clade.update_clades()
         Clade.update_clades_interpro()
-    except:
+    except Exception as e:
         flash('An error occurred while updating clades', 'danger')
     else:
         flash('All clades updated', 'success')
@@ -74,6 +83,12 @@ def update_clades():
 @admin_controls.route('/add/species', methods=['POST'])
 @login_required
 def add_species():
+    """
+    Adds a species to the species table and adds sequences for that species to the sequence table based on the fasta
+    file provided.
+
+    :return: Redirect to admin panel interface
+    """
     form = AddSpeciesForm(request.form)
 
     if request.method == 'POST' and form.validate():
@@ -111,12 +126,22 @@ def add_species():
 @admin_controls.route('/add/descriptions', methods=['POST'])
 @login_required
 def add_descriptions():
+    # TODO
     return Response("HELLO")
 
 
 @admin_controls.route('/add/functional_data', methods=['POST'])
 @login_required
 def add_functional_data():
+    """
+    Controller to populate the GO structure and descriptions and InterPro domains with descriptions to the corresponding
+    tables.
+
+    Will empty the tables prior to uploading the new information, this might break links with existing GO terms assigned
+    to sequences !
+
+    :return: Redirect to admin panel interface
+    """
     form = AddFunctionalDataForm(request.form)
 
     if request.method == 'POST' and form.validate():
@@ -126,7 +151,7 @@ def add_functional_data():
         if go_data != b'':
             fd, temp_path = mkstemp()
             open(temp_path, 'wb').write(go_data)
-            GO.add_from_obo(temp_path, empty=True,compressed=go_compressed)
+            GO.add_from_obo(temp_path, empty=True, compressed=go_compressed)
 
             os.close(fd)
             os.remove(temp_path)
@@ -158,6 +183,16 @@ def add_functional_data():
 @admin_controls.route('/add/go', methods=['POST'])
 @login_required
 def add_go():
+    """
+    Adds GO labels to sequences using a tab-delimited text-file
+
+    On relation per line like this:
+
+    sequence_name   GO_term evidence_code
+    ...
+
+    :return: Redirect to admin panel interface
+    """
     form = AddGOForm(request.form)
     form.populate_species()
 
@@ -190,6 +225,11 @@ def add_go():
 @admin_controls.route('/add/interpro', methods=['POST'])
 @login_required
 def add_interpro():
+    """
+    Adds InterPro domain information to sequences based on InterProScan output
+
+    :return: Redirect to admin panel interface
+    """
     form = AddInterProForm(request.form)
     form.populate_species()
 
@@ -221,6 +261,17 @@ def add_interpro():
 @admin_controls.route('/add/xrefs', methods=['POST'])
 @login_required
 def add_xrefs():
+    """
+    Adds external references to sequences. A few platforms are included by default (note that this only works if the
+    sequence name is the same in PlaNet and the third-party platform)
+
+    A tab-delimited text-file can be uploaded with the following structure:
+
+    sequence_name(planet)   sequence_name(other platform)   platform_name   url
+    ...
+
+    :return: Redirect to admin panel interface
+    """
     form = AddXRefsForm(request.form)
 
     if request.method == 'POST':
@@ -261,6 +312,14 @@ def add_xrefs():
 @admin_controls.route('/add/xrefs_family', methods=['POST'])
 @login_required
 def add_xrefs_family():
+    """
+    Adds external references to gene families. A tab-delimited text-file can be uploaded with the following structure:
+
+    family_name(planet)   family_name(other platform)   platform_name   url
+    ...
+
+    :return: Redirect to admin panel interface
+    """
     form = AddXRefsFamiliesForm(request.form)
 
     if request.method == 'POST':
@@ -291,6 +350,11 @@ def add_xrefs_family():
 @admin_controls.route('/add/family', methods=['POST'])
 @login_required
 def add_family():
+    """
+    Add gene families to PlaNet from various sources.
+
+    :return: Redirect to admin panel interface:
+    """
     form = AddFamiliesForm(request.form)
 
     if request.method == 'POST':
@@ -325,6 +389,11 @@ def add_family():
 @admin_controls.route('/add/expression_profile', methods=['POST'])
 @login_required
 def add_expression_profiles():
+    """
+    Add expression profiles to sequences based on data from LSTrAP
+
+    :return: Redirect to admin panel interface
+    """
     form = AddExpressionProfilesForm(request.form)
 
     if request.method == 'POST':
@@ -373,6 +442,11 @@ def add_expression_profiles():
 @admin_controls.route('/add/coexpression_network', methods=['POST'])
 @login_required
 def add_coexpression_network():
+    """
+    Adds the co-expression network for a species based on LSTrAP output
+
+    :return: Redirect to admin panel interface
+    """
     form = AddCoexpressionNetworkForm(request.form)
 
     if request.method == 'POST':
@@ -409,6 +483,11 @@ def add_coexpression_network():
 @admin_controls.route('/add/coexpression_clusters', methods=['POST'])
 @login_required
 def add_coexpression_clusters():
+    """
+    Add co-expression clusters, based on LSTrAP output (MCL clusters)
+
+    :return: Redirect to admin panel interface
+    """
     form = AddCoexpressionClustersForm(request.form)
     form.populate_networks()
 
@@ -444,6 +523,11 @@ def add_coexpression_clusters():
 @admin_controls.route('/add/clades', methods=['POST'])
 @login_required
 def add_clades():
+    """
+    Adds clades to the database based on a structured JSON object.
+
+    :return: Redirect to admin panel interface
+    """
     form = AddCladesForm(request.form)
 
     if request.method == 'POST' and form.validate():
@@ -530,3 +614,37 @@ def add_tissue_specificity():
             return redirect(url_for('admin.index'))
         else:
             abort(405)
+
+
+@admin_controls.route('/calculate_enrichment')
+@login_required
+def calculate_enrichment():
+    CoexpressionCluster.calculate_enrichment()
+
+    flash('Successfully calculated GO enrichment for co-expression clusters', 'success')
+    return redirect(url_for('admin.index'))
+
+
+@admin_controls.route('/export_ftp')
+@login_required
+def export_ftp():
+    PLANET_FTP_DATA = current_app.config['PLANET_FTP_DATA']
+
+    # Constants for the sub-folders
+    SEQUENCE_PATH = os.path.join(PLANET_FTP_DATA, 'sequences')
+    ANNOTATION_PATH = os.path.join(PLANET_FTP_DATA, 'annotation')
+    FAMILIES_PATH = os.path.join(PLANET_FTP_DATA, 'families')
+    EXPRESSION_PATH = os.path.join(PLANET_FTP_DATA, 'expression')
+
+    export_coding_sequences(SEQUENCE_PATH)
+    export_protein_sequences(SEQUENCE_PATH)
+
+    export_go_annotation(ANNOTATION_PATH)
+    export_interpro_annotation(ANNOTATION_PATH)
+
+    export_families(FAMILIES_PATH)
+    export_coexpression_clusters(EXPRESSION_PATH)
+    export_expression_networks(EXPRESSION_PATH)
+
+    flash('Successfully exported data to FTP folder', 'success')
+    return redirect(url_for('admin.index'))
