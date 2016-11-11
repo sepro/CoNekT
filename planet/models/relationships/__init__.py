@@ -70,6 +70,16 @@ class SequenceCoexpressionClusterAssociation(db.Model):
     sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
     coexpression_cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
 
+    sequence = db.relationship('Sequence', backref=db.backref('coexpression_cluster_associations',
+                                                              lazy='dynamic',
+                                                              cascade="all, delete-orphan"),
+                               lazy='joined')
+    coexpression_cluster = db.relationship('CoexpressionCluster',
+                                           backref=db.backref('sequence_associations',
+                                                              lazy='dynamic',
+                                                              cascade="all, delete-orphan"),
+                                           lazy='joined')
+
 
 class CoexpressionClusterSimilarity(db.Model):
     __tablename__ = 'coexpression_cluster_similarity'

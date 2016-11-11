@@ -25,7 +25,10 @@ class CoexpressionClusteringMethod(db.Model):
     method = db.Column(db.Text)
     cluster_count = db.Column(db.Integer)
 
-    clusters = db.relationship('CoexpressionCluster', backref=db.backref('method', lazy='joined'), lazy='dynamic')
+    clusters = db.relationship('CoexpressionCluster',
+                               backref=db.backref('method', lazy='joined'),
+                               lazy='dynamic',
+                               cascade='all, delete-orphan')
 
     @staticmethod
     def update_counts():
@@ -113,10 +116,11 @@ class CoexpressionCluster(db.Model):
     method_id = db.Column(db.Integer, db.ForeignKey('coexpression_clustering_methods.id'))
     name = db.Column(db.String(50), index=True)
 
-    sequences = db.relationship('Sequence', secondary=sequence_coexpression_cluster, lazy='dynamic')
-    sequence_associations = db.relationship('SequenceCoexpressionClusterAssociation',
-                                            backref=db.backref('coexpression_cluster', lazy='joined'),
-                                            lazy='dynamic')
+    # sequences = db.relationship('Sequence', secondary=sequence_coexpression_cluster, lazy='dynamic')
+
+    # Other properties
+    # sequences defined in Sequence
+    # sequence_associations defined in SequenceCoexpressionClusterAssociation'
 
     go_enrichment = db.relationship('ClusterGOEnrichment',
                                     backref=db.backref('cluster', lazy='joined'),

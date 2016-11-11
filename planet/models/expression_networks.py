@@ -24,9 +24,15 @@ class ExpressionNetworkMethod(db.Model):
     edge_type = db.Column(db.Enum("rank", "weight", name='edge_type'))
     probe_count = db.Column(db.Integer)
 
-    probes = db.relationship('ExpressionNetwork', backref=db.backref('method', lazy='joined'), lazy='dynamic')
+    probes = db.relationship('ExpressionNetwork',
+                             backref=db.backref('method', lazy='joined'),
+                             lazy='dynamic',
+                             cascade='all, delete-orphan')
 
-    clustering_methods = db.relationship('CoexpressionClusteringMethod', backref='network_method', lazy='dynamic')
+    clustering_methods = db.relationship('CoexpressionClusteringMethod',
+                                         backref='network_method',
+                                         lazy='dynamic',
+                                         cascade='all, delete-orphan')
 
     def __init__(self, species_id, description, edge_type="rank"):
         self.species_id = species_id

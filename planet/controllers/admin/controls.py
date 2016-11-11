@@ -59,7 +59,7 @@ def update_counts():
     else:
         flash('All count updated', 'success')
 
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('admin.controls.index'))
 
 
 @admin_controls.route('/update/clades')
@@ -79,7 +79,7 @@ def update_clades():
     else:
         flash('All clades updated', 'success')
 
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('admin.controls.index'))
 
 
 @admin_controls.route('/clear/cache')
@@ -92,7 +92,7 @@ def clear_cache():
     else:
         flash('All clades updated', 'success')
 
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('admin.controls.index'))
 
 
 @admin_controls.route('/add/species', methods=['POST'])
@@ -637,7 +637,7 @@ def calculate_enrichment():
     CoexpressionCluster.calculate_enrichment()
 
     flash('Successfully calculated GO enrichment for co-expression clusters', 'success')
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('admin.controls.index'))
 
 
 @admin_controls.route('/export_ftp')
@@ -662,4 +662,4 @@ def export_ftp():
     export_expression_networks(EXPRESSION_PATH)
 
     flash('Successfully exported data to FTP folder', 'success')
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('admin.controls.index'))
