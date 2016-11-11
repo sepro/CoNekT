@@ -124,6 +124,10 @@ class SequenceInterproAssociation(db.Model):
     start = db.Column(db.Integer, default=None)
     stop = db.Column(db.Integer, default=None)
 
+    sequence = db.relationship('Sequence', backref=db.backref('interpro_associations',
+                                                              lazy='dynamic',
+                                                              cascade='all, delete-orphan'))
+
     domain = db.relationship('Interpro', lazy='select')
 
 
@@ -139,6 +143,14 @@ class SequenceGOAssociation(db.Model):
                                  'ISS', 'ISO', 'ISA', 'ISM', 'IGC', 'IBA', 'IBD', 'IKR', 'IRD', 'RCA',
                                  'TAS', 'NAS', 'IC', 'ND', 'IEA', name='evidence'))
     source = db.Column(db.Text)
+
+    sequence = db.relationship('Sequence', backref=db.backref('go_associations',
+                                                              lazy='dynamic',
+                                                              cascade='all, delete-orphan'), lazy='joined')
+
+    go = db.relationship('GO', backref=db.backref('sequence_associations',
+                                                  lazy='dynamic',
+                                                  cascade='all, delete-orphan'), lazy='joined')
 
 
 class SequenceSequenceECCAssociation(db.Model):

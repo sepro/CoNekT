@@ -25,7 +25,10 @@ class GO(db.Model):
     species_counts = db.Column(db.Text)
 
     sequences = db.relationship('Sequence', secondary=sequence_go, lazy='dynamic')
-    sequence_associations = db.relationship('SequenceGOAssociation', backref=db.backref('go', lazy='joined'), lazy='dynamic')
+
+    # Other properties
+    #
+    # sequence_associations declared in 'SequenceGOAssociation'
 
     enriched_clusters = db.relationship('ClusterGOEnrichment',
                                         backref=db.backref('go', lazy='joined'),

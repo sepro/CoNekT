@@ -111,8 +111,8 @@ def add_species():
         species_id = Species.add(request.form.get('code'),
                                  request.form.get('name'),
                                  data_type=request.form.get('data_type'),
-                                 color=request.form.get('color'),
-                                 highlight=request.form.get('highlight'))
+                                 color='#' + request.form.get('color'),
+                                 highlight='#' + request.form.get('highlight'))
 
         # Add Sequences
         fd, temp_path = mkstemp()
