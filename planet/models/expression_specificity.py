@@ -16,7 +16,10 @@ class ExpressionSpecificityMethod(db.Model):
     conditions = db.Column(db.Text)
     species_id = db.Column(db.Integer, db.ForeignKey('species.id'), index=True)
 
-    specificities = db.relationship('ExpressionSpecificity', backref='method', lazy='dynamic')
+    specificities = db.relationship('ExpressionSpecificity',
+                                    backref='method',
+                                    lazy='dynamic',
+                                    cascade='all, delete-orphan')
 
     @staticmethod
     def calculate_specificities(species_id, description, remove_background=False):
