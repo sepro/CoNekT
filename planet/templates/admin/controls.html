@@ -19,6 +19,11 @@
     <a class="btn btn-default" href="{{ url_for('admin_controls.calculate_enrichment') }}">GO enrichment</a>
 </div>
 
+<h3>Cache</h3>
+<p>If caching is enabled, clearing the cache is recommended after uploading data or making changes</p>
+<div class="btn-group">
+    <a class="btn btn-default" href="{{ url_for('admin_controls.clear_cache') }}">Clear</a>
+</div>
 
 <h3>Export</h3>
 <p>This will export the data to the FTP folder sepcified in the configuration.</p>

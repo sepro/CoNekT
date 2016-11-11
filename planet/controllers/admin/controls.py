@@ -1,6 +1,8 @@
 from flask import Blueprint, Response, redirect, url_for, request, flash, abort, current_app
 from flask_login import login_required
 
+from planet import cache
+
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 from planet.models.expression_specificity import ExpressionSpecificityMethod
 from planet.models.condition_tissue import ConditionTissue
@@ -74,6 +76,19 @@ def update_clades():
         Clade.update_clades_interpro()
     except Exception as e:
         flash('An error occurred while updating clades', 'danger')
+    else:
+        flash('All clades updated', 'success')
+
+    return redirect(url_for('admin.index'))
+
+
+@admin_controls.route('/clear/cache')
+@login_required
+def clear_cache():
+    try:
+        cache.clear()
+    except Exception as e:
+        flash('An error occurred while clearing the cache', 'danger')
     else:
         flash('All clades updated', 'success')
 

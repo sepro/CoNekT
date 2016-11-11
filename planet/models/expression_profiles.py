@@ -181,7 +181,8 @@ class ExpressionProfile(db.Model):
                         condition = annotation[c]
                         profile[condition].append(float(v))
 
-                sequence_id, transcript_id = transcript.split('.')
+                parts = transcript.split('.')
+                sequence_id = parts[0]
 
                 new_probe = {"species_id": species_id,
                              "probe": transcript,

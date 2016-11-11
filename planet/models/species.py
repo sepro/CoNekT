@@ -18,7 +18,7 @@ class Species(db.Model):
     network_count = db.Column(db.Integer)
     profile_count = db.Column(db.Integer)
 
-    sequences = db.relationship('Sequence', backref='species', lazy='dynamic')
+    sequences = db.relationship('Sequence', backref='species', lazy='dynamic', cascade='all, delete-orphan')
     networks = db.relationship('ExpressionNetworkMethod', backref='species', lazy='dynamic')
     profiles = db.relationship('ExpressionProfile', backref='species', lazy='dynamic')
     expression_specificities = db.relationship('ExpressionSpecificityMethod', backref='species', lazy='dynamic')
