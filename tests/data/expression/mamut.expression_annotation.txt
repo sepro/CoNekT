@@ -1,0 +1,10 @@
+SampleID	ConditionDescription
+A	Tissue 01
+B	Tissue 01
+C	Tissue 01
+D	Tissue 02
+E	Tissue 02
+F	Tissue 02
+G	Tissue 03
+H	Tissue 03
+I	Tissue 03

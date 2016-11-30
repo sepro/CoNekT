@@ -1,0 +1,2 @@
+Gene01: Gene02(0.71)
+Gene02: Gene01(0.71)

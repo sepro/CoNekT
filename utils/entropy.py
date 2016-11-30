@@ -1,6 +1,7 @@
 from math import log2
 from bisect import bisect
 
+
 def entropy(dist):
     """
     Calculates the entropy for a given distribution (!)

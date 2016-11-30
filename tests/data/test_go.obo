@@ -1,0 +1,50 @@
+format-version: 1.2
+data-version: releases/2014-10-14
+date: 13:10:2014 08:33
+saved-by: kmv
+auto-generated-by: TermGenie 1.0
+subsetdef: Cross_product_review "Involved_in"
+subsetdef: goantislim_grouping "Grouping classes that can be excluded"
+subsetdef: gocheck_do_not_annotate "Term not to be used for direct annotation"
+subsetdef: gocheck_do_not_manually_annotate "Term not to be used for direct manual annotation"
+subsetdef: goslim_aspergillus "Aspergillus GO slim"
+subsetdef: goslim_candida "Candida GO slim"
+subsetdef: goslim_generic "Generic GO slim"
+subsetdef: goslim_goa "GOA and proteome slim"
+subsetdef: goslim_metagenomics "Metagenomics GO slim"
+subsetdef: goslim_pir "PIR GO slim"
+subsetdef: goslim_plant "Plant GO slim"
+subsetdef: goslim_pombe "Fission yeast GO slim"
+subsetdef: goslim_virus "Viral GO slim"
+subsetdef: goslim_yeast "Yeast GO slim"
+subsetdef: gosubset_prok "Prokaryotic GO subset"
+subsetdef: mf_needs_review "Catalytic activity terms in need of attention"
+subsetdef: termgenie_unvetted "Terms created by TermGenie that do not follow a template and require additional vetting by editors"
+subsetdef: virus_checked "Viral overhaul terms"
+synonymtypedef: systematic_synonym "Systematic synonym" EXACT
+default-namespace: gene_ontology
+remark: cvs version: $Revision: 21018 $
+remark: Includes Ontology(OntologyID(OntologyIRI(<http://purl.obolibrary.org/obo/go/never_in_taxon.owl>))) [Axioms: 18 Logical Axioms: 0]
+ontology: go
+property_value: propformat-version "1.2" xsd:string
+
+[Term]
+id: GO:0000001
+name: top_label
+namespace: biological_process
+def: "Top GO LABEL"
+synonym: "top_level" EXACT []
+
+[Term]
+id: GO:0000002
+name: second_label
+namespace: biological_process
+def: "Second label"
+is_a: GO:0000001 ! top_label
+
+[Term]
+id: GO:0000003
+name: third_label
+namespace: biological_process
+def: "Third label"
+is_a: GO:0000001 ! top_label

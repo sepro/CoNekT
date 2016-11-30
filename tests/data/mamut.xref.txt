@@ -1,0 +1,7 @@
+Gene01	BRCA2	Ensembl	http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000139618;r=13:32315474-32400266
+Gene02	SonicHedgehog	Ensembl	http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000164690;r=7:155799986-155812273
+Gene03	Superman	Plaza	http://bioinformatics.psb.ugent.be/plaza/versions/plaza_v3_dicots/genes/view/MD13G022660
+Gene01	BRCA2	token	
+Gene02	SHH	token	
+Gene02	SonicHedgehog	token	
+Gene03	Superman	token	
