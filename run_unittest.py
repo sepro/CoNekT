@@ -7,8 +7,8 @@ cov.start()
 import unittest
 import os
 
-from tests.website import WebsiteTest
-from tests.utils import UtilsTest
+# from tests.website import WebsiteTest
+# from tests.utils import UtilsTest
 from tests.build import BuildTest
 
 if __name__ == '__main__':
