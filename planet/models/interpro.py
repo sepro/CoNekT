@@ -145,7 +145,6 @@ class Interpro(db.Model):
 
         db.engine.execute(SequenceInterproAssociation.__table__.insert(), new_domains)
 
-
     @staticmethod
     def add_interpro_from_interproscan(filename, species_id):
         """

@@ -1,6 +1,7 @@
 import sys
 import gzip
 
+
 class Fasta:
     def __init__(self):
         self.sequences = {}
@@ -20,13 +21,16 @@ class Fasta:
 
         return output
 
-    def readfile(self, filename, compressed=False):
+    def readfile(self, filename, compressed=False, verbose=False):
         """
         Reads a fasta file to the dictionary
 
         :param filename: file to read
+        :param compressed: set to true if reading form a gzipped file
+        :param verbose: set to true to get extra debug information printed to STDERR
         """
-        print("Reading FASTA file:" + filename + "...", file=sys.stderr)
+        if verbose:
+            print("Reading FASTA file:" + filename + "...", file=sys.stderr)
 
         # Initialize variables
         name = ''
@@ -55,7 +59,8 @@ class Fasta:
         self.sequences[name] = ''.join(sequence)
 
         f.close()
-        print("Done! (found ", count, " sequences)", file=sys.stderr)
+        if verbose:
+            print("Done! (found ", count, " sequences)", file=sys.stderr)
 
     def writefile(self, filename):
         """

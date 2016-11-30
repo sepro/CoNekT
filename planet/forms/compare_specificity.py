@@ -1,11 +1,11 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, FloatField, BooleanField
 from wtforms.validators import InputRequired
 
 from planet.models.species import Species
 
 
-class CompareSpecificityForm(Form):
+class CompareSpecificityForm(FlaskForm):
     speciesa = SelectField('Speciesa')
     methodsa = SelectField('Methoda')
     conditionsa = SelectField('Conditiona')

@@ -1,11 +1,11 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, RadioField, SelectField
 from flask_wtf.file import FileRequired, FileField
 
 from planet.models.species import Species
 
 
-class AddExpressionProfilesForm(Form):
+class AddExpressionProfilesForm(FlaskForm):
     species_id = SelectField('Species', coerce=int)
 
     source = SelectField('Source', choices=[('lstrap', 'LSTrAP Expression Matrix')])

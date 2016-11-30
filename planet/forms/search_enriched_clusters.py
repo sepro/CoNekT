@@ -1,11 +1,11 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, FloatField, BooleanField
 from wtforms.validators import InputRequired
 
 from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 
 
-class SearchEnrichedClustersForm(Form):
+class SearchEnrichedClustersForm(FlaskForm):
     method = SelectField('Method', coerce=int)
     go_term = StringField('go_term', [InputRequired()])
 

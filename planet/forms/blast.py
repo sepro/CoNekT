@@ -1,9 +1,9 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import TextAreaField, SelectField
 from wtforms.validators import InputRequired
 
 
-class BlastForm(Form):
+class BlastForm(FlaskForm):
     blast_type = SelectField('blast_type')
     fasta = TextAreaField('fasta', [InputRequired()])
 

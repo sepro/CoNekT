@@ -1,11 +1,11 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField
 from flask_wtf.file import InputRequired, FileField
 
 from planet.models.expression_networks import ExpressionNetworkMethod
 
 
-class AddCoexpressionClustersForm(Form):
+class AddCoexpressionClustersForm(FlaskForm):
     network_id = SelectField('Network', coerce=int)
     description = StringField('Description', [InputRequired()])
     min_size = SelectField('Minimum cluster size', coerce=int, choices=[(i, i) for i in range(1, 11, 1)], default=10)

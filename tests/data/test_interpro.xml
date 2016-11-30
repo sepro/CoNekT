@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE interprodb SYSTEM "interpro.dtd">
+<interprodb>
+<release>
+  <dbinfo dbname="PANTHER" entry_count="59948" file_date="13-JAN-14" version="9.0"/>
+  <dbinfo dbname="PFAM" entry_count="16230" file_date="20-MAY-15" version="28.0"/>
+  <dbinfo dbname="PIRSF" entry_count="3285" file_date="07-APR-14" version="3.01"/>
+  <dbinfo dbname="PRINTS" entry_count="2106" file_date="14-JUN-12" version="42.0"/>
+  <dbinfo dbname="PRODOM" entry_count="1894" file_date="23-APR-09" version="2006.1"/>
+  <dbinfo dbname="PROSITE" entry_count="1308" file_date="01-APR-15" version="20.113"/>
+  <dbinfo dbname="PROFILE" entry_count="1112" file_date="01-APR-15" version="20.113"/>
+  <dbinfo dbname="SMART" entry_count="1008" file_date="24-OCT-11" version="6.2"/>
+  <dbinfo dbname="TIGRFAMs" entry_count="4488" file_date="16-SEP-14" version="15.0"/>
+  <dbinfo dbname="GENE3D" entry_count="2626" file_date="18-MAR-12" version="3.5.0"/>
+  <dbinfo dbname="SSF" entry_count="2019" file_date="08-NOV-10" version="1.75"/>
+  <dbinfo dbname="SWISSPROT" entry_count="549008" file_date="22-JUL-15" version="2015_08"/>
+  <dbinfo dbname="TREMBL" entry_count="50011027" file_date="22-JUL-15" version="2015_08"/>
+  <dbinfo dbname="INTERPRO" entry_count="27542" file_date="23-JUL-15" version="53.0"/>
+  <dbinfo dbname="GO" entry_count="23937" file_date="27-MAR-07" version="N/A"/>
+  <dbinfo dbname="MEROPS" entry_count="3830" file_date="14-DEC-10" version="9.3"/>
+  <dbinfo dbname="UniProt" entry_count="50560035" file_date="22-JUL-15" version="2015_08"/>
+  <dbinfo dbname="HAMAP" entry_count="2001" file_date="03-FEB-15" version="201502.04"/>
+  <dbinfo dbname="PFAMB" entry_count="20000" file_date="22-MAR-13" version="27.0"/>
+</release>
+<interpro id="IPR000001" protein_count="2725" short_name="Kringle" type="Domain">
+  <name>Kringle</name>
+  <abstract>
+<p>Kringles are autonomous structural domains, found throughout the blood clotting and fibrinolytic proteins. Kringle domains are believed to play a role in binding mediators (e.g., membranes, other proteins or phospholipids), and in the regulation of proteolytic activity [<cite idref="PUB00002414"/>, <cite idref="PUB00001541"/>, <cite idref="PUB00003257"/>]. 
+Kringle domains [<cite idref="PUB00003400"/>, <cite idref="PUB00000803"/>, <cite idref="PUB00001620"/>] are characterised by a triple loop, 3-disulphide bridge structure, whose  conformation is defined by a number of hydrogen bonds and small pieces of  anti-parallel beta-sheet. They are found in a varying number  of  copies  in some plasma proteins including prothrombin and urokinase-type plasminogen activator, which are serine proteases belonging to MEROPS peptidase family S1A.
+</p>
+</abstract>
+  <pub_list>
+    <publication id="PUB00000803">
+      <author_list>Patthy L.</author_list>
+      <title>Evolution of the proteases of blood coagulation and fibrinolysis by assembly from modules.</title>
+      <db_xref db="PUBMED" dbkey="3891096"/>
+      <journal>Cell</journal>
+      <location issue="3" pages="657-63" volume="41"/>
+      <year>1985</year>
+    </publication>
+    <publication id="PUB00001541">
+      <author_list>Patthy L, Trexler M, Vali Z, Banyai L, Varadi A.</author_list>
+      <title>Kringles: modules specialized for protein binding. Homology of the gelatin-binding region of fibronectin with the kringle structures of proteases.</title>
+      <db_xref db="PUBMED" dbkey="6373375"/>
+      <journal>FEBS Lett.</journal>
+      <location issue="1" pages="131-6" volume="171"/>
+      <year>1984</year>
+    </publication>
+    <publication id="PUB00002414">
+      <author_list>McMullen BA, Fujikawa K.</author_list>
+      <title>Amino acid sequence of the heavy chain of human alpha-factor XIIa (activated Hageman factor).</title>
+      <db_xref db="PUBMED" dbkey="3886654"/>
+      <journal>J. Biol. Chem.</journal>
+      <location issue="9" pages="5328-41" volume="260"/>
+      <year>1985</year>
+    </publication>
+    <publication id="PUB00001620">
+      <author_list>Ikeo K, Takahashi K, Gojobori T.</author_list>
+      <title>Evolutionary origin of numerous kringles in human and simian apolipoprotein(a).</title>
+      <db_xref db="PUBMED" dbkey="1879523"/>
+      <journal>FEBS Lett.</journal>
+      <location issue="1-2" pages="146-8" volume="287"/>
+      <year>1991</year>
+    </publication>
+    <publication id="PUB00003257">
+      <author_list>Atkinson RA, Williams RJ.</author_list>
+      <title>Solution structure of the kringle 4 domain from human plasminogen by 1H nuclear magnetic resonance spectroscopy and distance geometry.</title>
+      <db_xref db="PUBMED" dbkey="2157850"/>
+      <journal>J. Mol. Biol.</journal>
+      <location issue="3" pages="541-52" volume="212"/>
+      <year>1990</year>
+    </publication>
+    <publication id="PUB00003400">
+      <author_list>Castellino FJ, Beals JM.</author_list>
+      <title>The genetic relationships between the kringle domains of human plasminogen, prothrombin, tissue plasminogen activator, urokinase, and coagulation factor XII.</title>
+      <db_xref db="PUBMED" dbkey="3131537"/>
+      <journal>J. Mol. Evol.</journal>
+      <location issue="4" pages="358-69" volume="26"/>
+      <year>1987</year>
+    </publication>
+  </pub_list>
+  <parent_list>
+    <rel_ref ipr_ref="IPR013806"/>
+  </parent_list>
+  <contains>
+    <rel_ref ipr_ref="IPR018056"/>
+  </contains>
+  <found_in>
+    <rel_ref ipr_ref="IPR001314"/>
+    <rel_ref ipr_ref="IPR003966"/>
+    <rel_ref ipr_ref="IPR014394"/>
+    <rel_ref ipr_ref="IPR016247"/>
+    <rel_ref ipr_ref="IPR017076"/>
+  </found_in>
+  <member_list>
+    <db_xref protein_count="2607" db="PFAM" dbkey="PF00051" name="Kringle"/>
+    <db_xref protein_count="2676" db="PROFILE" dbkey="PS50070" name="KRINGLE_2"/>
+    <db_xref protein_count="2691" db="SMART" dbkey="SM00130" name="KR"/>
+  </member_list>
+  <external_doc_list>
+    <db_xref db="PANDIT" dbkey="PF00051"/>
+    <db_xref db="MSDsite" dbkey="PS00021"/>
+    <db_xref db="BLOCKS" dbkey="IPB000001"/>
+    <db_xref db="PROSITEDOC" dbkey="PDOC00020"/>
+  </external_doc_list>
+  <structure_db_links>
+    <db_xref db="PDB" dbkey="1a0h"/>
+    <db_xref db="PDB" dbkey="1a5h"/>
+    <db_xref db="PDB" dbkey="1b2i"/>
+    <db_xref db="PDB" dbkey="1bda"/>
+    <db_xref db="PDB" dbkey="1bht"/>
+    <db_xref db="PDB" dbkey="1bml"/>
+    <db_xref db="PDB" dbkey="1bui"/>
+    <db_xref db="PDB" dbkey="1cea"/>
+    <db_xref db="PDB" dbkey="1ceb"/>
+    <db_xref db="PDB" dbkey="1ddj"/>
+    <db_xref db="PDB" dbkey="1gmn"/>
+    <db_xref db="PDB" dbkey="1gmo"/>
+    <db_xref db="PDB" dbkey="1gp9"/>
+    <db_xref db="PDB" dbkey="1hpj"/>
+    <db_xref db="PDB" dbkey="1hpk"/>
+    <db_xref db="PDB" dbkey="1i5k"/>
+    <db_xref db="PDB" dbkey="1i71"/>
+    <db_xref db="PDB" dbkey="1jfn"/>
+    <db_xref db="PDB" dbkey="1kdu"/>
+    <db_xref db="PDB" dbkey="1ki0"/>
+    <db_xref db="PDB" dbkey="1kiv"/>
+    <db_xref db="PDB" dbkey="1krn"/>
+    <db_xref db="PDB" dbkey="1l4d"/>
+    <db_xref db="PDB" dbkey="1l4z"/>
+    <db_xref db="PDB" dbkey="1nk1"/>
+    <db_xref db="PDB" dbkey="1nl1"/>
+    <db_xref db="PDB" dbkey="1nl2"/>
+    <db_xref db="PDB" dbkey="1pk2"/>
+    <db_xref db="PDB" dbkey="1pk4"/>
+    <db_xref db="PDB" dbkey="1pkr"/>
+    <db_xref db="PDB" dbkey="1pmk"/>
+    <db_xref db="PDB" dbkey="1pml"/>
+    <db_xref db="PDB" dbkey="1qrz"/>
+    <db_xref db="PDB" dbkey="1rjx"/>
+    <db_xref db="PDB" dbkey="1rtf"/>
+    <db_xref db="PDB" dbkey="1tpg"/>
+    <db_xref db="PDB" dbkey="1tpk"/>
+    <db_xref db="PDB" dbkey="1urk"/>
+    <db_xref db="PDB" dbkey="2doh"/>
+    <db_xref db="PDB" dbkey="2doi"/>
+    <db_xref db="PDB" dbkey="2fd6"/>
+    <db_xref db="PDB" dbkey="2hgf"/>
+    <db_xref db="PDB" dbkey="2hpp"/>
+    <db_xref db="PDB" dbkey="2hpq"/>
+    <db_xref db="PDB" dbkey="2i9a"/>
+    <db_xref db="PDB" dbkey="2i9b"/>
+    <db_xref db="PDB" dbkey="2l0s"/>
+    <db_xref db="PDB" dbkey="2pf1"/>
+    <db_xref db="PDB" dbkey="2pf2"/>
+    <db_xref db="PDB" dbkey="2pk4"/>
+    <db_xref db="PDB" dbkey="2qj2"/>
+    <db_xref db="PDB" dbkey="2qj4"/>
+    <db_xref db="PDB" dbkey="2spt"/>
+    <db_xref db="PDB" dbkey="3bt1"/>
+    <db_xref db="PDB" dbkey="3bt2"/>
+    <db_xref db="PDB" dbkey="3e6p"/>
+    <db_xref db="PDB" dbkey="3hms"/>
+    <db_xref db="PDB" dbkey="3hmt"/>
+    <db_xref db="PDB" dbkey="3hn4"/>
+    <db_xref db="PDB" dbkey="3k65"/>
+    <db_xref db="PDB" dbkey="3kiv"/>
+    <db_xref db="PDB" dbkey="3laq"/>
+    <db_xref db="PDB" dbkey="3mkp"/>
+    <db_xref db="PDB" dbkey="3sp8"/>
+    <db_xref db="PDB" dbkey="3u73"/>
+    <db_xref db="PDB" dbkey="4iua"/>
+    <db_xref db="PDB" dbkey="4kiv"/>
+    <db_xref db="PDB" dbkey="5hpg"/>
+    <db_xref db="CATH" dbkey="2.10.25.10"/>
+    <db_xref db="CATH" dbkey="2.40.20.10"/>
+    <db_xref db="CATH" dbkey="3.50.4.10"/>
+    <db_xref db="SCOP" dbkey="b.47.1.2"/>
+    <db_xref db="SCOP" dbkey="g.10.1.1"/>
+    <db_xref db="SCOP" dbkey="g.14.1.1"/>
+    <db_xref db="SCOP" dbkey="g.3.11.1"/>
+    <db_xref db="SCOP" dbkey="g.32.1.1"/>
+  </structure_db_links>
+  <taxonomy_distribution>
+    <taxon_data name="Caenorhabditis elegans" proteins_count="5"/>
+    <taxon_data name="Eukaryota" proteins_count="2"/>
+    <taxon_data name="Eukaryota" proteins_count="17"/>
+    <taxon_data name="Bacteria" proteins_count="1"/>
+    <taxon_data name="Cyanobacteria" proteins_count="1"/>
+    <taxon_data name="Eukaryota" proteins_count="2594"/>
+    <taxon_data name="OtherEukaryotes" proteins_count="1"/>
+    <taxon_data name="Eukaryota" proteins_count="1"/>
+    <taxon_data name="PlastidGroup" proteins_count="15"/>
+    <taxon_data name="Eukaryota" proteins_count="15"/>
+    <taxon_data name="Eukaryota" proteins_count="24"/>
+    <taxon_data name="PlastidGroup" proteins_count="24"/>
+    <taxon_data name="GreenPlants" proteins_count="24"/>
+    <taxon_data name="Eukaryota" proteins_count="51"/>
+    <taxon_data name="PlastidGroup" proteins_count="51"/>
+    <taxon_data name="Eukaryota" proteins_count="14"/>
+    <taxon_data name="PlastidGroup" proteins_count="2"/>
+    <taxon_data name="PlastidGroup" proteins_count="14"/>
+    <taxon_data name="PlastidGroup" proteins_count="17"/>
+    <taxon_data name="Bacteria" proteins_count="3"/>
+    <taxon_data name="Arthropoda" proteins_count="135"/>
+    <taxon_data name="Eukaryota" proteins_count="2718"/>
+    <taxon_data name="Metazoa" proteins_count="2583"/>
+    <taxon_data name="Mouse" proteins_count="42"/>
+    <taxon_data name="Nematoda" proteins_count="83"/>
+    <taxon_data name="Viruses" proteins_count="1"/>
+    <taxon_data name="Virus" proteins_count="1"/>
+    <taxon_data name="Arthropoda" proteins_count="12"/>
+    <taxon_data name="Cyanobacteria" proteins_count="1"/>
+    <taxon_data name="Fungi" proteins_count="2"/>
+    <taxon_data name="Bacteria" proteins_count="6"/>
+    <taxon_data name="Chordata" proteins_count="2128"/>
+    <taxon_data name="Chordata" proteins_count="185"/>
+    <taxon_data name="FruitFly" proteins_count="3"/>
+    <taxon_data name="Fungi" proteins_count="2"/>
+    <taxon_data name="Human" proteins_count="83"/>
+    <taxon_data name="GreenPlants" proteins_count="22"/>
+    <taxon_data name="Metazoa" proteins_count="2553"/>
+    <taxon_data name="Chordata" proteins_count="1884"/>
+    <taxon_data name="GreenPlants" proteins_count="2"/>
+    <taxon_data name="Arthropoda" proteins_count="123"/>
+    <taxon_data name="Bacteria" proteins_count="2"/>
+    <taxon_data name="Chordata" proteins_count="59"/>
+    <taxon_data name="Metazoa" proteins_count="11"/>
+    <taxon_data name="Virus" proteins_count="1"/>
+    <taxon_data name="Metazoa" proteins_count="25"/>
+    <taxon_data name="Metazoa" proteins_count="5"/>
+    <taxon_data name="Nematoda" proteins_count="59"/>
+    <taxon_data name="Nematoda" proteins_count="24"/>
+  </taxonomy_distribution>
+</interpro>
+<interpro id="IPR000003" protein_count="944" short_name="Retinoid-X_rcpt/HNF4" type="Family">
+  <name>Retinoid X receptor/HNF4</name>
+  <abstract>
+<p>Steroid or nuclear hormone receptors (4A nuclear receptor, NRs) constitute an important superfamily of transcription regulators that are involved in widely diverse physiological functions, including control of embryonic development, cell differentiation and homeostasis. Members of the superfamily include the steroid hormone receptors and receptors for thyroid hormone, retinoids, 1,25-dihydroxy-vitamin D3 and a variety of other ligands [<cite idref="PUB00015853"/>]. The proteins function as dimeric molecules in nuclei to regulate the transcription of target genes in a ligand-responsive manner [<cite idref="PUB00004464"/>, <cite idref="PUB00006168"/>]. In addition to C-terminal ligand-binding domains, these nuclear receptors contain a highly-conserved, N-terminal zinc-finger that mediates specific binding to target DNA sequences, termed ligand-responsive elements. In the absence of ligand, steroid hormone receptors are thought to be weakly associated with nuclear components; hormone binding greatly increases receptor affinity.</p>
+<p>NRs are extremely important in medical research, a large number of them being implicated in diseases such as cancer, diabetes, hormone resistance syndromes, etc. While several NRs act as ligand-inducible transcription factors, many do not yet have a defined ligand and are accordingly termed 'orphan' receptors. During the last decade, more than 300 NRs have been described, many of which are orphans, which cannot easily be named due to current nomenclature confusions in the literature. However, a new system has recently been introduced in an attempt to rationalise the increasingly complex set of names used to describe superfamily members.</p>
+<p>The retinoic acid (retinoid X) receptor consists of 3 functional and 
+               structural domains: an N-terminal (modulatory) domain; a DNA binding domain
+               that mediates specific binding to target DNA sequences (ligand-responsive
+               elements); and a hormone binding domain. The N-terminal domain differs 
+               between retinoic acid isoforms; the small highly-conserved DNA-binding
+               domain (~65 residues) occupies the central portion of the protein; and 
+               the ligand binding domain lies at the receptor C terminus.</p>
+<p> This entry represents retinoid X receptors. It also represents hepatocyte nuclear factor 4 (HNF4), which is a nuclear receptor protein expressed in the liver and kidney, and functions as a key regulator of many metabolic pathways. HNF4 was originally classified as an orphan receptor. Linoleic acid has now been identified as the endogenous ligand for HNF4 in mammalian cells [<cite idref="PUB00057400"/>]. </p>
+</abstract>
+  <class_list>
+    <classification id="GO:0003677" class_type="GO">
+      <category>Molecular Function</category>
+      <description>DNA binding</description>
+    </classification>
+    <classification id="GO:0003707" class_type="GO">
+      <category>Molecular Function</category>
+      <description>steroid hormone receptor activity</description>
+    </classification>
+    <classification id="GO:0005634" class_type="GO">
+      <category>Cellular Component</category>
+      <description>nucleus</description>
+    </classification>
+    <classification id="GO:0006355" class_type="GO">
+      <category>Biological Process</category>
+      <description>regulation of transcription, DNA-templated</description>
+    </classification>
+    <classification id="GO:0008270" class_type="GO">
+      <category>Molecular Function</category>
+      <description>zinc ion binding</description>
+    </classification>
+  </class_list>
+  <pub_list>
+    <publication id="PUB00004464">
+      <author_list>Nishikawa J, Kitaura M, Imagawa M, Nishihara T.</author_list>
+      <title>Vitamin D receptor contains multiple dimerization interfaces that are functionally different.</title>
+      <db_xref db="PUBMED" dbkey="7899080"/>
+      <journal>Nucleic Acids Res.</journal>
+      <location issue="4" pages="606-11" volume="23"/>
+      <year>1995</year>
+    </publication>
+    <publication id="PUB00006168">
+      <author_list>De Vos P, Schmitt J, Verhoeven G, Stunnenberg HG.</author_list>
+      <title>Human androgen receptor expressed in HeLa cells activates transcription in vitro.</title>
+      <db_xref db="PUBMED" dbkey="8165128"/>
+      <journal>Nucleic Acids Res.</journal>
+      <location issue="7" pages="1161-6" volume="22"/>
+      <year>1994</year>
+    </publication>
+    <publication id="PUB00015853">
+      <author_list>Schwabe JW, Teichmann SA.</author_list>
+      <title>Nuclear receptors: the evolution of diversity.</title>
+      <db_xref db="PUBMED" dbkey="14747695"/>
+      <journal>Sci. STKE</journal>
+      <location issue="217" pages="pe4" volume="2004"/>
+      <year>2004</year>
+    </publication>
+    <publication id="PUB00057400">
+      <author_list>Yuan X, Ta TC, Lin M, Evans JR, Dong Y, Bolotin E, Sherman MA, Forman BM, Sladek FM.</author_list>
+      <title>Identification of an endogenous ligand bound to a native orphan nuclear receptor.</title>
+      <db_xref db="PUBMED" dbkey="19440305"/>
+      <journal>PLoS ONE</journal>
+      <location issue="5" pages="e5609" volume="4"/>
+      <year>2009</year>
+    </publication>
+  </pub_list>
+  <parent_list>
+    <rel_ref ipr_ref="IPR001723"/>
+  </parent_list>
+  <contains>
+    <rel_ref ipr_ref="IPR000536"/>
+  </contains>
+  <member_list>
+    <db_xref protein_count="944" db="PRINTS" dbkey="PR00545" name="RETINOIDXR"/>
+  </member_list>
+  <external_doc_list>
+    <db_xref db="BLOCKS" dbkey="IPB000003"/>
+    <db_xref db="REACTOME" dbkey="REACT_71"/>
+  </external_doc_list>
+  <structure_db_links>
+    <db_xref db="PDB" dbkey="1by4"/>
+    <db_xref db="PDB" dbkey="1dkf"/>
+    <db_xref db="PDB" dbkey="1dsz"/>
+    <db_xref db="PDB" dbkey="1fby"/>
+    <db_xref db="PDB" dbkey="1fm6"/>
+    <db_xref db="PDB" dbkey="1fm9"/>
+    <db_xref db="PDB" dbkey="1g1u"/>
+    <db_xref db="PDB" dbkey="1g2n"/>
+    <db_xref db="PDB" dbkey="1g5y"/>
+    <db_xref db="PDB" dbkey="1h9u"/>
+    <db_xref db="PDB" dbkey="1hg4"/>
+    <db_xref db="PDB" dbkey="1k74"/>
+    <db_xref db="PDB" dbkey="1lbd"/>
+    <db_xref db="PDB" dbkey="1mv9"/>
+    <db_xref db="PDB" dbkey="1mvc"/>
+    <db_xref db="PDB" dbkey="1mzn"/>
+    <db_xref db="PDB" dbkey="1r0n"/>
+    <db_xref db="PDB" dbkey="1r0o"/>
+    <db_xref db="PDB" dbkey="1r1k"/>
+    <db_xref db="PDB" dbkey="1r20"/>
+    <db_xref db="PDB" dbkey="1rdt"/>
+    <db_xref db="PDB" dbkey="1rxr"/>
+    <db_xref db="PDB" dbkey="1uhl"/>
+    <db_xref db="PDB" dbkey="1xdk"/>
+    <db_xref db="PDB" dbkey="1xiu"/>
+    <db_xref db="PDB" dbkey="1xls"/>
+    <db_xref db="PDB" dbkey="1xv9"/>
+    <db_xref db="PDB" dbkey="1xvp"/>
+    <db_xref db="PDB" dbkey="1ynw"/>
+    <db_xref db="PDB" dbkey="2acl"/>
+    <db_xref db="PDB" dbkey="2gl8"/>
+    <db_xref db="PDB" dbkey="2han"/>
+    <db_xref db="PDB" dbkey="2nll"/>
+    <db_xref db="PDB" dbkey="2nxx"/>
+    <db_xref db="PDB" dbkey="2p1t"/>
+    <db_xref db="PDB" dbkey="2p1u"/>
+    <db_xref db="PDB" dbkey="2p1v"/>
+    <db_xref db="PDB" dbkey="2q60"/>
+    <db_xref db="PDB" dbkey="2r40"/>
+    <db_xref db="PDB" dbkey="2zxz"/>
+    <db_xref db="PDB" dbkey="2zy0"/>
+    <db_xref db="PDB" dbkey="3a9e"/>
+    <db_xref db="PDB" dbkey="3dzu"/>
+    <db_xref db="PDB" dbkey="3dzy"/>
+    <db_xref db="PDB" dbkey="3e00"/>
+    <db_xref db="PDB" dbkey="3e94"/>
+    <db_xref db="PDB" dbkey="3eyb"/>
+    <db_xref db="PDB" dbkey="3fal"/>
+    <db_xref db="PDB" dbkey="3fc6"/>
+    <db_xref db="PDB" dbkey="3fug"/>
+    <db_xref db="PDB" dbkey="3h0a"/>
+    <db_xref db="PDB" dbkey="3ixp"/>
+    <db_xref db="PDB" dbkey="3kwy"/>
+    <db_xref db="PDB" dbkey="3nsp"/>
+    <db_xref db="PDB" dbkey="3nsq"/>
+    <db_xref db="PDB" dbkey="3oap"/>
+    <db_xref db="PDB" dbkey="3ozj"/>
+    <db_xref db="PDB" dbkey="3pcu"/>
+    <db_xref db="PDB" dbkey="3r29"/>
+    <db_xref db="PDB" dbkey="3r2a"/>
+    <db_xref db="PDB" dbkey="3r5m"/>
+    <db_xref db="PDB" dbkey="3uvv"/>
+    <db_xref db="CATH" dbkey="1.10.565.10"/>
+    <db_xref db="CATH" dbkey="3.30.50.10"/>
+    <db_xref db="SCOP" dbkey="a.123.1.1"/>
+    <db_xref db="SCOP" dbkey="g.39.1.2"/>
+  </structure_db_links>
+  <taxonomy_distribution>
+    <taxon_data name="Caenorhabditis elegans" proteins_count="1"/>
+    <taxon_data name="Eukaryota" proteins_count="944"/>
+    <taxon_data name="Arthropoda" proteins_count="267"/>
+    <taxon_data name="Metazoa" proteins_count="1"/>
+    <taxon_data name="Chordata" proteins_count="597"/>
+    <taxon_data name="Eukaryota" proteins_count="944"/>
+    <taxon_data name="FruitFly" proteins_count="4"/>
+    <taxon_data name="Human" proteins_count="18"/>
+    <taxon_data name="Metazoa" proteins_count="944"/>
+    <taxon_data name="Mouse" proteins_count="19"/>
+    <taxon_data name="Nematoda" proteins_count="31"/>
+    <taxon_data name="Arthropoda" proteins_count="18"/>
+    <taxon_data name="Chordata" proteins_count="4"/>
+    <taxon_data name="Metazoa" proteins_count="942"/>
+    <taxon_data name="Nematoda" proteins_count="7"/>
+    <taxon_data name="Chordata" proteins_count="576"/>
+    <taxon_data name="Nematoda" proteins_count="24"/>
+    <taxon_data name="Arthropoda" proteins_count="249"/>
+    <taxon_data name="Chordata" proteins_count="17"/>
+    <taxon_data name="Metazoa" proteins_count="4"/>
+    <taxon_data name="Metazoa" proteins_count="1"/>
+  </taxonomy_distribution>
+</interpro>
+</interprodb>

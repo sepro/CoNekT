@@ -1,11 +1,11 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import TextAreaField, SelectField
 from wtforms.validators import InputRequired
 
 from planet.models.species import Species
 
 
-class HeatmapForm(Form):
+class HeatmapForm(FlaskForm):
     species_id = SelectField('species', coerce=int)
     probes = TextAreaField('probes', [InputRequired()])
 

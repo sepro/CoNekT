@@ -1,10 +1,10 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, RadioField
 from flask_wtf.file import FileRequired, FileField
 from wtforms.validators import InputRequired, DataRequired
 
 
-class AddSpeciesForm(Form):
+class AddSpeciesForm(FlaskForm):
     name = StringField('Scientific Name', [InputRequired()])
     code = StringField('Code', [InputRequired()])
 

@@ -1,9 +1,9 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, EqualTo, Email
 
 
-class RegistrationForm(Form):
+class RegistrationForm(FlaskForm):
     username = StringField('Username', [InputRequired()])
     password = PasswordField('Password', [InputRequired(), EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField('Confirm Password', [InputRequired()])

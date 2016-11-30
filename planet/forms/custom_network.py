@@ -1,4 +1,4 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import TextAreaField, SelectField, BooleanField
 from wtforms.validators import InputRequired
 
@@ -8,7 +8,7 @@ from planet.models.coexpression_clusters import CoexpressionClusteringMethod
 from planet.models.expression_specificity import ExpressionSpecificityMethod
 
 
-class CustomNetworkForm(Form):
+class CustomNetworkForm(FlaskForm):
     method_id = SelectField('method', coerce=int)
     probes = TextAreaField('probes', [InputRequired()])
     family_method = SelectField('family_method', coerce=int)

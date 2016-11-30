@@ -1,11 +1,11 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, FloatField, BooleanField
 from wtforms.validators import InputRequired
 
 from planet.models.species import Species
 
 
-class SearchSpecificProfilesForm(Form):
+class SearchSpecificProfilesForm(FlaskForm):
     species = SelectField('Species')
     methods = SelectField('Method')
     conditions = SelectField('Condition')

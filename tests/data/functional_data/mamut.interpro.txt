@@ -1,0 +1,2 @@
+Gene01	6b3125b5faac0d94c2772b518bb800ec	323	Pfam	PF00781	Diacylglycerol kinase catalytic domain	5	124	1.5E-28	T	21-12-2015	IPR000001	Diacylglycerol kinase, catalytic domain	GO:0016301
+Gene01	6b3125b5faac0d94c2772b518bb800ec	323	SUPERFAMILY	SSF111331		3	297	2.62E-66	T	21-12-2015	IPR000003	NAD kinase/diacylglycerol	kinase-like domain
