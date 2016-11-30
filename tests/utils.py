@@ -1,7 +1,9 @@
 from utils.tau import tau
-from utils.entropy import entropy
+from utils.entropy import entropy, entropy_from_values
 from utils.jaccard import jaccard
 from utils.sequence import translate
+from utils.enrichment import hypergeo_cdf, hypergeo_sf, fdr_correction
+from utils.expression import max_spm
 
 from unittest import TestCase
 
@@ -13,8 +15,25 @@ class UtilsTest(TestCase):
         self.assertEqual(tau([0, 0, 0, 0, 0, 0]), None)
         self.assertEqual("%.2f" % tau([0, 8, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0]), "0.95")  # example from Yanai et al. 2005
 
+    def test_enrichment(self):
+        self.assertEqual("%.3f" % hypergeo_cdf(2, 3, 10, 100), "0.999")
+        self.assertEqual("%.3f" % hypergeo_cdf(2, 6, 10, 100), "0.987")
+
+        self.assertEqual("%.3f" % hypergeo_sf(2, 3, 10, 100), "0.026")
+        self.assertEqual("%.3f" % hypergeo_sf(2, 6, 10, 100), "0.109")
+
+        self.assertEqual(fdr_correction([0.05, 0.06, 0.07]), [0.07, 0.07, 0.07])
+
     def test_entropy(self):
         self.assertEqual(entropy([1, 0, 0, 0, 0, 0]), 0)
+
+        self.assertEqual(entropy_from_values([0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3], num_bins=4), entropy([3, 3, 3, 3]))
+        self.assertEqual(entropy_from_values([0, 0, 0], num_bins=4), entropy([]))
+
+    def test_expression(self):
+        self.assertEqual(max_spm({'leaf': 1, 'root': 0}, substract_background=False), {'condition': 'leaf', 'score': 1})
+        self.assertEqual(max_spm({'leaf': 1.1, 'root': 0.1}, substract_background=True), {'condition': 'leaf', 'score': 1})
+        self.assertEqual(max_spm({}, substract_background=False), None)
 
     def test_jaccard(self):
         self.assertEqual(jaccard('ab', 'bc'), 1/3)

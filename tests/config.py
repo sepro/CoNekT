@@ -31,7 +31,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 # Settings for the FTP/bulk data
-PLANET_FTP_DATA = os.path.join(basedir, 'ftp')
+_, PLANET_FTP_DATA = tempfile.mkstemp()
 
 # Settings for Cache
 CACHE_TYPE = 'null'

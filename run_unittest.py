@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from coverage import coverage
 
-cov = coverage(branch=True, omit=['virtualenv/*', 'tests/*', 'config.py'])
+cov = coverage(branch=True, omit=['virtualenv/*', 'tests/*', 'config.py', 'utils/benchmark.py'])
 cov.start()
 
 import unittest
