@@ -273,7 +273,8 @@ with app.app_context():
 
     print("Adding Families")
     print("===============")
-    families_id = GeneFamily.add_families_from_plaza("data/genefamily_data.hom.csv", "PLAZA 2.5 Homologous gene families")
+    # TODO OBSOLETE
+    # families_id = GeneFamily.add_families_from_plaza("data/genefamily_data.hom.csv", "PLAZA 2.5 Homologous gene families")
 
     print("Adding Expression Plots")
     print("=======================")

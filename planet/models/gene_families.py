@@ -2,8 +2,6 @@ from planet import db
 from planet.models.relationships import sequence_family, family_xref, SequenceSequenceECCAssociation
 from planet.models.sequences import Sequence
 
-from utils.parser.plaza.families import Parser as FamilyParser
-
 import csv
 import re
 
@@ -19,7 +17,9 @@ class GeneFamilyMethod(db.Model):
     method = db.Column(db.Text)
     family_count = db.Column(db.Integer)
 
-    families = db.relationship('GeneFamily', backref=db.backref('method', lazy='joined'), lazy='dynamic')
+    families = db.relationship('GeneFamily', backref=db.backref('method', lazy='joined'),
+                               lazy='dynamic',
+                               cascade='all, delete-orphan')
 
     def __init__(self, method):
         self.method = method
@@ -161,25 +161,17 @@ class GeneFamily(db.Model):
         return method.id
 
     @staticmethod
-    def add_families_from_tab(filename, description, handle_isoforms=True):
+    def add_families_from_orthofinder(filename, description, handle_isoforms=True):
         """
-        DEPRICATED IMPORT FROM MCL
+        Add gene families directly from MCL output (one line with all genes from one family)
 
-        :param filename:
-        :param description:
-        :param handle_isoforms:
-        :return:
+        :param filename: The file to load
+        :param description: Description of the method to store in the database
+        :param handle_isoforms: should isofroms (indicated by .1 at the end) be handled
+        :return the new methods internal ID
         """
-
         # Create new method for these families
-        method = GeneFamilyMethod(description)
-
-        try:
-            db.session.add(method)
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            quit()
+        method = GeneFamilyMethod.add(description)
 
         gene_hash = {}
         all_sequences = Sequence.query.all()
@@ -191,71 +183,24 @@ class GeneFamily(db.Model):
                 gene_id = re.sub('\.\d+$', '', sequence.name.lower())
                 gene_hash[gene_id] = sequence
 
-        family_hash = {}
+        with open(filename, "r") as f_in:
+            for line in f_in:
+                orthofinder_id, *parts = line.strip().split()
 
-        families = {}
-        genes = []
+                orthofinder_id = orthofinder_id.rstrip(':')
 
-        with open(filename) as csvfile:
-            reader = csv.DictReader(csvfile, delimiter='\t')
-            for row in reader:
-                    family = row['family']
-                    gene = row['gene']
+                new_family = GeneFamily(orthofinder_id.replace('OG', 'OG_%02d_' % method.id))
+                new_family.method_id = method.id
 
-                    genes.append(gene)
+                for p in parts:
+                    if p.lower() in gene_hash.keys():
+                        new_family.sequences.append(gene_hash[p.lower()])
 
-                    if family not in families.keys():
-                        families[family] = []
-                        family_hash[family] = GeneFamily(family)
-                        family_hash[family].method_id = method.id
-
-                    families[family].append(gene)
-
-        for name, f in family_hash.items():
-            db.session.add(f)
-
-        for name, f in family_hash.items():
-            for gene in families[name]:
-                if gene.lower() in gene_hash.keys():
-                    gene_hash[gene.lower()].families.append(family_hash[name])
-
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            print(e)
-
-        return method.id
-
-    @staticmethod
-    def add_families_from_plaza(filename, description):
-        family_parser = FamilyParser()
-        family_parser.read(filename)
-
-        method = GeneFamilyMethod(description)
-
-        db.session.add(method)
-
-        gene_hash = {}
-        all_sequences = Sequence.query.all()
-
-        for sequence in all_sequences:
-            gene_hash[sequence.name] = sequence
-
-        for family, genes in family_parser.families.items():
-            new_family = GeneFamily(family)
-            new_family.method_id = method.id
-
-            db.session.add(new_family)
-
-            for gene in genes:
-                if gene in gene_hash:
-                    gene_hash[gene].families.append(new_family)
-
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            print(e)
+                try:
+                    db.session.add(new_family)
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+                    quit()
 
         return method.id
