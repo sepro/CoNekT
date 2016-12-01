@@ -41,6 +41,19 @@ class GeneFamilyMethod(db.Model):
             db.session.rollback()
             print(e)
 
+    @staticmethod
+    def add(description):
+        new_method = GeneFamilyMethod(description)
+
+        try:
+            db.session.add(new_method)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
+
+        return new_method
+
 
 class GeneFamily(db.Model):
     __tablename__ = 'gene_families'
@@ -105,7 +118,58 @@ class GeneFamily(db.Model):
         return output
 
     @staticmethod
+    def add_families_from_mcl(filename, description, handle_isoforms=True, prefix='mcl'):
+        """
+        Add gene families directly from MCL output (one line with all genes from one family)
+
+        :param filename: The file to load
+        :param description: Description of the method to store in the database
+        :param handle_isoforms: should isofroms (indicated by .1 at the end) be handled
+        :return the new methods internal ID
+        """
+        # Create new method for these families
+        method = GeneFamilyMethod.add(description)
+
+        gene_hash = {}
+        all_sequences = Sequence.query.all()
+
+        for sequence in all_sequences:
+            gene_hash[sequence.name.lower()] = sequence
+
+            if handle_isoforms:
+                gene_id = re.sub('\.\d+$', '', sequence.name.lower())
+                gene_hash[gene_id] = sequence
+
+        with open(filename, "r") as f_in:
+            for i, line in enumerate(f_in, start=1):
+                parts = line.strip().split()
+
+                new_family = GeneFamily('%s_%02d_%08d' % (prefix, method.id, i))
+                new_family.method_id = method.id
+
+                for p in parts:
+                    if p.lower() in gene_hash.keys():
+                        new_family.sequences.append(gene_hash[p.lower()])
+
+                try:
+                    db.session.add(new_family)
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+                    quit()
+
+        return method.id
+
+    @staticmethod
     def add_families_from_tab(filename, description, handle_isoforms=True):
+        """
+        DEPRICATED IMPORT FROM MCL
+
+        :param filename:
+        :param description:
+        :param handle_isoforms:
+        :return:
+        """
 
         # Create new method for these families
         method = GeneFamilyMethod(description)

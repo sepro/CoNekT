@@ -384,6 +384,9 @@ def add_family():
             if source == 'plaza':
                 GeneFamily.add_families_from_plaza(temp_path, method_description)
                 flash('Added Gene families from file %s' % form.file.name, 'success')
+            elif source == 'mcl':
+                GeneFamily.add_families_from_mcl(temp_path, method_description)
+                flash('Added Gene families from file %s' % form.file.name, 'success')
             else:
                 flash('Method not implemented yet', 'danger')
             os.close(fd)
