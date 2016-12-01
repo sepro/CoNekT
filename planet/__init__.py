@@ -18,6 +18,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_htmlmin import HTMLMIN
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_compress import Compress
 
 from planet.extensions.blast import BlastThread
 
@@ -27,6 +28,7 @@ toolbar = DebugToolbarExtension()
 cache = Cache()
 htmlmin = HTMLMIN()
 blast_thread = BlastThread()
+compress = Compress()
 
 
 def create_app(config):
@@ -45,14 +47,17 @@ def create_app(config):
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
 
-    # Enable DebugToolBar
-    toolbar.init_app(app)
-
     # Enable cach
     cache.init_app(app)
 
+    # Enable Compress
+    compress.init_app(app)
+
     # Enable HTMLMIN
     htmlmin.init_app(app)
+
+    # Enable DebugToolBar
+    toolbar.init_app(app)
 
     LOGIN_ENABLED = app.config['LOGIN_ENABLED']
     BLAST_ENABLED = app.config['BLAST_ENABLED']
