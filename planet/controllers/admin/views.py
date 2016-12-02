@@ -18,12 +18,20 @@ from planet.forms.admin.add_clades import AddCladesForm
 from planet.forms.admin.add_expression_specificity import AddConditionSpecificityForm, AddTissueSpecificityForm
 
 
+class AdminBaseView(BaseView):
+    def is_accessible(self):
+        """
+        Override to ensure the current user is an admin
+        """
+        return current_user.is_authenticated and current_user.is_administrator
+
+
 class MyAdminIndexView(AdminIndexView):
     def is_accessible(self):
         """
         Override to ensure the current user is an admin
         """
-        return current_user.is_authenticated() and current_user.is_administrator()
+        return current_user.is_authenticated and current_user.is_administrator
 
 
 class MyModelView(ModelView):
@@ -31,7 +39,7 @@ class MyModelView(ModelView):
         """
         Override to ensure the current user is an admin
         """
-        return current_user.is_authenticated() and current_user.is_administrator()
+        return current_user.is_authenticated and current_user.is_administrator
 
     def _get_endpoint(self, endpoint):
         """
@@ -135,7 +143,7 @@ class CladesAdminView(MyModelView):
     can_create = True
 
 
-class ControlsView(BaseView):
+class ControlsView(AdminBaseView):
     @expose('/')
     def index(self):
         message = Markup('<strong>Note: </strong> some operations on this page can take a long time and slow down the '
@@ -146,7 +154,7 @@ class ControlsView(BaseView):
         return self.render('admin/controls.html')
 
 
-class AddSpeciesView(BaseView):
+class AddSpeciesView(AdminBaseView):
     @expose('/')
     def index(self):
         form = AddSpeciesForm()
@@ -154,7 +162,7 @@ class AddSpeciesView(BaseView):
         return self.render('admin/add/species.html', form=form)
 
 
-class AddFunctionalDataView(BaseView):
+class AddFunctionalDataView(AdminBaseView):
     @expose('/')
     def index(self):
         form = AddFunctionalDataForm()
@@ -162,7 +170,7 @@ class AddFunctionalDataView(BaseView):
         return self.render('admin/add/functional_data.html', form=form)
 
 
-class AddGOView(BaseView):
+class AddGOView(AdminBaseView):
     @expose('/')
     def index(self):
         form = AddGOForm()
@@ -171,7 +179,7 @@ class AddGOView(BaseView):
         return self.render('admin/add/go.html', form=form)
 
 
-class AddInterProView(BaseView):
+class AddInterProView(AdminBaseView):
     @expose('/')
     def index(self):
         form = AddInterProForm()
@@ -180,7 +188,7 @@ class AddInterProView(BaseView):
         return self.render('admin/add/interpro.html', form=form)
 
 
-class AddXRefsView(BaseView):
+class AddXRefsView(AdminBaseView):
     @expose('/')
     def index(self):
         form = AddXRefsForm()
@@ -189,7 +197,7 @@ class AddXRefsView(BaseView):
         return self.render('admin/add/xrefs.html', form=form)
 
 
-class AddXRefsFamiliesView(BaseView):
+class AddXRefsFamiliesView(AdminBaseView):
     @expose('/')
     def index(self):
         form = AddXRefsFamiliesForm()
@@ -198,7 +206,7 @@ class AddXRefsFamiliesView(BaseView):
         return self.render('admin/add/xrefs_families.html', form=form)
 
 
-class AddFamiliesView(BaseView):
+class AddFamiliesView(AdminBaseView):
     @expose('/')
     def index(self):
         form = AddFamiliesForm()
@@ -206,7 +214,7 @@ class AddFamiliesView(BaseView):
         return self.render('admin/add/families.html', form=form)
 
 
-class AddExpressionProfilesView(BaseView):
+class AddExpressionProfilesView(AdminBaseView):
     @expose('/')
     def index(self):
         form = AddExpressionProfilesForm()
@@ -215,7 +223,7 @@ class AddExpressionProfilesView(BaseView):
         return self.render('admin/add/expression_profiles.html', form=form)
 
 
-class AddCoexpressionNetworkView(BaseView):
+class AddCoexpressionNetworkView(AdminBaseView):
     @expose('/')
     def index(self):
         form = AddCoexpressionNetworkForm()
@@ -224,7 +232,7 @@ class AddCoexpressionNetworkView(BaseView):
         return self.render('admin/add/coexpression_network.html', form=form)
 
 
-class AddSpecificityView(BaseView):
+class AddSpecificityView(AdminBaseView):
     @expose('/')
     def index(self):
         condition_form = AddConditionSpecificityForm()
@@ -238,7 +246,7 @@ class AddSpecificityView(BaseView):
                            tissue_form=tissue_form)
 
 
-class AddCoexpressionClustersView(BaseView):
+class AddCoexpressionClustersView(AdminBaseView):
     @expose('/')
     def index(self):
         form = AddCoexpressionClustersForm()
@@ -247,7 +255,7 @@ class AddCoexpressionClustersView(BaseView):
         return self.render('admin/add/coexpression_clusters.html', form=form)
 
 
-class AddCladesView(BaseView):
+class AddCladesView(AdminBaseView):
     @expose('/')
     def index(self):
         form = AddCladesForm()

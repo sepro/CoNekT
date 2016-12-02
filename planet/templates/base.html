@@ -82,7 +82,7 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> <strong>{{ current_user.username }}</strong></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out"></i> Log out</a></li>
-                                    {% if current_user.is_administrator() %}
+                                    {% if current_user.is_administrator %}
                                     <li role="separator" class="divider"></li>
                                     <li><a href="{{ url_for('admin.index') }}"><i class="fa fa-cogs"></i> Admin panel</a></li>
                                     {% endif %}

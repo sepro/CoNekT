@@ -4,7 +4,7 @@ from planet.controllers.help import __TOPICS as topics
 
 from flask_testing import TestCase
 
-from tests.config import LOGIN_ENABLED, BLAST_ENABLED
+from .config import LOGIN_ENABLED, BLAST_ENABLED
 
 import json
 import unittest
@@ -621,7 +621,7 @@ class WebsiteTest(TestCase):
             self.assertTrue('value' in d.keys())
             self.assertTrue('tokens' in d.keys())
 
-    @unittest.skipIf(not LOGIN_ENABLED, "Skipping test because LOGIN is not enabled")
+    @unittest.skipIf(not LOGIN_ENABLED, "Skipping test_auth because LOGIN is not enabled")
     def test_auth(self):
         """
         Test if a user can log in

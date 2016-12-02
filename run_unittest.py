@@ -10,6 +10,7 @@ import os
 from tests.website import WebsiteTest
 from tests.utils import UtilsTest
 from tests.build import BuildTest
+from tests.admin import AdminTest
 
 if __name__ == '__main__':
     try:

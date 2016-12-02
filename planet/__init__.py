@@ -257,4 +257,12 @@ def create_app(config):
         g.search_form = BasicSearchForm()
         g.page_items = 30
 
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.get(user_id)
+
+    @login_manager.unauthorized_handler
+    def unauthorized():
+        return render_template('error/403.html'), 403
+
     return app
