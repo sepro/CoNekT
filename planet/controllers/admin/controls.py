@@ -57,7 +57,7 @@ def update_counts():
         print(e)
         flash('An error occurred while re-doing counts', 'danger')
     else:
-        flash('All count updated', 'success')
+        flash('All counts updated', 'success')
 
     return redirect(url_for('admin.controls.index'))
 
@@ -90,7 +90,7 @@ def clear_cache():
     except Exception as e:
         flash('An error occurred while clearing the cache', 'danger')
     else:
-        flash('All clades updated', 'success')
+        flash('Cache cleared', 'success')
 
     return redirect(url_for('admin.controls.index'))
 
@@ -123,12 +123,13 @@ def add_species():
 
         compressed = 'gzip' in request.files[form.fasta.name].content_type
 
-        open(temp_path, 'wb').write(fasta_data)
+        with open(temp_path, 'wb') as fasta_writer:
+            fasta_writer.write(fasta_data)
         sequence_count = Sequence.add_from_fasta(temp_path, species_id, compressed=compressed)
 
         os.close(fd)
         os.remove(temp_path)
-        flash('Addes species %s and %d sequences' % (request.form.get('name'), sequence_count), 'success')
+        flash('Added species %s with %d sequences' % (request.form.get('name'), sequence_count), 'success')
         return redirect(url_for('admin.index'))
     else:
         if not form.validate():
@@ -165,7 +166,10 @@ def add_functional_data():
         go_compressed = 'gzip' in request.files[form.go.name].content_type
         if go_data != b'':
             fd, temp_path = mkstemp()
-            open(temp_path, 'wb').write(go_data)
+
+            with open(temp_path, 'wb') as go_writer:
+                go_writer.write(go_data)
+
             GO.add_from_obo(temp_path, empty=True, compressed=go_compressed)
 
             os.close(fd)
@@ -178,7 +182,10 @@ def add_functional_data():
         interpro_data = request.files[form.interpro.name].read()
         if interpro_data != b'':
             fd, temp_path = mkstemp()
-            open(temp_path, 'wb').write(interpro_data)
+
+            with open(temp_path, 'wb') as interpro_writer:
+                interpro_writer.write(interpro_data)
+
             Interpro.add_from_xml(temp_path, empty=True)
 
             os.close(fd)
@@ -218,7 +225,9 @@ def add_go():
         file = request.files[form.file.name].read()
         if file != b'':
             fd, temp_path = mkstemp()
-            open(temp_path, 'wb').write(file)
+
+            with open(temp_path, 'wb') as go_writer:
+                go_writer.write(file)
 
             GO.add_go_from_tab(temp_path, species_id, source=source)
 
@@ -254,7 +263,8 @@ def add_interpro():
         file = request.files[form.file.name].read()
         if file != b'':
             fd, temp_path = mkstemp()
-            open(temp_path, 'wb').write(file)
+            with open(temp_path, 'wb') as interpro_writer:
+                interpro_writer.write(file)
 
             Interpro.add_interpro_from_interproscan(temp_path, species_id)
 
@@ -305,7 +315,9 @@ def add_xrefs():
             xref_data = request.files[form.file.name].read()
             if xref_data != b'':
                 fd, temp_path = mkstemp()
-                open(temp_path, 'wb').write(xref_data)
+
+                with open(temp_path, 'wb') as xref_writer:
+                    xref_writer.write(xref_data)
 
                 XRef.add_xref_genes_from_file(species_id, temp_path)
 
@@ -379,7 +391,9 @@ def add_family():
         family_data = request.files[form.file.name].read()
         if family_data != b'':
             fd, temp_path = mkstemp()
-            open(temp_path, 'wb').write(family_data)
+
+            with open(temp_path, 'wb') as family_writer:
+                family_writer.write(family_data)
 
             if source == 'mcl':
                 GeneFamily.add_families_from_mcl(temp_path, method_description)
@@ -423,14 +437,18 @@ def add_expression_profiles():
         order_colors_file = request.files[form.order_colors_file.name].read()
         if matrix_file != b'' and annotation_file != b'':
             fd_matrix, temp_matrix_path = mkstemp()
-            open(temp_matrix_path, 'wb').write(matrix_file)
+
+            with open(temp_matrix_path, 'wb') as matrix_writer:
+                matrix_writer.write(matrix_file)
 
             fd_annotation, temp_annotation_path = mkstemp()
-            open(temp_annotation_path, 'wb').write(annotation_file)
+            with open(temp_annotation_path, 'wb') as annotation_writer:
+                annotation_writer.write(annotation_file)
 
             if order_colors_file != b'':
                 fd_order_colors, temp_order_colors_path = mkstemp()
-                open(temp_order_colors_path, 'wb').write(order_colors_file)
+                with open(temp_order_colors_path, 'wb') as oc_writer:
+                    oc_writer.write(order_colors_file)
 
                 ExpressionProfile.add_profile_from_lstrap(temp_matrix_path, temp_annotation_path, species_id,
                                                           order_color_file=temp_order_colors_path)
@@ -477,7 +495,8 @@ def add_coexpression_network():
 
         if file != b'':
             fd, temp_path = mkstemp()
-            open(temp_path, 'wb').write(file)
+            with open(temp_path, 'wb') as network_writer:
+                network_writer.write(file)
 
             ExpressionNetwork.read_expression_network_lstrap(temp_path, species_id, description,
                                                              pcc_cutoff=pcc_cutoff,
@@ -518,7 +537,9 @@ def add_coexpression_clusters():
 
         if file != b'':
             fd, temp_path = mkstemp()
-            open(temp_path, 'wb').write(file)
+
+            with open(temp_path, 'wb') as cluster_writer:
+                cluster_writer.write(file)
 
             CoexpressionClusteringMethod.add_lstrap_coexpression_clusters(temp_path, description, network_id,
                                                                           min_size=min_size)

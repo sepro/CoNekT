@@ -249,7 +249,7 @@ class CoexpressionCluster(db.Model):
                 clusters = CoexpressionCluster.query.all()
 
                 for i, cluster in enumerate(clusters):
-                    print(i, "\t cluster: ", cluster.method_id, cluster.name)
+                    # print(i, "\t cluster: ", cluster.method_id, cluster.name)
                     cluster.__calculate_enrichment()
 
     @staticmethod
