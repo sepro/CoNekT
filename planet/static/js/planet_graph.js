@@ -4,7 +4,12 @@ var initial_json;
 
 function select_neighborhood(ev, node_name) {
     ev.preventDefault();
+
+    // Select all nodes in the neighborhood
     cy.$('#' + node_name).neighborhood().select();
+
+    // Close tooltip
+    $('div.qtip:visible').qtip('hide');
 };
 
 $(function () { // on dom ready

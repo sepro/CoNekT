@@ -13,8 +13,8 @@ var MAX_LABELS = 3;
 
 $(function () {
     'use strict';
-    var svg_file  = $('#legend').attr('url'),
-        svg_legend = Pablo.load(svg_file, function () {
+    var svg_file  = $('#legend').attr('url');
+    svg_legend = Pablo.load(svg_file, function () {
             this.appendTo($('#legend'));
             svg_legend.find('[edge_color]').attr('style', 'opacity:0');
             svg_legend.find('[edge_color="color"]').attr('style', 'opacity:100');
