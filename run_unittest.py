@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 from coverage import coverage
 
+import unittest
+import os
+
 cov = coverage(branch=True, omit=['virtualenv/*', 'tests/*', 'config.py', 'utils/benchmark.py'])
 cov.start()
 
-import unittest
-import os
 
 from tests.website import WebsiteTest
 from tests.utils import UtilsTest
