@@ -12,6 +12,16 @@ function select_neighborhood(ev, node_name) {
     $('div.qtip:visible').qtip('hide');
 };
 
+function select_homologs(ev, family) {
+    ev.preventDefault();
+
+    // Select all nodes in the neighborhood
+    cy.nodes('[family_name = \'' + family + '\' ]').select();
+
+    // Close tooltip
+    $('div.qtip:visible').qtip('hide');
+};
+
 $(function () { // on dom ready
     'use strict';
     var url = $('#cy').attr("json"),
@@ -76,6 +86,15 @@ $(function () { // on dom ready
                         value: '<a href="#" onclick="select_neighborhood(event, \'' + n.data('id') + '\')">neighborhood</a>'
                     }
                 );
+
+                if (n.data('family_name') !== null) {
+                    content.push(
+                    {
+                        value: '<a href="#" onclick="select_homologs(event, \'' + n.data('family_name') + '\')">homologs</a>'
+                    }
+                    )
+                }
+
 
 
 
