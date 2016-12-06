@@ -15,6 +15,10 @@ SECRET_KEY = 'change me !'
 
 # Login settings + admin account
 LOGIN_ENABLED = True
+
+# Credentials for admin account
+# Remove this after creating the database !
+# the debug toolbar will show these settings with debug mode enabled
 ADMIN_PASSWORD = 'admin'
 ADMIN_EMAIL = 'admin@web.com'
 
@@ -23,7 +27,6 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db', 'planet.db'
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'migration')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = DEBUG
-
 
 # Settings for the FTP/bulk data
 PLANET_FTP_DATA = os.path.join(basedir, 'ftp')
