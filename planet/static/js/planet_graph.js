@@ -2,6 +2,11 @@
 var cy;
 var initial_json;
 
+function select_neighborhood(ev, node_name) {
+    ev.preventDefault();
+    cy.$('#' + node_name).neighborhood().select();
+};
+
 $(function () { // on dom ready
     'use strict';
     var url = $('#cy').attr("json"),
@@ -63,7 +68,7 @@ $(function () { // on dom ready
                         value: '<span class="text-muted">select:</span>'
                     },
                     {
-                        value: '<a href="#" onclick="select_neighborhood(\'' + n.data('id') + '\')">neighborhood</a>'
+                        value: '<a href="#" onclick="select_neighborhood(event, \'' + n.data('id') + '\')">neighborhood</a>'
                     }
                 );
 
@@ -476,8 +481,3 @@ $(function () { // on dom ready
         });
     });
 }); // end on dom ready
-
-function select_neighborhood(node_name) {
-    console.log('click' + node_name)
-    cy.$('#' + node_name).neighborhood().select();
-};
