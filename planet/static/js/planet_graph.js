@@ -7,7 +7,7 @@ function select_neighborhood(ev, node_name) {
 
     // Select all nodes in the neighborhood
     console.log('click ' + node_name);
-    cy.$('#' + node_name).neighborhood().select();
+    cy.nodes('[gene_name = \'' + node_name + '\']').neighborhood().select();
 
     // Close tooltip
     $('div.qtip:visible').qtip('hide');
@@ -85,7 +85,7 @@ $(function () { // on dom ready
                         value: '<span class="text-muted">select:</span>'
                     },
                     {
-                        value: '<a href="#" onclick="select_neighborhood(event, \'' + n.data('id') + '\')">neighborhood</a>'
+                        value: '<a href="#" onclick="select_neighborhood(event, \'' + n.data('gene_name') + '\')">neighborhood</a>'
                     }
                 );
 
