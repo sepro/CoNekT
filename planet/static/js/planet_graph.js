@@ -55,6 +55,15 @@ $(function () { // on dom ready
                     },
                     {
                         value: n.data('family_clade') !== 'None' ? 'Clade : <strong>' + n.data('family_clade') + '</strong>' : '<span class="text-muted">No clade assigned</span>'
+                    },
+                    {
+                        value: ''
+                    },
+                    {
+                        value: '<span class="text-muted">select:</span>'
+                    },
+                    {
+                        value: '<a href="#" onclick="select_neighborhood(\'' + n.data('id') + '\')">neighborhood</a>'
                     }
                 );
 
@@ -467,3 +476,8 @@ $(function () { // on dom ready
         });
     });
 }); // end on dom ready
+
+function select_neighborhood(node_name) {
+    console.log('click' + node_name)
+    cy.$('#' + node_name).neighborhood().select();
+};
