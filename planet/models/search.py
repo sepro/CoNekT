@@ -1,12 +1,12 @@
+from sqlalchemy import func
+from sqlalchemy.sql import or_, and_
+
+from planet.models.expression.profiles import ExpressionProfile
+from planet.models.gene_families import GeneFamily
+from planet.models.go import GO
+from planet.models.interpro import Interpro
 from planet.models.relationships import ClusterGOEnrichment
 from planet.models.sequences import Sequence
-from planet.models.go import GO
-from planet.models.gene_families import GeneFamily
-from planet.models.interpro import Interpro
-from planet.models.expression_profiles import ExpressionProfile
-
-from sqlalchemy.sql import or_, and_
-from sqlalchemy import func
 
 
 class Search:

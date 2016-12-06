@@ -1,13 +1,11 @@
-from flask import Blueprint, request, render_template
-from sqlalchemy import and_
+from collections import defaultdict
 
-from planet.models.species import Species
-from planet.models.expression_specificity import ExpressionSpecificityMethod, ExpressionSpecificity
-from planet.models.relationships import SequenceFamilyAssociation
+from flask import Blueprint, request, render_template
 
 from planet.forms.compare_specificity import CompareSpecificityForm
-
-from collections import defaultdict
+from planet.models.expression.specificity import ExpressionSpecificityMethod, ExpressionSpecificity
+from planet.models.relationships import SequenceFamilyAssociation
+from planet.models.species import Species
 
 specificity_comparison = Blueprint('specificity_comparison', __name__)
 

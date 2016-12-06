@@ -1,12 +1,11 @@
+import json
+
 from flask import Blueprint, request, render_template, Response, Markup
 
-from planet.models.expression_networks import ExpressionNetwork
-from planet.models.sequences import Sequence
 from planet.forms.custom_network import CustomNetworkForm
-
 from planet.helpers.cytoscape import CytoscapeHelper
-
-import json
+from planet.models.expression.networks import ExpressionNetwork
+from planet.models.sequences import Sequence
 
 custom_network = Blueprint('custom_network', __name__)
 

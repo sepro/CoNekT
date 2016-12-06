@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField
 from flask_wtf.file import InputRequired, FileField
+from wtforms import StringField, SelectField
 
-from planet.models.expression_networks import ExpressionNetworkMethod
+from planet.models.expression.networks import ExpressionNetworkMethod
 
 
 class AddCoexpressionClustersForm(FlaskForm):

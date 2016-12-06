@@ -1,16 +1,13 @@
-from flask import Blueprint, render_template, g, Response
-from sqlalchemy import or_
-from sqlalchemy.orm import joinedload
-
-from planet import cache
-from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
-from planet.models.relationships import CoexpressionClusterSimilarity, SequenceCoexpressionClusterAssociation
-from planet.helpers.cytoscape import CytoscapeHelper
-from planet.models.sequences import Sequence
-from planet.models.expression_profiles import ExpressionProfile
-
 import json
 
+from flask import Blueprint, render_template, g, Response
+from sqlalchemy import or_
+
+from planet import cache
+from planet.helpers.cytoscape import CytoscapeHelper
+from planet.models.expression.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
+from planet.models.relationships import CoexpressionClusterSimilarity, SequenceCoexpressionClusterAssociation
+from planet.models.sequences import Sequence
 
 expression_cluster = Blueprint('expression_cluster', __name__)
 

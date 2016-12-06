@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-from planet import create_app, db
+import json
 
 from flask_testing import TestCase
 
-import json
+from planet import create_app, db
 
 
 class BuildTest(TestCase):
@@ -35,10 +35,10 @@ class BuildTest(TestCase):
         from planet.models.xrefs import XRef
         from planet.models.go import GO
         from planet.models.interpro import Interpro
-        from planet.models.expression_profiles import ExpressionProfile
-        from planet.models.expression_networks import ExpressionNetwork, ExpressionNetworkMethod
-        from planet.models.coexpression_clusters import CoexpressionClusteringMethod
-        from planet.models.expression_specificity import ExpressionSpecificityMethod
+        from planet.models.expression.profiles import ExpressionProfile
+        from planet.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
+        from planet.models.expression.coexpression_clusters import CoexpressionClusteringMethod
+        from planet.models.expression.specificity import ExpressionSpecificityMethod
         from planet.models.gene_families import GeneFamily, GeneFamilyMethod
         from planet.models.clades import Clade
 

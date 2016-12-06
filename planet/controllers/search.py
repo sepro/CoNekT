@@ -1,17 +1,16 @@
+import json
+
 from flask import g, Blueprint, flash, request, redirect, url_for, render_template, Response
-from sqlalchemy.sql import or_
 from sqlalchemy import func
+from sqlalchemy.sql import or_
 
 from planet import cache
-from planet.models.go import GO
-from planet.models.search import Search
-from planet.models.expression_specificity import ExpressionSpecificityMethod, ExpressionSpecificity
-from planet.models.species import Species
-
 from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
 from planet.forms.search_specific_profiles import SearchSpecificProfilesForm
-
-import json
+from planet.models.expression.specificity import ExpressionSpecificityMethod, ExpressionSpecificity
+from planet.models.go import GO
+from planet.models.search import Search
+from planet.models.species import Species
 
 search = Blueprint('search', __name__)
 

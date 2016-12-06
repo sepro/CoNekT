@@ -1,11 +1,11 @@
 from flask import Blueprint, request, render_template
 
 from planet import cache
-from planet.models.expression_profiles import ExpressionProfile
-from planet.models.relationships import SequenceCoexpressionClusterAssociation
-from planet.models.coexpression_clusters import CoexpressionCluster
-from planet.models.sequences import Sequence
 from planet.forms.heatmap import HeatmapForm
+from planet.models.expression.coexpression_clusters import CoexpressionCluster
+from planet.models.expression.profiles import ExpressionProfile
+from planet.models.relationships import SequenceCoexpressionClusterAssociation
+from planet.models.sequences import Sequence
 
 heatmap = Blueprint('heatmap', __name__)
 

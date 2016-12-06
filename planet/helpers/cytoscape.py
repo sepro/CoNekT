@@ -1,16 +1,15 @@
+from copy import deepcopy
+
 from flask import url_for
 from sqlalchemy.orm import joinedload
 
-from planet.models.relationships import SequenceFamilyAssociation, SequenceInterproAssociation
+from planet.models.expression.specificity import ExpressionSpecificity
+from planet.models.expression.profiles import ExpressionProfile
 from planet.models.relationships import SequenceCoexpressionClusterAssociation
-from planet.models.coexpression_clusters import CoexpressionCluster
+from planet.models.relationships import SequenceFamilyAssociation, SequenceInterproAssociation
 from planet.models.sequences import Sequence
 from planet.models.species import Species
-from planet.models.expression_profiles import ExpressionProfile
-from planet.models.expression_specificity import ExpressionSpecificity
-
-from utils.color import family_to_shape_and_color, string_to_hex_color
-from copy import deepcopy
+from utils.color import family_to_shape_and_color
 
 
 class CytoscapeHelper:

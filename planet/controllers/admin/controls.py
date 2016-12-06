@@ -1,40 +1,37 @@
+import json
+import os
+from tempfile import mkstemp
+
 from flask import Blueprint, Response, redirect, url_for, request, flash, abort, current_app
 from flask_login import login_required
 
 from planet import cache
-
-from planet.models.coexpression_clusters import CoexpressionClusteringMethod
-from planet.models.expression_specificity import ExpressionSpecificityMethod
-from planet.models.condition_tissue import ConditionTissue
-from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
-from planet.models.expression_profiles import ExpressionProfile
-from planet.models.coexpression_clusters import CoexpressionCluster
-from planet.models.gene_families import GeneFamilyMethod, GeneFamily
-from planet.models.species import Species
-from planet.models.sequences import Sequence
-from planet.models.clades import Clade
-from planet.models.go import GO
-from planet.models.interpro import Interpro
-from planet.models.xrefs import XRef
-
-from planet.forms.admin.add_species import AddSpeciesForm
+from planet.forms.admin.add_clades import AddCladesForm
+from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClustersForm
+from planet.forms.admin.add_coexpression_network import AddCoexpressionNetworkForm
+from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
+from planet.forms.admin.add_expression_specificity import AddTissueSpecificityForm, AddConditionSpecificityForm
+from planet.forms.admin.add_family import AddFamiliesForm
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
 from planet.forms.admin.add_go_sequences import AddGOForm
 from planet.forms.admin.add_interpro_sequences import AddInterProForm
+from planet.forms.admin.add_species import AddSpeciesForm
 from planet.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
-from planet.forms.admin.add_family import AddFamiliesForm
-from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
-from planet.forms.admin.add_coexpression_network import AddCoexpressionNetworkForm
-from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClustersForm
-from planet.forms.admin.add_clades import AddCladesForm
-from planet.forms.admin.add_expression_specificity import AddTissueSpecificityForm, AddConditionSpecificityForm
-
 from planet.ftp import export_coding_sequences, export_families, export_protein_sequences, export_go_annotation, \
     export_interpro_annotation, export_coexpression_clusters, export_expression_networks
-
-import os
-import json
-from tempfile import mkstemp
+from planet.models.clades import Clade
+from planet.models.condition_tissue import ConditionTissue
+from planet.models.expression.coexpression_clusters import CoexpressionCluster
+from planet.models.expression.coexpression_clusters import CoexpressionClusteringMethod
+from planet.models.expression.networks import ExpressionNetworkMethod, ExpressionNetwork
+from planet.models.expression.profiles import ExpressionProfile
+from planet.models.expression.specificity import ExpressionSpecificityMethod
+from planet.models.gene_families import GeneFamilyMethod, GeneFamily
+from planet.models.go import GO
+from planet.models.interpro import Interpro
+from planet.models.sequences import Sequence
+from planet.models.species import Species
+from planet.models.xrefs import XRef
 
 admin_controls = Blueprint('admin_controls', __name__)
 

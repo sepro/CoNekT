@@ -1,5 +1,26 @@
 from planet import create_app
 
+
+def check_sanity_species_data(data, name=''):
+    required_keys = ['code', 'fasta', 'go', 'interpro', 'profile', 'profile_conversion', 'network',
+                     'network_description', 'clusters', 'clusters_description']
+
+    required_paths = ['fasta', 'go', 'interpro', 'profile', 'profile_conversion', 'network', 'clusters']
+
+    if not all([r in data.keys() for r in required_keys]):
+        for r in required_keys:
+            if r not in data.keys():
+                print('[', name, ']', 'Key', r, 'missing')
+        return False
+
+    if not all([data[r] is None or os.path.exists(data[r]) for r in required_paths]):
+        for r in required_paths:
+            if data[r] is not None and not os.path.exists(data[r]):
+                print('[', name, ']', 'Problem with path in', r)
+        return False
+
+    return True
+
 app = create_app('config')
 
 
@@ -216,27 +237,19 @@ SPECIES = {
 
 with app.app_context():
     # import of models need to happen after app is created !
-    from build.sanity import check_sanity_species_data
+    # from build.db.expression import parse_expression_plot
+    # from build.db.expression import parse_expression_network
+    # from build.db.coexpression_clusters import add_planet_coexpression_clusters
 
-    from build.db.expression import parse_expression_plot
-    from build.db.expression import parse_expression_network
-    from build.db.coexpression_clusters import add_planet_coexpression_clusters
-    from build.db.xref import create_plaza_xref_families
-
-    from planet.models.coexpression_clusters import CoexpressionClusteringMethod,CoexpressionCluster
-    from planet.models.expression_networks import ExpressionNetworkMethod
-    from planet.models.gene_families import GeneFamilyMethod, GeneFamily
+    from planet.models.expression.coexpression_clusters import CoexpressionClusteringMethod
+    from planet.models.expression.networks import ExpressionNetworkMethod
+    from planet.models.gene_families import GeneFamilyMethod
     from planet.models.species import Species
     from planet.models.sequences import Sequence
     from planet.models.clades import Clade
     from planet.models.go import GO
-    from planet.models.xrefs import XRef
     from planet.models.interpro import Interpro
-    from planet.models.expression_specificity import ExpressionSpecificityMethod
-    from planet.models.expression_profiles import ExpressionProfile
-    from planet.models.condition_tissue import ConditionTissue
-
-    from planet.ftp import export_ftp_data
+    from planet.models.expression.specificity import ExpressionSpecificityMethod
 
     print("Checking input")
     print("==============")
@@ -276,26 +289,26 @@ with app.app_context():
     # TODO OBSOLETE
     # families_id = GeneFamily.add_families_from_plaza("data/genefamily_data.hom.csv", "PLAZA 2.5 Homologous gene families")
 
-    print("Adding Expression Plots")
-    print("=======================")
-    for species, data in SPECIES.items():
-        if 'profile' in data.keys() and 'profile_conversion' in data.keys():
-            parse_expression_plot(data['profile'], data['profile_conversion'], data['code'])
-
-    print("Adding Expression Networks")
-    print("==========================")
-    for species, data in SPECIES.items():
-        if 'network_description' in data.keys() and 'network' in data.keys():
-            data['network_id'] = parse_expression_network(data['network'], data['code'], data['network_description'])
-
-    print("Adding Coexpression Clusters")
-    print("============================")
-    for species, data in SPECIES.items():
-        if all(x in data.keys() for x in ['network', 'clusters', 'network_id', 'clusters_description']):
-            add_planet_coexpression_clusters(data['network'],
-                                             data['clusters'],
-                                             data['clusters_description'],
-                                             data['network_id'])
+    # print("Adding Expression Plots")
+    # print("=======================")
+    # for species, data in SPECIES.items():
+    #     if 'profile' in data.keys() and 'profile_conversion' in data.keys():
+    #         parse_expression_plot(data['profile'], data['profile_conversion'], data['code'])
+    #
+    # print("Adding Expression Networks")
+    # print("==========================")
+    # for species, data in SPECIES.items():
+    #     if 'network_description' in data.keys() and 'network' in data.keys():
+    #         data['network_id'] = parse_expression_network(data['network'], data['code'], data['network_description'])
+    #
+    # print("Adding Coexpression Clusters")
+    # print("============================")
+    # for species, data in SPECIES.items():
+    #     if all(x in data.keys() for x in ['network', 'clusters', 'network_id', 'clusters_description']):
+    #         add_planet_coexpression_clusters(data['network'],
+    #                                          data['clusters'],
+    #                                          data['clusters_description'],
+    #                                          data['network_id'])
 
     print("Precalculating big counts")
     print("=========================")

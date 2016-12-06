@@ -1,21 +1,19 @@
+import json
+from math import log2
+
 from flask import url_for
-
-from planet import db
-from planet.models.expression_networks import ExpressionNetwork
-from planet.models.gene_families import GeneFamily
-from planet.models.sequences import Sequence
-from planet.models.relationships import sequence_coexpression_cluster, SequenceGOAssociation, ClusterGOEnrichment
-from planet.models.relationships import CoexpressionClusterSimilarity, SequenceCoexpressionClusterAssociation, SequenceFamilyAssociation
-
-from utils.enrichment import hypergeo_sf, fdr_correction
-from utils.benchmark import benchmark
-from utils.jaccard import jaccard
-
 from sqlalchemy import join
 from sqlalchemy.orm import joinedload, load_only
 
-import json
-from math import log2
+from planet import db
+from planet.models.expression.networks import ExpressionNetwork
+from planet.models.gene_families import GeneFamily
+from planet.models.relationships import CoexpressionClusterSimilarity, SequenceCoexpressionClusterAssociation, SequenceFamilyAssociation
+from planet.models.relationships import SequenceGOAssociation, ClusterGOEnrichment
+from planet.models.sequences import Sequence
+from utils.benchmark import benchmark
+from utils.enrichment import hypergeo_sf, fdr_correction
+from utils.jaccard import jaccard
 
 
 class CoexpressionClusteringMethod(db.Model):

@@ -1,13 +1,12 @@
+import json
+from statistics import mean
+
 from flask import Blueprint, redirect, url_for, render_template, Response
 from sqlalchemy.orm import undefer
 
 from planet import cache
-from planet.models.expression_profiles import ExpressionProfile
 from planet.models.condition_tissue import ConditionTissue
-
-import json
-from statistics import mean
-
+from planet.models.expression.profiles import ExpressionProfile
 
 expression_profile = Blueprint('expression_profile', __name__)
 

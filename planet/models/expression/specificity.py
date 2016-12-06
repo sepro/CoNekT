@@ -1,11 +1,11 @@
-from planet import db
-from planet.models.expression_profiles import ExpressionProfile
-from utils.expression import expression_specificity
-from utils.entropy import entropy_from_values
-from utils.tau import tau
-
 import json
 from statistics import mean
+
+from planet import db
+from planet.models.expression.profiles import ExpressionProfile
+from utils.entropy import entropy_from_values
+from utils.expression import expression_specificity
+from utils.tau import tau
 
 
 class ExpressionSpecificityMethod(db.Model):

@@ -1,11 +1,11 @@
+import json
+
 from flask import Blueprint, url_for, render_template, flash, redirect, Response
 
 from planet import cache
-from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
-from planet.models.species import Species
 from planet.helpers.cytoscape import CytoscapeHelper
-
-import json
+from planet.models.expression.networks import ExpressionNetworkMethod, ExpressionNetwork
+from planet.models.species import Species
 
 
 expression_network = Blueprint('expression_network', __name__)

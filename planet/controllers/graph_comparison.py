@@ -1,10 +1,10 @@
+import json
+
 from flask import Blueprint, render_template, Response
 
 from planet import cache
-from planet.models.coexpression_clusters import CoexpressionCluster
 from planet.helpers.cytoscape import CytoscapeHelper
-
-import json
+from planet.models.expression.coexpression_clusters import CoexpressionCluster
 
 graph_comparison = Blueprint('graph_comparison', __name__)
 

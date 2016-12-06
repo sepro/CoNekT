@@ -1,17 +1,15 @@
+import json
+
 from flask import Blueprint, request, render_template,flash
 from sqlalchemy.orm import noload
 
 from planet import cache
-from planet.models.sequences import Sequence
-from planet.models.expression_profiles import ExpressionProfile
-from planet.models.relationships import SequenceCoexpressionClusterAssociation
-from planet.models.coexpression_clusters import CoexpressionCluster
-
 from planet.forms.profile_comparison import ProfileComparisonForm
-
 from planet.helpers.chartjs import prepare_profiles
-
-import json
+from planet.models.expression.coexpression_clusters import CoexpressionCluster
+from planet.models.expression.profiles import ExpressionProfile
+from planet.models.relationships import SequenceCoexpressionClusterAssociation
+from planet.models.sequences import Sequence
 
 profile_comparison = Blueprint('profile_comparison', __name__)
 

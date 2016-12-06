@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-from planet import create_app, db
-from planet.controllers.help import __TOPICS as topics
+import json
+import unittest
 
 from flask_testing import TestCase
 
+from planet import create_app, db
+from planet.controllers.help import __TOPICS as topics
 from .config import LOGIN_ENABLED, BLAST_ENABLED
-
-import json
-import unittest
 
 
 class WebsiteTest(TestCase):
@@ -32,16 +31,16 @@ class WebsiteTest(TestCase):
         Creates a database and fills it with sufficient dummy data to run the tests.
         """
         from planet.models.users import User
-        from planet.models.expression_profiles import ExpressionProfile
+        from planet.models.expression.profiles import ExpressionProfile
         from planet.models.sequences import Sequence
         from planet.models.species import Species
         from planet.models.interpro import Interpro
         from planet.models.go import GO
         from planet.models.gene_families import GeneFamily, GeneFamilyMethod
-        from planet.models.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
-        from planet.models.expression_networks import ExpressionNetwork, ExpressionNetworkMethod
+        from planet.models.expression.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
+        from planet.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
         from planet.models.relationships import SequenceCoexpressionClusterAssociation, SequenceSequenceECCAssociation
-        from planet.models.expression_specificity import ExpressionSpecificityMethod
+        from planet.models.expression.specificity import ExpressionSpecificityMethod
         from planet.models.clades import Clade
 
         db.create_all()
@@ -467,7 +466,7 @@ class WebsiteTest(TestCase):
         """
         Test for routes associated with an ExpressionProfile
         """
-        from planet.models.expression_profiles import ExpressionProfile
+        from planet.models.expression.profiles import ExpressionProfile
 
         response = self.client.get('/profile/')
         self.assertRedirects(response, "/")
@@ -542,7 +541,7 @@ class WebsiteTest(TestCase):
         from planet.models.interpro import Interpro
         from planet.models.go import GO
         from planet.models.gene_families import GeneFamily
-        from planet.models.expression_profiles import ExpressionProfile
+        from planet.models.expression.profiles import ExpressionProfile
 
         sequence = Sequence.query.first()
         interpro = Interpro.query.first()
@@ -665,8 +664,8 @@ class WebsiteTest(TestCase):
         self.assertTrue('status' in data)
 
     def test_heatmap(self):
-        from planet.models.expression_profiles import ExpressionProfile
-        from planet.models.coexpression_clusters import CoexpressionCluster
+        from planet.models.expression.profiles import ExpressionProfile
+        from planet.models.expression.coexpression_clusters import CoexpressionCluster
 
         profile = ExpressionProfile.query.first()
         cluster = CoexpressionCluster.query.first()
@@ -685,8 +684,8 @@ class WebsiteTest(TestCase):
         self.assert200(response)
 
     def test_profile_comparison(self):
-        from planet.models.expression_profiles import ExpressionProfile
-        from planet.models.coexpression_clusters import CoexpressionCluster
+        from planet.models.expression.profiles import ExpressionProfile
+        from planet.models.expression.coexpression_clusters import CoexpressionCluster
 
         profile = ExpressionProfile.query.first()
         cluster = CoexpressionCluster.query.first()
@@ -713,7 +712,7 @@ class WebsiteTest(TestCase):
 
     def test_expression_network(self):
         from planet.models.species import Species
-        from planet.models.expression_networks import ExpressionNetwork
+        from planet.models.expression.networks import ExpressionNetwork
 
         species = Species.query.first()
         expression_network = ExpressionNetwork.query.first()
@@ -739,7 +738,7 @@ class WebsiteTest(TestCase):
 
     def test_coexpression_cluster(self):
         from planet.models.species import Species
-        from planet.models.coexpression_clusters import CoexpressionCluster
+        from planet.models.expression.coexpression_clusters import CoexpressionCluster
         from planet.models.gene_families import GeneFamilyMethod
 
         species = Species.query.first()
@@ -776,7 +775,7 @@ class WebsiteTest(TestCase):
         self.assertCytoscapeJson(data)
 
     def test_graph_comparison(self):
-        from planet.models.coexpression_clusters import CoexpressionCluster
+        from planet.models.expression.coexpression_clusters import CoexpressionCluster
         from planet.models.gene_families import GeneFamilyMethod
 
         cluster = CoexpressionCluster.query.first()

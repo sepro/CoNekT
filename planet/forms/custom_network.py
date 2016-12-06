@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import TextAreaField, SelectField, BooleanField
+from wtforms import TextAreaField, SelectField
 from wtforms.validators import InputRequired
 
-from planet.models.expression_networks import ExpressionNetworkMethod
+from planet.models.expression.coexpression_clusters import CoexpressionClusteringMethod
+from planet.models.expression.networks import ExpressionNetworkMethod
+from planet.models.expression.specificity import ExpressionSpecificityMethod
 from planet.models.gene_families import GeneFamilyMethod
-from planet.models.coexpression_clusters import CoexpressionClusteringMethod
-from planet.models.expression_specificity import ExpressionSpecificityMethod
 
 
 class CustomNetworkForm(FlaskForm):

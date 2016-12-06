@@ -14,11 +14,11 @@ Everything that needs to be set up to get flask running is initialized in this f
 from flask import Flask, render_template, g
 from flask_admin import Admin
 from flask_cache import Cache
+from flask_compress import Compress
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_htmlmin import HTMLMIN
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from flask_compress import Compress
 
 from planet.extensions.blast import BlastThread
 
@@ -73,10 +73,10 @@ def create_app(config):
     from planet.models.go import GO
     from planet.models.interpro import Interpro
     from planet.models.gene_families import GeneFamilyMethod, GeneFamily
-    from planet.models.coexpression_clusters import CoexpressionClusteringMethod, CoexpressionCluster
-    from planet.models.expression_profiles import ExpressionProfile
-    from planet.models.expression_networks import ExpressionNetworkMethod, ExpressionNetwork
-    from planet.models.expression_specificity import ExpressionSpecificityMethod, ExpressionSpecificity
+    from planet.models.expression.coexpression_clusters import CoexpressionClusteringMethod, CoexpressionCluster
+    from planet.models.expression.profiles import ExpressionProfile
+    from planet.models.expression.networks import ExpressionNetworkMethod, ExpressionNetwork
+    from planet.models.expression.specificity import ExpressionSpecificityMethod, ExpressionSpecificity
     from planet.models.condition_tissue import ConditionTissue
     from planet.models.clades import Clade
     from planet.models.xrefs import XRef
