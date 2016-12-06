@@ -6,7 +6,6 @@ function select_neighborhood(ev, node_name) {
     ev.preventDefault();
 
     // Select all nodes in the neighborhood
-    console.log('click ' + node_name);
     cy.nodes('[gene_name = \'' + node_name + '\']').neighborhood().select();
 
     // Close tooltip
@@ -17,7 +16,6 @@ function select_homologs(ev, family) {
     ev.preventDefault();
 
     // Select all nodes in the neighborhood
-    console.log('click ' + family);
     cy.nodes('[family_name = \'' + family + '\' ]').select();
 
     // Close tooltip

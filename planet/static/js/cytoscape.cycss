@@ -20,6 +20,8 @@ edge {
 }
 
 node:selected {
+        width: 50px;
+        height: 50px;
         border-width:6px;
         border-color:#AAD8FF;
         border-opacity:0.5;
@@ -28,7 +30,7 @@ node:selected {
 }
 
 node.found {
-        width: 60px;
+        width: 50px;
         height: 60px;
         text-outline-width: 2;
         text-outline-color: #EEE;
@@ -93,6 +95,14 @@ node.spm_shape {
 
 node.cluster_shape {
         shape: data(cluster_shape);
+}
+
+edge:selected {
+        border-width:6px;
+        border-color:#AAD8FF;
+        border-opacity:0.5;
+        background-color:#77828C;
+        line-color: black;
 }
 
 edge.color {
