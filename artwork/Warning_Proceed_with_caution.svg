@@ -13,7 +13,7 @@
    height="297mm"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
+   inkscape:version="0.91 r13725"
    sodipodi:docname="Warning_Proceed_with_caution.svg"
    inkscape:export-filename="C:\Users\Seb\Google Drive\Images\PlaNet\caution.png"
    inkscape:export-xdpi="71.887672"
@@ -28,16 +28,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="490.34355"
+     inkscape:cx="246.77212"
      inkscape:cy="704.36294"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1366"
-     inkscape:window-height="706"
-     inkscape:window-x="-8"
+     inkscape:window-width="1920"
+     inkscape:window-height="1058"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1">
     <sodipodi:guide
@@ -65,69 +65,71 @@
      inkscape:label="Laag 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:7.99999952;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       id="rect2985"
-       width="532.85712"
-       height="435.71426"
-       x="118.92858"
-       y="124.50504"
-       ry="30.999998"
-       rx="31" />
-    <rect
-       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       id="rect3792"
-       width="491.42856"
-       height="190"
-       x="139.64285"
-       y="147.50504"
-       ry="17"
-       rx="17" />
-    <path
-       sodipodi:type="arc"
-       style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:17.14699936;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       id="path3794"
-       sodipodi:cx="406.42856"
-       sodipodi:cy="264.50504"
-       sodipodi:rx="259.28571"
-       sodipodi:ry="117.85714"
-       d="m 665.71426,264.50504 a 259.28571,117.85714 0 1 1 -518.57141,0 259.28571,117.85714 0 1 1 518.57141,0 z"
-       transform="matrix(0.96418733,0,0,0.9030303,-6.5161269,3.648982)" />
-    <text
-       xml:space="preserve"
-       style="font-size:13.20194721px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tahoma;-inkscape-font-specification:Tahoma"
-       x="161.6557"
-       y="273.95776"
-       id="text3796"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan3798"
-         x="161.6557"
+    <g
+       id="g4144"
+       transform="matrix(0.24194397,0,0,0.24194397,-10.020552,-4.3647107)">
+      <rect
+         rx="31"
+         ry="30.999998"
+         y="124.50504"
+         x="118.92858"
+         height="435.71426"
+         width="532.85712"
+         id="rect2985"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:7.99999952;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         rx="17"
+         ry="17"
+         y="147.50504"
+         x="139.64285"
+         height="190"
+         width="491.42856"
+         id="rect3792"
+         style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <ellipse
+         transform="matrix(0.96418733,0,0,0.9030303,-6.5161269,3.648982)"
+         id="path3794"
+         style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:17.14699936;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         cx="406.42856"
+         cy="264.50504"
+         rx="259.28571"
+         ry="117.85714" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text3796"
          y="273.95776"
-         style="font-size:86.63777924px;font-weight:bold;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Tahoma Bold">WARNING</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:15.88628006px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Tahoma;-inkscape-font-specification:Tahoma"
-       x="130.71429"
-       y="420.41098"
-       id="text3800"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         x="130.71429"
+         x="161.6557"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.20194721px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:Tahoma;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           style="font-weight:bold;font-size:86.63777924px;-inkscape-font-specification:'Tahoma Bold';fill:#ffffff;fill-opacity:1"
+           y="273.95776"
+           x="161.6557"
+           id="tspan3798"
+           sodipodi:role="line">WARNING</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text3800"
          y="420.41098"
-         id="tspan3804"
-         style="font-size:71.48825836px">PROCEED WITH</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:13.58206844px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Tahoma;-inkscape-font-specification:Tahoma"
-       x="132.84415"
-       y="528.21112"
-       id="text3808"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan3810"
-         x="132.84415"
+         x="130.71429"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.88628006px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:Tahoma;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           style="font-size:71.48825836px"
+           id="tspan3804"
+           y="420.41098"
+           x="130.71429"
+           sodipodi:role="line">PROCEED WITH</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text3808"
          y="528.21112"
-         style="font-size:122.23862457px">CAUTION</tspan></text>
+         x="132.84415"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.58206844px;line-height:125%;font-family:Tahoma;-inkscape-font-specification:Tahoma;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           style="font-size:122.23862457px"
+           y="528.21112"
+           x="132.84415"
+           id="tspan3810"
+           sodipodi:role="line">CAUTION</tspan></text>
+    </g>
   </g>
 </svg>

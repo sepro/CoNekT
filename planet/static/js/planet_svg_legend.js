@@ -92,6 +92,7 @@ function generate_legend(label_set, attribute) {
             var label = (label_set[color][shape] === null) ? 'None' : label_set[color][shape],
                 new_label = families.g();
 
+            new_label.attr('class', 'legend_node_' + label);
             new_label.transform('translate', col * HSPACE, row * VSPACE + 15);
 
             if (shape === 'ellipse') {
