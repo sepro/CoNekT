@@ -164,33 +164,13 @@
             <li>
             <div class="row">
                 <div class="col-md-6 col-sm-12">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Data <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li class="nav-header"><p class="text-muted">data</p></li>
-                        <li><a href="#" id="cy-download-json">JSON (network)</a></li>
-                        <li><a href="#" id="cy-download-jsoncy">JSON (network + colors/shapes)</a></li>
-                        <li><a href="#" id="cy-download-xgmml">xgmml</a></li>
-                    </ul>
-                </div>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="modal"  data-target="#data_modal">Data</button>
                 </div>
                 <div class="col-md-6 col-sm-12">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Image <span class="caret"></span>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="modal"  data-target="#image_modal">
+                    Image
                     </button>
-                    <ul class="dropdown-menu">
-                        <li class="nav-header"><p class="text-muted">image</p></li>
-                        <li><p><a href="#" id="cy-download-svg">SVG</a> <span class="text-muted">|</span> <a href="#" id="cy-download-img-lowres">PNG</a></p></li>
-                        <li class="divider"></li>
-                        <li class="nav-header"><p class="text-muted">legend</p></li>
-                        <li><p><a href="#" id="cy-download-svg-legend">SVG</a>  <span class="text-muted">|</span> <a href="#" id="cy-download-png-legend">PNG</a></p></li>
-                        <li class="divider"></li>
-                        <li class="nav-header"><p class="text-muted">image + legend</p></li>
-                        <li><p><a href="#" id="cy-download-svg-with-legend">SVG</a> <span class="text-muted">|</span> <a href="#" id="cy-download-png-with-legend">PNG</a></p></li>
-                    </ul>
                 </div>
                 </div>
             </div>
@@ -229,6 +209,55 @@
     </div>
 </div>
 
+</div>
+
+<div class="modal" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel">
+    <div class="modal-dialog" role="document" style="width:1000px;height:800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h4 class="modal-title" id="dataModalLabel"><strong>Export Data</strong></h4>
+            </div>
+            <div class="modal-body" syle="width:700px;height:200px">
+                <button class="btn btn-primary" id="cy-download-json">... as JSON</button> <span class="text-muted">(network only)</span> <br/>
+                <button class="btn btn-primary" id="cy-download-jsoncy">... as JSON</button> <span class="text-muted"> (network + colors/shapes)</span> <br/>
+                <button class="btn btn-primary" id="cy-download-xgmml">... as XGMML</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+      </div>
+</div>
+
+<div class="modal" id="image_modal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel">
+    <div class="modal-dialog" role="document" style="width:1000px;height:800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h4 class="modal-title" id="imageModalLabel"><strong>Export Image</strong></h4>
+            </div>
+            <div class="modal-body" syle="width:700px;height:200px">
+                <table>
+                    <tbody>
+                    <tr>
+                        <td class="col-md-3"><strong>Image</strong></td>
+                        <td class="col-md-9"><button class="btn btn-primary" id="cy-download-svg">SVG</button> <button class="btn btn-primary" id="cy-download-img-lowres">PNG</button></td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3"><strong>Legend</strong></td>
+                        <td class="col-md-9"><button class="btn btn-primary" id="cy-download-svg-legend">SVG</button> <button class="btn btn-primary"  id="cy-download-png-legend">PNG</button></td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3"><strong>Image with Legend</strong></td>
+                        <td class="col-md-9"><button class="btn btn-primary" id="cy-download-svg-with-legend">SVG</button> <button class="btn btn-primary"  id="cy-download-png-with-legend">PNG</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+      </div>
 </div>
 {% endblock %}
 
