@@ -50,7 +50,7 @@ function select_lc(ev, lc_label) {
     svg_legend.find(".legend_node").transform('scale', null);
 
     // Find node matching to family
-    var family_match = svg_legend.find(".legend_node_"+ lc_label);
+    var family_match = svg_legend.find(".legend_node_"+ lc_label.split(';').join('_'));
     // Increase size of that node
     family_match.transform('scale', 1.5);
 
