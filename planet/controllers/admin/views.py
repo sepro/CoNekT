@@ -9,6 +9,7 @@ from planet.forms.admin.add_species import AddSpeciesForm
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
 from planet.forms.admin.add_go_sequences import AddGOForm
 from planet.forms.admin.add_interpro_sequences import AddInterProForm
+from planet.forms.admin.add_sequence_descriptions import AddSequenceDescriptionsForm
 from planet.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
 from planet.forms.admin.add_family import AddFamiliesForm
 from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
@@ -186,6 +187,15 @@ class AddInterProView(AdminBaseView):
         form.populate_species()
 
         return self.render('admin/add/interpro.html', form=form)
+
+
+class AddSequenceDescriptionsView(AdminBaseView):
+    @expose('/')
+    def index(self):
+        form = AddSequenceDescriptionsForm()
+        form.populate_species()
+
+        return self.render('admin/add/sequence_descriptions.html', form=form)
 
 
 class AddXRefsView(AdminBaseView):

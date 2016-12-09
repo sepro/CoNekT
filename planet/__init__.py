@@ -143,7 +143,8 @@ def create_app(config):
             CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView, \
             ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView, AddXRefsView, \
             AddXRefsFamiliesView, AddFamiliesView, AddExpressionProfilesView, AddCoexpressionClustersView, \
-            AddCoexpressionNetworkView, AddGOView, AddInterProView, AddCladesView, AddSpecificityView
+            AddCoexpressionNetworkView, AddGOView, AddInterProView, AddCladesView, AddSpecificityView, \
+            AddSequenceDescriptionsView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'), template_mode='bootstrap3')
 
@@ -185,6 +186,10 @@ def create_app(config):
         admin.add_view(AddCladesView(name='Clades',
                                      endpoint='admin.add.clades',
                                      url='add/clades/', category='Add'))
+
+        admin.add_view(AddSequenceDescriptionsView(name='Sequence Descriptions',
+                                                   endpoint='admin.add.sequence_descriptions',
+                                                   url='add/sequence_descriptions/', category='Add'))
 
         admin.add_view(AddXRefsView(name='XRefs Genes',
                                     endpoint='admin.add.xrefs',

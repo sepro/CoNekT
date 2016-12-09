@@ -123,3 +123,24 @@ class Sequence(db.Model):
         db.engine.execute(Sequence.__table__.insert(), new_sequences)
 
         return len(fasta_data.sequences.keys())
+
+    @staticmethod
+    def add_descriptions(filename, species_id):
+        sequences = Sequence.query.filter_by(species_id=species_id).all()
+
+        seq_dict = {}
+
+        for s in sequences:
+            seq_dict[s.name] = s
+
+        with open(filename, "r") as f_in:
+            for i, line in enumerate(f_in):
+                name, description = line.strip().split('\t')
+
+                if name in seq_dict.keys():
+                    seq_dict[name].description = description
+
+                if i % 400 == 0:
+                    db.session.commit()
+
+            db.session.commit()
