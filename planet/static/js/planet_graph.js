@@ -40,6 +40,25 @@ function select_homologs(ev, family) {
     $('div.qtip:visible').qtip('hide');
 };
 
+function select_lc(ev, lc_label) {
+    ev.preventDefault();
+
+    // Select all nodes in the neighborhood
+    cy.nodes('[lc_label = \'' + lc_label + '\' ]').select();
+
+    // Reset all nodes in the legend
+    svg_legend.find(".legend_node").transform('scale', null);
+
+    // Find node matching to family
+    var family_match = svg_legend.find(".legend_node_"+ lc_label);
+    // Increase size of that node
+    family_match.transform('scale', 1.5);
+
+
+    // Close tooltip
+    $('div.qtip:visible').qtip('hide');
+};
+
 $(function () { // on dom ready
     'use strict';
     var url = $('#cy').attr("json"),
@@ -112,7 +131,13 @@ $(function () { // on dom ready
                     }
                     )
                 }
-
+                if (n.data('lc_label') !== null) {
+                    content.push(
+                    {
+                        value: '<a href="#" onclick="select_lc(event, \'' + n.data('lc_label') + '\')">same label</a>'
+                    }
+                    )
+                }
 
 
 
