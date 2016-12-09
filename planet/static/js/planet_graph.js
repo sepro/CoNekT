@@ -8,8 +8,17 @@ function select_neighborhood(ev, node_name) {
     // Select all nodes in the neighborhood
     cy.nodes('[gene_name = \'' + node_name + '\']').neighborhood().select();
 
+    // Reset all nodes in the legend
+    svg_legend.find(".legend_node").transform('scale', null);
+
     // Close tooltip
     $('div.qtip:visible').qtip('hide');
+};
+
+function click_edge(ev) {
+    ev.preventDefault();
+    // Reset all nodes in the legend
+    svg_legend.find(".legend_node").transform('scale', null);
 };
 
 function select_homologs(ev, family) {
@@ -17,6 +26,15 @@ function select_homologs(ev, family) {
 
     // Select all nodes in the neighborhood
     cy.nodes('[family_name = \'' + family + '\' ]').select();
+
+    // Reset all nodes in the legend
+    svg_legend.find(".legend_node").transform('scale', null);
+
+    // Find node matching to family
+    var family_match = svg_legend.find(".legend_node_"+ family);
+    // Increase size of that node
+    family_match.transform('scale', 1.5);
+
 
     // Close tooltip
     $('div.qtip:visible').qtip('hide');
@@ -144,7 +162,6 @@ $(function () { // on dom ready
                     content.push({ value: 'ECC: ' + e.data('ecc_score').toFixed(2) });
                 }
 
-
                 e.qtip({
                     content: content.map(function (item) {
                         return item.value;
@@ -162,6 +179,14 @@ $(function () { // on dom ready
                     }
                 });
             }); // end cy.edges.forEach...
+
+            cy.edges().on("click", function(ev) {
+                click_edge(ev);
+            });
+
+             cy.on("click", function(ev) {
+                click_edge(ev);
+            });
 
             // Fill data for legend
             var svg_families = [],
