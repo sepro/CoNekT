@@ -16,7 +16,7 @@ required_endpoints = ['/admin/add/species/', '/admin/add/expression_profiles/',
                       '/admin/add/interpro/', '/admin/add/clades/', '/admin/add/xrefs/',
                       '/admin/add/xrefs_families/', '/admin/controls/', '/admin/species/', '/admin/clades/',
                       '/admin/families/', '/admin/networks/', '/admin/clusters/', '/admin/specificity/',
-                      '/admin/condition_tissue/', '/admin/add/functional_data/']
+                      '/admin/condition_tissue/', '/admin/add/functional_data/', '/admin/add/sequence_descriptions/']
 
 
 class AdminTest(TestCase):
@@ -115,6 +115,16 @@ class AdminTest(TestCase):
                                         follow_redirects=True, content_type='multipart/form-data')
             self.assert200(response)
             self.assertTrue('Added species' in response.data.decode('utf-8'))  # Check for flash message
+
+        # Add Sequence descriptions
+        with open('./tests/data/mamut.descriptions.txt', 'rb') as description_data:
+            payload = {'species_id': 1, 'file': description_data}
+
+            response = self.client.post('/admin_controls/add/sequence_descriptions', data=payload,
+                                        follow_redirects=True,
+                                        content_type='multipart/form-data')
+            self.assert200(response)
+            self.assertTrue('Added descriptions from file' in response.data.decode('utf-8'))  # Check for flash message
 
         # Add GO
         with open('./tests/data/functional_data/mamut.go.txt', 'rb') as go_data:

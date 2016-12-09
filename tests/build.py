@@ -46,6 +46,8 @@ class BuildTest(TestCase):
         s = Species.query.first()
 
         Sequence.add_from_fasta('./tests/data/mamut.cds.fasta', s.id)
+        Sequence.add_descriptions('./tests/data/mamut.descriptions.txt', s.id)
+
         XRef.add_xref_genes_from_file(s.id, './tests/data/mamut.xref.txt')
         GO.add_from_obo('./tests/data/test_go.obo')
         GO.add_go_from_tab('./tests/data/functional_data/mamut.go.txt', s.id, source="Fake UnitTest Data")
@@ -114,6 +116,7 @@ class BuildTest(TestCase):
         self.assertEqual(len(s.sequences.all()), 3)                        # Check if all genes are added
 
         self.assertEqual(test_sequence.name, 'Gene01')
+        self.assertTrue('Breast Cancer 2 gene,' in test_sequence.description)
         self.assertEqual(test_sequence.species_id, s.id)
 
         self.assertEqual(test_sequence.aliases, 'BRCA2')                # Check if alias is added and correct

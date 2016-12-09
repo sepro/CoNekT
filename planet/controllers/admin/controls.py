@@ -137,7 +137,7 @@ def add_species():
             abort(405)
 
 
-@admin_controls.route('/add/descriptions', methods=['POST'])
+@admin_controls.route('/add/sequence_descriptions', methods=['POST'])
 @login_required
 def add_descriptions():
     form = AddSequenceDescriptionsForm(request.form)
@@ -149,8 +149,8 @@ def add_descriptions():
         if description_data != b'':
             fd, temp_path = mkstemp()
 
-            with open(temp_path, 'wb') as xref_writer:
-                xref_writer.write(description_data)
+            with open(temp_path, 'wb') as desc_writer:
+                desc_writer.write(description_data)
 
             Sequence.add_descriptions(temp_path, species_id)
 
