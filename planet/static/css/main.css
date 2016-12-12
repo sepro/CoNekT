@@ -113,7 +113,7 @@ textarea.form-control {
 
 #loading.pagination {
   text-align: center;
-  margin-top: 2em;
+  margin-top: 50px;
   font-size: 3em;
   color: #000;
   width:100%;
@@ -121,6 +121,10 @@ textarea.form-control {
 
 #loading.loaded {
   display: none;
+}
+
+#stem, #leaf_pair_01, #leaf_pair_02, #leaf_pair_03, #leaf_pair_04, #leaf_pair_05 {
+  opacity:0
 }
 
 /*
