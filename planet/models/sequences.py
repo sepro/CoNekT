@@ -5,6 +5,8 @@ from planet.models.relationships import sequence_xref, sequence_sequence_ecc
 from utils.sequence import translate
 from utils.parser.fasta import Fasta
 
+import operator
+
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
@@ -103,7 +105,8 @@ class Sequence(db.Model):
 
         new_sequences = []
 
-        for name, sequence in fasta_data.sequences.items():
+        # Loop over sequences, sorted by name (key here) and add to db
+        for name, sequence in sorted(fasta_data.sequences.items(), key=operator.itemgetter(0)):
             new_sequence = {"species_id": species_id,
                             "name": name,
                             "description": None,
