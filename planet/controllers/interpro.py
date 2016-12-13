@@ -61,7 +61,7 @@ def interpro_sequences(interpro_id, page=1):
     :param interpro_id: Internal ID of the interpro domain
     :param page: Page number
     """
-    sequences = Interpro.query.get(interpro_id).sequences.group_by(Sequence.id).order_by(Sequence.name)\
+    sequences = Interpro.query.get(interpro_id).sequences.group_by(Sequence.id)\
         .options(joinedload('species'))\
         .paginate(page, g.page_items, False).items
 

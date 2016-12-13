@@ -61,9 +61,9 @@ def go_sequences(go_id, page=1):
     :param page: Page number
     """
     sequences = GO.query.get(go_id).sequences.\
-        group_by(Sequence.id).order_by(Sequence.name).paginate(page,
-                                                               g.page_items,
-                                                               False).items
+        group_by(Sequence.id).paginate(page,
+                                       g.page_items,
+                                       False).items
 
     return render_template('pagination/sequences.html', sequences=sequences)
 
