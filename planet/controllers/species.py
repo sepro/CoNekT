@@ -43,9 +43,9 @@ def species_sequences(species_id, page=1):
     :param species_id: Internal ID of the species
     :param page: Page number
     """
-    sequences = Species.query.get(species_id).sequences.order_by(Sequence.name).paginate(page,
-                                                                                  g.page_items,
-                                                                                  False).items
+    sequences = Species.query.get(species_id).sequences.paginate(page,
+                                                                 g.page_items,
+                                                                 False).items
 
     return render_template('pagination/sequences.html', sequences=sequences)
 
