@@ -41,11 +41,9 @@ def family_view(family_id):
     """
     current_family = GeneFamily.query.get_or_404(family_id)
     sequence_count = len(current_family.sequences.with_entities(Sequence.id).all())
-    ecc_count = current_family.ecc_associations_count
 
     return render_template('family.html', family=current_family,
                            count=sequence_count,
-                           ecc_count=ecc_count,
                            xrefs=current_family.xrefs.all())
 
 

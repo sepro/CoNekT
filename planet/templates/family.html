@@ -48,8 +48,8 @@
     {{ macro.pagination(
         'Expression Context Conservation',
         url_for('family.family_ecc_relations', family_id=family.id),
-        ecc_count,
-        url_for('family.family_ecc_relations', family_id=family.id)
+        -1,
+        none
     ) }}
     <br />
 

@@ -6,6 +6,8 @@ $(document).ready(function () {
             page_count = parseInt(panel.attr("page-count"), 10),
             page = parseInt(panel.attr("current_page"), 10);
 
+            page_count = page_count >=0 ? page_count : 10000; // If pagecount is not known, very large number
+
         panel.html(`<br /><br /><div id="loading" class="pagination"><svg id="svg2" xmlns="http://www.w3.org/2000/svg" height="150" width="150" version="1.1">
                  <defs id="defs4">
                   <linearGradient id="linearGradient4293">
