@@ -88,13 +88,6 @@ def family_ecc_relations(family_id, page=1):
     return render_template('pagination/ecc_relations.html', relations=relations)
 
 
-@family.route('/ecc_relations/table/<family_id>/')
-@cache.cached()
-def family_ecc_relations_table(family_id):
-    # TODO
-
-    return "hello world"
-
 @family.route('/json/species/<family_id>')
 @cache.cached()
 def family_json_species(family_id):
