@@ -263,9 +263,11 @@
             <h4 class="modal-title" id="dataModalLabel"><strong>Export Data</strong></h4>
             </div>
             <div class="modal-body" syle="width:700px;height:200px">
-                <button class="btn btn-primary" id="cy-download-json">... as JSON</button> <span class="text-muted">(network only)</span> <br/><br/>
-                <button class="btn btn-primary" id="cy-download-jsoncy">... as JSON</button> <span class="text-muted"> (network + colors/shapes)</span> <br/><br/>
-                <button class="btn btn-primary" id="cy-download-xgmml">... as XGMML</button>
+                <button class="btn btn-primary" id="cy-download-xgmml">XGMML</button> <span class="text-muted">(compatible with Cytoscape)</span>
+                <hr />
+                <h3>Other formats</h3>
+                <button class="btn btn-default" id="cy-download-json">JSON</button> <span class="text-muted">(network only)</span> <br/><br/>
+                <button class="btn btn-default" id="cy-download-jsoncy">JSON</button> <span class="text-muted">(network + colors/shapes)</span> <br/><br/>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -284,19 +286,22 @@
                 <table>
                     <tbody>
                     <tr>
+                        <td class="col-md-3"><strong>Image with Legend</strong></td>
+                        <td class="col-md-9"><button class="btn btn-primary" id="cy-download-svg-with-legend">SVG</button> <button class="btn btn-primary"  id="cy-download-png-with-legend">PNG</button></td>
+                    </tr>
+                    <tr><td colspan="2"><br /></td></tr>
+                    <tr><td colspan="2">Other Options</td></tr>
+                    <tr><td colspan="2"><hr /></td></tr>
+                    <tr>
                         <td class="col-md-3"><strong>Image</strong></td>
-                        <td class="col-md-9"><button class="btn btn-primary" id="cy-download-svg">SVG</button> <button class="btn btn-primary" id="cy-download-img-lowres">PNG</button></td>
+                        <td class="col-md-9"><button class="btn btn-default" id="cy-download-svg">SVG</button> <button class="btn btn-default" id="cy-download-img-lowres">PNG</button></td>
                     </tr>
                     <tr><td><br /></td></tr>
                     <tr>
                         <td class="col-md-3"><strong>Legend</strong></td>
-                        <td class="col-md-9"><button class="btn btn-primary" id="cy-download-svg-legend">SVG</button> <button class="btn btn-primary"  id="cy-download-png-legend">PNG</button></td>
+                        <td class="col-md-9"><button class="btn btn-default" id="cy-download-svg-legend">SVG</button> <button class="btn btn-default"  id="cy-download-png-legend">PNG</button></td>
                     </tr>
                     <tr><td><br /></td></tr>
-                    <tr>
-                        <td class="col-md-3"><strong>Image with Legend</strong></td>
-                        <td class="col-md-9"><button class="btn btn-primary" id="cy-download-svg-with-legend">SVG</button> <button class="btn btn-primary"  id="cy-download-png-with-legend">PNG</button></td>
-                    </tr>
                     </tbody>
                 </table>
             </div>

@@ -117,6 +117,29 @@ class GeneFamily(db.Model):
 
         return output
 
+    @property
+    def ecc_associations_count(self):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        output = SequenceSequenceECCAssociation.query\
+            .filter_by(gene_family_method_id=self.method_id)\
+            .filter(or_(or_(*[SequenceSequenceECCAssociation.query_id == s for s in sequence_ids]),
+                        or_(*[SequenceSequenceECCAssociation.target_id == s for s in sequence_ids])))\
+            .count()
+
+        return output
+
+    def ecc_associations_paginated(self, page=1, page_items=30):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        output = SequenceSequenceECCAssociation.query\
+            .filter_by(gene_family_method_id=self.method_id)\
+            .filter(or_(or_(*[SequenceSequenceECCAssociation.query_id == s for s in sequence_ids]),
+                        or_(*[SequenceSequenceECCAssociation.target_id == s for s in sequence_ids])))\
+            .paginate(page, page_items, False).items
+
+        return output
+
     @staticmethod
     def add_families_from_mcl(filename, description, handle_isoforms=True, prefix='mcl'):
         """

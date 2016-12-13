@@ -41,11 +41,12 @@ def family_view(family_id):
     """
     current_family = GeneFamily.query.get_or_404(family_id)
     sequence_count = len(current_family.sequences.with_entities(Sequence.id).all())
+    ecc_count = current_family.ecc_associations_count
 
     return render_template('family.html', family=current_family,
                            count=sequence_count,
-                           xrefs=current_family.xrefs.all(),
-                           ecc_associations=current_family.ecc_associations)
+                           ecc_count=ecc_count,
+                           xrefs=current_family.xrefs.all())
 
 
 @family.route('/sequences/<family_id>/')
@@ -60,8 +61,8 @@ def family_sequences(family_id, page=1):
     """
     sequences = GeneFamily.query.get(family_id).sequences.options(joinedload('species')).\
         order_by(Sequence.name).paginate(page,
-                                  g.page_items,
-                                  False).items
+                                         g.page_items,
+                                         False).items
 
     return render_template('pagination/sequences.html', sequences=sequences)
 
@@ -78,6 +79,23 @@ def family_sequences_table(family_id):
 
     return Response(render_template('tables/sequences.csv', sequences=sequences), mimetype='text/plain')
 
+
+@family.route('/ecc_relations/<family_id>/')
+@family.route('/ecc_relations/<family_id>/<int:page>')
+@cache.cached()
+def family_ecc_relations(family_id, page=1):
+    f = GeneFamily.query.get(family_id)
+    relations = f.ecc_associations_paginated(page, g.page_items)
+
+    return render_template('pagination/ecc_relations.html', relations=relations)
+
+
+@family.route('/ecc_relations/table/<family_id>/')
+@cache.cached()
+def family_ecc_relations_table(family_id):
+    # TODO
+
+    return "hello world"
 
 @family.route('/json/species/<family_id>')
 @cache.cached()
