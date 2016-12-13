@@ -47,9 +47,11 @@ $(document).ready(function () {
                    <path id="path4168" d="m303.87 284.11c-1.2314-0.48378 10.736-24.39 34.629-23.721 18.056 0.50579 53.849 6.0602 53.849 6.0602-5.7438-0.89456-42.065 33.913-61.814 31.686-16.35-1.8436-28.705-13.397-26.665-14.025z" stroke="#114b00" stroke-width="1px" fill="url(#linearGradient4305)"/>
                    <path id="path4344" style="color-rendering:auto;text-decoration-color:#000000;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;block-progression:tb;text-decoration-line:none;text-decoration-style:solid;image-rendering:auto;white-space:normal;text-indent:0;text-transform:none" d="m389.23 266.08-0.0703 0.006c-27.985 2.8066-51.525 6.2886-67.902 10.839-16.377 4.5503-28.773 8.3913-34.292 14.83-0.86849 1.013 0.38852 4.575 1.257 3.562 5.0287-5.8674 17.369-11.965 33.57-16.466 16.201-4.5012 40.794-9.356 68.709-12.156 1.2692-0.13775 0.005-0.64166-1.2717-0.61487z" fill="#114b00"/>
                    <path id="path4354" style="color-rendering:auto;text-decoration-color:#000000;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;block-progression:tb;text-decoration-line:none;text-decoration-style:solid;image-rendering:auto;white-space:normal;text-indent:0;text-transform:none" d="m241.11 203.04c-0.89692 0.0138-0.90268 0.47885-0.25099 1.0952 14.527 14.143 28.078 30.756 35.036 44.547 6.9581 13.791 8.3598 29.952 4.598 43.27-0.42115 1.315 3.5369-0.77275 3.8654-2.1139 3.918-13.871 0.43532-27.957-6.6783-42.057-7.1136-14.099-21.228-30.216-35.848-44.449-0.19133-0.19142-0.45206-0.29712-0.72266-0.29297z" fill="#114b00"/>
-                  </g></g><path id="stem" d="m30.724 100.48c1.072-55.803 16.195-69.278 30.949-83.863-25.171 23.733-28.283 53.519-28.418 84.123z" stroke="#114b00" stroke-width=".16999px" fill="url(#linearGradient4303)"/></svg></div>`);
-
+                  </g></g><path id="stem" d="m30.724 100.48c1.072-55.803 16.195-69.278 30.949-83.863-25.171 23.733-28.283 53.519-28.418 84.123z" stroke="#114b00" stroke-width=".16999px" fill="url(#linearGradient4303)"/></svg></div>`).promise().done(function(){
         init_planet_loader();
+    });;
+
+
 
         panel.load(base_url + page);
 
