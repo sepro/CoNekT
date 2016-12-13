@@ -6,7 +6,6 @@ from planet.models.gene_families import GeneFamily
 from planet.models.sequences import Sequence
 import json
 
-
 family = Blueprint('family', __name__)
 
 
