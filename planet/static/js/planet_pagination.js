@@ -83,6 +83,7 @@ $(document).ready(function () {
     $(".planet-pagination-last").click(function () {
         var panel = $(this).closest(".planet-pagination-container").find(".planet-pagination"),
             page_count = parseInt(panel.attr("page-count"), 10);
+        page_count = page_count >=0 ? page_count : 10000; // If pagecount is not known, very large number
         panel.attr("current_page", page_count);
         update(panel);
     });
@@ -91,6 +92,7 @@ $(document).ready(function () {
         var panel = $(this).closest(".planet-pagination-container").find(".planet-pagination"),
             page_count = parseInt(panel.attr("page-count"), 10),
             current_page = parseInt(panel.attr("current_page"), 10);
+        page_count = page_count >=0 ? page_count : 10000; // If pagecount is not known, very large number
         if (current_page < page_count) {
             panel.attr("current_page", current_page + 1);
         }
