@@ -1,4 +1,4 @@
-{% macro pagination(title, url, count, download) -%}
+{% macro pagination(title, url, count, download, key) -%}
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default planet-pagination-container">
@@ -7,13 +7,15 @@
                     <div style="height:300px;overflow-y:auto;" class="planet-pagination"
                          base-url="{{ url }}"
                          page-count="{{ (count / g.page_items)|round(0, 'ceil')|int }}"
-                         current_page=1></div>
+                         current_page=1
+                         key="{{ key }}"></div>
                 {% else %}
                     <div class="panel-heading">{{title}}{% if download %} (<a href="{{ download }}" download="table.csv">download table</a>){% endif %}</div>
                     <div style="height:300px;overflow-y:auto;" class="planet-pagination"
                          base-url="{{ url }}"
                          page-count="-1"
-                         current_page=1></div>
+                         current_page=1
+                         key="{{ key }}"></div>
                 {% endif %}
                 <div class="panel-body">
                     <button class="btn btn-primary planet-pagination-first"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span></button>

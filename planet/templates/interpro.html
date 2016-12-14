@@ -33,7 +33,8 @@
     {{ macro.pagination('Sequences',
         url_for('interpro.interpro_sequences', interpro_id=interpro.id),
         count,
-        url_for('interpro.interpro_sequences_table', interpro_id=interpro.id)
+        url_for('interpro.interpro_sequences_table', interpro_id=interpro.id),
+        'interpro'
     ) }}
 
     {% endif %}

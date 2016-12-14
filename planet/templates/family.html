@@ -40,7 +40,8 @@
         'Sequences',
         url_for('family.family_sequences', family_id=family.id),
         count,
-        url_for('family.family_sequences_table', family_id=family.id)
+        url_for('family.family_sequences_table', family_id=family.id),
+        'seq'
     ) }}
 
     <br />
@@ -49,7 +50,8 @@
         'Expression Context Conservation',
         url_for('family.family_ecc_relations', family_id=family.id),
         -1,
-        none
+        none,
+        'ecc'
     ) }}
     <br />
 

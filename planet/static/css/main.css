@@ -111,7 +111,12 @@ textarea.form-control {
   width:100%;
 }
 
-#loading.pagination {
+
+#loading.loaded {
+  display: none;
+}
+
+.pagination_loading {
   text-align: center;
   margin-top: 50px;
   font-size: 3em;
@@ -119,13 +124,10 @@ textarea.form-control {
   width:100%;
 }
 
-#loading.loaded {
-  display: none;
+.gsap_start_hidden {
+    opacity:0
 }
 
-#stem, #leaf_pair_01, #leaf_pair_02, #leaf_pair_03, #leaf_pair_04, #leaf_pair_05 {
-  opacity:0
-}
 
 /*
  * Global add-ons

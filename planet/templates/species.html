@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        {{ macro.pagination('Sequences', url_for('species.species_sequences', species_id=species.id), species.sequence_count, none) }}
+        {{ macro.pagination('Sequences', url_for('species.species_sequences', species_id=species.id), species.sequence_count, none, 'species') }}
 
     {% elif all_species %}
         <ol class="breadcrumb">
