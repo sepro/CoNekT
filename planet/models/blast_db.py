@@ -31,7 +31,5 @@ class BlastDB:
         subprocess.call(shlex.split(build_cds_cmd))
         subprocess.call(shlex.split(build_pep_cmd))
 
-        # TODO clean up temp files
-
 
 
