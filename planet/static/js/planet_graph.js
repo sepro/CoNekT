@@ -323,6 +323,7 @@ $(function () { // on dom ready
         $(this).closest('.cy-option-menu').find('.cy-edge-width').each(function () {
             cy.edges('[^homology]').removeClass($(this).attr('attr'));
         });
+
         cy.edges('[^homology]').addClass($(this).attr('attr'));
     });
 

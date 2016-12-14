@@ -276,7 +276,8 @@ class SequenceSequenceECCAssociation(db.Model):
         edges = [{"source": association.query_sequence.name,
                   "target": association.target_sequence.name,
                   "ecc_score": association.ecc,
-                  "edge_type": 1}]
+                  'ecc_pair_color': "#D33",
+                  "edge_type": "ecc"}]
 
         query_network = association.query_sequence.network_nodes.filter_by(method_id=association.query_network_method_id).first_or_404().network
         target_network = association.target_sequence.network_nodes.filter_by(method_id=association.target_network_method_id).first_or_404().network
@@ -307,7 +308,9 @@ class SequenceSequenceECCAssociation(db.Model):
 
             edges.append({"source": association.query_sequence.name,
                           "target": gene_name,
-                          "link_score": n['link_score'] if 'link_score' in n else 0})
+                          "link_score": n['link_score'] if 'link_score' in n else 0,
+                          "edge_type": "expression",
+                          'ecc_pair_color': "#3D3"})
 
         for n in target_network_data:
             gene_id = n['gene_id'] if 'gene_id' in n.keys() else None
@@ -328,14 +331,16 @@ class SequenceSequenceECCAssociation(db.Model):
 
             edges.append({"source": association.target_sequence.name,
                           "target": gene_name,
-                          "link_score": n['link_score'] if 'link_score' in n else 0})
+                          "link_score": n['link_score'] if 'link_score' in n else 0,
+                          "edge_type": "expression",
+                          'ecc_pair_color': "#3D3"})
 
         """
         Add gene families to sequences
         """
         seq_fams = SequenceFamilyAssociation.query.filter(and_(SequenceFamilyAssociation.sequence_id.in_(sequences),
-                                                                 SequenceFamilyAssociation.family.has(method_id=association.gene_family_method_id)
-                                                                 )).all()
+                                                               SequenceFamilyAssociation.family.has(method_id=association.gene_family_method_id)
+                                                               )).all()
 
         seq_to_fam = {sf.sequence_id: sf.gene_family_id for sf in seq_fams}
 
@@ -352,7 +357,9 @@ class SequenceSequenceECCAssociation(db.Model):
                     edges.append(
                         {'source': nodes[i]['id'],
                          'target': nodes[j]['id'],
-                         'color': "#33D",
+                         'homology_color': "#33D",
+                         'edge_type': 'homology',
+                         'ecc_pair_color': "#33D",
                          'homology': True}
                     )
 

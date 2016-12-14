@@ -133,6 +133,10 @@ edge.ecc_type {
         line-color: mapData(edge_type, 0, 1, #00ccff, #ffcc00);
 }
 
+edge.ecc_pair_color {
+        line-color: data(ecc_pair_color);
+}
+
 edge.default {
         opacity: 0.7;
         width: 1;

@@ -99,13 +99,15 @@
                         <li><a href="#" class="cy-edge-color" attr="color">Default</a></li>
                         {% if node %}
                         <li><a href="#" class="cy-edge-color" attr="depth_color">Depth</a></li>
-                        {% endif %}
-                        {% if not sequence %}
+                        {% elif ecc_pair %}
+                        <li><a href="#" class="cy-edge-color" attr="ecc_pair_color">Type</a></li>
+                        {% elif not sequence %}
                         <li><a href="#" class="cy-edge-color" attr="link_score">Score</a></li>
                         {% else %}
                         <li><a href="#" class="cy-edge-color" attr="ecc_score">ECC</a></li>
                         <li><a href="#" class="cy-edge-color" attr="ecc_type">ECC type</a></li>
                         {% endif %}
+
                     </ul>
                     </div>
                 </div>
@@ -150,7 +152,6 @@
                         <li><a href="#" class="cy-layout" layout="circle">Circle</a></li>
                         <li><a href="#" class="cy-layout" layout="concentric">Concentric</a></li>
                         <li><a href="#" class="cy-layout" layout="cose">Cose</a></li>
-                        <!--<li><a href="#" class="cy-layout" layout="cose-bilkent">Cose-Bilkent</a></li>-->
                         <li><a href="#" class="cy-layout" layout="grid">Grid</a></li>
                         <li class="divider"></li>
                         <li><a href="#" class="cy-layout" layout="random">Random</a></li>
