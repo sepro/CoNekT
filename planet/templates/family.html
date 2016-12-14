@@ -44,6 +44,34 @@
         'seq'
     ) }}
 
+    <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">InterPro Domains</div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <tbody>
+                            {% for domain_id, domain_stat in family.interpro_stats.items() %}
+                            <tr>
+                                <td>{{ domain_id }}</td>
+                                <td>{{ domain_stat.domain.label }}</td>
+                                <td>{{ domain_stat.count }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td>
+                                    <p>No external references for this sequences in the database.</p>
+                                </td>
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <br />
 
     {{ macro.pagination(

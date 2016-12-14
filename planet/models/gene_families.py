@@ -1,9 +1,10 @@
 from planet import db
-from planet.models.relationships import sequence_family, family_xref, SequenceSequenceECCAssociation
+from planet.models.relationships import sequence_family, family_xref, SequenceSequenceECCAssociation,\
+    SequenceInterproAssociation
 from planet.models.sequences import Sequence
 
-import csv
 import re
+import json
 
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql import or_, and_
@@ -125,6 +126,25 @@ class GeneFamily(db.Model):
             .filter(or_(or_(*[SequenceSequenceECCAssociation.query_id == s for s in sequence_ids]),
                         or_(*[SequenceSequenceECCAssociation.target_id == s for s in sequence_ids])))\
             .paginate(page, page_items, False).items
+
+        return output
+
+    @property
+    def interpro_stats(self):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        output = {}
+
+        data = SequenceInterproAssociation.query.filter(SequenceInterproAssociation.sequence_id.in_(sequence_ids)).all()
+
+        for d in data:
+            if d.interpro_id not in output.keys():
+                output[d.interpro_id] = {
+                    'domain': d.domain,
+                    'count': 1
+                }
+            else:
+                output[d.interpro_id]['count'] += 1
 
         return output
 

@@ -1,8 +1,8 @@
-import json
+from sqlalchemy import and_
 
 from planet import db
 
-from sqlalchemy import and_
+import json
 
 sequence_go = db.Table('sequence_go',
                        db.Column('id', db.Integer, primary_key=True),
