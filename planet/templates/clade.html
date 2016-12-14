@@ -26,8 +26,8 @@
         {% endfor %}</p><br />
 
 
-    {{ macro.pagination('Families', url_for('clade.clade_families', clade_id=clade.id), families_count, url_for('clade.clade_families_table', clade_id=clade.id)), 'family' }}
-    {{ macro.pagination('Interpro domains', url_for('clade.clade_interpro', clade_id=clade.id), interpro_count, url_for('clade.clade_interpro_table', clade_id=clade.id)), 'interpro' }}
+    {{ macro.pagination('Families', url_for('clade.clade_families', clade_id=clade.id), families_count, url_for('clade.clade_families_table', clade_id=clade.id), 'family') }}
+    {{ macro.pagination('Interpro domains', url_for('clade.clade_interpro', clade_id=clade.id), interpro_count, url_for('clade.clade_interpro_table', clade_id=clade.id), 'interpro') }}
 
     {% endif %}
 </div>
