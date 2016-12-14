@@ -25,6 +25,14 @@
     <a class="btn btn-default" href="{{ url_for('admin_controls.clear_cache') }}">Clear</a>
 </div>
 
+{% if g.blast_enabled %}
+<h3>Blast</h3>
+<p>This will build the Blast DB</p>
+<div class="btn-group">
+    <a class="btn btn-default" href="{{ url_for('admin_controls.build_blast_db') }}">Build Blast DB</a>
+</div>
+{% endif %}
+
 <h3>Export</h3>
 <p>This will export the data to the FTP folder sepcified in the configuration.</p>
 <div class="btn-group">

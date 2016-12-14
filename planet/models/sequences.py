@@ -5,6 +5,7 @@ from planet.models.relationships import sequence_xref, sequence_sequence_ecc
 from utils.sequence import translate
 from utils.parser.fasta import Fasta
 
+from sqlalchemy.orm import undefer
 import operator
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
@@ -147,3 +148,19 @@ class Sequence(db.Model):
                     db.session.commit()
 
             db.session.commit()
+
+    @staticmethod
+    def export_cds(filename):
+        sequences = Sequence.query.options(undefer('coding_sequence')).all()
+
+        with open(filename, "w") as f_out:
+            for s in sequences:
+                print(">%s\n%s" % (s.name, s.coding_sequence), file=f_out)
+
+    @staticmethod
+    def export_protein(filename):
+        sequences = Sequence.query.options(undefer('coding_sequence')).all()
+
+        with open(filename, "w") as f_out:
+            for s in sequences:
+                print(">%s\n%s" % (s.name, s.protein_sequence), file=f_out)

@@ -18,8 +18,11 @@ from planet.forms.admin.add_interpro_sequences import AddInterProForm
 from planet.forms.admin.add_species import AddSpeciesForm
 from planet.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
 from planet.forms.admin.add_sequence_descriptions import AddSequenceDescriptionsForm
+
 from planet.ftp import export_coding_sequences, export_families, export_protein_sequences, export_go_annotation, \
     export_interpro_annotation, export_coexpression_clusters, export_expression_networks
+
+from planet.models.blast_db import BlastDB
 from planet.models.clades import Clade
 from planet.models.condition_tissue import ConditionTissue
 from planet.models.expression.coexpression_clusters import CoexpressionCluster
@@ -89,6 +92,19 @@ def clear_cache():
         flash('An error occurred while clearing the cache', 'danger')
     else:
         flash('Cache cleared', 'success')
+
+    return redirect(url_for('admin.controls.index'))
+
+
+@admin_controls.route('/build_blast_db')
+@login_required
+def build_blast_db():
+    try:
+        BlastDB.create_db()
+    except Exception as e:
+        flash('An error occurred while building the Blast DB', 'danger')
+    else:
+        flash('Blast DB build', 'success')
 
     return redirect(url_for('admin.controls.index'))
 
