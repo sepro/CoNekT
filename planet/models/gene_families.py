@@ -149,7 +149,7 @@ class GeneFamily(db.Model):
                 output[d.interpro_id]['count'] += 1
                 if d.sequence_id not in output[d.interpro_id]['sequences']:
                     output[d.interpro_id]['sequences'].append(d.sequence_id)
-                if d.sequence.species_id not in output[d.interpro_id]['sprecies']:
+                if d.sequence.species_id not in output[d.interpro_id]['species']:
                     output[d.interpro_id]['species'].append(d.sequence.species_id)
 
         for k, v in output.items():
