@@ -1,5 +1,14 @@
 <div class="table-responsive">
     <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>Label</td>
+                <td>Description</td>
+                <td>Count</td>
+                <td>Sequence count</td>
+                <td>Species count</td>
+            </tr>
+        </thead>
         <tbody>
             {% for domain_id, domain_stat in interpro_stats.items() %}
             <tr>
