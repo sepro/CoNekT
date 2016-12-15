@@ -46,7 +46,9 @@ $(document).ready(function () {
                    <path id="${key}path4354" style="color-rendering:auto;text-decoration-color:#000000;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;block-progression:tb;text-decoration-line:none;text-decoration-style:solid;image-rendering:auto;white-space:normal;text-indent:0;text-transform:none" d="m241.11 203.04c-0.89692 0.0138-0.90268 0.47885-0.25099 1.0952 14.527 14.143 28.078 30.756 35.036 44.547 6.9581 13.791 8.3598 29.952 4.598 43.27-0.42115 1.315 3.5369-0.77275 3.8654-2.1139 3.918-13.871 0.43532-27.957-6.6783-42.057-7.1136-14.099-21.228-30.216-35.848-44.449-0.19133-0.19142-0.45206-0.29712-0.72266-0.29297z" fill="#114b00"/>
                   </g></g><path class="gsap_start_hidden ${key}stem" d="m30.724 100.48c1.072-55.803 16.195-69.278 30.949-83.863-25.171 23.733-28.283 53.519-28.418 84.123z" stroke="#114b00" stroke-width=".16999px" fill="url(#${key}linearGradient4303)"/></svg></div>`).promise().done(function(){
         init_planet_loader(key);
-        panel.load(base_url);
+        panel.load(base_url, function() {
+            $(this).find(".stupidtable").stupidtable();
+        });
     });
 
     }
