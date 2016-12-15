@@ -128,3 +128,10 @@ def family_json_species(family_id):
 
     return Response(json.dumps(output), mimetype='application/json')
 
+
+@family.route('/ajax/interpro/<family_id>')
+@cache.cached()
+def family_interpro_ajax(family_id):
+    f = GeneFamily.query.get(family_id)
+
+    return render_template('async/interpro_stats.html', interpro_stats=f.interpro_stats)

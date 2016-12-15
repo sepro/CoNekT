@@ -134,25 +134,27 @@
 
         </div>
 </div>
-<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/stupidtable.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/TweenMax.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/planet_loader.js') }}"></script>
-<!-- code to reload modal on each click -->
-<script>
-    $(function () {
-      $('a[data-target=#helpModal], abbr[data-target=#helpModal]').click(function(ev) {
-        ev.preventDefault();
-        var target = $(this).attr("href");
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/stupidtable.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/TweenMax.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/planet_loader.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/planet_pagination.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/planet_ajax_table.js') }}"></script>
+        <!-- code to reload modal on each click -->
+        <script>
+            $(function () {
+              $('a[data-target=#helpModal], abbr[data-target=#helpModal]').click(function(ev) {
+                ev.preventDefault();
+                var target = $(this).attr("href");
 
-        // load the url and show modal on success
-        $("#helpModal .modal-content").load(target, function() {
-             $("#helpModal").modal("show");
-        });
-      });
-    });
-</script>
+                // load the url and show modal on success
+                $("#helpModal .modal-content").load(target, function() {
+                     $("#helpModal").modal("show");
+                });
+              });
+            });
+        </script>
 {% block extrajs %}{% endblock %}
 </body>
 </html>

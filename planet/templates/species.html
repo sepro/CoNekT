@@ -90,9 +90,7 @@
 {% endblock %}
 
 {% block extrajs %}
-    {% if species %}
-        <script src="{{ url_for('static', filename='js/planet_pagination.js') }}"></script>
-    {% elif all_species %}
+    {% if all_species %}
         <script>
             $(function () {
                 $("#species_table").stupidtable();

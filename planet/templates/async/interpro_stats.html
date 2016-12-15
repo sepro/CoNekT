@@ -1,0 +1,22 @@
+<div class="table-responsive">
+    <table class="table table-striped">
+        <tbody>
+            {% for domain_id, domain_stat in interpro_stats.items() %}
+            <tr>
+                <td><a href="{{ url_for('interpro.interpro_view', interpro_id=domain_id) }}">{{ domain_stat.domain.label }}</a></td>
+                <td>{{ domain_stat.domain.description }}</td>
+                <td>{{ domain_stat.count }}</td>
+                <td>{{ domain_stat.sequence_count }}</td>
+                <td>{{ domain_stat.species_count }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td>
+                    <p>No external references for this sequences in the database.</p>
+                </td>
+                <td></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

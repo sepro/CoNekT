@@ -37,7 +37,6 @@
 
 {% block extrajs %}
     {% if clade %}
-    <script src="{{ url_for('static', filename='js/planet_pagination.js') }}"></script>
         {% if clade.species_count > 1 %}
             <script src="{{ url_for('static', filename='js/d3.v3.min.js') }}" type="text/javascript"></script>
             <script src="{{ url_for('static', filename='js/newick.js') }}" type="text/javascript"></script>

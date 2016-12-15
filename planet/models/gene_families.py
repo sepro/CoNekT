@@ -141,10 +141,20 @@ class GeneFamily(db.Model):
             if d.interpro_id not in output.keys():
                 output[d.interpro_id] = {
                     'domain': d.domain,
-                    'count': 1
+                    'count': 1,
+                    'sequences': [d.sequence_id],
+                    'species': [d.sequence.species_id]
                 }
             else:
                 output[d.interpro_id]['count'] += 1
+                if d.sequence_id not in output[d.interpro_id]['sequences']:
+                    output[d.interpro_id]['sequences'].append(d.sequence_id)
+                if d.sequence.species_id not in output[d.interpro_id]['sprecies']:
+                    output[d.interpro_id]['species'].append(d.sequence.species_id)
+
+        for k, v in output.items():
+            v['species_count'] = len(v['species'])
+            v['sequence_count'] = len(v['sequences'])
 
         return output
 
