@@ -2,6 +2,7 @@
 
 {% block container %}
 {% import 'macros/pagination.html' as macro %}
+{% import 'macros/ajax_table.html' as ajax %}
 {% import 'macros/cluster_actions.html' as ca %}
 <div class="top-pad">
 
@@ -77,6 +78,12 @@
 
     {% endif %}
 
+    {{ ajax.ajax_table(
+        'InterPro Domains',
+        url_for('go.go_interpro_ajax', go_id=go.id),
+        none,
+        'interpro_ajax'
+    ) }}
 
 </div>
 {% endblock %}

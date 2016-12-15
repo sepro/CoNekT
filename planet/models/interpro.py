@@ -64,6 +64,46 @@ class Interpro(db.Model):
         return output
 
     @staticmethod
+    def sequence_stats(sequence_ids):
+        """
+        Takes a list of sequence IDs and returns InterPro stats for those sequences
+
+        :param sequence_ids: list of sequence ids
+        :return: dict with for each InterPro domain linked with any of the input sequences stats
+        """
+
+        output = {}
+
+        data = SequenceInterproAssociation.query.filter(SequenceInterproAssociation.sequence_id.in_(sequence_ids)).all()
+
+        for d in data:
+            if d.interpro_id not in output.keys():
+                output[d.interpro_id] = {
+                    'domain': d.domain,
+                    'count': 1,
+                    'sequences': [d.sequence_id],
+                    'species': [d.sequence.species_id]
+                }
+            else:
+                output[d.interpro_id]['count'] += 1
+                if d.sequence_id not in output[d.interpro_id]['sequences']:
+                    output[d.interpro_id]['sequences'].append(d.sequence_id)
+                if d.sequence.species_id not in output[d.interpro_id]['species']:
+                    output[d.interpro_id]['species'].append(d.sequence.species_id)
+
+        for k, v in output.items():
+            v['species_count'] = len(v['species'])
+            v['sequence_count'] = len(v['sequences'])
+
+        return output
+
+    @property
+    def interpro_stats(self):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        return Interpro.sequence_stats(sequence_ids)
+
+    @staticmethod
     def add_from_xml(filename, empty=True):
         """
         Populates interpro table with domains and descriptions from the official website's XML file

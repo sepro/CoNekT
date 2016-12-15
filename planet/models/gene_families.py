@@ -1,7 +1,7 @@
 from planet import db
-from planet.models.relationships import sequence_family, family_xref, SequenceSequenceECCAssociation,\
-    SequenceInterproAssociation
+from planet.models.relationships import sequence_family, family_xref, SequenceSequenceECCAssociation
 from planet.models.sequences import Sequence
+from planet.models.interpro import Interpro
 
 import re
 import json
@@ -133,30 +133,7 @@ class GeneFamily(db.Model):
     def interpro_stats(self):
         sequence_ids = [s.id for s in self.sequences.all()]
 
-        output = {}
-
-        data = SequenceInterproAssociation.query.filter(SequenceInterproAssociation.sequence_id.in_(sequence_ids)).all()
-
-        for d in data:
-            if d.interpro_id not in output.keys():
-                output[d.interpro_id] = {
-                    'domain': d.domain,
-                    'count': 1,
-                    'sequences': [d.sequence_id],
-                    'species': [d.sequence.species_id]
-                }
-            else:
-                output[d.interpro_id]['count'] += 1
-                if d.sequence_id not in output[d.interpro_id]['sequences']:
-                    output[d.interpro_id]['sequences'].append(d.sequence_id)
-                if d.sequence.species_id not in output[d.interpro_id]['species']:
-                    output[d.interpro_id]['species'].append(d.sequence.species_id)
-
-        for k, v in output.items():
-            v['species_count'] = len(v['species'])
-            v['sequence_count'] = len(v['sequences'])
-
-        return output
+        return Interpro.sequence_stats(sequence_ids)
 
     @staticmethod
     def add_families_from_mcl(filename, description, handle_isoforms=True, prefix='mcl'):

@@ -120,6 +120,7 @@ def go_json_species(go_id):
 
 
 @go.route('/json/genes/<go_label>')
+@cache.cached()
 def go_genes_find(go_label):
     current_go = GO.query.filter_by(label=go_label).first()
 
@@ -127,3 +128,11 @@ def go_genes_find(go_label):
         return Response(json.dumps([association.sequence_id for association in current_go.sequence_associations]), mimetype='application/json')
     else:
         return Response(json.dumps([]), mimetype='application/json')
+
+
+@go.route('/ajax/interpro/<go_id>')
+@cache.cached()
+def go_interpro_ajax(go_id):
+    current_go = GO.query.get(go_id)
+
+    return render_template('async/interpro_stats.html', interpro_stats=current_go.interpro_stats)

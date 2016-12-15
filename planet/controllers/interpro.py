@@ -122,3 +122,10 @@ def interpro_json_species(interpro_id):
 
     return Response(json.dumps(output), mimetype='application/json')
 
+
+@interpro.route('/ajax/interpro/<interpro_id>')
+@cache.cached()
+def interpro_interpro_ajax(interpro_id):
+    current_interpro = Interpro.query.get(interpro_id)
+
+    return render_template('async/interpro_stats.html', interpro_stats=current_interpro.interpro_stats)

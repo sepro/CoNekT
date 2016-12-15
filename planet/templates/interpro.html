@@ -2,6 +2,7 @@
 
 {% block container %}
 {% import 'macros/pagination.html' as macro %}
+{% import 'macros/ajax_table.html' as ajax %}
 <div class="top-pad">
 
     {% if interpro %}
@@ -35,6 +36,13 @@
         count,
         url_for('interpro.interpro_sequences_table', interpro_id=interpro.id),
         'interpro'
+    ) }}
+
+    {{ ajax.ajax_table(
+        'Other Domains',
+        url_for('interpro.interpro_interpro_ajax', interpro_id=interpro.id),
+        none,
+        'interpro_ajax'
     ) }}
 
     {% endif %}

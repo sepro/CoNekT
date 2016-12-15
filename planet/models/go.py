@@ -1,6 +1,7 @@
 from planet import db
 from planet.models.relationships import sequence_go, SequenceGOAssociation
 from planet.models.sequences import Sequence
+from planet.models.interpro import Interpro
 
 from utils.parser.obo import Parser as OBOParser
 from utils.parser.plaza.go import Parser as GOParser
@@ -67,6 +68,12 @@ class GO(db.Model):
                 count += 1
 
         return count
+
+    @property
+    def interpro_stats(self):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        return Interpro.sequence_stats(sequence_ids)
 
     @staticmethod
     def update_species_counts():
