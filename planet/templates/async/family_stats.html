@@ -3,7 +3,6 @@
         <thead>
             <tr>
                 <th data-sort="string-ins">Label</th>
-                <th data-sort="int">Count</th>
                 <th data-sort="int">Sequence count</th>
                 <th data-sort="int">Species count</th>
             </tr>
@@ -13,7 +12,6 @@
             <tr>
                 <td><a href="{{ url_for('family.family_view', family_id=family_id) }}">{{ family_stat.family.name }}</a></td>
                 <td>{{ family_stat.count }}</td>
-                <td>{{ family_stat.sequence_count }}</td>
                 <td>{{ family_stat.species_count }}</td>
             </tr>
             {% else %}
