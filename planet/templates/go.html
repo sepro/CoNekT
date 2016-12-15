@@ -76,7 +76,7 @@
         'go'
     ) }}
 
-    {% endif %}
+    <h3 class="banner-blue" id="associated_things">Associations</h3>
 
     {{ ajax.ajax_table(
         'InterPro Domains',
@@ -84,6 +84,24 @@
         none,
         'interpro_ajax'
     ) }}
+
+    {{ ajax.ajax_table(
+        'GO Terms',
+        url_for('go.go_go_ajax', go_id=go.id),
+        none,
+        'go_ajax'
+    ) }}
+
+    {{ ajax.ajax_table(
+        'Family Terms',
+        url_for('go.go_family_ajax', go_id=go.id),
+        none,
+        'family_ajax'
+    ) }}
+
+    {% endif %}
+
+
 
 </div>
 {% endblock %}

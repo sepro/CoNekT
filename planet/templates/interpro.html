@@ -37,12 +37,27 @@
         url_for('interpro.interpro_sequences_table', interpro_id=interpro.id),
         'interpro'
     ) }}
+    <h3 class="banner-blue" id="associated_things">Associations</h3>
 
     {{ ajax.ajax_table(
         'Other Domains',
         url_for('interpro.interpro_interpro_ajax', interpro_id=interpro.id),
         none,
         'interpro_ajax'
+    ) }}
+
+    {{ ajax.ajax_table(
+        'GO terms',
+        url_for('interpro.interpro_go_ajax', interpro_id=interpro.id),
+        none,
+        'go_ajax'
+    ) }}
+
+    {{ ajax.ajax_table(
+        'Families',
+        url_for('interpro.interpro_family_ajax', interpro_id=interpro.id),
+        none,
+        'family_ajax'
     ) }}
 
     {% endif %}

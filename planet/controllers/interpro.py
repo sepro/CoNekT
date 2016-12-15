@@ -129,3 +129,19 @@ def interpro_interpro_ajax(interpro_id):
     current_interpro = Interpro.query.get(interpro_id)
 
     return render_template('async/interpro_stats.html', interpro_stats=current_interpro.interpro_stats)
+
+
+@interpro.route('/ajax/go/<interpro_id>')
+@cache.cached()
+def interpro_go_ajax(interpro_id):
+    current_interpro = Interpro.query.get(interpro_id)
+
+    return render_template('async/go_stats.html', go_stats=current_interpro.go_stats)
+
+
+@interpro.route('/ajax/family/<interpro_id>')
+@cache.cached()
+def interpro_family_ajax(interpro_id):
+    current_interpro = Interpro.query.get(interpro_id)
+
+    return render_template('async/family_stats.html', family_stats=current_interpro.family_stats)

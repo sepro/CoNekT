@@ -136,3 +136,19 @@ def go_interpro_ajax(go_id):
     current_go = GO.query.get(go_id)
 
     return render_template('async/interpro_stats.html', interpro_stats=current_go.interpro_stats)
+
+
+@go.route('/ajax/go/<go_id>')
+@cache.cached()
+def go_go_ajax(go_id):
+    current_go = GO.query.get(go_id)
+
+    return render_template('async/go_stats.html', go_stats=current_go.go_stats)
+
+
+@go.route('/ajax/family/<go_id>')
+@cache.cached()
+def go_family_ajax(go_id):
+    current_go = GO.query.get(go_id)
+
+    return render_template('async/family_stats.html', family_stats=current_go.family_stats)

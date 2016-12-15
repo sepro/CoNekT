@@ -3,6 +3,7 @@
         <thead>
             <tr>
                 <th data-sort="string-ins">Label</th>
+                <th data-sort="string-ins">Name</th>
                 <th data-sort="string-ins">Description</th>
                 <th data-sort="int">Count</th>
                 <th data-sort="int">Sequence count</th>
@@ -10,18 +11,19 @@
             </tr>
         </thead>
         <tbody>
-            {% for domain_id, domain_stat in interpro_stats.items() %}
+            {% for go_id, go_stat in go_stats.items() %}
             <tr>
-                <td><a href="{{ url_for('interpro.interpro_view', interpro_id=domain_id) }}">{{ domain_stat.domain.label }}</a></td>
-                <td>{{ domain_stat.domain.description }}</td>
-                <td>{{ domain_stat.count }}</td>
-                <td>{{ domain_stat.sequence_count }}</td>
-                <td>{{ domain_stat.species_count }}</td>
+                <td><a href="{{ url_for('go.go_view', go_id=go_id) }}">{{ go_stat.go.label }}</a></td>
+                <td>{{ go_stat.go.name }}</td>
+                <td>{{ go_stat.go.description|truncate(80) }}</td>
+                <td>{{ go_stat.count }}</td>
+                <td>{{ go_stat.sequence_count }}</td>
+                <td>{{ go_stat.species_count }}</td>
             </tr>
             {% else %}
             <tr>
                 <td>
-                    <p>No associated domains for this item in the database.</p>
+                    <p>No associated GO terms for this item in the database.</p>
                 </td>
                 <td></td>
             </tr>

@@ -1,7 +1,9 @@
 from planet import db
-from planet.models.relationships import sequence_family, family_xref, SequenceSequenceECCAssociation
+from planet.models.relationships import sequence_family, family_xref, SequenceSequenceECCAssociation,\
+    SequenceFamilyAssociation
 from planet.models.sequences import Sequence
 from planet.models.interpro import Interpro
+from planet.models.go import GO
 
 import re
 import json
@@ -129,11 +131,57 @@ class GeneFamily(db.Model):
 
         return output
 
+    @staticmethod
+    def sequence_stats(sequence_ids):
+        """
+        Takes a list of sequence IDs and returns InterPro stats for those sequences
+
+        :param sequence_ids: list of sequence ids
+        :return: dict with for each InterPro domain linked with any of the input sequences stats
+        """
+
+        output = {}
+
+        data = SequenceFamilyAssociation.query.filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids)).all()
+
+        for d in data:
+            if d.gene_family_id not in output.keys():
+                output[d.gene_family_id] = {
+                    'family': d.family,
+                    'count': 1,
+                    'sequences': [d.sequence_id],
+                    'species': [d.sequence.species_id]
+                }
+            else:
+                output[d.gene_family_id]['count'] += 1
+                if d.sequence_id not in output[d.gene_family_id]['sequences']:
+                    output[d.gene_family_id]['sequences'].append(d.sequence_id)
+                if d.sequence.species_id not in output[d.gene_family_id]['species']:
+                    output[d.gene_family_id]['species'].append(d.sequence.species_id)
+
+        for k, v in output.items():
+            v['species_count'] = len(v['species'])
+            v['sequence_count'] = len(v['sequences'])
+
+        return output
+
     @property
     def interpro_stats(self):
         sequence_ids = [s.id for s in self.sequences.all()]
 
         return Interpro.sequence_stats(sequence_ids)
+
+    @property
+    def go_stats(self):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        return GO.sequence_stats(sequence_ids)
+
+    @property
+    def family_stats(self):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        return GeneFamily.sequence_stats(sequence_ids)
 
     @staticmethod
     def add_families_from_mcl(filename, description, handle_isoforms=True, prefix='mcl'):

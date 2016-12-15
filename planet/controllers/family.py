@@ -135,3 +135,19 @@ def family_interpro_ajax(family_id):
     f = GeneFamily.query.get(family_id)
 
     return render_template('async/interpro_stats.html', interpro_stats=f.interpro_stats)
+
+
+@family.route('/ajax/go/<family_id>')
+@cache.cached()
+def family_go_ajax(family_id):
+    f = GeneFamily.query.get(family_id)
+
+    return render_template('async/go_stats.html', go_stats=f.go_stats)
+
+
+@family.route('/ajax/family/<family_id>')
+@cache.cached()
+def family_family_ajax(family_id):
+    f = GeneFamily.query.get(family_id)
+
+    return render_template('async/family_stats.html', family_stats=f.family_stats)

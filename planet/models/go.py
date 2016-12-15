@@ -1,7 +1,6 @@
 from planet import db
 from planet.models.relationships import sequence_go, SequenceGOAssociation
 from planet.models.sequences import Sequence
-from planet.models.interpro import Interpro
 
 from utils.parser.obo import Parser as OBOParser
 from utils.parser.plaza.go import Parser as GOParser
@@ -69,11 +68,59 @@ class GO(db.Model):
 
         return count
 
+    @staticmethod
+    def sequence_stats(sequence_ids):
+        """
+        Takes a list of sequence IDs and returns InterPro stats for those sequences
+
+        :param sequence_ids: list of sequence ids
+        :return: dict with for each InterPro domain linked with any of the input sequences stats
+        """
+
+        output = {}
+
+        data = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id.in_(sequence_ids)).all()
+
+        for d in data:
+            if d.go_id not in output.keys():
+                output[d.go_id] = {
+                    'go': d.go,
+                    'count': 1,
+                    'sequences': [d.sequence_id],
+                    'species': [d.sequence.species_id]
+                }
+            else:
+                output[d.go_id]['count'] += 1
+                if d.sequence_id not in output[d.go_id]['sequences']:
+                    output[d.go_id]['sequences'].append(d.sequence_id)
+                if d.sequence.species_id not in output[d.go_id]['species']:
+                    output[d.go_id]['species'].append(d.sequence.species_id)
+
+        for k, v in output.items():
+            v['species_count'] = len(v['species'])
+            v['sequence_count'] = len(v['sequences'])
+
+        return output
+
     @property
     def interpro_stats(self):
+        from planet.models.interpro import Interpro
         sequence_ids = [s.id for s in self.sequences.all()]
 
         return Interpro.sequence_stats(sequence_ids)
+
+    @property
+    def go_stats(self):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        return GO.sequence_stats(sequence_ids)
+
+    @property
+    def family_stats(self):
+        from planet.models.gene_families import GeneFamily
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        return GeneFamily.sequence_stats(sequence_ids)
 
     @staticmethod
     def update_species_counts():

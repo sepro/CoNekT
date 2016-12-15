@@ -45,6 +45,16 @@
         'seq'
     ) }}
 
+    {{ macro.pagination(
+        'Expression Context Conservation',
+        url_for('family.family_ecc_relations', family_id=family.id),
+        -1,
+        none,
+        'ecc'
+    ) }}
+
+    <h3 class="banner-blue" id="associated_things">Associations</h3>
+
     {{ ajax.ajax_table(
         'InterPro Domains',
         url_for('family.family_interpro_ajax', family_id=family.id),
@@ -52,12 +62,18 @@
         'interpro_ajax'
     ) }}
 
-    {{ macro.pagination(
-        'Expression Context Conservation',
-        url_for('family.family_ecc_relations', family_id=family.id),
-        -1,
+    {{ ajax.ajax_table(
+        'GO terms',
+        url_for('family.family_go_ajax', family_id=family.id),
         none,
-        'ecc'
+        'go_ajax'
+    ) }}
+
+    {{ ajax.ajax_table(
+        'Other families',
+        url_for('family.family_family_ajax', family_id=family.id),
+        none,
+        'family_ajax'
     ) }}
 
     <div class="row">

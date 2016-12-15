@@ -3,25 +3,23 @@
         <thead>
             <tr>
                 <th data-sort="string-ins">Label</th>
-                <th data-sort="string-ins">Description</th>
                 <th data-sort="int">Count</th>
                 <th data-sort="int">Sequence count</th>
                 <th data-sort="int">Species count</th>
             </tr>
         </thead>
         <tbody>
-            {% for domain_id, domain_stat in interpro_stats.items() %}
+            {% for family_id, family_stat in family_stats.items() %}
             <tr>
-                <td><a href="{{ url_for('interpro.interpro_view', interpro_id=domain_id) }}">{{ domain_stat.domain.label }}</a></td>
-                <td>{{ domain_stat.domain.description }}</td>
-                <td>{{ domain_stat.count }}</td>
-                <td>{{ domain_stat.sequence_count }}</td>
-                <td>{{ domain_stat.species_count }}</td>
+                <td><a href="{{ url_for('family.family_view', family_id=family_id) }}">{{ family_stat.family.name }}</a></td>
+                <td>{{ family_stat.count }}</td>
+                <td>{{ family_stat.sequence_count }}</td>
+                <td>{{ family_stat.species_count }}</td>
             </tr>
             {% else %}
             <tr>
                 <td>
-                    <p>No associated domains for this item in the database.</p>
+                    <p>No associated families for this item in the database.</p>
                 </td>
                 <td></td>
             </tr>
