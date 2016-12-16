@@ -7,6 +7,8 @@ from utils.parser.interpro import DomainParser as InterproDomainParser
 
 from sqlalchemy.orm import joinedload
 
+from utils.benchmark import benchmark
+
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
@@ -98,12 +100,14 @@ class Interpro(db.Model):
         return output
 
     @property
+    @benchmark
     def interpro_stats(self):
         sequence_ids = [s.id for s in self.sequences.all()]
 
         return Interpro.sequence_stats(sequence_ids)
 
     @property
+    @benchmark
     def go_stats(self):
         from planet.models.go import GO
         sequence_ids = [s.id for s in self.sequences.all()]
@@ -111,6 +115,7 @@ class Interpro(db.Model):
         return GO.sequence_stats(sequence_ids)
 
     @property
+    @benchmark
     def family_stats(self):
         from planet.models.gene_families import GeneFamily
         sequence_ids = [s.id for s in self.sequences.all()]
