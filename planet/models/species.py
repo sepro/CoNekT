@@ -17,6 +17,7 @@ class Species(db.Model):
     sequence_count = db.Column(db.Integer)
     network_count = db.Column(db.Integer)
     profile_count = db.Column(db.Integer)
+    description = db.Column(db.Text)
 
     sequences = db.relationship('Sequence', backref='species', lazy='dynamic', cascade='all, delete-orphan')
     networks = db.relationship('ExpressionNetworkMethod', backref='species', lazy='dynamic')
@@ -24,7 +25,7 @@ class Species(db.Model):
     expression_specificities = db.relationship('ExpressionSpecificityMethod', backref='species', lazy='dynamic')
 
     def __init__(self, code, name, data_type='genome', ncbi_tax_id=None, pubmed_id=None, project_page=None,
-                 color="#C7C7C7", highlight="#DEDEDE"):
+                 color="#C7C7C7", highlight="#DEDEDE", description=None):
         self.code = code
         self.name = name
         self.data_type = data_type
@@ -36,16 +37,17 @@ class Species(db.Model):
         self.sequence_count = 0
         self.profile_count = 0
         self.network_count = 0
+        self.description = description
 
     def __repr__(self):
         return str(self.id) + ". " + self.name
 
     @staticmethod
     def add(code, name, data_type='genome', ncbi_tax_id=None, pubmed_id=None, project_page=None,
-            color="#C7C7C7", highlight="#DEDEDE"):
+            color="#C7C7C7", highlight="#DEDEDE", description=None):
 
         new_species = Species(code, name, data_type=data_type, ncbi_tax_id=ncbi_tax_id, pubmed_id=pubmed_id,
-                              project_page=project_page, color=color, highlight=highlight)
+                              project_page=project_page, color=color, highlight=highlight, description=description)
 
         species = Species.query.filter_by(code=code).first()
 

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, RadioField
+from wtforms import StringField, RadioField, TextAreaField
 from flask_wtf.file import FileRequired, FileField
 from wtforms.validators import InputRequired, DataRequired
 
@@ -14,6 +14,8 @@ class AddSpeciesForm(FlaskForm):
 
     color = StringField('Color', [InputRequired()])
     highlight = StringField('Highlight', [InputRequired()])
+
+    description = TextAreaField('Description', [InputRequired()])
 
     fasta = FileField('Fasta')
 

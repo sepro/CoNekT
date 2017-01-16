@@ -42,6 +42,12 @@
         <label>{{ form.highlight.label }}</label>
         {{form.highlight(class_="form-control jscolor", placeholder="DDDDDD", value="DDDDDD") }}
     </div>
+
+    <div class="form-group">
+        <label>{{ form.description.label }} (supports markdown)</label>
+        {{form.description(class_="form-control", placeholder="") }}
+    </div>
+
     <div class="form-group">
         <p>Add FASTA file containing all genes, with the gene name in the header. Note that uploading compressed (gzip) files is supported.</p>
         <label class="btn btn-default" for="fasta" id="my-file-button">

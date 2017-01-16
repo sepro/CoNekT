@@ -18,6 +18,7 @@ htmlmin==0.1.10
 itsdangerous==0.24
 Jinja2==2.8
 Mako==1.0.6
+Markdown==2.6.7
 MarkupSafe==0.23
 mpmath==0.19
 pbr==1.10.0

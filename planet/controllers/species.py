@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, g, make_response, Response
+from flask import Blueprint, render_template, g, make_response, Response, Markup
+from markdown import markdown
 
 from planet import db, cache
 from planet.models.species import Species
@@ -30,7 +31,9 @@ def species_view(species_id):
     """
     current_species = Species.query.get_or_404(species_id)
 
-    return render_template('species.html', species=current_species)
+    description = None if current_species.description is None else Markup(markdown(current_species.description))
+
+    return render_template('species.html', species=current_species, description=description)
 
 
 @species.route('/sequences/<species_id>/')
