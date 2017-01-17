@@ -11,7 +11,7 @@ def screen():
     Shows the main screen
     """
 
-    news = News.query.order_by(News.posted_by.desc()).limit(5)
+    news = News.query.order_by(News.posted.desc()).limit(5)
 
     return render_template('static_pages/main.html', news=news)
 
