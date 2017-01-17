@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template
 
+from planet.models.news import News
+
 main = Blueprint('main', __name__)
 
 
@@ -8,7 +10,10 @@ def screen():
     """
     Shows the main screen
     """
-    return render_template('static_pages/main.html')
+
+    news = News.query.order_by(News.posted_by.desc()).limit(5)
+
+    return render_template('static_pages/main.html', news=news)
 
 
 @main.route('/features')

@@ -107,7 +107,9 @@
     {% endif %}
 
     {% if not (sequences or go or interpro or families or profiles) %}
+    <div class="col-md-12">
         <p>No results found for <strong>{{ keyword }}</strong></p>
+    </div>
     {% endif %}
     </div>
 </div>

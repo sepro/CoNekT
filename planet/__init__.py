@@ -80,6 +80,7 @@ def create_app(config):
     from planet.models.condition_tissue import ConditionTissue
     from planet.models.clades import Clade
     from planet.models.xrefs import XRef
+    from planet.models.news import News
 
     # Import all relationships (tables for many-to-many relationships)
     import planet.models.relationships
@@ -144,11 +145,16 @@ def create_app(config):
             ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView, AddXRefsView, \
             AddXRefsFamiliesView, AddFamiliesView, AddExpressionProfilesView, AddCoexpressionClustersView, \
             AddCoexpressionNetworkView, AddGOView, AddInterProView, AddCladesView, AddSpecificityView, \
-            AddSequenceDescriptionsView
+            AddSequenceDescriptionsView, NewsAdminView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'), template_mode='bootstrap3')
 
         # Add views used to build the database
+
+        admin.add_view(NewsAdminView(News, db.session,
+                                     endpoint='admin.news',
+                                     url='news/'))
+
         admin.add_view(AddFunctionalDataView(name='Functional Data',
                                              endpoint='admin.add.functional_data',
                                              url='add/functional_data/', category='Add'))

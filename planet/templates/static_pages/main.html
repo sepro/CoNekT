@@ -5,13 +5,52 @@
     <ol class="breadcrumb">
         <li class="active">Home</li>
     </ol>
-    <div>
-    <img src="{{ url_for('static', filename='img/icon-192x192.png') }}" style="float:left;margin-right:25px;margin-top:-20px" />
-    <h1>Welcome to PlaNet 2.0<br /> <small>a platform dedicated to the visualization and analysis of plant co-expression and co-function networks.</small></h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <div style="overflow:hidden">
+                <img src="{{ url_for('static', filename='img/icon-192x192.png') }}" style="float:left;margin-right:25px;margin-top:-20px;margin-bottom:20px" />
+                <h1>Welcome to PlaNet 2.0<br /> <small>a platform dedicated to the visualization and analysis of plant co-expression and co-function networks.</small></h1>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="panel panel-default" style="background-color: #C1D0DE">
+                <div class="panel-body">
+                    <form  role="search" method="post" id="search-form-main" name="search-form-main" action="{{ url_for('search.simple') }}">
+                        {{ g.search_form.csrf_token }}
+                        <div>
+                            <div class="from-group input-group">
+                                {{ g.search_form.terms(class_="form-control", placeholder="Search") }}
+                                <div class="input-group-btn"><button type="submit" class="btn btn-primary" value="Search">Search</button></div>
+                            </div>
+                            <p>e.g. <a href="{{ url_for('search.search_single_keyword', keyword='AT1G01720') }}">AT1G01720</a>,
+                                <a href="{{ url_for('search.search_single_keyword', keyword='GO:0005737') }}">GO:0005737</a>,
+                                <a href="{{ url_for('search.search_single_keyword', keyword='Auxin') }}">Auxin</a> ...</p>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
-
-
+        <div class="col-lg-6 col-md-12">
+            <div class="panel panel-success">
+              <div class="panel-heading">News</div>
+              <div class="panel-body">
+                  {% for n in news %}
+                  <div>
+                      <p>{{ n.message_markup }}</p>
+                      <p class="text-muted text-right">by {{ n.posted_by }} (<strong>{{n.posted}}</strong>)</p>
+                      {% if not loop.last %}
+                        <hr />
+                      {% endif %}
+                  </div>
+                  {% else %}
+                      <p><em>No news messages found</em></p>
+                  {% endfor %}
+              </div>
+            </div>
+        </div>
     </div>
 </div>
 

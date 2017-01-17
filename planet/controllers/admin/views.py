@@ -145,6 +145,15 @@ class CladesAdminView(MyModelView):
     can_create = True
 
 
+class NewsAdminView(MyModelView):
+    """
+    News view in admin page, specifies what is available in CRUD
+    """
+    form_columns = ('message', 'posted_by', 'posted')
+
+    can_create = True
+
+
 class ControlsView(AdminBaseView):
     @expose('/')
     def index(self):
