@@ -61,6 +61,7 @@ def create_app(config):
 
     LOGIN_ENABLED = app.config['LOGIN_ENABLED']
     BLAST_ENABLED = app.config['BLAST_ENABLED']
+    TWITTER_HANDLE = app.config['TWITTER_HANDLE'] if 'TWITTER_HANDLE' in app.config.keys() else None
 
     # Enable BLAST
     if BLAST_ENABLED:
@@ -266,6 +267,7 @@ def create_app(config):
         g.login_enabled = LOGIN_ENABLED
         g.blast_enabled = BLAST_ENABLED
         g.search_form = BasicSearchForm()
+        g.twitter_handle = TWITTER_HANDLE
         g.page_items = 30
 
     @login_manager.user_loader

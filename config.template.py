@@ -57,3 +57,5 @@ MAKEBLASTDB_NUCL_CMD = MAKEBLASTDB_PATH + ' -in <IN>' ' -out ' + BLASTN_DB_PATH 
 # Debug settings
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 
+# Twitter handle (None to disable twitter feed)
+TWITTER_HANDLE = "LabMutwil"

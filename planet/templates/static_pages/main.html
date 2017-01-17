@@ -51,11 +51,13 @@
               </div>
             </div>
         </div>
+        {% if g.twitter_handle %}
         <div class="col-lg-6 col-md-12">
             <div class="panel panel-default" style="height:300px; overflow-y:scroll">
-                <a class="twitter-timeline" href="https://twitter.com/LabMutwil">Tweets by LabMutwil</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+                <a class="twitter-timeline" href="https://twitter.com/{{g.twitter_handle}}">Tweets by LabMutwil</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 
