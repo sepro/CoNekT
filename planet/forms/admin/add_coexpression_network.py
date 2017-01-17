@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, RadioField, SelectField
-from flask_wtf.file import FileRequired, FileField, InputRequired
+from flask_wtf.file import FileRequired, FileField
+from wtforms.validators import InputRequired
 
 from planet.models.species import Species
 

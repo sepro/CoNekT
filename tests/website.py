@@ -94,13 +94,13 @@ class WebsiteTest(TestCase):
         test_expression_network = ExpressionNetwork(test_profile.probe,
                                                     test_sequence.id,
                                                     '[{"gene_name": "TEST_SEQ_02", "gene_id": ' + str(test_sequence2.id)
-                                                    + ', "probe_name": "test_probe2", "link_score": 0}]',
+                                                    + ', "probe_name": "test_probe2", "link_score": 0, "hrr":0}]',
                                                     test_expression_network_method.id)
 
         test_expression_network2 = ExpressionNetwork(test_profile2.probe,
                                                      test_sequence2.id,
                                                      '[{"gene_name": "TEST_SEQ_01", "gene_id": ' + str(test_sequence.id)
-                                                     + ', "probe_name": "test_probe2", "link_score": 0}]',
+                                                     + ', "probe_name": "test_probe2", "link_score": 0, "hrr":0}]',
                                                      test_expression_network_method.id)
 
         db.session.add(test_expression_network)

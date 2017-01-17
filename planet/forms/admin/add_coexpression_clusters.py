@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import InputRequired, FileField
+from flask_wtf.file import FileField
+from wtforms.validators import InputRequired
 from wtforms import StringField, SelectField
 
 from planet.models.expression.networks import ExpressionNetworkMethod
