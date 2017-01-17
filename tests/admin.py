@@ -109,7 +109,8 @@ class AdminTest(TestCase):
             payload = {'code': 'mmu', 'name': 'Marek mutwiliana',
                        'data_type': 'genome', 'color': '#000000',
                        'highlight': '#DDDDDD',
-                       'fasta': fasta_data}
+                       'fasta': fasta_data,
+                       'description': '**Markdown supported**'}
 
             response = self.client.post('/admin_controls/add/species', data=payload,
                                         follow_redirects=True, content_type='multipart/form-data')

@@ -13,6 +13,8 @@ import json
 import re
 from sqlalchemy import and_
 
+from collections import defaultdict
+
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
@@ -302,6 +304,7 @@ class ExpressionNetwork(db.Model):
                           "depth": 0,
                           "link_score": link["link_score"],
                           "link_pcc": link["link_pcc"] if "link_pcc" in link.keys() else None,
+                          "hrr": link["hrr"] if "hrr" in link.keys() else None,
                           "edge_type": edge_type})
             additional_nodes.append(link["probe_name"])
             existing_edges.append([node.probe, link["probe_name"]])
@@ -336,6 +339,7 @@ class ExpressionNetwork(db.Model):
                                           "depth": i,
                                           "link_score": link["link_score"],
                                           "link_pcc": link["link_pcc"] if "link_pcc" in link.keys() else None,
+                                          "hrr": link["hrr"] if "hrr" in link.keys() else None,
                                           "edge_type": edge_type})
                             existing_edges.append([new_node.probe, link["probe_name"]])
                             existing_edges.append([link["probe_name"], new_node.probe])
@@ -363,6 +367,7 @@ class ExpressionNetwork(db.Model):
                                       "depth": depth+1,
                                       "link_score": link["link_score"],
                                       "link_pcc": link["link_pcc"] if "link_pcc" in link.keys() else None,
+                                      "hrr": link["hrr"] if "hrr" in link.keys() else None,
                                       "edge_type": edge_type})
                         existing_edges.append([new_node.probe, link["probe_name"]])
                         existing_edges.append([link["probe_name"], new_node.probe])
@@ -460,6 +465,7 @@ class ExpressionNetwork(db.Model):
             print(e)
 
         network = {}
+        scores = defaultdict(lambda : defaultdict(lambda: None))     # Score for non-existing pairs will be None
 
         with open(network_file) as fin:
             for line in fin:
@@ -489,10 +495,28 @@ class ExpressionNetwork(db.Model):
                                     "link_score": i,
                                     "link_pcc": value}
                             network[query]["linked_probes"].append(link)
+                            scores[query][name] = i
 
-                network[query]["network"] = json.dumps(network[query]["linked_probes"])
+        # HRR
+        # In case there is no score, the value will be 500
+        hr_ranks = defaultdict(lambda: defaultdict(int))
 
-            # add nodes in sets of 400 to avoid sending to much in a single query
+        for query, targets in scores.items():
+            for target, score in targets.items():
+                if None in [score, scores[target][query]]:
+                    hr_ranks[query][target] = None
+                else:
+                    hr_ranks[query][target] = max(score, scores[target][query])
+
+        # Dump dicts into network string, which will be loaded into the database
+        for query in network.keys():
+
+            for i, l in enumerate(network[query]["linked_probes"]):
+                network[query]["linked_probes"][i]["hrr"] = hr_ranks[query][l["probe_name"]]
+
+            network[query]["network"] = json.dumps(network[query]["linked_probes"])
+
+        # add nodes in sets of 400 to avoid sending to much in a single query
         new_nodes = []
         for _, n in network.items():
             new_nodes.append(n)
