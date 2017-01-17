@@ -34,7 +34,7 @@
     </div>
     <div class="row">
         <div class="col-lg-6 col-md-12">
-            <div class="panel panel-success">
+            <div class="panel panel-success"  style="height:300px; overflow-y:scroll">
               <div class="panel-heading">News</div>
               <div class="panel-body">
                   {% for n in news %}
@@ -49,6 +49,11 @@
                       <p><em>No news messages found</em></p>
                   {% endfor %}
               </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="panel panel-default" style="height:300px; overflow-y:scroll">
+                <a class="twitter-timeline" href="https://twitter.com/LabMutwil">Tweets by LabMutwil</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
             </div>
         </div>
     </div>
