@@ -465,18 +465,16 @@ class ExpressionNetwork(db.Model):
             print(e)
 
         network = {}
-        scores = defaultdict(lambda : defaultdict(lambda: None))     # Score for non-existing pairs will be None
+        scores = defaultdict(lambda: defaultdict(lambda: None))     # Score for non-existing pairs will be None
 
         with open(network_file) as fin:
             for line in fin:
                 query, hits = line.strip().split(' ')
                 query = query.replace(':', '')
 
-                sequence = re.sub('\.\d$', '', query)
-
                 network[query] = {
                     "probe": query,
-                    "sequence_id": sequence_dict[sequence.upper()] if sequence.upper() in sequence_dict.keys() else None,
+                    "sequence_id": sequence_dict[query.upper()] if query.upper() in sequence_dict.keys() else None,
                     "linked_probes": [],
                     "total_count": 0,
                     "method_id": network_method.id
@@ -488,10 +486,9 @@ class ExpressionNetwork(db.Model):
                     if value > pcc_cutoff:
                         network[query]["total_count"] += 1
                         if i < limit:
-                            s = re.sub('\.\d$', '', name)
                             link = {"probe_name": name,
-                                    "gene_name": s,
-                                    "gene_id": sequence_dict[s.upper()] if s.upper() in sequence_dict.keys() else None,
+                                    "gene_name": name,
+                                    "gene_id": sequence_dict[name.upper()] if name.upper() in sequence_dict.keys() else None,
                                     "link_score": i,
                                     "link_pcc": value}
                             network[query]["linked_probes"].append(link)
@@ -514,7 +511,8 @@ class ExpressionNetwork(db.Model):
             for i, l in enumerate(network[query]["linked_probes"]):
                 network[query]["linked_probes"][i]["hrr"] = hr_ranks[query][l["probe_name"]]
 
-            network[query]["network"] = json.dumps(network[query]["linked_probes"])
+            # Dump links WITH HRR into json string
+            network[query]["network"] = json.dumps([n for n in network[query]["linked_probes"] if n['hrr'] is not None])
 
         # add nodes in sets of 400 to avoid sending to much in a single query
         new_nodes = []

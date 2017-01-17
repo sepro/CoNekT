@@ -139,8 +139,6 @@ $(function () { // on dom ready
                     )
                 }
 
-
-
                 n.qtip({
                     content: content.map(function (item) {
                         return item.value;
@@ -169,13 +167,17 @@ $(function () { // on dom ready
                     content.push({value: '<a href="' + e.data('profile_comparison') + '">Compare profiles</a>'});
                 }
 
-                if (e.data('link_score') !== undefined) {
-                    content.push({ value: 'Link Score: ' + e.data('link_score') });
+                if (e.data('hrr') !== undefined) {
+                    if (e.data('hrr') !== null) {
+                        content.push({ value: 'Rank (HRR): ' + e.data('hrr') });
+                    } else {
+                        content.push({ value: 'Couldn\'t determine HRR' })
+                    }
                 }
 
                 if (e.data('link_pcc') !== undefined) {
                     if (e.data('link_pcc') !== null) {
-                        content.push({ value: 'PCC: ' + e.data('link_pcc').toFixed(3) });
+                        content.push({ value: 'Correlation (PCC): ' + e.data('link_pcc').toFixed(3) });
                     }
                 }
 
@@ -330,8 +332,8 @@ $(function () { // on dom ready
     $('#cy-edge-score').on("slideStop", function (slideEvt) {
         var cutoff = slideEvt.value;
 
-        cy.edges("[link_score>" + cutoff + "]").style('display', 'none');
-        cy.edges("[link_score<=" + cutoff + "]").style('display', 'element');
+        cy.edges("[hrr>" + cutoff + "]").style('display', 'none');
+        cy.edges("[hrr<=" + cutoff + "]").style('display', 'element');
     });
 
     $('.cy-depth-filter').click(function (ev) {
