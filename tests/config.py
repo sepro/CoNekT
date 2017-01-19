@@ -57,4 +57,7 @@ BLASTN_CMD = BLASTN_PATH + ' -db ' + BLASTN_DB_PATH + ' -query <IN> -out <OUT> -
 # Debug settings
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 
+# Twitter Handle
+TWITTER_HANDLE = None
+
 

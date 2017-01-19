@@ -31,7 +31,8 @@ def species_view(species_id):
     """
     current_species = Species.query.get_or_404(species_id)
 
-    description = None if current_species.description is None else Markup(markdown(current_species.description))
+    description = None if current_species.description is None \
+        else Markup(markdown(current_species.description, extensions=['markdown.extensions.tables']))
 
     return render_template('species.html', species=current_species, description=description)
 
