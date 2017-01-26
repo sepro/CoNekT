@@ -228,7 +228,6 @@ $(function () { // on dom ready
             /* Make cursor pointer when hovering over*/
             cy.on('mouseover', 'edge', function (evt) {
                         $('html,body').css('cursor', 'pointer');
-                        console.log(evt.cyTarget);
                     } );
 
             cy.on('mouseout', 'edge', function (evt) {
