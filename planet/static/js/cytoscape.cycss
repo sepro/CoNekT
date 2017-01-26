@@ -19,13 +19,19 @@ edge {
         line-color: data(color);
 }
 
+node:active {
+    overlay-opacity: 0;
+    border-width:6px;
+    border-color:#AAD8FF;
+    border-opacity:0.5;
+}
+
 node:selected {
         width: 50px;
         height: 50px;
         border-width:6px;
         border-color:#AAD8FF;
         border-opacity:0.5;
-        background-color:#77828C;
         line-color: black;
 }
 
@@ -97,12 +103,18 @@ node.cluster_shape {
         shape: data(cluster_shape);
 }
 
+edge:active {
+    overlay-opacity:0;
+    border-opacity:0;
+}
+
 edge:selected {
         border-width:6px;
         border-color:#AAD8FF;
         border-opacity:0.5;
         background-color:#77828C;
-        line-color: black;
+        overlay-opacity:0.1;
+        overlay-padding: 3;
 }
 
 edge.color {

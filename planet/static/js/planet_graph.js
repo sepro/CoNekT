@@ -207,6 +207,7 @@ $(function () { // on dom ready
                 });
             }); // end cy.edges.forEach...
 
+            /* Enable click events */
             cy.edges().on("click", function(ev) {
                 click_edge(ev);
             });
@@ -214,6 +215,25 @@ $(function () { // on dom ready
              cy.on("click", function(ev) {
                 click_edge(ev);
             });
+
+            /* Make cursor pointer when hovering over*/
+            cy.on('mouseover', 'node', function (evt) {
+                        $('html,body').css('cursor', 'pointer');
+                    } );
+
+            cy.on('mouseout', 'node', function (evt) {
+                        $('html,body').css('cursor', 'default');
+                    });
+
+            /* Make cursor pointer when hovering over*/
+            cy.on('mouseover', 'edge', function (evt) {
+                        $('html,body').css('cursor', 'pointer');
+                        console.log(evt.cyTarget);
+                    } );
+
+            cy.on('mouseout', 'edge', function (evt) {
+                        $('html,body').css('cursor', 'default');
+                    });
 
             // Fill data for legend
             var svg_families = [],
