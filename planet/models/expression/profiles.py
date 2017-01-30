@@ -184,12 +184,9 @@ class ExpressionProfile(db.Model):
                         condition = annotation[c]
                         profile[condition].append(float(v))
 
-                parts = transcript.split('.')
-                sequence_id = parts[0]
-
                 new_probe = {"species_id": species_id,
                              "probe": transcript,
-                             "sequence_id": sequence_dict[sequence_id.upper()] if sequence_id.upper() in sequence_dict.keys() else None,
+                             "sequence_id": sequence_dict[transcript.upper()] if transcript.upper() in sequence_dict.keys() else None,
                              "profile": json.dumps({"order": order,
                                                     "colors": colors,
                                                     "data": profile})

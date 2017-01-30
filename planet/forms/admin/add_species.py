@@ -15,7 +15,7 @@ class AddSpeciesForm(FlaskForm):
     color = StringField('Color', [InputRequired()])
     highlight = StringField('Highlight', [InputRequired()])
 
-    description = TextAreaField('Description', [InputRequired()])
+    description = TextAreaField('Description')
 
     fasta = FileField('Fasta')
 
