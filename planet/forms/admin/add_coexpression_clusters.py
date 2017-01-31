@@ -14,5 +14,5 @@ class AddCoexpressionClustersForm(FlaskForm):
     file = FileField()
 
     def populate_networks(self):
-        self.network_id.choices = [(e.id, e.description + ' (' + str(e.species) + ')')
+        self.network_id.choices = [(e.id, str(e))
                                    for e in ExpressionNetworkMethod.query.all()]
