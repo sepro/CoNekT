@@ -10,25 +10,13 @@
             <li><a href="{{ url_for('species.species_overview') }}">Species</a></li>
             <li class="active"><strong><em>{{ species.name }}</em></strong></li>
         </ol>
-        <h1><strong>{{ species.name }}</strong> <small>({{ species.code }})</small></h1>
+        <h1><strong><em>{{ species.name }}</em></strong> <small>({{ species.code }})</small></h1>
 
         {% if description %}
             {{ description }}
             <br />
         {% endif %}
-
-        Transcripts: {{ species.sequence_count }}
         <br />
-
-        {% if species.ncbi_tax_id %}
-            NCBI taxonomy: <a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ species.ncbi_tax_id }}">{{ species.ncbi_tax_id }}</a><br />
-        {% endif %}
-        {% if species.pubmed_id %}
-            Pubmed : <a href="http://www.ncbi.nlm.nih.gov/pubmed/{{ species.pubmed_id }}">{{ species.pubmed_id }}</a><br />
-        {% endif %}
-        {% if species.project_page %}
-            Website : <a href="{{ species.project_page }}">{{ species.project_page }}</a><br />
-        {% endif %}
 
         <div class="row">
             <div class="col-lg-12">
