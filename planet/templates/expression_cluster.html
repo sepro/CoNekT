@@ -4,8 +4,9 @@
 {% import 'macros/pagination.html' as macro %}
 <div class="top-pad">
 
-    {% if cluster_methods %}
+    {% if overview %}
     <h1>Clustering Methods Overview</h1>
+    {% if cluster_methods|count > 1 %}
      <div class="table-responsive">
         <table class="table">
             <thead>
@@ -30,6 +31,9 @@
             </tbody>
         </table>
         </div>
+    {% else %}
+        <p><span class="text-muted"><em>No co-expression clusters generated.</em></span></p>
+    {% endif %}
     {% elif cluster %}
         <h1>Cluster: {{ cluster.name }}<br /><small>{{ cluster.method.method }}</small></h1>
         <a href="{{ url_for('expression_cluster.expression_cluster_graph', cluster_id=cluster.id) }}">View graph</a> <i class="fa fa-share-alt"></i>
@@ -64,6 +68,10 @@
                                             <td>{{ go.corrected_p_value|round(6) }}</td>
                                         </tr>
                                         {% endif %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6"><span class="text-muted"><em>No enriched GO-terms found</em></span></td>
+                                        </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
@@ -98,6 +106,10 @@
                                             <td>{{ sc.jaccard_index|round(3) }}</td>
                                             <td>{{ sc.gene_family_method.method }}</td>
                                             <td><a href="{{ url_for('graph_comparison.graph_comparison_cluster', one=sc.source_id, two=sc.target_id, family_method_id=sc.gene_family_method_id) }}">Compare</a></td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="5"><span class="text-muted"><em>No similar clusters found</em></span></td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>

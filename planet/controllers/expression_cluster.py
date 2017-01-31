@@ -19,7 +19,7 @@ def expression_cluster_overview():
     """
     cluster_methods = CoexpressionClusteringMethod.query.all()
 
-    return render_template("expression_cluster.html", cluster_methods=cluster_methods)
+    return render_template("expression_cluster.html", cluster_methods=cluster_methods, overview=True)
 
 
 @expression_cluster.route('/view/<cluster_id>')
