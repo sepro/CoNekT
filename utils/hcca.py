@@ -59,29 +59,28 @@ class HCCA:
 
         print("Done!")
 
-    def __clustettes(self, lista, clustets):
+    def __clustettes(self, nodes):
         """
         Detect islands of nodes smaller than max_cluster_size
 
-        :param lista:
-        :param clustets:
+        :param nodes:
         :return:
         """
         cons = []
 
-        for l in lista:
+        for l in nodes:
             cons += self.curDic[l]
 
-        cons = list(set(cons + lista))
+        cons = list(set(cons + nodes))
 
-        if len(cons) > self.max_cluster_size:
-            pass
-        elif len(cons) == len(lista):
-            cons.sort()
-            if cons not in clustets:
-                clustets.append(cons)
-        else:
-            self.__clustettes(cons, clustets)
+        # If the network is larger than the max_cluster size it is not a clustet, skip
+        if len(cons) <= self.max_cluster_size:
+            if len(cons) == len(nodes):
+                cons.sort()
+                if cons not in self.clustets:
+                    self.clustets.append(cons)
+            else:
+                self.__clustettes(cons)
 
     def __remove_loners(self):
         """
@@ -93,7 +92,7 @@ class HCCA:
 
         # Detect nodes forming small islands
         for node in self.curDic.keys():
-            self.__clustettes([node], self.clustets)
+            self.__clustettes([node])
 
         # Removes nodes from small islands
         deleted_count = 0
