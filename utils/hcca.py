@@ -1,15 +1,26 @@
 import sys
-import json
+
 
 class HCCA:
     """
     The HCCA class to create clusters from a Rank Based Network
 
     """
-    def __init__(self, step_size=3, hrr_cutoff=50):
+    def __init__(self, step_size=3, hrr_cutoff=50, min_cluster_size=40, max_cluster_size=200):
+        """
+        Clear lists and store settings
+
+        :param step_size: desired step size
+        :param hrr_cutoff: desired hrr_cutoff
+        :param min_cluster_size: minimal size of a cluster
+        :param max_cluster_size: maximal size of a cluster
+        """
         # Settings
         self.hrrCutoff = hrr_cutoff
         self.stepSize = step_size
+
+        self.min_cluster_size = min_cluster_size
+        self.max_cluster_size = max_cluster_size
 
         # Dicts to store the network
         self.scoreDic = {}
@@ -48,21 +59,24 @@ class HCCA:
 
         print("Done!")
 
-    def __clustettes(self, lista, clustets, min_size=200):
+    def __clustettes(self, lista, clustets):
         """
-        Detect islands of nodes smaller than min_size
+        Detect islands of nodes smaller than max_cluster_size
 
         :param lista:
         :param clustets:
-        :param min_size:
         :return:
         """
         cons = []
-        for j in range(len(lista)):
-            cons += self.curDic[lista[j]]
+
+        for l in lista:
+            cons += self.curDic[l]
+
         cons = list(set(cons + lista))
-        if len(cons) > min_size:
+
+        if len(cons) > self.max_cluster_size:
             return
+
         elif len(cons) == len(lista):
             cons.sort()
             if cons not in clustets:
@@ -71,43 +85,30 @@ class HCCA:
         else:
             self.__clustettes(cons, clustets)
 
-    def __remove_loners(self, min_size=200):
+    def __remove_loners(self):
         """
         Removes nodes contained in islands (smaller than min_size) from the analysis
-
-        :param min_size:
-        :return:
         """
         print("Detecting loners...", end='')
 
-        notLoners = list(self.curDic.keys())
+        not_loners = list(self.curDic.keys())
 
-        node_count = len(self.curDic.keys())
+        node_count = len(not_loners)
 
         # Detect nodes forming small islands
-        for i in range(len(notLoners)):
-            self.__clustettes([notLoners[i]], self.clustets, min_size=min_size)
+        for nl in not_loners:
+            self.__clustettes([nl], self.clustets)
 
         # Removes nodes from small islands
         deleted_count = 0
-        for i in range(len(self.clustets)):
-            for j in range(len(self.clustets[i])):
+        for clustet in self.clustets:
+            for c in clustet:
                 deleted_count += 1
-                del self.curDic[self.clustets[i][j]]
+                del self.curDic[c]
 
-        print("Done!\nRemoved %d nodes (out of %d)" % (deleted_count, node_count))
+        print("Done!\nFound %d loners (out of %d nodes)" % (deleted_count, node_count))
 
-    def print_debug(self):
-        print("scoreDict:")
-        print(json.dumps(self.scoreDic, indent='\t')[:500], "...")
-
-        print("curDict:")
-        print(json.dumps(self.curDic, indent='\t')[:500], "...")
-
-        print("loners:")
-        print(json.dumps(self.loners, indent='\t')[:500], "...")
-
-    def SurroundingStep(self, lista, whole, step):
+    def __surrounding_step(self, lista, whole, step):
         """
 
         :param lista:
@@ -115,63 +116,65 @@ class HCCA:
         :param step:
         :return:
         """
-        if step < self.stepSize:  ##step size is defined to 3
+
+        if step < self.stepSize:
             nvn = lista
-            for j in range(len(lista)):
-                nvn += self.curDic[lista[j]]
+            for l in lista:
+                nvn += self.curDic[l]
             nvn = list(set(nvn))
-            self.SurroundingStep(nvn, whole, step + 1)
+            self.__surrounding_step(nvn, whole, step + 1)
         else:
             whole.append(lista)
 
-    def Chisel(self, NVN, clusters):
+    def __chisel(self, nvn, clusters):
         """
         this function recursively removes nodes from NVN. Only nodes that are connected more to the inside of NVN are retained
 
-        :param NVN:
+        :param nvn:
         :param clusters:
         :return:
         """
         temp = []
-        seta = set(NVN)
-        for i in range(len(NVN)):
-            connections = self.curDic[NVN[i]]
-            inside = set(NVN) & set(connections)
+        seta = set(nvn)
+        for i in range(len(nvn)):
+            connections = self.curDic[nvn[i]]
+            inside = set(nvn) & set(connections)
             outside = (set(connections) - set(inside))
-            inScore = 0
-            outScore = 0
+            in_score = 0
+            out_score = 0
             for j in inside:
-                inScore += self.scoreDic[NVN[i]][j]
+                in_score += self.scoreDic[nvn[i]][j]
             for j in outside:
-                outScore += self.scoreDic[NVN[i]][j]
-            if inScore > outScore:
-                temp.append(NVN[i])
+                out_score += self.scoreDic[nvn[i]][j]
+            if in_score > out_score:
+                temp.append(nvn[i])
         if len(temp) == len(seta):
             clusters.append(temp)
             return
         else:
-            self.Chisel(temp, clusters)
+            self.__chisel(temp, clusters)
 
-    def BiggestIsle(self, lista, clusterSet, curSeed):
+    def __biggest_isle(self, lista, cluster_set, cur_seed):
         """
-        sometimes the NVN is split into to islands after chiseling. This function finds the biggest island and keeps it. The smaller island is discarded.
+        Sometimes the NVN is split into to islands after chiseling. This function finds the biggest island
+        and keeps it. The smaller island is discarded.
 
         :param lista:
-        :param clusterSet:
-        :param curSeed:
+        :param cluster_set:
+        :param cur_seed:
         :return:
         """
         temp = []
         for k in range(len(lista)):
             temp += self.scoreDic[lista[k]].keys()
-        nodes = set(temp + lista) & clusterSet
+        nodes = set(temp + lista) & cluster_set
         if len(set(nodes)) == len(set(lista)):
-            curSeed.append(list(set(nodes)))
+            cur_seed.append(list(set(nodes)))
             return
         else:
-            self.BiggestIsle(list(nodes), clusterSet, curSeed)
+            self.__biggest_isle(list(nodes), cluster_set, cur_seed)
 
-    def nonOverlappers(self, clusters):
+    def __find_non_overlapping(self, clusters):
         """
         This function accepts a list of Stable Putative Clusters and greedily extracts non overlapping
         clusters with highest modularity.
@@ -181,19 +184,19 @@ class HCCA:
         """
         rankedClust = []
         for i in range(len(clusters)):
-            inScore = 0
-            outScore = 0
+            in_score = 0
+            out_score = 0
             for j in range(len(clusters[i])):
                 connections = set(self.scoreDic[clusters[i][j]].keys())
-                inCons = list(connections & set(clusters[i]))
-                outCons = list(connections - set(clusters[i]))
-                inScore = 0
-                outScore = 0
-                for k in range(len(inCons)):
-                    inScore += self.scoreDic[clusters[i][j]][inCons[k]]
-                for k in range(len(outCons)):
-                    outScore += self.scoreDic[clusters[i][j]][outCons[k]]
-            rankedClust.append([outScore / inScore, clusters[i]])
+                in_cons = list(connections & set(clusters[i]))
+                out_cons = list(connections - set(clusters[i]))
+                in_score = 0
+                out_score = 0
+                for k in range(len(in_cons)):
+                    in_score += self.scoreDic[clusters[i][j]][in_cons[k]]
+                for k in range(len(out_cons)):
+                    out_score += self.scoreDic[clusters[i][j]][out_cons[k]]
+            rankedClust.append([out_score / in_score, clusters[i]])
 
         rankedClust.sort()
         BestClust = [rankedClust[0][1]]
@@ -207,7 +210,7 @@ class HCCA:
                 BestClust.append(rankedClust[i][1])
         return BestClust
 
-    def networkEditor(self, clustered):
+    def __network_editor(self, clustered):
         """
         This function removes nodes in accepted clusters from the current network.
 
@@ -215,78 +218,87 @@ class HCCA:
         :return:
         """
         connected = []
-        clusteredNodes = []
+        clustered_nodes = []
         for i in range(len(clustered)):
-            clusteredNodes += clustered[i]
+            clustered_nodes += clustered[i]
             for j in range(len(clustered[i])):
                 connected += self.curDic[clustered[i][j]]
                 del self.curDic[clustered[i][j]]
-        connections = list(set(connected) - set(clusteredNodes))
+        connections = list(set(connected) - set(clustered_nodes))
         for i in range(len(connections)):
-            self.curDic[connections[i]] = list(set(self.curDic[connections[i]]) - set(clusteredNodes))
+            self.curDic[connections[i]] = list(set(self.curDic[connections[i]]) - set(clustered_nodes))
 
-    def filler(self, LeftOvers):  ##This function assigns nodes that were not clustered by HCCA to clusters they are having highest connectivity to.
-        conScoreMat = [[]] * len(self.clustered)
+    def __filler(self, left_overs):
+        """
+        This function assigns nodes that were not clustered by HCCA to clusters they are having highest connectivity to.
+
+        :param left_overs:
+        :return:
+        """
+        con_score_mat = [[]] * len(self.clustered)
         clustera = []
-        print(len(LeftOvers))
-        if len(LeftOvers) != 0:
-            for i in range(len(LeftOvers)):
+        print(len(left_overs))
+        if len(left_overs) != 0:
+            for i in range(len(left_overs)):
                 for j in range(len(self.clustered)):
-                    connections = list(set(self.scoreDic[LeftOvers[i]].keys()) & set(self.clustered[j]))
+                    connections = list(set(self.scoreDic[left_overs[i]].keys()) & set(self.clustered[j]))
                     score = 0
                     for k in range(len(connections)):
-                        score += self.scoreDic[LeftOvers[i]][connections[k]]
-                    conScoreMat[j] = score
+                        score += self.scoreDic[left_overs[i]][connections[k]]
+                    con_score_mat[j] = score
 
-                topScore = max(conScoreMat)
-                if topScore != 0:
-                    sizeList = []
-                    for j in range(len(conScoreMat)):
-                        if conScoreMat[j] == topScore:
-                            sizeList.append([len(self.clustered[j]), j])
-                    sizeList.sort()
-                    self.clustered[sizeList[0][1]] += [LeftOvers[i]]
-                    clustera.append(LeftOvers[i])
-            LeftOvers = list(set(LeftOvers) - set(clustera))
-            return self.filler(LeftOvers)
+                top_score = max(con_score_mat)
+                if top_score != 0:
+                    size_list = []
+                    for j in range(len(con_score_mat)):
+                        if con_score_mat[j] == top_score:
+                            size_list.append([len(self.clustered[j]), j])
+                    size_list.sort()
+                    self.clustered[size_list[0][1]] += [left_overs[i]]
+                    clustera.append(left_overs[i])
+            left_overs = list(set(left_overs) - set(clustera))
+            return self.__filler(left_overs)
         else:
             return
 
-    def run_iteration(self):
+    def __iterate(self):
         """
-        Run one iteration of CCA
+        Runs one iteration of CCA
 
         :return:
         """
         save = []
-        notClustered = list(self.curDic.keys())
-        for i in range(len(notClustered)):
+        not_clustered = list(self.curDic.keys())
+        for i in range(len(not_clustered)):
 
-            sys.stdout.write("\rNode " + str(i) + " out of " + str(len(notClustered)))
+            sys.stdout.write("\rNode " + str(i) + " out of " + str(len(not_clustered)))
             sys.stdout.flush()
 
             whole = []
             clusters = []
-            self.SurroundingStep([notClustered[i]], whole, 0)
-            self.Chisel(whole[0], clusters)
+            self.__surrounding_step([not_clustered[i]], whole, 0)
+            self.__chisel(whole[0], clusters)
             if len(clusters[0]) > 20:
                 checked = []
                 for j in range(len(clusters[0])):
                     if clusters[0][j] not in checked:
-                        curSeed = []
-                        self.BiggestIsle([clusters[0][j]], set(clusters[0]), curSeed)
-                        checked += curSeed[0]
-                        if 200 > len(curSeed[0]) > 40:  ##Here the desired size of clusters is specified
-                            save.append(curSeed[0])
+                        cur_seed = []
+                        self.__biggest_isle([clusters[0][j]], set(clusters[0]), cur_seed)
+                        checked += cur_seed[0]
+                        # Check if cluster is withing the desired size range
+                        if self.max_cluster_size > len(cur_seed[0]) > self.min_cluster_size:
+                            save.append(cur_seed[0])
                             break
-        print("\nfinding non-overlappers")
-        newCluster = self.nonOverlappers(save)
-        print("Found %s non overlapping SPCs. Making a cluster list" % len(newCluster))
-        for i in range(len(newCluster)):
-            self.clustered.append(newCluster[i])
-        print("%s clusters are now existing. Started the network edit." % len(self.clustered))
-        self.networkEditor(newCluster)
-        print("finished the edit.")
+
+        print("\nFinding non-overlappers...", end='')
+        new_cluster = self.__find_non_overlapping(save)
+        print("Done!\nFound %s non overlapping SPCs. Making a cluster list" % len(new_cluster))
+        for i in range(len(new_cluster)):
+            self.clustered.append(new_cluster[i])
+
+        print("\n%s clusters are now existing. Started the network edit..." % len(self.clustered))
+        self.__network_editor(new_cluster)
+        print("Done!\nFinished the edits.")
 
     def build_clusters(self):
         """
@@ -298,29 +310,36 @@ class HCCA:
 
         while True:
             try:
+                print("\n-------------")
                 print("Iteration: %s" % iteration)
-                self.run_iteration()
+                print("-------------")
+
+                self.__iterate()
+
                 iteration += 1
             except:
                 leftovers = list(self.curDic.keys())
 
-                self.filler(leftovers)
+                self.__filler(leftovers)
                 break
 
     def write_output(self, filename):
         save = []
-        for i in range(len(self.clustered)):
-            for j in range(len(self.clustered[i])):
-                save.append("%s\t%s\n" % (self.clustered[i][j], str(i)))
-        for i in range(len(self.clustets)):
-            for j in range(len(self.clustets[i])):
-                save.append("%s\ts%s\n" % (self.clustets[i][j], str(i)))
-        for i in range(len(self.loners)):
-            save.append("%s\ts%s\n" % (self.loners[i], "NA"))
 
-        v = open(filename, "w")
-        v.writelines(save)
-        v.close()
+        for i, cluster in enumerate(self.clustered):
+            for member in cluster:
+                save.append("%s\t%d\n" % (member, i))
+
+        for i, clustet in enumerate(self.clustets):
+            for member in clustet:
+                save.append("%s\ts%d\n" % (member, i))
+
+        for loner in self.loners:
+            save.append("%s\tsNA\n" % loner)
+
+        # Write output to file
+        with open(filename, "w") as v:
+            v.writelines(save)
 
 if __name__ == "__main__":
     hcca_test = HCCA(step_size=3, hrr_cutoff=50)
