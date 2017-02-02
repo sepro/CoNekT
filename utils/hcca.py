@@ -75,13 +75,11 @@ class HCCA:
         cons = list(set(cons + lista))
 
         if len(cons) > self.max_cluster_size:
-            return
-
+            pass
         elif len(cons) == len(lista):
             cons.sort()
             if cons not in clustets:
                 clustets.append(cons)
-            return
         else:
             self.__clustettes(cons, clustets)
 
@@ -91,13 +89,11 @@ class HCCA:
         """
         print("Detecting loners...", end='')
 
-        not_loners = list(self.curDic.keys())
-
-        node_count = len(not_loners)
+        node_count = len(self.curDic)
 
         # Detect nodes forming small islands
-        for nl in not_loners:
-            self.__clustettes([nl], self.clustets)
+        for node in self.curDic.keys():
+            self.__clustettes([node], self.clustets)
 
         # Removes nodes from small islands
         deleted_count = 0
@@ -108,23 +104,24 @@ class HCCA:
 
         print("Done!\nFound %d loners (out of %d nodes)" % (deleted_count, node_count))
 
-    def __surrounding_step(self, lista, whole, step):
+    def __surrounding_step(self, node_list, whole, step):
         """
 
-        :param lista:
+        :param node_list:
         :param whole:
         :param step:
         :return:
         """
-
         if step < self.stepSize:
-            nvn = lista
-            for l in lista:
+            nvn = [l for l in node_list]
+            for l in node_list:
                 nvn += self.curDic[l]
+
             nvn = list(set(nvn))
+
             self.__surrounding_step(nvn, whole, step + 1)
         else:
-            whole.append(lista)
+            whole.append(node_list)
 
     def __chisel(self, nvn, clusters):
         """
@@ -136,21 +133,22 @@ class HCCA:
         """
         temp = []
         seta = set(nvn)
-        for i in range(len(nvn)):
-            connections = self.curDic[nvn[i]]
+
+        for n in nvn:
+            connections = self.curDic[n]
             inside = set(nvn) & set(connections)
             outside = (set(connections) - set(inside))
             in_score = 0
             out_score = 0
             for j in inside:
-                in_score += self.scoreDic[nvn[i]][j]
+                in_score += self.scoreDic[n][j]
             for j in outside:
-                out_score += self.scoreDic[nvn[i]][j]
+                out_score += self.scoreDic[n][j]
             if in_score > out_score:
-                temp.append(nvn[i])
+                temp.append(n)
+
         if len(temp) == len(seta):
             clusters.append(temp)
-            return
         else:
             self.__chisel(temp, clusters)
 
@@ -170,7 +168,6 @@ class HCCA:
         nodes = set(temp + lista) & cluster_set
         if len(set(nodes)) == len(set(lista)):
             cur_seed.append(list(set(nodes)))
-            return
         else:
             self.__biggest_isle(list(nodes), cluster_set, cur_seed)
 
@@ -182,33 +179,36 @@ class HCCA:
         :param clusters:
         :return:
         """
-        rankedClust = []
-        for i in range(len(clusters)):
+        ranked_clust = []
+        for cluster in clusters:
             in_score = 0
             out_score = 0
-            for j in range(len(clusters[i])):
-                connections = set(self.scoreDic[clusters[i][j]].keys())
-                in_cons = list(connections & set(clusters[i]))
-                out_cons = list(connections - set(clusters[i]))
+            for node in cluster:
+                connections = set(self.scoreDic[node].keys())
+                in_cons = list(connections & set(cluster))
+                out_cons = list(connections - set(cluster))
                 in_score = 0
                 out_score = 0
-                for k in range(len(in_cons)):
-                    in_score += self.scoreDic[clusters[i][j]][in_cons[k]]
-                for k in range(len(out_cons)):
-                    out_score += self.scoreDic[clusters[i][j]][out_cons[k]]
-            rankedClust.append([out_score / in_score, clusters[i]])
 
-        rankedClust.sort()
-        BestClust = [rankedClust[0][1]]
-        for i in range(len(rankedClust)):
+                for in_con in in_cons:
+                    in_score += self.scoreDic[node][in_con]
+
+                for out_con in out_cons:
+                    out_score += self.scoreDic[node][out_con]
+
+            ranked_clust.append([out_score / in_score, cluster])
+
+        ranked_clust.sort()
+        best_clust = [ranked_clust[0][1]]
+        for i in range(len(ranked_clust)):
             counter = 0
-            for j in range(len(BestClust)):
-                if len(set(rankedClust[i][1]) & set(BestClust[j])) > 0:
+            for j in range(len(best_clust)):
+                if len(set(ranked_clust[i][1]) & set(best_clust[j])) > 0:
                     counter += 1
                     break
-            if counter == 0 and rankedClust[i][0] < 1:
-                BestClust.append(rankedClust[i][1])
-        return BestClust
+            if counter == 0 and ranked_clust[i][0] < 1:
+                best_clust.append(ranked_clust[i][1])
+        return best_clust
 
     def __network_editor(self, clustered):
         """
@@ -237,7 +237,7 @@ class HCCA:
         """
         con_score_mat = [[]] * len(self.clustered)
         clustera = []
-        print(len(left_overs))
+        print("Leftovers : %d" % len(left_overs))
         if len(left_overs) != 0:
             for i in range(len(left_overs)):
                 for j in range(len(self.clustered)):
@@ -257,9 +257,7 @@ class HCCA:
                     self.clustered[size_list[0][1]] += [left_overs[i]]
                     clustera.append(left_overs[i])
             left_overs = list(set(left_overs) - set(clustera))
-            return self.__filler(left_overs)
-        else:
-            return
+            self.__filler(left_overs)
 
     def __iterate(self):
         """
@@ -292,11 +290,11 @@ class HCCA:
 
         print("\nFinding non-overlappers...", end='')
         new_cluster = self.__find_non_overlapping(save)
-        print("Done!\nFound %s non overlapping SPCs. Making a cluster list" % len(new_cluster))
+        print("Done!\nFound %s non overlapping SPCs. Making a cluster list..." % len(new_cluster), end='')
         for i in range(len(new_cluster)):
             self.clustered.append(new_cluster[i])
 
-        print("\n%s clusters are now existing. Started the network edit..." % len(self.clustered))
+        print("Done!\n\nCurrent number of clusters %d. Starting the network edit..." % len(self.clustered))
         self.__network_editor(new_cluster)
         print("Done!\nFinished the edits.")
 
@@ -320,6 +318,7 @@ class HCCA:
             except:
                 leftovers = list(self.curDic.keys())
 
+                print("\nClustering completed, handling left overs...")
                 self.__filler(leftovers)
                 break
 
@@ -342,7 +341,7 @@ class HCCA:
             v.writelines(save)
 
 if __name__ == "__main__":
-    hcca_test = HCCA(step_size=3, hrr_cutoff=50)
+    hcca_test = HCCA(step_size=3, hrr_cutoff=30)
 
     hcca_test.read_network(sys.argv[1])
 
