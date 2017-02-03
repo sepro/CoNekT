@@ -557,6 +557,19 @@ def add_coexpression_network():
             abort(405)
 
 
+@admin_controls.route('/build/hcca_clusters/<int:network_method_id>', methods=['get'])
+def build_hcca_clusters(network_method_id):
+    """
+    Temporary function to test building hcca clusters
+
+    :param network_method_id:
+    :return:
+    """
+    CoexpressionClusteringMethod.build_hcca_clusters("HCCA clusters", network_method_id)
+
+    return "Build complete"
+
+
 @admin_controls.route('/add/coexpression_clusters', methods=['POST'])
 @login_required
 def add_coexpression_clusters():

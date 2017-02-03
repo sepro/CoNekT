@@ -6,7 +6,7 @@ from sqlalchemy import join
 from sqlalchemy.orm import joinedload, load_only
 
 from planet import db
-from planet.models.expression.networks import ExpressionNetwork
+from planet.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
 from planet.models.gene_families import GeneFamily
 from planet.models.relationships import CoexpressionClusterSimilarity, SequenceCoexpressionClusterAssociation, SequenceFamilyAssociation
 from planet.models.relationships import SequenceGOAssociation, ClusterGOEnrichment
@@ -14,6 +14,7 @@ from planet.models.sequences import Sequence
 from utils.benchmark import benchmark
 from utils.enrichment import hypergeo_sf, fdr_correction
 from utils.jaccard import jaccard
+from utils.hcca import HCCA
 
 
 class CoexpressionClusteringMethod(db.Model):
@@ -44,6 +45,92 @@ class CoexpressionClusteringMethod(db.Model):
         except Exception as e:
             db.session.rollback()
             print(e)
+
+    @staticmethod
+    def build_hcca_clusters(method, network_method_id, step_size=3, hrr_cutoff=30, min_cluster_size=40, max_cluster_size=200):
+        """
+        method to build HCCA clusters for a certain network
+
+        :param method: Name for the current clustering method
+        :param network_method_id: ID for the network to cluster
+        :param step_size: desired step_size for the HCCA algorithm
+        :param hrr_cutoff: desired hrr_cutoff for the HCCA algorithm
+        :param min_cluster_size: minimal cluster size
+        :param max_cluster_size: maximum cluster size
+        """
+
+        network_data = {}
+
+        # Get network from DB
+        print("Loading Network data from DB...", sep='')
+        ExpressionNetworkMethod.query.get_or_404(network_method_id)                     # Check if method exists
+
+        probes = ExpressionNetwork.query.filter_by(method_id=network_method_id).all()   # Load all probes
+
+        for p in probes:
+            # Loop over probes and store hrr for all neighbors
+            neighborhood = json.loads(p.network)
+            network_data[p.sequence_id] = {nb["gene_id"]: nb["hrr"] for nb in neighborhood
+                                           if "gene_id" in nb.keys()
+                                           and "hrr" in nb.keys()
+                                           and nb["gene_id"] is not None}
+
+        print("Done!\nStarting to build Clusters...\n")
+
+        # Build clusters
+        hcca_util = HCCA(
+            step_size=step_size,
+            hrr_cutoff=hrr_cutoff,
+            min_cluster_size=min_cluster_size,
+            max_cluster_size=max_cluster_size
+        )
+
+        hcca_util.load_data(network_data)
+
+        hcca_util.build_clusters()
+
+        # Add new method to DB
+        clusters = list(set([t[1] for t in hcca_util.clusters]))
+        if len(clusters) > 0:
+            print("Done building clusters, adding clusters to DB")
+
+            # Add new method first
+            new_method = CoexpressionClusteringMethod()
+
+            new_method.network_method_id = network_method_id
+            new_method.method = method
+            new_method.cluster_count = len(clusters)
+
+            db.session.add(new_method)
+
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+
+            # Add cluster and store as dict
+            cluster_dict = {}
+
+            for c in clusters:
+                cluster_dict[c] = CoexpressionCluster()
+                cluster_dict[c].method_id = new_method.id
+                cluster_dict[c].name = c
+
+                db.session.add(cluster_dict[c])
+
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+
+            # Link sequences to clusters
+
+
+
+        else:
+            print("No clusters found! Not adding anything to DB !")
 
     @staticmethod
     def add_lstrap_coexpression_clusters(cluster_file, description, network_id, prefix='cluster_', min_size=10):

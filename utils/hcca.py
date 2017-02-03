@@ -1,5 +1,5 @@
 import sys
-
+import json
 
 class HCCA:
     """
@@ -30,34 +30,6 @@ class HCCA:
         self.loners = []
         self.clustered = []
         self.clustets = []
-
-    def read_network(self, filename):
-        """
-        Function to read network from PlaNet 1 HRR files (retained for testing !)
-
-        :param filename: path to file to read
-        """
-        print("Reading Rank Based network from HRR file...", end='')
-
-        a = open(filename).readlines()  # open network file
-
-        for i in range(len(a)):         # this loop processess the network file into 2 dicts (curDic and scoreDic).
-            splitted = a[i].split("\t")
-            dicto = {}
-            connections = []
-            for j in range(5, len(splitted)):
-                if "+" in splitted[j]:
-                    splitx = splitted[j].split("+")
-                    if float(splitx[1]) < self.hrrCutoff:
-                        dicto[splitx[0]] = 1 / (float(splitx[1]) + 1)
-                        connections.append(splitx[0])
-            if len(dicto) != 0:
-                self.scoreDic[str(i)] = dicto
-                self.curDic[str(i)] = connections
-            else:
-                self.loners.append(str(i))
-
-        print("Done!")
 
     def __clustettes(self, nodes):
         """
@@ -214,7 +186,6 @@ class HCCA:
         This function removes nodes in accepted clusters from the current network.
 
         :param clustered:
-        :return:
         """
         connected = []
         clustered_nodes = []
@@ -314,12 +285,100 @@ class HCCA:
                 self.__iterate()
 
                 iteration += 1
-            except:
+            except IndexError:
+                # When no additional clusters can be found, and IndexError (out of range) is produced.
+                # Catch and handle gracefully
                 leftovers = list(self.curDic.keys())
 
                 print("\nClustering completed, handling left overs...")
                 self.__filler(leftovers)
                 break
+
+    def read_network(self, filename):
+        """
+        Function to read network from PlaNet 1 HRR files (retained for testing !)
+
+        :param filename: path to file to read
+        """
+        print("Reading Rank Based network from HRR file...", end='')
+
+        a = open(filename).readlines()  # open network file
+
+        for i in range(len(a)):         # this loop processess the network file into 2 dicts (curDic and scoreDic).
+            splitted = a[i].split("\t")
+            dicto = {}
+            connections = []
+            for j in range(5, len(splitted)):
+                if "+" in splitted[j]:
+                    splitx = splitted[j].split("+")
+                    if float(splitx[1]) < self.hrrCutoff:
+                        dicto[splitx[0]] = 1 / (float(splitx[1]) + 1)
+                        connections.append(splitx[0])
+            if len(dicto) != 0:
+                self.scoreDic[str(i)] = dicto
+                self.curDic[str(i)] = connections
+            else:
+                self.loners.append(str(i))
+
+        print("Done!")
+
+    def load_data(self, data):
+        """
+        Loads curDict and scoreDict from dictionary
+
+        {
+            "GeneA": {
+                "GeneB" : 1 (rank),
+                "GeneC" : 2,
+                ...
+            },
+            "GeneB": {
+                "GeneA" : 1,
+                ...
+            },
+            ...
+        }
+
+        :param data: dictionary with co-expressed pairs and their ranks
+        :return:
+        """
+        print("Loading network from dict...", sep='')
+
+        self.curDic = {}
+        self.scoreDic = {}
+        self.loners = []
+
+        for gene, scores in data.items():
+            neighbors = [k for k, score in scores.items() if score < self.hrrCutoff]
+            if len(neighbors) == 0:
+                self.loners.append(gene)
+            else:
+                self.curDic[gene] = neighbors
+
+        for gene, scores in data.items():
+            self.scoreDic[gene] = {k: 1/(score + 1) for k, score in scores.items() if score < self.hrrCutoff}
+
+        print("Done!")
+
+    @property
+    def clusters(self):
+        """
+        Returns a list of all members of clusters and clustets, with a name for the cluster/clustet.
+
+        :return: List of tuples [(member, clustername, clustet (bool)), ...]
+        """
+        output = []
+        count = 1
+        for cluster in self.clustered:
+            for member in cluster:
+                output.append((member, "Cluster_%d" % count, False))
+            count += 1
+
+        for clustet in self.clustets:
+            for member in clustet:
+                output.append((member, "Cluster_%d" % count, True))
+
+        return output
 
     def write_output(self, filename):
         save = []
@@ -347,4 +406,8 @@ if __name__ == "__main__":
     hcca_test.build_clusters()
 
     hcca_test.write_output(sys.argv[2])
+
+    print(hcca_test.clusters)
+
+
 

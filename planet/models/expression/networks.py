@@ -495,7 +495,6 @@ class ExpressionNetwork(db.Model):
                             scores[query][name] = i
 
         # HRR
-        # In case there is no score, the value will be 500
         hr_ranks = defaultdict(lambda: defaultdict(int))
 
         for query, targets in scores.items():
@@ -503,7 +502,8 @@ class ExpressionNetwork(db.Model):
                 if None in [score, scores[target][query]]:
                     hr_ranks[query][target] = None
                 else:
-                    hr_ranks[query][target] = max(score, scores[target][query])
+                    # As scores start from 0 and ranks one, increase the hrr by one
+                    hr_ranks[query][target] = max(score, scores[target][query]) + 1
 
         # Dump dicts into network string, which will be loaded into the database
         for query in network.keys():
