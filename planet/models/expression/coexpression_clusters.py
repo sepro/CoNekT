@@ -61,6 +61,8 @@ class CoexpressionClusteringMethod(db.Model):
 
         network_data = {}
 
+        sequence_probe = {}
+
         # Get network from DB
         print("Loading Network data from DB...", sep='')
         ExpressionNetworkMethod.query.get_or_404(network_method_id)                     # Check if method exists
@@ -74,6 +76,8 @@ class CoexpressionClusteringMethod(db.Model):
                                            if "gene_id" in nb.keys()
                                            and "hrr" in nb.keys()
                                            and nb["gene_id"] is not None}
+
+            sequence_probe[p.sequence_id] = p.probe
 
         print("Done!\nStarting to build Clusters...\n")
 
@@ -126,7 +130,32 @@ class CoexpressionClusteringMethod(db.Model):
                 print(e)
 
             # Link sequences to clusters
+            for i, t in enumerate(hcca_util.clusters):
+                gene_id, cluster_name, _ = t
 
+                relation = SequenceCoexpressionClusterAssociation()
+
+                relation.probe = sequence_probe[gene_id] if gene_id in sequence_probe.keys() else None
+                relation.sequence_id = gene_id
+                relation.coexpression_cluster_id = cluster_dict[cluster_name].id if cluster_name in cluster_dict.keys() else None
+
+                if relation.coexpression_cluster_id is not None:
+                    db.session.add(relation)
+
+                if i > 0 and i % 400 == 0:
+                    # Add relations in sets of 400
+                    try:
+                        db.session.commit()
+                    except Exception as e:
+                        db.session.rollback()
+                        print(e)
+
+            # Add remaining relations
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(e)
 
 
         else:
