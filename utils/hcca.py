@@ -73,8 +73,12 @@ class HCCA:
         deleted_count = 0
         for clustet in self.clustets:
             for c in clustet:
-                deleted_count += 1
-                del self.curDic[c]
+                try:
+                    del self.curDic[c]
+                except:
+                    pass
+                finally:
+                    deleted_count += 1
 
         print("Done!\nFound %d loners (out of %d nodes)" % (deleted_count, node_count))
 
