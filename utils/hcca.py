@@ -41,10 +41,7 @@ class HCCA:
         cons = []
 
         for l in nodes:
-            try:
-                cons += self.curDic[l]
-            except:
-                pass
+            cons += self.curDic[l]
 
         cons = list(set(cons + nodes))
 
@@ -73,12 +70,8 @@ class HCCA:
         deleted_count = 0
         for clustet in self.clustets:
             for c in clustet:
-                try:
-                    del self.curDic[c]
-                except:
-                    pass
-                finally:
-                    deleted_count += 1
+                del self.curDic[c]
+                deleted_count += 1
 
         print("Done!\nFound %d loners (out of %d nodes)" % (deleted_count, node_count))
 
@@ -113,21 +106,18 @@ class HCCA:
         seta = set(nvn)
 
         for n in nvn:
-            try:
-                connections = self.curDic[n]
+            connections = self.curDic[n]
 
-                inside = set(nvn) & set(connections)
-                outside = (set(connections) - set(inside))
-                in_score = 0
-                out_score = 0
-                for j in inside:
-                    in_score += self.scoreDic[n][j]
-                for j in outside:
-                    out_score += self.scoreDic[n][j]
-                if in_score > out_score:
-                    temp.append(n)
-            except:
-                pass
+            inside = set(nvn) & set(connections)
+            outside = (set(connections) - set(inside))
+            in_score = 0
+            out_score = 0
+            for j in inside:
+                in_score += self.scoreDic[n][j]
+            for j in outside:
+                out_score += self.scoreDic[n][j]
+            if in_score > out_score:
+                temp.append(n)
 
         if len(temp) == len(seta):
             clusters.append(temp)
