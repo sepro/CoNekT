@@ -115,9 +115,7 @@ class HCCA:
         for n in nvn:
             try:
                 connections = self.curDic[n]
-            except:
-                pass
-            finally:
+
                 inside = set(nvn) & set(connections)
                 outside = (set(connections) - set(inside))
                 in_score = 0
@@ -128,6 +126,8 @@ class HCCA:
                     out_score += self.scoreDic[n][j]
                 if in_score > out_score:
                     temp.append(n)
+            except:
+                pass
 
         if len(temp) == len(seta):
             clusters.append(temp)
