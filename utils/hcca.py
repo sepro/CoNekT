@@ -41,7 +41,8 @@ class HCCA:
         cons = []
 
         for l in nodes:
-            cons += self.curDic[l]
+            if l not in self.loners:
+                cons += self.curDic[l]
 
         cons = list(set(cons + nodes))
 

@@ -568,7 +568,7 @@ def build_hcca_clusters():
         description = request.form.get('description')
         CoexpressionClusteringMethod.build_hcca_clusters(description, network_method_id)
 
-        flash('Succesfully built clusters using HCCA.', 'success')
+        flash('Succesfully build clusters using HCCA.', 'success')
         return redirect(url_for('admin.index'))
     else:
         if not form.validate():
