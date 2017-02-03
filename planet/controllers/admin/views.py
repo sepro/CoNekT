@@ -14,6 +14,7 @@ from planet.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
 from planet.forms.admin.add_family import AddFamiliesForm
 from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
 from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClustersForm
+from planet.forms.admin.build_coexpression_clusters import BuildCoexpressionClustersForm
 from planet.forms.admin.add_coexpression_network import AddCoexpressionNetworkForm
 from planet.forms.admin.add_clades import AddCladesForm
 from planet.forms.admin.add_expression_specificity import AddConditionSpecificityForm, AddTissueSpecificityForm
@@ -252,6 +253,24 @@ class AddCoexpressionNetworkView(AdminBaseView):
         return self.render('admin/add/coexpression_network.html', form=form)
 
 
+class AddCoexpressionClustersView(AdminBaseView):
+    @expose('/')
+    def index(self):
+        form = AddCoexpressionClustersForm()
+        form.populate_networks()
+
+        return self.render('admin/add/coexpression_clusters.html', form=form)
+
+
+class BuildCoexpressionClustersView(AdminBaseView):
+    @expose('/')
+    def index(self):
+        form = BuildCoexpressionClustersForm()
+        form.populate_networks()
+
+        return self.render('admin/build/coexpression_clusters.html', form=form)
+
+
 class AddSpecificityView(AdminBaseView):
     @expose('/')
     def index(self):
@@ -264,15 +283,6 @@ class AddSpecificityView(AdminBaseView):
         return self.render('admin/add/expression_specificity.html',
                            condition_form=condition_form,
                            tissue_form=tissue_form)
-
-
-class AddCoexpressionClustersView(AdminBaseView):
-    @expose('/')
-    def index(self):
-        form = AddCoexpressionClustersForm()
-        form.populate_networks()
-
-        return self.render('admin/add/coexpression_clusters.html', form=form)
 
 
 class AddCladesView(AdminBaseView):

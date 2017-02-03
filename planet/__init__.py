@@ -146,7 +146,7 @@ def create_app(config):
             ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView, AddXRefsView, \
             AddXRefsFamiliesView, AddFamiliesView, AddExpressionProfilesView, AddCoexpressionClustersView, \
             AddCoexpressionNetworkView, AddGOView, AddInterProView, AddCladesView, AddSpecificityView, \
-            AddSequenceDescriptionsView, NewsAdminView
+            AddSequenceDescriptionsView, NewsAdminView, BuildCoexpressionClustersView
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'), template_mode='bootstrap3')
 
@@ -205,6 +205,11 @@ def create_app(config):
         admin.add_view(AddXRefsFamiliesView(name='XRefs Families',
                                             endpoint='admin.add.xrefs_families',
                                             url='add/xrefs_families/', category='Add'))
+
+        # Build Menu
+        admin.add_view(BuildCoexpressionClustersView(name='HCCA Clusters',
+                                                     endpoint='admin.build.hcca_clusters',
+                                                     url='build/hcca_clusters/', category='Build'))
 
         # Control panel
         admin.add_view(ControlsView(name='Controls', endpoint='admin.controls', url='controls/'))

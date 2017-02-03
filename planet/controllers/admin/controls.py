@@ -8,6 +8,7 @@ from flask_login import login_required
 from planet import cache
 from planet.forms.admin.add_clades import AddCladesForm
 from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClustersForm
+from planet.forms.admin.build_coexpression_clusters import BuildCoexpressionClustersForm
 from planet.forms.admin.add_coexpression_network import AddCoexpressionNetworkForm
 from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
 from planet.forms.admin.add_expression_specificity import AddTissueSpecificityForm, AddConditionSpecificityForm
@@ -557,17 +558,24 @@ def add_coexpression_network():
             abort(405)
 
 
-@admin_controls.route('/build/hcca_clusters/<int:network_method_id>', methods=['get'])
-def build_hcca_clusters(network_method_id):
-    """
-    Temporary function to test building hcca clusters
+@admin_controls.route('/build/hcca_clusters', methods=['POST'])
+@login_required
+def build_hcca_clusters():
+    form = BuildCoexpressionClustersForm(request.form)
+    form.populate_networks()
+    if request.method == 'POST' and form.validate():
+        network_method_id = int(request.form.get('network_id'))
+        description = request.form.get('description')
+        CoexpressionClusteringMethod.build_hcca_clusters(description, network_method_id)
 
-    :param network_method_id:
-    :return:
-    """
-    CoexpressionClusteringMethod.build_hcca_clusters("HCCA clusters", network_method_id)
-
-    return "Build complete"
+        flash('Succesfully built clusters using HCCA.', 'success')
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
 
 
 @admin_controls.route('/add/coexpression_clusters', methods=['POST'])
