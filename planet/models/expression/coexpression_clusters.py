@@ -79,6 +79,15 @@ class CoexpressionClusteringMethod(db.Model):
 
             sequence_probe[p.sequence_id] = p.probe
 
+        # Double check edges are reciprocally defined
+        for sequence, data in network_data.items():
+            for neighbor, score in data.items():
+                if neighbor not in network_data.keys():
+                    network_data[neighbor] = {sequence: score}
+                else:
+                    if sequence not in network_data[neighbor].keys():
+                        network_data[neighbor][sequence] = score
+
         print("Done!\nStarting to build Clusters...\n")
 
         # Build clusters
