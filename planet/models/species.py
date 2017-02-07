@@ -9,9 +9,6 @@ class Species(db.Model):
     code = db.Column(db.String(50, collation=SQL_COLLATION), unique=True)
     name = db.Column(db.String(200, collation=SQL_COLLATION))
     data_type = db.Column(db.Enum('genome', 'transcriptome', name='data_type'))
-    ncbi_tax_id = db.Column(db.Integer)
-    pubmed_id = db.Column(db.Integer)
-    project_page = db.Column(db.Text)
     color = db.Column(db.String(7), default="#C7C7C7")
     highlight = db.Column(db.String(7), default="#DEDEDE")
     sequence_count = db.Column(db.Integer)
@@ -24,14 +21,11 @@ class Species(db.Model):
     profiles = db.relationship('ExpressionProfile', backref='species', lazy='dynamic')
     expression_specificities = db.relationship('ExpressionSpecificityMethod', backref='species', lazy='dynamic')
 
-    def __init__(self, code, name, data_type='genome', ncbi_tax_id=None, pubmed_id=None, project_page=None,
+    def __init__(self, code, name, data_type='genome',
                  color="#C7C7C7", highlight="#DEDEDE", description=None):
         self.code = code
         self.name = name
         self.data_type = data_type
-        self.ncbi_tax_id = ncbi_tax_id
-        self.pubmed_id = pubmed_id
-        self.project_page = project_page
         self.color = color
         self.highlight = highlight
         self.sequence_count = 0
@@ -43,11 +37,10 @@ class Species(db.Model):
         return str(self.id) + ". " + self.name
 
     @staticmethod
-    def add(code, name, data_type='genome', ncbi_tax_id=None, pubmed_id=None, project_page=None,
+    def add(code, name, data_type='genome',
             color="#C7C7C7", highlight="#DEDEDE", description=None):
 
-        new_species = Species(code, name, data_type=data_type, ncbi_tax_id=ncbi_tax_id, pubmed_id=pubmed_id,
-                              project_page=project_page, color=color, highlight=highlight, description=description)
+        new_species = Species(code, name, data_type=data_type, color=color, highlight=highlight, description=description)
 
         species = Species.query.filter_by(code=code).first()
 

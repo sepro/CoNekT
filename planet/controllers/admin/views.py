@@ -57,8 +57,7 @@ class SpeciesAdminView(MyModelView):
     """
     Species view in admin page, specifies what is available in CRUD
     """
-    form_columns = ('code', 'name', 'data_type', 'ncbi_tax_id',
-                    'pubmed_id', 'project_page', 'color', 'highlight', 'description')
+    form_columns = ('code', 'name', 'data_type', 'color', 'highlight', 'description')
     form_create_rules = form_columns
     form_edit_rules = form_columns
 
@@ -67,9 +66,6 @@ class SpeciesAdminView(MyModelView):
     def create_model(self, form):
         model = self.model(form.code.data,
                            form.name.data,
-                           form.data_type.data,
-                           form.ncbi_tax_id.data,
-                           form.pubmed_id.data,
                            form.project_page.data,
                            form.color.data,
                            form.highlight.data,
