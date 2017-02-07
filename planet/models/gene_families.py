@@ -7,6 +7,7 @@ from planet.models.go import GO
 
 import re
 import json
+from collections import defaultdict
 
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql import or_, and_
@@ -187,7 +188,7 @@ class GeneFamily(db.Model):
 
         :param filename: The file to load
         :param description: Description of the method to store in the database
-        :param handle_isoforms: should isofroms (indicated by .1 at the end) be handled
+        :param handle_isoforms: should isoforms (indicated by .1 at the end) be handled
         :return the new methods internal ID
         """
         # Create new method for these families
@@ -203,6 +204,9 @@ class GeneFamily(db.Model):
                 gene_id = re.sub('\.\d+$', '', sequence.name.lower())
                 gene_hash[gene_id] = sequence
 
+        families = []
+        family_members = defaultdict(list)
+
         with open(filename, "r") as f_in:
             for i, line in enumerate(f_in, start=1):
                 parts = line.strip().split()
@@ -210,27 +214,66 @@ class GeneFamily(db.Model):
                 new_family = GeneFamily('%s_%02d_%08d' % (prefix, method.id, i))
                 new_family.method_id = method.id
 
+                families.append(new_family)
+
                 for p in parts:
                     if p.lower() in gene_hash.keys():
-                        new_family.sequences.append(gene_hash[p.lower()])
+                        family_members[new_family.name].append(gene_hash[p.lower()])
 
+        # add all families
+
+        for i, f in enumerate(families):
+            db.session.add(f)
+
+            if i > 0 and i % 400 == 0:
+                # Commit to DB every 400 records
                 try:
-                    db.session.add(new_family)
                     db.session.commit()
                 except Exception as e:
                     db.session.rollback()
                     quit()
+
+        try:
+            # Commit to DB remainder
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            quit()
+
+        for i, f in enumerate(families):
+            for member in family_members[f.name]:
+                association = SequenceFamilyAssociation()
+
+                association.sequence_id = member.id
+                association.gene_family_id = f.id
+
+                db.session.add(association)
+
+                if i > 0 and i % 400 == 0:
+                    # Commit to DB every 400 records
+                    try:
+                        db.session.commit()
+                    except Exception as e:
+                        db.session.rollback()
+                        quit()
+
+        try:
+            # Commit to DB remainder
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            quit()
 
         return method.id
 
     @staticmethod
     def add_families_from_orthofinder(filename, description, handle_isoforms=True):
         """
-        Add gene families directly from MCL output (one line with all genes from one family)
+        Add gene families directly from OrthoFinder output (one line with all genes from one family)
 
         :param filename: The file to load
         :param description: Description of the method to store in the database
-        :param handle_isoforms: should isofroms (indicated by .1 at the end) be handled
+        :param handle_isoforms: should isoforms (indicated by .1 at the end) be handled
         :return the new methods internal ID
         """
         # Create new method for these families

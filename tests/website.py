@@ -737,11 +737,11 @@ class WebsiteTest(TestCase):
         self.assertCytoscapeJson(data)
 
     def test_coexpression_cluster(self):
-        from planet.models.species import Species
+        # from planet.models.species import Species
         from planet.models.expression.coexpression_clusters import CoexpressionCluster
         from planet.models.gene_families import GeneFamilyMethod
 
-        species = Species.query.first()
+        # species = Species.query.first()
         cluster = CoexpressionCluster.query.first()
         sequence = cluster.sequences.first()
         gf_method = GeneFamilyMethod.query.first()
@@ -749,7 +749,7 @@ class WebsiteTest(TestCase):
         response = self.client.get('/cluster/')
         self.assert_template_used('expression_cluster.html')
         self.assert200(response)
-        self.assertTrue(species.name in response.data.decode('utf-8'))
+        # self.assertTrue(species.name in response.data.decode('utf-8'))
 
         response = self.client.get('/cluster/view/%d' % cluster.id)
         self.assert_template_used('expression_cluster.html')
