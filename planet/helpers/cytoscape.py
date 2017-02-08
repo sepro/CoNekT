@@ -90,6 +90,9 @@ class CytoscapeHelper:
         for i in sequence_interpro:
             if i.sequence_id not in data:
                 data[i.sequence_id] = {}
+                data[i.sequence_id]["name"] = None
+                data[i.sequence_id]["id"] = None
+                data[i.sequence_id]["url"] = None
 
             if "interpro" in data[i.sequence_id]:
                 data[i.sequence_id]["interpro"] += [i.domain.label]
