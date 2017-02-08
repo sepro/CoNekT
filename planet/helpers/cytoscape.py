@@ -93,6 +93,8 @@ class CytoscapeHelper:
                 data[i.sequence_id]["name"] = None
                 data[i.sequence_id]["id"] = None
                 data[i.sequence_id]["url"] = None
+                data[i.sequence_id]["clade"] = "None"
+                data[i.sequence_id]["clade_count"] = 0
 
             if "interpro" in data[i.sequence_id]:
                 data[i.sequence_id]["interpro"] += [i.domain.label]
