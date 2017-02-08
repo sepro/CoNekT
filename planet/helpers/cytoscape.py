@@ -88,6 +88,9 @@ class CytoscapeHelper:
                 data[s.sequence_id]["clade_count"] = 0
 
         for i in sequence_interpro:
+            if i.sequence_id not in data:
+                data[i.sequence_id] = {}
+
             if "interpro" in data[i.sequence_id]:
                 data[i.sequence_id]["interpro"] += [i.domain.label]
             else:
