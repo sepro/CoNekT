@@ -5,6 +5,13 @@
     <ol class="breadcrumb">
         <li class="active">Home</li>
     </ol>
+
+    {% if g.msg %}
+    <div class="alert alert-info">
+        <strong>{{ g.msg_title|safe }}: </strong>{{ g.msg|safe }}
+    </div>
+    {% endif %}
+
     <div class="row">
         <div class="col-lg-12">
             <div style="overflow:hidden">
