@@ -4,7 +4,7 @@
             {% for sequence in sequences %}
                 <tr>
                     <td><a href="{{ url_for('sequence.sequence_view', sequence_id=sequence.id) }}">{{ sequence.name }}</a></td>
-                    <td>{% if sequence.aliases %}{{ sequence.aliases }}{% else %}<span class="text-muted">No alias</span>{% endif %}</td>
+                    <td>{% if sequence.aliases %}{{ sequence.aliases|truncate(20) }}{% else %}<span class="text-muted">No alias</span>{% endif %}</td>
                     <td><a href="{{ url_for('species.species_view', species_id=sequence.species_id) }}"><em>{{ sequence.species.name }}</em></a></td>
                     <td>{% if sequence.description %}{{ sequence.description|truncate(60) }}{% else %}<span class="text-muted">No description available</span>{% endif %}</td>
                     <td>{{ sequence.readable_type }}</td>
