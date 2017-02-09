@@ -95,11 +95,19 @@
                                 </ul>
                                 {% endif %}
                             {% endif %}
+
                         </li>
+                        {% if g.msg %}
+                        <li class="dropdown">
+                            <a href="#" data-toggle="popover" data-html="true" data-placement="bottom" title="{{ g.msg_title }}" data-content="{{ g.msg }}"><i class="fa fa-envelope"><span class="badge badge-notify">!</span></i></a>
+                        </li>
+                        {% endif%}
                     </ul>
                 </div>
             </div>
         </div>
+
+
 
         <!-- Code to get flash function working -->
         <div class="container">
@@ -144,6 +152,7 @@
         <!-- code to reload modal on each click -->
         <script>
             $(function () {
+              $('[data-toggle="popover"]').popover({container: 'body'});
               $('a[data-target=#helpModal], abbr[data-target=#helpModal]').click(function(ev) {
                 ev.preventDefault();
                 var target = $(this).attr("href");

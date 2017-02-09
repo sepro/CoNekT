@@ -379,3 +379,13 @@ submenu
     background-color: #428bca;
     border-radius: 4px;
 }
+
+/* Badge */
+
+.badge-notify{
+   background:red;
+   position:relative;
+   top: -10px;
+   left: -5px;
+   transform: scale(0.8);
+}

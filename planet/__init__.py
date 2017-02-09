@@ -11,7 +11,7 @@ Everything that needs to be set up to get flask running is initialized in this f
 
   * set up global things like the search form and custom 403/404 error messages
 """
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, flash
 from flask_admin import Admin
 from flask_cache import Cache
 from flask_compress import Compress
@@ -274,6 +274,12 @@ def create_app(config):
         g.search_form = BasicSearchForm()
         g.twitter_handle = TWITTER_HANDLE
         g.page_items = 30
+
+        if 'GLOB_MSG' in app.config and app.config['GLOB_MSG'] is not None:
+            g.msg = app.config['GLOB_MSG']
+            g.msg_title = app.config['GLOB_MSG_TITLE'] if 'GLOB_MSG_TITLE' in app.config else 'info'
+        else:
+            g.msg = None
 
     @login_manager.user_loader
     def load_user(user_id):

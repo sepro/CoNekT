@@ -59,3 +59,9 @@ DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 # Twitter handle (None to disable twitter feed)
 TWITTER_HANDLE = "LabMutwil"
+
+# Global message
+# This message will be injected on each page !
+# Can be used to announce maintenance, ...
+GLOB_MSG = None
+GLOB_MSG_TITLE = 'Info'
