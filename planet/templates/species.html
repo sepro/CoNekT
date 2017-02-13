@@ -44,8 +44,7 @@
             <table class="table" style="margin-bottom:100px;" id="species_table">
                 <thead>
                     <tr>
-                        <th data-sort="int">ID</th>
-                        <th data-sort="string-ins">Code</th>
+                        {% if g.debug %}<th data-sort="int">ID</th>{% endif %}
                         <th data-sort="string-ins">Name</th>
                         <th data-sort="int">Transcripts</th>
                         <th data-sort="int">Profiles</th>
@@ -56,9 +55,8 @@
                 <tbody>
                 {% for s in all_species  %}
                     <tr>
-                        <td>{{ s.id }}</td>
-                        <td>{{ s.code }}</td>
-                        <td><em><a href="{{ url_for('species.species_view', species_id=s.id) }}">{{ s.name }}</a></em></td>
+                        {% if g.debug %}<td>{{ s.id }}</td>{% endif %}
+                        <td><em><a href="{{ url_for('species.species_view', species_id=s.id) }}">{{ s.name }}</a></em> <span class="'text-muted">({{ s.code }})</span></td>
                         <td>{{ s.sequence_count }}</td>
                         <td>{{ s.profile_count }}</td>
                         <td><a href="{{url_for('expression_network.expression_network_species', species_id=s.id)}}">{{ s.network_count }}</a></td>

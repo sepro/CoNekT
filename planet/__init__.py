@@ -275,6 +275,8 @@ def create_app(config):
         g.twitter_handle = TWITTER_HANDLE
         g.page_items = 30
 
+        g.debug = app.config['DEBUG'] if 'DEBUG' in app.config else False
+
         if 'GLOB_MSG' in app.config and app.config['GLOB_MSG'] is not None:
             g.msg = app.config['GLOB_MSG']
             g.msg_title = app.config['GLOB_MSG_TITLE'] if 'GLOB_MSG_TITLE' in app.config else 'info'

@@ -22,7 +22,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    {% if g.debug %}<th>ID</th>{% endif %}
                     <th>Species</th>
                     <th>Description</th>
                     <th>Score</th>
@@ -32,7 +32,7 @@
             <tbody>
             {% for n in networks  %}
                 <tr>
-                    <td>{{ n.id }}</td>
+                    {% if g.debug %}<td>{{ n.id }}</td>{% endif %}
                     <td><em><a href="{{ url_for('species.species_view', species_id=n.species.id) }}">{{ n.species.name }}</a></em></td>
                     <td>{{ n.description }}</td>
                     <td>{{ n.edge_type }}</td>

@@ -62,7 +62,7 @@
                     <div class="panel-body">
                         <form method="POST"  action="{{ url_for('blast.blast_main') }}"  role="form">
                             {{ form.csrf_token }}
-                            <label>Blast Type</label>
+                            <label><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='blast') }}" data-target="#helpModal">Blast Type</abbr></label>
                             {{form.blast_type(class_="form-control") }}<br />
                             <label>Query sequence</label>
                             {{form.fasta(class_="form-control") }}<br />
