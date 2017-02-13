@@ -182,46 +182,7 @@ class GeneFamily(db.Model):
         return GeneFamily.sequence_stats(sequence_ids)
 
     @staticmethod
-    def add_families_from_mcl(filename, description, handle_isoforms=True, prefix='mcl'):
-        """
-        Add gene families directly from MCL output (one line with all genes from one family)
-
-        :param filename: The file to load
-        :param description: Description of the method to store in the database
-        :param handle_isoforms: should isoforms (indicated by .1 at the end) be handled
-        :return the new methods internal ID
-        """
-        # Create new method for these families
-        method = GeneFamilyMethod.add(description)
-
-        gene_hash = {}
-        all_sequences = Sequence.query.all()
-
-        for sequence in all_sequences:
-            gene_hash[sequence.name.lower()] = sequence
-
-            if handle_isoforms:
-                gene_id = re.sub('\.\d+$', '', sequence.name.lower())
-                gene_hash[gene_id] = sequence
-
-        families = []
-        family_members = defaultdict(list)
-
-        with open(filename, "r") as f_in:
-            for i, line in enumerate(f_in, start=1):
-                parts = line.strip().split()
-
-                new_family = GeneFamily('%s_%02d_%08d' % (prefix, method.id, i))
-                new_family.method_id = method.id
-
-                families.append(new_family)
-
-                for p in parts:
-                    if p.lower() in gene_hash.keys():
-                        family_members[new_family.name].append(gene_hash[p.lower()])
-
-        # add all families
-
+    def __add_families(families, family_members):
         for i, f in enumerate(families):
             db.session.add(f)
 
@@ -264,10 +225,53 @@ class GeneFamily(db.Model):
             db.session.rollback()
             quit()
 
+    @staticmethod
+    def add_families_from_mcl(filename, description, handle_isoforms=False, prefix='mcl'):
+        """
+        Add gene families directly from MCL output (one line with all genes from one family)
+
+        :param filename: The file to load
+        :param description: Description of the method to store in the database
+        :param handle_isoforms: should isoforms (indicated by .1 at the end) be handled
+        :return the new methods internal ID
+        """
+        # Create new method for these families
+        method = GeneFamilyMethod.add(description)
+
+        gene_hash = {}
+        all_sequences = Sequence.query.all()
+
+        for sequence in all_sequences:
+            gene_hash[sequence.name.lower()] = sequence
+
+            if handle_isoforms:
+                gene_id = re.sub('\.\d+$', '', sequence.name.lower())
+                gene_hash[gene_id] = sequence
+
+        families = []
+        family_members = defaultdict(list)
+
+        with open(filename, "r") as f_in:
+            for i, line in enumerate(f_in, start=1):
+                parts = line.strip().split()
+
+                new_family = GeneFamily('%s_%02d_%08d' % (prefix, method.id, i))
+                new_family.method_id = method.id
+
+                families.append(new_family)
+
+                for p in parts:
+                    if p.lower() in gene_hash.keys():
+                        family_members[new_family.name].append(gene_hash[p.lower()])
+
+        # add all families
+
+        GeneFamily.__add_families(families, family_members)
+
         return method.id
 
     @staticmethod
-    def add_families_from_orthofinder(filename, description, handle_isoforms=True):
+    def add_families_from_orthofinder(filename, description, handle_isoforms=False):
         """
         Add gene families directly from OrthoFinder output (one line with all genes from one family)
 
@@ -289,6 +293,9 @@ class GeneFamily(db.Model):
                 gene_id = re.sub('\.\d+$', '', sequence.name.lower())
                 gene_hash[gene_id] = sequence
 
+        families = []
+        family_members = defaultdict(list)
+
         with open(filename, "r") as f_in:
             for line in f_in:
                 orthofinder_id, *parts = line.strip().split()
@@ -298,15 +305,14 @@ class GeneFamily(db.Model):
                 new_family = GeneFamily(orthofinder_id.replace('OG', 'OG_%02d_' % method.id))
                 new_family.method_id = method.id
 
+                families.append(new_family)
+
                 for p in parts:
                     if p.lower() in gene_hash.keys():
-                        new_family.sequences.append(gene_hash[p.lower()])
+                        family_members[new_family.name].append(gene_hash[p.lower()])
 
-                try:
-                    db.session.add(new_family)
-                    db.session.commit()
-                except Exception as e:
-                    db.session.rollback()
-                    quit()
+        # add all families
+
+        GeneFamily.__add_families(families, family_members)
 
         return method.id
