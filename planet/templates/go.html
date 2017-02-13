@@ -23,7 +23,8 @@
                     <p>There are <strong>{{ count }}</strong> sequences with this label.</p>
                     {% if count > 0 %}
                     <div id="canvas-holder" class="center-block"  style="height:300px;max-height:300px">
-                        <canvas id="chart-area" class="center-block" width="300" height="300"/>
+                        <div id="chart-loader"></div>
+                        <canvas id="chart-area" class="center-block" width="300" height="300" style="display:none"/>
                     </div>
                     {% endif %}
                 </div>
@@ -115,7 +116,7 @@
 	        $('[data-toggle="tooltip"]').tooltip();
 	});
 	{% import "macros/chartjs.html" as chartjs %}
-	   {{ chartjs.pie_chart("chart-area", url_for('go.go_json_species', go_id=go.id)) }}
+	   {{ chartjs.pie_chart_loader("chart-area", url_for('go.go_json_species', go_id=go.id), "chart-loader") }}
 
 	</script>
     {% endif %}

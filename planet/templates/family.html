@@ -38,7 +38,8 @@
                     <p>There are <strong>{{ count }}</strong> sequences with this label.</p>
                     {% if count > 0 %}
                     <div id="canvas-holder" class="center-block" style="height:300px;max-height:300px">
-                        <canvas id="chart-area" class="center-block" width="300" height="300"/>
+                        <div id="chart-loader"></div>
+                        <canvas id="chart-area" class="center-block" width="300" height="300" style="display:none"/>
                     </div>
                     {% endif %}
                 </div>
@@ -129,7 +130,8 @@
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
 	<script>
 	{% import "macros/chartjs.html" as chartjs %}
-	{{ chartjs.pie_chart("chart-area", url_for('family.family_json_species', family_id=family.id)) }}
+
+	{{ chartjs.pie_chart_loader("chart-area", url_for('family.family_json_species', family_id=family.id), "chart-loader") }}
 	</script>
     {% endif %}
 {% endblock %}
