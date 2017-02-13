@@ -29,9 +29,13 @@
                                 {{ g.search_form.terms(class_="form-control", placeholder="Search") }}
                                 <div class="input-group-btn"><button type="submit" class="btn btn-primary" value="Search">Search</button></div>
                             </div>
-                            <p>e.g. <a href="{{ url_for('search.search_single_keyword', keyword='AT1G01720') }}">AT1G01720</a>,
-                                <a href="{{ url_for('search.search_single_keyword', keyword='GO:0005737') }}">GO:0005737</a>,
-                                <a href="{{ url_for('search.search_single_keyword', keyword='Auxin') }}">Auxin</a> ...</p>
+                            {% if keyword_examples %}
+                            <span>e.g.
+                                {% for ke in keyword_examples %}
+                                <a href="{{ url_for('search.search_single_keyword', keyword=ke) }}">{{ ke }}</a>,
+                                {% endfor %}
+                                ...</span>
+                            {% endif %}
 
                         </div>
                     </form>

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, current_app
 
 from planet.models.news import News
 
@@ -11,9 +11,11 @@ def screen():
     Shows the main screen
     """
 
+    keyword_examples = current_app.config['KEYWORD_EXAMPLES'] if'KEYWORD_EXAMPLES' in current_app.config.keys() else None
+
     news = News.query.order_by(News.posted.desc()).limit(5)
 
-    return render_template('static_pages/main.html', news=news)
+    return render_template('static_pages/main.html', news=news, keyword_examples=keyword_examples)
 
 
 @main.route('/features')

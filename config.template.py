@@ -59,6 +59,7 @@ DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 # Twitter handle (None to disable twitter feed)
 TWITTER_HANDLE = "LabMutwil"
+KEYWORD_EXAMPLES = ['AT1G01720', 'GO:0005737', 'Auxin']
 
 # Global message
 # This message will be injected on each page !
