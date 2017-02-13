@@ -749,10 +749,10 @@ def calculate_cluster_similarity(gf_method_id):
 @admin_controls.route('/calculate_ecc/<int:gf_method_id>')
 @login_required
 def calculate_ecc(gf_method_id):
-    species = Species.query.all()
-    species_ids = [s.id for s in species]
+    networks = ExpressionNetworkMethod.query.all()
+    network_ids = [n.id for n in networks]
 
-    ExpressionNetworkMethod.calculate_ecc(species_ids, gf_method_id)
+    ExpressionNetworkMethod.calculate_ecc(network_ids, gf_method_id)
 
     flash('Successfully calculated ECC', 'success')
     return redirect(url_for('admin.controls.index'))
