@@ -719,9 +719,30 @@ def add_tissue_specificity():
 @admin_controls.route('/calculate_enrichment')
 @login_required
 def calculate_enrichment():
+    """
+    Controller to start GO enrichment calculations
+
+    :return: Redirect to admin main screen
+    """
     CoexpressionCluster.calculate_enrichment()
 
     flash('Successfully calculated GO enrichment for co-expression clusters', 'success')
+    return redirect(url_for('admin.controls.index'))
+
+
+@admin_controls.route('/calculate_cluster_similarity/<int:gf_method_id>')
+@login_required
+def calculate_cluster_similarity(gf_method_id):
+    """
+    Calculate similarities between co-expression clusterings based on content. Homologous genes are used to indicate the
+    similarity.
+
+    :param gf_method_id: gene family method to use for similarities
+    :return: Redirect to admin main screen
+    """
+    CoexpressionCluster.calculate_similarities(gene_family_method_id=gf_method_id)
+
+    flash('Successfully calculated co-expression clustering similarities', 'success')
     return redirect(url_for('admin.controls.index'))
 
 

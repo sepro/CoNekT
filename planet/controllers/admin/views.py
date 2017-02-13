@@ -5,6 +5,8 @@ from flask_admin import AdminIndexView, expose, BaseView
 
 from flask_login import current_user
 
+from planet.models.gene_families import GeneFamilyMethod
+
 from planet.forms.admin.add_species import AddSpeciesForm
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
 from planet.forms.admin.add_go_sequences import AddGOForm
@@ -159,7 +161,9 @@ class ControlsView(AdminBaseView):
                          'multiple updates simultaniously.')
         flash(message, 'danger')
 
-        return self.render('admin/controls.html')
+        gene_family_methods = GeneFamilyMethod.query.all()
+
+        return self.render('admin/controls.html', gene_family_methods=gene_family_methods)
 
 
 class AddSpeciesView(AdminBaseView):

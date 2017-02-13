@@ -428,14 +428,17 @@ class CoexpressionCluster(db.Model):
                     data.append([current_keys[0], current_keys[1], j])
 
         ordered_j = sorted([a[2] for a in data])
-        percentile_cutoff = ordered_j[int(len(ordered_j)*percentile_pass)]
+        if len(ordered_j) > 0:
+            percentile_cutoff = ordered_j[int(len(ordered_j)*percentile_pass)]
 
-        database = [{'source_id': d[0],
-                     'target_id': d[1],
-                     'gene_family_method_id': gene_family_method_id,
-                     'jaccard_index': d[2],
-                     'p_value': 0,
-                     'corrected_p_value': 0} for d in data if d[2] >= percentile_cutoff]
+            database = [{'source_id': d[0],
+                         'target_id': d[1],
+                         'gene_family_method_id': gene_family_method_id,
+                         'jaccard_index': d[2],
+                         'p_value': 0,
+                         'corrected_p_value': 0} for d in data if d[2] >= percentile_cutoff]
 
-        db.engine.execute(CoexpressionClusterSimilarity.__table__.insert(), database)
+            db.engine.execute(CoexpressionClusterSimilarity.__table__.insert(), database)
+        else:
+            print("No similar clusters found!")
 
