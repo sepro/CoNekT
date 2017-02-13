@@ -746,6 +746,18 @@ def calculate_cluster_similarity(gf_method_id):
     return redirect(url_for('admin.controls.index'))
 
 
+@admin_controls.route('/calculate_ecc/<int:gf_method_id>')
+@login_required
+def calculate_ecc(gf_method_id):
+    species = Species.query.all()
+    species_ids = [s.id for s in species]
+
+    ExpressionNetworkMethod.calculate_ecc(species_ids, gf_method_id)
+
+    flash('Successfully calculated ECC', 'success')
+    return redirect(url_for('admin.controls.index'))
+
+
 @admin_controls.route('/export_ftp')
 @login_required
 def export_ftp():

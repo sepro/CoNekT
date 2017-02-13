@@ -28,6 +28,16 @@
     {% endfor %}
 </div>
 
+<h3>ECC</h3>
+<div class="btn-group">
+    {% for gfm in gene_family_methods %}
+        <a class="btn btn-default" href="{{ url_for('admin_controls.calculate_ecc', gf_method_id=gfm.id) }}">{{ gfm.method }} </a>
+    {% else%}
+        <p>No gene families defined. Unable to ECC values</p>
+    {% endfor %}
+</div>
+
+
 <h3>Cache</h3>
 <p>If caching is enabled, clearing the cache is recommended after uploading data or making changes</p>
 <div class="btn-group">
