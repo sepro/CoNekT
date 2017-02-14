@@ -6,6 +6,7 @@ from planet import cache
 from planet.helpers.cytoscape import CytoscapeHelper
 from planet.models.expression.networks import ExpressionNetworkMethod, ExpressionNetwork
 from planet.models.species import Species
+from planet.models.gene_families import GeneFamilyMethod
 
 
 expression_network = Blueprint('expression_network', __name__)
@@ -59,7 +60,7 @@ def expression_network_graph(node_id, depth=1, family_method_id=1):
 @expression_network.route('/json/<node_id>')
 @expression_network.route('/json/<node_id>/<int:family_method_id>')
 @cache.cached()
-def expression_network_json(node_id, family_method_id=1):
+def expression_network_json(node_id, family_method_id=None):
     """
     Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)
 
@@ -67,6 +68,10 @@ def expression_network_json(node_id, family_method_id=1):
     :param family_method_id: Which gene families to use
     """
     network = ExpressionNetwork.get_neighborhood(node_id, 1)
+
+    if family_method_id is None:
+        family_method = GeneFamilyMethod.query.one()
+        family_method_id = family_method.id
 
     network_cytoscape = CytoscapeHelper.parse_network(network)
     network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, family_method_id)

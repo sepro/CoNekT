@@ -8,6 +8,7 @@ from planet.helpers.cytoscape import CytoscapeHelper
 from planet.models.expression.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
 from planet.models.relationships import CoexpressionClusterSimilarity, SequenceCoexpressionClusterAssociation
 from planet.models.sequences import Sequence
+from planet.models.gene_families import GeneFamilyMethod
 
 expression_cluster = Blueprint('expression_cluster', __name__)
 
@@ -98,7 +99,7 @@ def expression_cluster_download(cluster_id):
 @expression_cluster.route('/graph/<cluster_id>')
 @expression_cluster.route('/graph/<cluster_id>/<int:family_method_id>')
 @cache.cached()
-def expression_cluster_graph(cluster_id, family_method_id=1):
+def expression_cluster_graph(cluster_id, family_method_id=None):
     """
     Creates the graph with all the members of the cluster
 
@@ -107,13 +108,17 @@ def expression_cluster_graph(cluster_id, family_method_id=1):
     """
     cluster = CoexpressionCluster.query.get(cluster_id)
 
+    if family_method_id is None:
+        family_method = GeneFamilyMethod.query.one()
+        family_method_id = family_method.id
+
     return render_template("expression_graph.html", cluster=cluster, family_method_id=family_method_id)
 
 
 @expression_cluster.route('/json/<cluster_id>')
 @expression_cluster.route('/json/<cluster_id>/<int:family_method_id>')
 @cache.cached()
-def expression_cluster_json(cluster_id, family_method_id=1):
+def expression_cluster_json(cluster_id, family_method_id=None):
     """
     Generates JSON output compatible with cytoscape.js (see planet/static/planet_graph.js for details how to render)
 
@@ -121,6 +126,10 @@ def expression_cluster_json(cluster_id, family_method_id=1):
     :param family_method_id: gene family method used for color coding the graph
     """
     network = CoexpressionCluster.get_cluster(cluster_id)
+
+    if family_method_id is None:
+        family_method = GeneFamilyMethod.query.one()
+        family_method_id = family_method.id
 
     network_cytoscape = CytoscapeHelper.parse_network(network)
     network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, family_method_id)

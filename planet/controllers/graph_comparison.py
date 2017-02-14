@@ -5,6 +5,8 @@ from flask import Blueprint, render_template, Response
 from planet import cache
 from planet.helpers.cytoscape import CytoscapeHelper
 from planet.models.expression.coexpression_clusters import CoexpressionCluster
+from planet.models.gene_families import GeneFamilyMethod
+
 
 graph_comparison = Blueprint('graph_comparison', __name__)
 
@@ -38,7 +40,7 @@ def graph_comparison_cluster(one, two, family_method_id=1):
 @graph_comparison.route('/cluster/json/<int:one>/<int:two>')
 @graph_comparison.route('/cluster/json/<int:one>/<int:two>/<int:family_method_id>')
 @cache.cached()
-def graph_comparison_cluster_json(one, two, family_method_id=1):
+def graph_comparison_cluster_json(one, two, family_method_id=None):
     """
     Controller that fetches network data from two clusters from the database, adds all essential information and merges
     the two networks. The function returns a JSON object compatible with cytoscape.js
@@ -48,6 +50,10 @@ def graph_comparison_cluster_json(one, two, family_method_id=1):
     :param family_method_id: internal id of the gene family method (used down stream for coloring and connecting)
     :return: json object compatible with cytoscape.js and our UI elements
     """
+    if family_method_id is None:
+        family_method = GeneFamilyMethod.query.one()
+        family_method_id = family_method.id
+
     network_one = CytoscapeHelper.parse_network(CoexpressionCluster.get_cluster(one))
     network_one = CytoscapeHelper.add_family_data_nodes(network_one, family_method_id)
     network_one = CytoscapeHelper.add_connection_data_nodes(network_one)
