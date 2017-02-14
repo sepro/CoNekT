@@ -1,8 +1,8 @@
+import json
+
 from sqlalchemy import and_
 
 from planet import db
-
-import json
 
 sequence_go = db.Table('sequence_go',
                        db.Column('id', db.Integer, primary_key=True),
@@ -59,47 +59,6 @@ cluster_go_enrichment = db.Table('cluster_go_enrichment',
                                  db.Column('cluster_id', db.Integer, db.ForeignKey('coexpression_clusters.id'), index=True),
                                  db.Column('go_id', db.Integer, db.ForeignKey('go.id'), index=True)
                                  )
-
-
-class SequenceCoexpressionClusterAssociation(db.Model):
-    __tablename__ = 'sequence_coexpression_cluster'
-    __table_args__ = {'extend_existing': True}
-
-    id = db.Column(db.Integer, primary_key=True)
-    probe = db.Column(db.String(50), index=True)
-    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
-    coexpression_cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
-
-    sequence = db.relationship('Sequence', backref=db.backref('coexpression_cluster_associations',
-                                                              lazy='dynamic',
-                                                              cascade="all, delete-orphan"),
-                               lazy='joined')
-    coexpression_cluster = db.relationship('CoexpressionCluster',
-                                           backref=db.backref('sequence_associations',
-                                                              lazy='dynamic',
-                                                              cascade="all, delete-orphan"),
-                                           lazy='joined')
-
-
-class CoexpressionClusterSimilarity(db.Model):
-    __tablename__ = 'coexpression_cluster_similarity'
-    __table_args__ = {'extend_existing': True}
-
-    id = db.Column(db.Integer, primary_key=True)
-    source_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
-    target_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
-
-    gene_family_method_id = db.Column('gene_family_method_id', db.Integer, db.ForeignKey('gene_family_methods.id'),
-                                      index=True)
-
-    jaccard_index = db.Column(db.Float, index=True)
-    p_value = db.Column(db.Float, index=True)
-    corrected_p_value = db.Column(db.Float, index=True)
-
-    source = db.relationship('CoexpressionCluster', lazy='joined', foreign_keys=[source_id])
-    target = db.relationship('CoexpressionCluster', lazy='joined', foreign_keys=[target_id])
-
-    gene_family_method = db.relationship('GeneFamilyMethod', lazy='joined')
 
 
 class SequenceFamilyAssociation(db.Model):

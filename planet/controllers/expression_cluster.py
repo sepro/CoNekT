@@ -6,7 +6,8 @@ from sqlalchemy import or_
 from planet import cache
 from planet.helpers.cytoscape import CytoscapeHelper
 from planet.models.expression.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
-from planet.models.relationships import CoexpressionClusterSimilarity, SequenceCoexpressionClusterAssociation
+from planet.models.relationships.cluster_similarity import CoexpressionClusterSimilarity
+from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
 from planet.models.sequences import Sequence
 from planet.models.gene_families import GeneFamilyMethod
 

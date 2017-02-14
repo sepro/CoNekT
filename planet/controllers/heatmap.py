@@ -4,7 +4,7 @@ from planet import cache
 from planet.forms.heatmap import HeatmapForm
 from planet.models.expression.coexpression_clusters import CoexpressionCluster
 from planet.models.expression.profiles import ExpressionProfile
-from planet.models.relationships import SequenceCoexpressionClusterAssociation
+from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
 from planet.models.sequences import Sequence
 
 heatmap = Blueprint('heatmap', __name__)

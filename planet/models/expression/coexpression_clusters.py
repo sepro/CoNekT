@@ -8,7 +8,8 @@ from sqlalchemy.orm import joinedload, load_only
 from planet import db
 from planet.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
 from planet.models.gene_families import GeneFamily
-from planet.models.relationships import CoexpressionClusterSimilarity, SequenceCoexpressionClusterAssociation
+from planet.models.relationships.cluster_similarity import CoexpressionClusterSimilarity
+from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
 from planet.models.relationships import SequenceGOAssociation, ClusterGOEnrichment, SequenceFamilyAssociation
 from planet.models.sequences import Sequence
 from utils.benchmark import benchmark

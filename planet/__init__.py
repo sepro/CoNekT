@@ -85,6 +85,8 @@ def create_app(config):
 
     # Import all relationships (tables for many-to-many relationships)
     import planet.models.relationships
+    from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
+    from planet.models.relationships.cluster_similarity import CoexpressionClusterSimilarity
 
     # Import controllers and register as blueprint
     from planet.controllers.main import main
