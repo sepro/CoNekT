@@ -7,4 +7,4 @@ class SequenceXRefAssociation(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
-    xref_id_id = db.Column(db.Integer, db.ForeignKey('xrefs.id'))
+    xref_id = db.Column(db.Integer, db.ForeignKey('xrefs.id'))
