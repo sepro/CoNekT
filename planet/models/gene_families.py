@@ -9,7 +9,7 @@ import re
 import json
 from collections import defaultdict
 
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, Load
 from sqlalchemy.sql import or_, and_
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
@@ -68,7 +68,7 @@ class GeneFamily(db.Model):
 
     sequences = db.relationship('Sequence', secondary=sequence_family, lazy='dynamic')
 
-    xrefs = db.relationship('XRef', secondary=family_xref, lazy='dynamic')
+    xrefs = db.relationship('XRef', secondary=family_xref, lazy='joined')
 
     def __init__(self, name):
         self.name = name
