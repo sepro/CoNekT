@@ -12,6 +12,15 @@
         <li class="active"><strong>Results</strong></li>
     </ol>
     <h1>Profile comparison</h1>
+    {% if cluster_id %}
+        {% if normalize == 1 %}
+            <span class="text-muted">Normalization: <strong>Enabled</strong></span> | (<a href="{{ url_for('profile_comparison.profile_comparison_cluster', cluster_id=cluster_id, normalize=0)}}">disable</a>)
+        {% else %}
+            <span class="text-muted">Normalization: <strong>Disabled</strong></span> | (<a href="{{ url_for('profile_comparison.profile_comparison_cluster', cluster_id=cluster_id, normalize=1)}}">enable</a>)
+        {% endif %}
+        </p>
+    {% endif %}
+
     <div id="canvas-holder" class="center-block">
         <canvas id="chart-line" class="center-block" width="800" height="600"/>
     </div>

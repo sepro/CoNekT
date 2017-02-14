@@ -22,6 +22,7 @@ def profile_comparison_cluster(cluster_id, normalize=0):
     This will get all the expression profiles for members of given cluster and plot them
 
     :param cluster_id: internal id of the cluster to visualize
+    :param normalize: if the plot should be normalized (against max value of each series)
     """
     cluster = CoexpressionCluster.query.get(cluster_id)
     associations = SequenceCoexpressionClusterAssociation.query.\
@@ -40,7 +41,9 @@ def profile_comparison_cluster(cluster_id, normalize=0):
     profile_chart = prepare_profiles(profiles[:50], True if normalize == 1 else False)
 
     return render_template("expression_profile_comparison.html",
-                           profiles=json.dumps(profile_chart))
+                           profiles=json.dumps(profile_chart),
+                           normalize=normalize,
+                           cluster_id=cluster_id)
 
 
 @profile_comparison.route('/', methods=['GET', 'POST'])
