@@ -128,8 +128,6 @@ class SequenceInterproAssociation(db.Model):
                                                               lazy='dynamic',
                                                               cascade='all, delete-orphan'), lazy='joined')
 
-    # domain = db.relationship('Interpro', lazy='select')
-
     domain = db.relationship('Interpro', backref=db.backref('sequence_associations',
                              lazy='dynamic', cascade='all, delete-orphan'), lazy='joined')
 
@@ -368,7 +366,6 @@ class SequenceSequenceECCAssociation(db.Model):
 
         return {"nodes": nodes, "edges": edges}, association.gene_family_method_id
 
-
 class ClusterGOEnrichment(db.Model):
     __tablename__ = 'cluster_go_enrichment'
     __table_args__ = {'extend_existing': True}
@@ -401,3 +398,4 @@ class ClusterGOEnrichment(db.Model):
     @property
     def genome_percentage(self):
         return self.go_count*100/self.go_size
+

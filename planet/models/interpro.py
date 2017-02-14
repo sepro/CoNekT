@@ -21,9 +21,9 @@ class Interpro(db.Model):
     clade_id = db.Column(db.Integer, db.ForeignKey('clades.id'), index=True)
 
     sequences = db.relationship('Sequence', secondary=sequence_interpro, lazy='dynamic')
-    # sequence_associations = db.relationship('SequenceInterproAssociation',
-    #                                         backref=db.backref('interpro', lazy='joined'),
-    #                                         lazy='dynamic')
+
+    # Other properties
+    # sequence_associations = defined in SequenceInterproRelationship
 
     def __init__(self, label, description):
         self.label = label
