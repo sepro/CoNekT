@@ -92,6 +92,7 @@ def create_app(config):
     from planet.models.relationships.sequence_interpro import SequenceInterproAssociation
     from planet.models.relationships.sequence_family import SequenceFamilyAssociation
     from planet.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
+    from planet.models.relationships.sequence_xref import SequenceXRefAssociation
 
     # Import controllers and register as blueprint
     from planet.controllers.main import main
