@@ -32,7 +32,7 @@
                             {% if keyword_examples %}
                             <span>e.g.
                                 {% for ke in keyword_examples %}
-                                <a href="{{ url_for('search.search_single_keyword', keyword=ke) }}">{{ ke }}</a>,
+                                <a href="{{ url_for('search.search_single_keyword', keyword=ke) }}" data-toggle="modal" data-target="#loaderModal">{{ ke }}</a>,
                                 {% endfor %}
                                 ...</span>
                             {% endif %}
