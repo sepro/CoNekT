@@ -150,4 +150,5 @@ def family_go_ajax(family_id):
 def family_family_ajax(family_id):
     f = GeneFamily.query.get(family_id)
 
-    return render_template('async/family_stats.html', family_stats=f.family_stats)
+    return render_template('async/family_stats.html',
+                           family_stats={k: v for k, v in f.family_stats.items() if str(k) != str(family_id)})

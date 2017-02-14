@@ -143,7 +143,8 @@ def go_interpro_ajax(go_id):
 def go_go_ajax(go_id):
     current_go = GO.query.get(go_id)
 
-    return render_template('async/go_stats.html', go_stats=current_go.go_stats)
+    return render_template('async/go_stats.html',
+                           go_stats={k: v for k, v in current_go.go_stats.items() if str(k) != str(go_id)})
 
 
 @go.route('/ajax/family/<go_id>')

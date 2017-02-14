@@ -128,7 +128,8 @@ def interpro_json_species(interpro_id):
 def interpro_interpro_ajax(interpro_id):
     current_interpro = Interpro.query.get(interpro_id)
 
-    return render_template('async/interpro_stats.html', interpro_stats=current_interpro.interpro_stats)
+    return render_template('async/interpro_stats.html',
+                           interpro_stats={k: v for k, v in current_interpro.interpro_stats.items() if str(k) != str(interpro_id)})
 
 
 @interpro.route('/ajax/go/<interpro_id>')
