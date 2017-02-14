@@ -27,12 +27,12 @@
                         <div>
                             <div class="from-group input-group">
                                 {{ g.search_form.terms(class_="form-control", placeholder="Search") }}
-                                <div class="input-group-btn"><button type="submit" class="btn btn-primary" value="Search">Search</button></div>
+                                <div class="input-group-btn"><button type="submit" class="btn btn-primary" value="Search" data-toggle="modal" data-target="#loaderModal">Search</button></div>
                             </div>
                             {% if keyword_examples %}
                             <span>e.g.
                                 {% for ke in keyword_examples %}
-                                <a href="{{ url_for('search.search_single_keyword', keyword=ke) }}" data-toggle="modal" data-target="#loaderModal">{{ ke }}</a>,
+                                <a href="{{ url_for('search.search_single_keyword', keyword=ke) }}">{{ ke }}</a>,
                                 {% endfor %}
                                 ...</span>
                             {% endif %}
