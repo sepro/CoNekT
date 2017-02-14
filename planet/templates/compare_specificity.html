@@ -76,7 +76,9 @@
                         <a href="{{ url_for('sequence.sequence_view', sequence_id=s.id) }}">{{s.name}}</a>
                     {% endfor %}
                     )</p>
-                {% endfor %}
+                {% else %}
+                    <span class="text-muted"><em>No families found</em></span>
+                {%endfor%}
             </div>
             <div class="col-md-4">
                 <h3>Intersection</h3>
@@ -88,7 +90,9 @@
                         <a href="{{ url_for('sequence.sequence_view', sequence_id=s.id) }}">{{s.name}}</a>
                     {% endfor %}
                     )</p>
-                {% endfor %}
+                {% else %}
+                    <span class="text-muted"><em>No families found</em></span>
+                {%endfor%}
             </div>
             <div class="col-md-4">
                 <h3>{{ labels.right_species }}</h3>
@@ -100,7 +104,9 @@
                         <a href="{{ url_for('sequence.sequence_view', sequence_id=s.id) }}">{{s.name}}</a>
                     {% endfor %}
                     )</p>
-                {% endfor %}
+                {% else %}
+                    <span class="text-muted"><em>No families found</em></span>
+                {%endfor%}
             </div>
         </div>
     {% endif %}
