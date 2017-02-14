@@ -4,7 +4,7 @@ from flask import Blueprint, request, render_template
 
 from planet.forms.compare_specificity import CompareSpecificityForm
 from planet.models.expression.specificity import ExpressionSpecificityMethod, ExpressionSpecificity
-from planet.models.relationships import SequenceFamilyAssociation
+from planet.models.relationships.sequence_family import SequenceFamilyAssociation
 from planet.models.species import Species
 
 specificity_comparison = Blueprint('specificity_comparison', __name__)

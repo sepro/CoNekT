@@ -1,6 +1,7 @@
 from planet import db
-from planet.models.relationships import sequence_family, family_xref, SequenceSequenceECCAssociation,\
-    SequenceFamilyAssociation
+from planet.models.relationships import sequence_family, family_xref
+from planet.models.relationships.sequence_family import SequenceFamilyAssociation
+from planet.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
 from planet.models.sequences import Sequence
 from planet.models.interpro import Interpro
 from planet.models.go import GO

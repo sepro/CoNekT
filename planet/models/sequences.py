@@ -32,6 +32,7 @@ class Sequence(db.Model):
     # coexpression_cluster_associations declared in 'SequenceCoexpressionClusterAssociation'
     # interpro_associations declared in 'SequenceInterproAssociation'
     # go_associations declared in 'SequenceGOAssociation'
+    # family_associations declared in 'SequenceFamilyAssociation'
 
     go_labels = db.relationship('GO', secondary=sequence_go, lazy='dynamic')
     interpro_domains = db.relationship('Interpro', secondary=sequence_interpro, lazy='dynamic')
@@ -42,12 +43,12 @@ class Sequence(db.Model):
                                             lazy='dynamic')
 
     ecc_query_associations = db.relationship('SequenceSequenceECCAssociation',
-                                             primaryjoin=(sequence_sequence_ecc.c.query_id == id),
+                                             primaryjoin="SequenceSequenceECCAssociation.query_id == Sequence.id",
                                              backref=db.backref('query_sequence', lazy='joined'),
                                              lazy='dynamic')
 
     ecc_target_associations = db.relationship('SequenceSequenceECCAssociation',
-                                              primaryjoin=(sequence_sequence_ecc.c.target_id == id),
+                                              primaryjoin="SequenceSequenceECCAssociation.target_id == Sequence.id",
                                               backref=db.backref('target_sequence', lazy='joined'),
                                               lazy='dynamic')
 

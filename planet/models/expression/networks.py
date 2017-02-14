@@ -1,8 +1,9 @@
 from flask import url_for
 from planet import db
-from planet.models.relationships import SequenceFamilyAssociation, SequenceSequenceECCAssociation
+
+from planet.models.relationships.sequence_family import SequenceFamilyAssociation
+from planet.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
 from planet.models.gene_families import GeneFamily
-from planet.models.species import Species
 from planet.models.sequences import Sequence
 
 from utils.jaccard import jaccard

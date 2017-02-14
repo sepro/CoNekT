@@ -39,7 +39,7 @@ class WebsiteTest(TestCase):
         from planet.models.gene_families import GeneFamily, GeneFamilyMethod
         from planet.models.expression.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
         from planet.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
-        from planet.models.relationships import SequenceSequenceECCAssociation
+        from planet.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
         from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
         from planet.models.expression.specificity import ExpressionSpecificityMethod
         from planet.models.clades import Clade
@@ -827,7 +827,7 @@ class WebsiteTest(TestCase):
         self.assertTrue(interpro.label in response.data.decode('utf-8'))
 
     def test_ecc(self):
-        from planet.models.relationships import SequenceSequenceECCAssociation
+        from planet.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
 
         ecc = SequenceSequenceECCAssociation.query.first()
 

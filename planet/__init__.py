@@ -90,6 +90,8 @@ def create_app(config):
     from planet.models.relationships.cluster_go import ClusterGOEnrichment
     from planet.models.relationships.sequence_go import SequenceGOAssociation
     from planet.models.relationships.sequence_interpro import SequenceInterproAssociation
+    from planet.models.relationships.sequence_family import SequenceFamilyAssociation
+    from planet.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
 
     # Import controllers and register as blueprint
     from planet.controllers.main import main

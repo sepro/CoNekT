@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, url_for, render_template
 from sqlalchemy import and_
 
 from planet.models.sequences import Sequence
-from planet.models.relationships import SequenceSequenceECCAssociation
+from planet.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
 
 from planet.helpers.cytoscape import CytoscapeHelper
 
