@@ -37,7 +37,7 @@ def expression_network_species(species_id):
 @expression_network.route('/graph/<node_id>')
 @expression_network.route('/graph/<node_id>/<int:family_method_id>')
 @cache.cached()
-def expression_network_graph(node_id, depth=1, family_method_id=1):
+def expression_network_graph(node_id, depth=1, family_method_id=None):
     """
     Page that displays the network graph for a specific network's probe, the depth indicates how many steps away from
     the query gene the network is retrieved. For performance reasons depths > 1 are not allowed
@@ -47,6 +47,10 @@ def expression_network_graph(node_id, depth=1, family_method_id=1):
     Currently unused, filtering is done by javascript downstream
     :param family_method_id: family method to use for colors and shapes based on the family
     """
+    if family_method_id is None:
+        family_method = GeneFamilyMethod.query.one()
+        family_method_id = family_method.id
+
     if depth > 1:
         flash("Depth cannot be larger than 1. Showing the network with depth 1", "warning")
         return redirect(url_for('expression_network.expression_network_graph', node_id=node_id, depth=1,
