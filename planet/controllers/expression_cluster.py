@@ -109,7 +109,7 @@ def expression_cluster_graph(cluster_id, family_method_id=None):
     cluster = CoexpressionCluster.query.get(cluster_id)
 
     if family_method_id is None:
-        family_method = GeneFamilyMethod.query.one()
+        family_method = GeneFamilyMethod.query.first()
         family_method_id = family_method.id
 
     return render_template("expression_graph.html", cluster=cluster, family_method_id=family_method_id)
@@ -128,7 +128,7 @@ def expression_cluster_json(cluster_id, family_method_id=None):
     network = CoexpressionCluster.get_cluster(cluster_id)
 
     if family_method_id is None:
-        family_method = GeneFamilyMethod.query.one()
+        family_method = GeneFamilyMethod.query.first()
         family_method_id = family_method.id
 
     network_cytoscape = CytoscapeHelper.parse_network(network)

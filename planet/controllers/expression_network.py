@@ -48,7 +48,7 @@ def expression_network_graph(node_id, depth=1, family_method_id=None):
     :param family_method_id: family method to use for colors and shapes based on the family
     """
     if family_method_id is None:
-        family_method = GeneFamilyMethod.query.one()
+        family_method = GeneFamilyMethod.query.first()
         family_method_id = family_method.id
 
     if depth > 1:
@@ -74,7 +74,7 @@ def expression_network_json(node_id, family_method_id=None):
     network = ExpressionNetwork.get_neighborhood(node_id, 1)
 
     if family_method_id is None:
-        family_method = GeneFamilyMethod.query.one()
+        family_method = GeneFamilyMethod.query.first()
         family_method_id = family_method.id
 
     network_cytoscape = CytoscapeHelper.parse_network(network)

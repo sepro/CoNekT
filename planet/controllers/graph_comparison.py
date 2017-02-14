@@ -51,7 +51,7 @@ def graph_comparison_cluster_json(one, two, family_method_id=None):
     :return: json object compatible with cytoscape.js and our UI elements
     """
     if family_method_id is None:
-        family_method = GeneFamilyMethod.query.one()
+        family_method = GeneFamilyMethod.query.first()
         family_method_id = family_method.id
 
     network_one = CytoscapeHelper.parse_network(CoexpressionCluster.get_cluster(one))
