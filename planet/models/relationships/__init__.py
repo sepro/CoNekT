@@ -69,8 +69,12 @@ class SequenceFamilyAssociation(db.Model):
     sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
     gene_family_id = db.Column(db.Integer, db.ForeignKey('gene_families.id'))
 
-    sequence = db.relationship('Sequence', lazy='joined')
-    family = db.relationship('GeneFamily', lazy='joined')
+    sequence = db.relationship('Sequence', backref=db.backref('family_associations',
+                                                              lazy='dynamic',
+                                                              cascade='all, delete-orphan'), lazy='joined')
+    family = db.relationship('GeneFamily', backref=db.backref('sequence_associations',
+                                                              lazy='dynamic',
+                                                              cascade='all, delete-orphan'), lazy='joined')
 
 
 class SequenceSequenceECCAssociation(db.Model):
