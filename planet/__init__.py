@@ -87,6 +87,7 @@ def create_app(config):
     import planet.models.relationships
     from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
     from planet.models.relationships.cluster_similarity import CoexpressionClusterSimilarity
+    from planet.models.relationships.cluster_go import ClusterGOEnrichment
 
     # Import controllers and register as blueprint
     from planet.controllers.main import main
