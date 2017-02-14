@@ -68,7 +68,7 @@ class GeneFamily(db.Model):
 
     sequences = db.relationship('Sequence', secondary=sequence_family, lazy='dynamic')
 
-    xrefs = db.relationship('XRef', secondary=family_xref, lazy='joined')
+    xrefs = db.relationship('XRef', secondary=family_xref, lazy='dynamic')
 
     def __init__(self, name):
         self.name = name

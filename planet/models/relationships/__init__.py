@@ -126,9 +126,12 @@ class SequenceInterproAssociation(db.Model):
 
     sequence = db.relationship('Sequence', backref=db.backref('interpro_associations',
                                                               lazy='dynamic',
-                                                              cascade='all, delete-orphan'))
+                                                              cascade='all, delete-orphan'), lazy='joined')
 
-    domain = db.relationship('Interpro', lazy='select')
+    # domain = db.relationship('Interpro', lazy='select')
+
+    domain = db.relationship('Interpro', backref=db.backref('sequence_associations',
+                             lazy='dynamic', cascade='all, delete-orphan'), lazy='joined')
 
 
 class SequenceGOAssociation(db.Model):
