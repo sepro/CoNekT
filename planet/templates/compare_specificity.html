@@ -17,6 +17,10 @@
                         <form method="POST"  action="{{ url_for('specificity_comparison.specificity_comparison_main') }}"  role="form">
                             {{ form.csrf_token }}
                             <div class="row">
+                            <div class="col-sm-12">
+                                <label>Gene Families</label>
+                                {{form.family_method(class_="form-control")}}
+                            </div>
                             <div class="col-md-6 col-sm-12">
                             <label>Species A</label>
                             {{form.speciesa(class_="form-control")}}<br/>

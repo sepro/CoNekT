@@ -3,9 +3,12 @@ from wtforms import StringField, SelectField, FloatField, BooleanField
 from wtforms.validators import InputRequired
 
 from planet.models.species import Species
+from planet.models.gene_families import GeneFamilyMethod
 
 
 class CompareSpecificityForm(FlaskForm):
+    family_method = SelectField('family_method')
+
     speciesa = SelectField('Speciesa')
     methodsa = SelectField('Methoda')
     conditionsa = SelectField('Conditiona')
@@ -17,6 +20,7 @@ class CompareSpecificityForm(FlaskForm):
     cutoffb = StringField('Cutoffa')
 
     def populate_form(self):
+        self.family_method.choices = [(m.id, m.method) for m in GeneFamilyMethod.query.order_by(GeneFamilyMethod.id)]
         self.speciesa.choices = [(0, "Select species")] + [(s.id, s.name) for s in Species.query.order_by(Species.name)]
         self.methodsa.choices = [(0, "Select species first")]
         self.conditionsa.choices = [(0, "Select method first")]

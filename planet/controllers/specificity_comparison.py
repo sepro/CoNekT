@@ -23,6 +23,8 @@ def specificity_comparison_main():
     if request.method == 'GET':
         return render_template('compare_specificity.html', form=form)
     else:
+        family_method = request.form.get('family_method')
+
         species_a_id = request.form.get('speciesa')
         method_a_id = request.form.get('methodsa')
         condition_a = request.form.get('conditionsa')
@@ -45,7 +47,7 @@ def specificity_comparison_main():
 
         sequence_ids = [r.profile.sequence_id for r in results_a] + [r.profile.sequence_id for r in results_b]
 
-        family_associations = SequenceFamilyAssociation.query.filter(SequenceFamilyAssociation.family.has(method_id=1)).filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids))
+        family_associations = SequenceFamilyAssociation.query.filter(SequenceFamilyAssociation.family.has(method_id=family_method)).filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids))
         seq_to_fam = {f.sequence_id: f.gene_family_id for f in family_associations}
         fam_to_data = defaultdict(list)
         famID_to_name = {}
