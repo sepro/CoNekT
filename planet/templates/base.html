@@ -71,7 +71,7 @@
                                 {{ g.search_form.csrf_token }}
                                 <div class="form-group input-group">
                                     {{ g.search_form.terms(class_="form-control", placeholder="Search") }}
-                                    <div class="input-group-btn"><button type="submit" class="btn btn-primary" value="Search"><i class="fa fa-search"></i></button></div>
+                                    <div class="input-group-btn"><button type="submit" class="btn btn-primary" value="Search" data-toggle="modal" data-target="#loaderModal"><i class="fa fa-search"></i></button></div>
                                 </div>
 
                             </form>
@@ -141,7 +141,18 @@
             </div>
 
         </div>
-</div>
+        </div>
+        <div class="modal" id="loaderModal" tabindex="-1" role="dialog" aria-labelledby="loaderModalLabel">
+          <div class="modal-dialog" role="document" style="width:1000px;height:800px;">
+            <div class="modal-content">
+                <div class="modal-body">
+                <div id="leafy_loader"></div>
+                <p class="text-center text-muted">Loading ... please wait ... </p>
+                </div>
+            </div>
+          </div>
+        </div>
+
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/stupidtable.min.js') }}"></script>
@@ -152,6 +163,10 @@
         <!-- code to reload modal on each click -->
         <script>
             $(function () {
+
+              $("#leafy_loader").html(get_loader_svg('loader_leafy'));
+              init_planet_loader('loader_leafy');
+
               $('[data-toggle="popover"]').popover({container: 'body'});
               $('a[data-target=#helpModal], abbr[data-target=#helpModal]').click(function(ev) {
                 ev.preventDefault();

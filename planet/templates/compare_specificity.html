@@ -111,17 +111,6 @@
         </div>
     {% endif %}
 </div>
-<div class="modal" id="loaderModal" tabindex="-1" role="dialog" aria-labelledby="loaderModalLabel">
-  <div class="modal-dialog" role="document" style="width:1000px;height:800px;">
-    <div class="modal-content">
-        <div class="modal-body">
-        <div id="leafy_loader"></div>
-        <p class="text-center">Please wait ... </p>
-        </div>
-    </div>
-  </div>
-</div>
-
 {% endblock %}
 
 {% block extrajs %}
@@ -130,10 +119,6 @@
 {% if form %}
 <script>
 $(function () {
-
-    $("#leafy_loader").html(get_loader_svg('loader_leafy'));
-    init_planet_loader('loader_leafy');
-
     $('#cutoffa').slider({
         formatter: function(value) {
             return 'Cutoff: ' + value;
