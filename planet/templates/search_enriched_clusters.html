@@ -17,7 +17,7 @@
         <table class="table table-striped" id="results_table">
             <thead>
             <tr>
-                <th data-sort="int">ID</th>
+                {% if g.debug %}<th data-sort="int">ID</th>{% endif %}
                 <th data-sort="string-ins">Species</th>
                 <th data-sort="string-ins">Method</th>
                 <th data-sort="string-ins">Name</th>
@@ -31,7 +31,7 @@
             {% for r in results %}
                     {% for c in r.clusters %}
                     <tr>
-                        <td>{{ c.cluster_id }}</td>
+                        {% if g.debug %}<td>{{ c.cluster_id }}</td>{% endif %}
                         <td><em>{{ c.cluster.method.network_method.species.name }}</em></td>
                         <td>{{ c.cluster.method.method }}</td>
                         <td>{{ c.cluster.name }}</td>
