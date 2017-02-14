@@ -1,5 +1,6 @@
 from planet import db
-from planet.models.relationships import sequence_go, SequenceGOAssociation
+from planet.models.relationships import sequence_go
+from planet.models.relationships.sequence_go import SequenceGOAssociation
 from planet.models.sequences import Sequence
 
 from utils.parser.obo import Parser as OBOParser

@@ -1,5 +1,6 @@
 from planet import db
-from planet.models.relationships import sequence_interpro, SequenceInterproAssociation
+from planet.models.relationships import sequence_interpro
+from planet.models.relationships.sequence_interpro import SequenceInterproAssociation
 from planet.models.sequences import Sequence
 
 from utils.parser.interpro import Parser as InterproParser

@@ -10,7 +10,8 @@ from planet.models.expression.networks import ExpressionNetwork, ExpressionNetwo
 from planet.models.gene_families import GeneFamily
 from planet.models.relationships.cluster_similarity import CoexpressionClusterSimilarity
 from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
-from planet.models.relationships import SequenceGOAssociation, SequenceFamilyAssociation
+from planet.models.relationships import SequenceFamilyAssociation
+from planet.models.relationships.sequence_go import SequenceGOAssociation
 from planet.models.relationships.cluster_go import ClusterGOEnrichment
 from planet.models.sequences import Sequence
 from utils.benchmark import benchmark

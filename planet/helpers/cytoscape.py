@@ -6,7 +6,8 @@ from sqlalchemy.orm import joinedload
 from planet.models.expression.specificity import ExpressionSpecificity
 from planet.models.expression.profiles import ExpressionProfile
 from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
-from planet.models.relationships import SequenceFamilyAssociation, SequenceInterproAssociation
+from planet.models.relationships import SequenceFamilyAssociation
+from planet.models.relationships.sequence_interpro import SequenceInterproAssociation
 from planet.models.sequences import Sequence
 from planet.models.species import Species
 from utils.color import family_to_shape_and_color

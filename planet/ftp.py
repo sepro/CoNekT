@@ -13,7 +13,8 @@ from planet.models.expression.coexpression_clusters import CoexpressionClusterin
 from planet.models.expression.networks import ExpressionNetworkMethod, ExpressionNetwork
 from planet.models.gene_families import GeneFamilyMethod
 from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
-from planet.models.relationships import SequenceGOAssociation, SequenceFamilyAssociation
+from planet.models.relationships import SequenceFamilyAssociation
+from planet.models.relationships.sequence_go import SequenceGOAssociation
 from planet.models.sequences import Sequence
 from planet.models.species import Species
 from utils.sequence import translate
