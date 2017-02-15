@@ -260,18 +260,13 @@
             {% endif %}
 
 <div class=container">
-<div class=container-fluid">
-<div class="col-lg-10 col-lg-offset-2 col-sm-8 col-sm-offset-4 col-md-8 col-md-offset-4 main">
-    <div class="row">
-
-
-            <div id="legend" url="{{ url_for('static', filename='svg/legend.svg') }}"></div>
+    <div class=container-fluid">
+        <div class="col-lg-10 col-lg-offset-2 col-sm-8 col-sm-offset-4 col-md-8 col-md-offset-4 main">
+            <div class="row">
+                <div id="legend" url="{{ url_for('static', filename='svg/legend.svg') }}"></div>
             </div>
         </div>
     </div>
-</div>
-
-</div>
 
 <div class="modal" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel">
     <div class="modal-dialog" role="document" style="width:1000px;height:800px;">
