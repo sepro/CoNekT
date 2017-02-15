@@ -17,8 +17,8 @@ class CoexpressionClusterSimilarity(db.Model):
     corrected_p_value = db.Column(db.Float, index=True)
 
     source = db.relationship('CoexpressionCluster', lazy='joined', foreign_keys=[source_id],
-                             cascade='all, delete-orphan')
+                             cascade='all, delete-orphan', single_parent=True)
     target = db.relationship('CoexpressionCluster', lazy='joined', foreign_keys=[target_id],
-                             cascade='all, delete-orphan')
+                             cascade='all, delete-orphan', single_parent=True)
 
     gene_family_method = db.relationship('GeneFamilyMethod', lazy='joined')
