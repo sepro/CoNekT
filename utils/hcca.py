@@ -378,6 +378,7 @@ class HCCA:
         for clustet in self.clustets:
             for member in clustet:
                 output.append((member, "Cluster_%d" % count, True))
+            count += 1
 
         return output
 
