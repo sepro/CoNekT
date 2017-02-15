@@ -17,6 +17,8 @@ species = Blueprint('species', __name__)
 def species_overview():
     """
     Overview of all species with data in the current database, including some basic statistics
+
+    Pulls the largest clade defined in Clades from the database (if present) and adds this as the tree to the page
     """
     all_species = Species.query.all()
 
@@ -31,7 +33,8 @@ def species_overview():
 @cache.cached()
 def species_view(species_id):
     """
-    Get a species based on the ID and show the details for this species
+    Get a species based on the ID and show the details for this species. The description, which can be markdown is
+    converted prior to adding it to the template.
 
     :param species_id: ID of the species to show
     """

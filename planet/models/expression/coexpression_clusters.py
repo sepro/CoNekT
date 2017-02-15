@@ -175,6 +175,16 @@ class CoexpressionClusteringMethod(db.Model):
 
     @staticmethod
     def add_lstrap_coexpression_clusters(cluster_file, description, network_id, prefix='cluster_', min_size=10):
+        """
+        Adds MCL clusters, as produced by LSTrAP, to the database
+
+        :param cluster_file: path to file with clusters
+        :param description: description to add to database for this set of clusters
+        :param network_id: network the clusters are based on
+        :param prefix: prefix for individual clsuter names (default 'cluster_')
+        :param min_size: minimal size of a cluster (default = 10)
+        :return: ID of new clustering method
+        """
         # get all sequences from the database and create a dictionary
         sequences = Sequence.query.all()
 

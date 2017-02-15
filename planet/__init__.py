@@ -11,8 +11,9 @@ Everything that needs to be set up to get flask running is initialized in this f
 
   * set up global things like the search form and custom 403/404 error messages
 """
-from flask import Flask, render_template, g, flash
+from flask import Flask, render_template, g
 from flask_admin import Admin
+from flask_admin.menu import MenuLink
 from flask_cache import Cache
 from flask_compress import Compress
 from flask_debugtoolbar import DebugToolbarExtension
@@ -161,10 +162,6 @@ def create_app(config):
 
         # Add views used to build the database
 
-        admin.add_view(NewsAdminView(News, db.session,
-                                     endpoint='admin.news',
-                                     url='news/'))
-
         admin.add_view(AddFunctionalDataView(name='Functional Data',
                                              endpoint='admin.add.functional_data',
                                              url='add/functional_data/', category='Add'))
@@ -224,17 +221,25 @@ def create_app(config):
         admin.add_view(ControlsView(name='Controls', endpoint='admin.controls', url='controls/'))
 
         # CRUD for various database tables
-        admin.add_view(SpeciesAdminView(Species, db.session, url='species/'))
-        admin.add_view(CladesAdminView(Clade, db.session, url='clades/'))
-        admin.add_view(GeneFamilyMethodAdminView(GeneFamilyMethod, db.session, url='families/', category="Methods"))
-        admin.add_view(ExpressionNetworkMethodAdminView(ExpressionNetworkMethod, db.session, url='networks/',
-                                                        category="Methods"))
-        admin.add_view(CoexpressionClusteringMethodAdminView(CoexpressionClusteringMethod, db.session, url='clusters/',
-                                                             category="Methods"))
-        admin.add_view(ExpressionSpecificityMethodAdminView(ExpressionSpecificityMethod, db.session, url='specificity/',
-                                                            category="Methods"))
+        admin.add_view(NewsAdminView(News, db.session,
+                                     endpoint='admin.news',
+                                     url='news/', category='Browse'))
+        admin.add_view(SpeciesAdminView(Species, db.session, url='species/', category='Browse'))
+        admin.add_view(CladesAdminView(Clade, db.session, url='clades/', category='Browse', name='Clades'))
         admin.add_view(ConditionTissueAdminView(ConditionTissue, db.session, url='condition_tissue/',
-                                                category="Conversion"))
+                                                category="Browse", name='Condition to Tissue'))
+
+        admin.add_menu_item(MenuLink("------------", class_name="divider", url='#'), target_category='Browse')
+        admin.add_menu_item(MenuLink("Methods", class_name="disabled", url="#"), target_category='Browse')
+
+        admin.add_view(GeneFamilyMethodAdminView(GeneFamilyMethod, db.session, url='families/', category="Browse", name='Gene Families'))
+        admin.add_view(ExpressionNetworkMethodAdminView(ExpressionNetworkMethod, db.session, url='networks/',
+                                                        category="Browse", name='Expression Networks'))
+        admin.add_view(CoexpressionClusteringMethodAdminView(CoexpressionClusteringMethod, db.session, url='clusters/',
+                                                             category="Browse", name='Coexpression Clustering'))
+        admin.add_view(ExpressionSpecificityMethodAdminView(ExpressionSpecificityMethod, db.session, url='specificity/',
+                                                            category="Browse", name='Expression Specificity'))
+
 
     #  ______________________________
     # < Beware, code overrides below >

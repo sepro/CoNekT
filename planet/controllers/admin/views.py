@@ -154,6 +154,9 @@ class NewsAdminView(MyModelView):
 
 
 class ControlsView(AdminBaseView):
+    """
+    Control panel for administrators. Contains links to
+    """
     @expose('/')
     def index(self):
         message = Markup('<strong>Note: </strong> some operations on this page can take a long time and slow down the '
@@ -167,6 +170,9 @@ class ControlsView(AdminBaseView):
 
 
 class AddSpeciesView(AdminBaseView):
+    """
+    Admin page to add a new species to the database
+    """
     @expose('/')
     def index(self):
         form = AddSpeciesForm()
@@ -175,6 +181,9 @@ class AddSpeciesView(AdminBaseView):
 
 
 class AddFunctionalDataView(AdminBaseView):
+    """
+    Admin page to add GO definitions and InterPro descriptions to the database
+    """
     @expose('/')
     def index(self):
         form = AddFunctionalDataForm()
@@ -183,6 +192,9 @@ class AddFunctionalDataView(AdminBaseView):
 
 
 class AddGOView(AdminBaseView):
+    """
+    Admin page to add GO terms for one species to the database
+    """
     @expose('/')
     def index(self):
         form = AddGOForm()
@@ -192,6 +204,9 @@ class AddGOView(AdminBaseView):
 
 
 class AddInterProView(AdminBaseView):
+    """
+    Admin page to add InterPro domains for one species to the database
+    """
     @expose('/')
     def index(self):
         form = AddInterProForm()
@@ -201,6 +216,9 @@ class AddInterProView(AdminBaseView):
 
 
 class AddSequenceDescriptionsView(AdminBaseView):
+    """
+    Admin page to add human readable descriptions to genes
+    """
     @expose('/')
     def index(self):
         form = AddSequenceDescriptionsForm()
@@ -210,6 +228,9 @@ class AddSequenceDescriptionsView(AdminBaseView):
 
 
 class AddXRefsView(AdminBaseView):
+    """
+    Admin page to add external references to genes
+    """
     @expose('/')
     def index(self):
         form = AddXRefsForm()
@@ -219,6 +240,9 @@ class AddXRefsView(AdminBaseView):
 
 
 class AddXRefsFamiliesView(AdminBaseView):
+    """
+    Admin page to add external references to families
+    """
     @expose('/')
     def index(self):
         form = AddXRefsFamiliesForm()
@@ -228,6 +252,9 @@ class AddXRefsFamiliesView(AdminBaseView):
 
 
 class AddFamiliesView(AdminBaseView):
+    """
+    Admin page to add gene families to the database
+    """
     @expose('/')
     def index(self):
         form = AddFamiliesForm()
@@ -236,6 +263,9 @@ class AddFamiliesView(AdminBaseView):
 
 
 class AddExpressionProfilesView(AdminBaseView):
+    """
+    Admin page to add expression profiles for one species to the database
+    """
     @expose('/')
     def index(self):
         form = AddExpressionProfilesForm()
@@ -245,6 +275,12 @@ class AddExpressionProfilesView(AdminBaseView):
 
 
 class AddCoexpressionNetworkView(AdminBaseView):
+    """
+    Admin page to add the co-expression network for one species.
+
+    Note: the input is a full PCC co-expression network, however, prior to adding the network HR Ranks are
+    calculated and used as an additional filter.
+    """
     @expose('/')
     def index(self):
         form = AddCoexpressionNetworkForm()
@@ -254,6 +290,9 @@ class AddCoexpressionNetworkView(AdminBaseView):
 
 
 class AddCoexpressionClustersView(AdminBaseView):
+    """
+    Add Coexpression clusters, computed outside of PlaNet, to the database
+    """
     @expose('/')
     def index(self):
         form = AddCoexpressionClustersForm()
@@ -263,6 +302,12 @@ class AddCoexpressionClustersView(AdminBaseView):
 
 
 class BuildCoexpressionClustersView(AdminBaseView):
+    """
+    Build HCCA clusters, based on an existing network.
+
+    Note: Computing the clusters is done on the server. This might cause a high load for the duration of the
+    calculations
+    """
     @expose('/')
     def index(self):
         form = BuildCoexpressionClustersForm()
@@ -272,6 +317,10 @@ class BuildCoexpressionClustersView(AdminBaseView):
 
 
 class AddSpecificityView(AdminBaseView):
+    """
+    Admin page to calculate condition specificities (no additional input required) or more general specificities
+    (file linking condition to more general condition/tissue/... required)
+    """
     @expose('/')
     def index(self):
         condition_form = AddConditionSpecificityForm()
@@ -286,6 +335,9 @@ class AddSpecificityView(AdminBaseView):
 
 
 class AddCladesView(AdminBaseView):
+    """
+    Admin page where all clades, in JSON, can be uploaded
+    """
     @expose('/')
     def index(self):
         form = AddCladesForm()

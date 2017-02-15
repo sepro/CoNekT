@@ -87,6 +87,11 @@ def update_clades():
 @admin_controls.route('/clear/cache')
 @login_required
 def clear_cache():
+    """
+    Touching this endpoint will clear the servers cache (all of it!).
+
+    :return: Redirect to admin controls
+    """
     try:
         cache.clear()
     except Exception as e:
@@ -100,6 +105,12 @@ def clear_cache():
 @admin_controls.route('/build_blast_db')
 @login_required
 def build_blast_db():
+    """
+    Touching this endpoint will export cds and protein fasta files and build a database using those files. Paths
+    and commands specified in the config file are used.
+
+    :return: Redirect to admin controls
+    """
     try:
         BlastDB.create_db()
     except Exception as e:
@@ -561,6 +572,11 @@ def add_coexpression_network():
 @admin_controls.route('/build/hcca_clusters', methods=['POST'])
 @login_required
 def build_hcca_clusters():
+    """
+    Controller that will start building HCCA clusters for a selected network
+
+    :return: return to admin index
+    """
     form = BuildCoexpressionClustersForm(request.form)
     form.populate_networks()
     if request.method == 'POST' and form.validate():
