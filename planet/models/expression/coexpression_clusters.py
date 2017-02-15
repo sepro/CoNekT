@@ -250,7 +250,8 @@ class CoexpressionCluster(db.Model):
 
     go_enrichment = db.relationship('ClusterGOEnrichment',
                                     backref=db.backref('cluster', lazy='joined'),
-                                    lazy='dynamic')
+                                    lazy='dynamic',
+                                    cascade='all, delete-orphan')
 
     @staticmethod
     def get_cluster(cluster_id):
