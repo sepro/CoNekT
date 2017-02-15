@@ -162,11 +162,28 @@ def create_app(config):
 
         # Add views used to build the database
 
-        admin.add_view(AddFunctionalDataView(name='Functional Data',
+        admin.add_view(AddSpeciesView(name='Species', endpoint='admin.add.species', url='add/species/', category='Add'))
+        admin.add_view(AddSequenceDescriptionsView(name='Sequence Descriptions',
+                                                   endpoint='admin.add.sequence_descriptions',
+                                                   url='add/sequence_descriptions/', category='Add'))
+
+        admin.add_menu_item(MenuLink("------------", class_name="divider", url='#'), target_category='Add')
+        admin.add_menu_item(MenuLink("Functional Annotation", class_name="disabled", url="#"), target_category='Add')
+
+        admin.add_view(AddFunctionalDataView(name='GO and InterPro definitions',
                                              endpoint='admin.add.functional_data',
                                              url='add/functional_data/', category='Add'))
 
-        admin.add_view(AddSpeciesView(name='Species', endpoint='admin.add.species', url='add/species/', category='Add'))
+        admin.add_view(AddGOView(name='GO Genes',
+                                 endpoint='admin.add.go_sequences',
+                                 url='add/go/', category='Add'))
+
+        admin.add_view(AddInterProView(name='InterPro Genes',
+                                       endpoint='admin.add.interpro_sequences',
+                                       url='add/interpro/', category='Add'))
+
+        admin.add_menu_item(MenuLink("------------", class_name="divider", url='#'), target_category='Add')
+        admin.add_menu_item(MenuLink("Expression", class_name="disabled", url="#"), target_category='Add')
 
         admin.add_view(AddExpressionProfilesView(name='Expression profiles',
                                                  endpoint='admin.add.expression_profiles',
@@ -184,25 +201,19 @@ def create_app(config):
                                           endpoint='admin.add.expression_specificity',
                                           url='add/expression_specificity/', category='Add'))
 
+        admin.add_menu_item(MenuLink("------------", class_name="divider", url='#'), target_category='Add')
+        admin.add_menu_item(MenuLink("Comparative Genomics", class_name="disabled", url="#"), target_category='Add')
+
         admin.add_view(AddFamiliesView(name='Gene Families',
                                        endpoint='admin.add.families',
                                        url='add/families/', category='Add'))
-
-        admin.add_view(AddGOView(name='GO Genes',
-                                 endpoint='admin.add.go_sequences',
-                                 url='add/go/', category='Add'))
-
-        admin.add_view(AddInterProView(name='InterPro Genes',
-                                       endpoint='admin.add.interpro_sequences',
-                                       url='add/interpro/', category='Add'))
 
         admin.add_view(AddCladesView(name='Clades',
                                      endpoint='admin.add.clades',
                                      url='add/clades/', category='Add'))
 
-        admin.add_view(AddSequenceDescriptionsView(name='Sequence Descriptions',
-                                                   endpoint='admin.add.sequence_descriptions',
-                                                   url='add/sequence_descriptions/', category='Add'))
+        admin.add_menu_item(MenuLink("------------", class_name="divider", url='#'), target_category='Add')
+        admin.add_menu_item(MenuLink("Misc.", class_name="disabled", url="#"), target_category='Add')
 
         admin.add_view(AddXRefsView(name='XRefs Genes',
                                     endpoint='admin.add.xrefs',
