@@ -4,8 +4,10 @@ from markdown import markdown
 from planet import db, cache
 from planet.models.species import Species
 from planet.models.sequences import Sequence
+from planet.models.clades import Clade
 
 from sqlalchemy.orm import undefer, noload
+from sqlalchemy import desc
 
 species = Blueprint('species', __name__)
 
@@ -18,7 +20,11 @@ def species_overview():
     """
     all_species = Species.query.all()
 
-    return render_template('species.html', all_species=all_species)
+    largest_clade = Clade.query.order_by(desc(Clade.species_count)).limit(1).first()
+
+    tree = largest_clade.newick_tree if largest_clade is not None else None
+
+    return render_template('species.html', all_species=all_species, species_tree=tree)
 
 
 @species.route('/view/<species_id>')
