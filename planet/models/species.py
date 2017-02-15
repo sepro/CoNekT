@@ -17,9 +17,9 @@ class Species(db.Model):
     description = db.Column(db.Text)
 
     sequences = db.relationship('Sequence', backref='species', lazy='dynamic', cascade='all, delete-orphan')
-    networks = db.relationship('ExpressionNetworkMethod', backref='species', lazy='dynamic')
-    profiles = db.relationship('ExpressionProfile', backref='species', lazy='dynamic')
-    expression_specificities = db.relationship('ExpressionSpecificityMethod', backref='species', lazy='dynamic')
+    networks = db.relationship('ExpressionNetworkMethod', backref='species', lazy='dynamic', cascade='all, delete-orphan')
+    profiles = db.relationship('ExpressionProfile', backref='species', lazy='dynamic', cascade='all, delete-orphan')
+    expression_specificities = db.relationship('ExpressionSpecificityMethod', backref='species', lazy='dynamic', cascade='all, delete-orphan')
 
     def __init__(self, code, name, data_type='genome',
                  color="#C7C7C7", highlight="#DEDEDE", description=None):
