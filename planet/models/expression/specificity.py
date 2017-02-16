@@ -21,6 +21,8 @@ class ExpressionSpecificityMethod(db.Model):
                                     lazy='dynamic',
                                     cascade='all, delete-orphan')
 
+    order = db.Column(db.Integer)
+
     @staticmethod
     def calculate_specificities(species_id, description, remove_background=False):
         """

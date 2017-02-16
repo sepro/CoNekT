@@ -413,3 +413,13 @@ submenu
    left: -5px;
    transform: scale(0.8);
 }
+
+/*
+Equal height panels. Should be added to class=row !
+*/
+
+.equal, .equal > div[class*='col-'] {
+    display: -webkit-flex;
+    display: flex;
+    flex:1 1 auto;
+}
