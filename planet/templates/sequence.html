@@ -142,7 +142,7 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="tbody-scroll">
                 {% for ecc_query_association in ecc_query_associations %}
                 <tr>
                     <td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.target_id) }}">{{ ecc_query_association.target_sequence.name }}</a></td>
@@ -182,7 +182,7 @@
                                 <th data-sort="string-ins">Evidence</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="tbody-scroll">
                             {% for go_association in go_associations %}
                             {% if go_association.evidence == None %}
                             <tr class="parent_term" style="display: none">
@@ -219,7 +219,7 @@
                                 <th data-sort="int">Stop</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="tbody-scroll">
                             {% for association in interpro_associations %}
                             <tr>
                                 <td><a href="{{ url_for('interpro.interpro_view', interpro_id=association.domain.id) }}">{{ association.domain.label }}</a></td>

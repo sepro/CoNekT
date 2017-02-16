@@ -316,6 +316,17 @@ th.rotated > div > span {
 }
 
 /*
+table with scroll
+*/
+
+.tbody-scroll {
+    display:block;
+    max-height:250px;
+    overflow:auto;
+}
+
+
+/*
 submenu
 */
 
