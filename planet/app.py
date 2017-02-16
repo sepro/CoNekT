@@ -2,11 +2,13 @@
 Everything that needs to be set up to get flask running is initialized in this file.
 
   * set up and configure the app
-  * start the database (db)
-  * load LoginManager (for user system)
-  * start Flask Debug Toolbar
-  * load all (!) models used (essential to create the database using db_create)
-  * load all (!) controllers and register their blueprints to a subdomain
+
+  * configure extensions (db, debugtoolbar, compress, ...)
+
+  * load all controllers and register their blueprints to a subdomain
+
+  * Note: as long as models are used by a controller they are loaded and included in create_db !
+
   * add admin panel
 
   * set up global things like the search form and custom 403/404 error messages
@@ -25,15 +27,10 @@ def create_app(config):
     app = Flask(__name__)
 
     app.config.from_object(config)
-
     configure_extensions(app)
-
     configure_blueprints(app)
-
     configure_admin_panel(app)
-
     configure_error_handlers(app)
-
     configure_hooks(app)
 
     return app
