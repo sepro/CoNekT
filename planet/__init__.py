@@ -21,7 +21,7 @@ from flask_htmlmin import HTMLMIN
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
-from planet.extensions.blast import BlastThread
+from .flask_blast import BlastThread
 
 db = SQLAlchemy()
 login_manager = LoginManager()

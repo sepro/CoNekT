@@ -1,6 +1,8 @@
 .idea/
 .idea/*
 virtualenv/
+db/
+venv/
 
 tmp
 bin
