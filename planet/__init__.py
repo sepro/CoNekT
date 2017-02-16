@@ -1,3 +1,3 @@
 from .app import create_app
 
-from planet.extensions import *
+from .extensions import *

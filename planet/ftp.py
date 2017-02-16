@@ -17,6 +17,7 @@ from planet.models.relationships.sequence_family import SequenceFamilyAssociatio
 from planet.models.relationships.sequence_go import SequenceGOAssociation
 from planet.models.sequences import Sequence
 from planet.models.species import Species
+
 from utils.sequence import translate
 
 
