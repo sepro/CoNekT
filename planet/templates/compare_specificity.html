@@ -4,7 +4,7 @@
     {% if form %}
         Compare specificity
     {% else %}
-        {{ labels.left_species }} vs {{ labels.right_species }}
+        {{ labels.left_species }} {{ labels.left_condition }} vs {{ labels.right_species }} {{ labels.right_condition }}
     {% endif %}
 {% endblock %}
 
@@ -15,8 +15,9 @@
         <li><a href="{{ url_for('main.features') }}">Tools</a></li>
         <li class="active"><strong>Compare Specific Profiles</strong></li>
     </ol>
-    <h1>Compare Specific Profiles</h1>
+
     {% if form %}
+    <h1>Compare Specific Profiles</h1>
         <div class="row">
             <div class="col-md-10 col-md-offset-1 col-sm-12">
                 <div class="panel panel-default">
@@ -68,6 +69,7 @@
         </div>
     </div>
     {% else %}
+    <h1>Compare Specific Profiles: <em>{{ labels.left_species }}</em> {{ labels.left_condition }} vs <em>{{ labels.right_species }}</em> {{ labels.right_condition }}</h1>
         <div class="row">
             <div class="col-lg-12">
                 <div id="venn" url="{{ url_for('static', filename='svg/venn.svg') }}"></div>
