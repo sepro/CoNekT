@@ -133,24 +133,23 @@
         <table class="table  table-striped table-fixed" id="ecc_hits_table">
             <thead>
                 <tr>
-                    <!--<th data-sort="string-ins">Query</th>-->
-                    <th data-sort="string-ins">Target</th>
-                    <th data-sort="float"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr> score</th>
-                    <th data-sort="float">p-Value</th>
-                    <th data-sort="float">p-Value <span class="text-muted">(adjusted)</span></th>
-                    <th data-sort="string-ins">Gene Family Method</th>
-                    <th>Actions</th>
+                    <th class="col-xs-2" data-sort="string-ins">Target</th>
+                    <th class="col-xs-1" data-sort="float"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr> score</th>
+                    <th class="col-xs-1" data-sort="float">p-Value</th>
+                    <th class="col-xs-1" data-sort="float">p-Value <span class="text-muted">(adjusted)</span></th>
+                    <th class="col-xs-3" data-sort="string-ins">Gene Family Method</th>
+                    <th class="col-xs-2">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for ecc_query_association in ecc_query_associations %}
                 <tr>
-                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.target_id) }}">{{ ecc_query_association.target_sequence.name }}</a></td>
-                    <td>{{ ecc_query_association.ecc|round(2) }}</td>
-                    <td>{% if ecc_query_association.p_value %}{{ ecc_query_association.p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
-                    <td>{% if ecc_query_association.corrected_p_value %}{{ ecc_query_association.corrected_p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
-                    <td>{{ ecc_query_association.gene_family_method.method }}</td>
-                    <td><a href="{{ url_for('ecc.ecc_graph_pair', ecc_id=ecc_query_association.id) }}" data-toggle="tooltip"  data-placement="top" title="View ECC pair as graph"><i class="fa fa-eye"></i></a>
+                    <td class="col-xs-2"><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.target_id) }}">{{ ecc_query_association.target_sequence.name }}</a></td>
+                    <td class="col-xs-1">{{ ecc_query_association.ecc|round(2) }}</td>
+                    <td class="col-xs-1">{% if ecc_query_association.p_value %}{{ ecc_query_association.p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
+                    <td class="col-xs-1">{% if ecc_query_association.corrected_p_value %}{{ ecc_query_association.corrected_p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
+                    <td class="col-xs-3">{{ ecc_query_association.gene_family_method.method }}</td>
+                    <td class="col-xs-2"><a href="{{ url_for('ecc.ecc_graph_pair', ecc_id=ecc_query_association.id) }}" data-toggle="tooltip"  data-placement="top" title="View ECC pair as graph"><i class="fa fa-eye"></i></a>
                         <a href="{{ url_for('ecc.ecc_graph', sequence=sequence.id, network=ecc_query_association.query_network_method_id, family=ecc_query_association.gene_family_method_id) }}" data-toggle="tooltip"  data-placement="top" title="View ECC as graph"><i class="fa fa-share-alt"></i></a></td>
                 </tr>
                 {% endfor %}
