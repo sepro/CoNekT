@@ -319,20 +319,21 @@ th.rotated > div > span {
 table with scroll
 */
 
-.table-scroll thead tr {
-  display: block;
-  position: relative;
+.table-fixed thead {
+  width: 97%;
 }
-
-.table-scroll tbody {
-  display: block;
-  overflow: auto;
+.table-fixed tbody {
+  height: 230px;
+  overflow-y: auto;
   width: 100%;
-  max-height: 200px;
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
-
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+  display: block;
+}
+.table-fixed tbody td, .table-fixed thead > tr> th {
+  float: left;
+  border-bottom-width: 0;
+}
 
 
 /*
