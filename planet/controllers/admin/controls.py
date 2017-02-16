@@ -2,7 +2,7 @@ import json
 import os
 from tempfile import mkstemp
 
-from flask import Blueprint, Response, redirect, url_for, request, flash, abort, current_app
+from flask import Blueprint, Markup, redirect, url_for, request, flash, abort, current_app
 from flask_login import login_required
 
 from planet import cache
@@ -740,9 +740,14 @@ def calculate_enrichment():
 
     :return: Redirect to admin main screen
     """
-    CoexpressionCluster.calculate_enrichment()
+    try:
+        CoexpressionCluster.calculate_enrichment()
+    except Exception as e:
+        flash(Markup('An error occurred! Please ensure the file is <strong>correctly formatted</strong>' +
+                     ' and <strong>update the counts</strong> if necessary'), 'warning')
+    finally:
+        flash('Successfully calculated GO enrichment for co-expression clusters', 'success')
 
-    flash('Successfully calculated GO enrichment for co-expression clusters', 'success')
     return redirect(url_for('admin.controls.index'))
 
 
