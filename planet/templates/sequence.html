@@ -130,7 +130,7 @@
     <h3 class="banner-blue" id="expression_conservation">Expression Context Conservation (<abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr>)</h3>
     {% if ecc_query_associations|count > 0 %}
     <div class="table-responsive">
-        <table class="table  table-striped" id="ecc_hits_table">
+        <table class="table  table-striped table-scroll" id="ecc_hits_table">
             <thead>
                 <tr>
                     <!--<th data-sort="string-ins">Query</th>-->
@@ -142,7 +142,7 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody class="tbody-scroll">
+            <tbody>
                 {% for ecc_query_association in ecc_query_associations %}
                 <tr>
                     <td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.target_id) }}">{{ ecc_query_association.target_sequence.name }}</a></td>
@@ -174,7 +174,7 @@
             <div class="tab-pane fade in active" id="tab1default">
                 {% if go_associations|count > 0 %}
                 <div class="table-responsive">
-                    <table class="table  table-striped" id="go_table">
+                    <table class="table  table-striped table-scroll" id="go_table">
                         <thead>
                             <tr>
                                 <th data-sort="string-ins"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr> Term</th>
@@ -182,7 +182,7 @@
                                 <th data-sort="string-ins">Evidence</th>
                             </tr>
                         </thead>
-                        <tbody class="tbody-scroll">
+                        <tbody>
                             {% for go_association in go_associations %}
                             {% if go_association.evidence == None %}
                             <tr class="parent_term" style="display: none">
@@ -210,7 +210,7 @@
             <div class="tab-pane fade" id="tab2default">
                 {% if interpro_associations|count > 0 %}
                 <div class="table-responsive">
-                    <table class="table table-striped" id="interpro_table">
+                    <table class="table table-striped table-scroll" id="interpro_table">
                         <thead>
                             <tr>
                                 <th data-sort="string-ins"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='interpro_domain') }}" data-target="#helpModal">InterPro domains</abbr></th>
@@ -219,7 +219,7 @@
                                 <th data-sort="int">Stop</th>
                             </tr>
                         </thead>
-                        <tbody class="tbody-scroll">
+                        <tbody>
                             {% for association in interpro_associations %}
                             <tr>
                                 <td><a href="{{ url_for('interpro.interpro_view', interpro_id=association.domain.id) }}">{{ association.domain.label }}</a></td>
