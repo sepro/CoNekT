@@ -106,7 +106,7 @@ class ExpressionSpecificityMethodAdminView(MyModelView):
     """
     ExpressionNetworkMethod view for admins, specifies what is available in CRUD
     """
-    form_columns = ('description', 'conditions', 'species')
+    form_columns = ('description', 'conditions', 'species', 'menu_order')
 
     column_display_pk = True
 
