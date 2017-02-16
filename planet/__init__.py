@@ -1,1 +1,3 @@
-from .app import create_app, db, cache, login_manager, blast_thread, compress, htmlmin
+from .app import create_app
+
+from planet.extensions import *

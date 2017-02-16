@@ -14,22 +14,8 @@ Everything that needs to be set up to get flask running is initialized in this f
 from flask import Flask, render_template, g
 from flask_admin import Admin
 from flask_admin.menu import MenuLink
-from flask_caching import Cache
-from flask_compress import Compress
-from flask_debugtoolbar import DebugToolbarExtension
-from flask_htmlmin import HTMLMIN
-from flask_login import LoginManager
-from flask_sqlalchemy import SQLAlchemy
 
-from .flask_blast import BlastThread
-
-db = SQLAlchemy()
-login_manager = LoginManager()
-toolbar = DebugToolbarExtension()
-cache = Cache()
-htmlmin = HTMLMIN()
-blast_thread = BlastThread()
-compress = Compress()
+from planet.extensions import toolbar, db, login_manager, cache, htmlmin, blast_thread, compress
 
 
 def create_app(config):
@@ -41,34 +27,6 @@ def create_app(config):
     app.config.from_object(config)
 
     configure_extensions(app)
-
-    # Import all models here
-    from planet.models.users import User
-    from planet.models.species import Species
-    from planet.models.sequences import Sequence
-    from planet.models.go import GO
-    from planet.models.interpro import Interpro
-    from planet.models.gene_families import GeneFamilyMethod, GeneFamily
-    from planet.models.expression.coexpression_clusters import CoexpressionClusteringMethod, CoexpressionCluster
-    from planet.models.expression.profiles import ExpressionProfile
-    from planet.models.expression.networks import ExpressionNetworkMethod, ExpressionNetwork
-    from planet.models.expression.specificity import ExpressionSpecificityMethod, ExpressionSpecificity
-    from planet.models.condition_tissue import ConditionTissue
-    from planet.models.clades import Clade
-    from planet.models.xrefs import XRef
-    from planet.models.news import News
-
-    # Import all relationships (tables for many-to-many relationships)
-    import planet.models.relationships
-    from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
-    from planet.models.relationships.cluster_similarity import CoexpressionClusterSimilarity
-    from planet.models.relationships.cluster_go import ClusterGOEnrichment
-    from planet.models.relationships.sequence_go import SequenceGOAssociation
-    from planet.models.relationships.sequence_interpro import SequenceInterproAssociation
-    from planet.models.relationships.sequence_family import SequenceFamilyAssociation
-    from planet.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
-    from planet.models.relationships.sequence_xref import SequenceXRefAssociation
-    from planet.models.relationships.family_xref import FamilyXRefAssociation
 
     configure_blueprints(app)
 
