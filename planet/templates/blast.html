@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    {% if token %}
+        BLAST Results
+    {% else %}
+        BLAST Search
+    {% endif %}
+{% endblock %}
+
 {% block container %}
 <div class="top-pad">
     <ol class="breadcrumb">

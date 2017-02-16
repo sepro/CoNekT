@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    {% if sequence %}
+        {{ sequence.name }} details
+    {% else %}
+        Sequence not found
+    {% endif %}
+{% endblock %}
+
 {% block container %}
 {% import "macros/cluster_actions.html" as ca %}
 {% import "macros/neighborhood_actions.html" as na %}
