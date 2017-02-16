@@ -746,6 +746,20 @@ def calculate_enrichment():
     return redirect(url_for('admin.controls.index'))
 
 
+@admin_controls.route('/delete_enrichment')
+@login_required
+def delete_enrichment():
+    """
+    Controller to delete all existing GO enrichments
+
+    :return: Redirect to admin main screen
+    """
+    CoexpressionCluster.delete_enrichment()
+
+    flash('Successfully removed GO enrichment for co-expression clusters', 'success')
+    return redirect(url_for('admin.controls.index'))
+
+
 @admin_controls.route('/calculate_cluster_similarity/<int:gf_method_id>')
 @login_required
 def calculate_cluster_similarity(gf_method_id):

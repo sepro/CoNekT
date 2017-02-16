@@ -390,6 +390,20 @@ class CoexpressionCluster(db.Model):
                     cluster.__calculate_enrichment()
 
     @staticmethod
+    def delete_enrichment():
+        """
+        Removes all GO enrichment data from the database
+
+        :return:
+        """
+        try:
+            db.session.query(ClusterGOEnrichment).delete()
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(e)
+
+    @staticmethod
     @benchmark
     def calculate_similarities(gene_family_method_id=1, percentile_pass=0.95):
         """

@@ -15,9 +15,8 @@
 </div>
 
 <h3>Co-expression clusters</h3>
-<div class="btn-group">
-    <a class="btn btn-default" href="{{ url_for('admin_controls.calculate_enrichment') }}">GO enrichment</a>
-</div>
+<strong>Note:</strong> Calculating the GO enrichment will remove previous calculations from the database !
+<a class="btn btn-default" href="{{ url_for('admin_controls.calculate_enrichment') }}">GO enrichment</a> <a class="btn btn-default" href="{{ url_for('admin_controls.delete_enrichment') }}">Delete enrichment</a>
 <br />
 <h4>Cluster Similarities</h4>
 <div class="btn-group">
