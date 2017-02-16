@@ -33,7 +33,7 @@
         <li>Sequence</li>
         <li class="active"><strong>{{ sequence.name }}</strong></li>
     </ol>
-    <h1><strong>{{ sequence.name }}</strong> {%- if sequence.aliases -%}<small>({{ sequence.aliases|truncate(10) }})</small>{%endif%}</h1>
+    <h1><strong>{{ sequence.name }}</strong>{%- if sequence.aliases -%}&nbsp;<small>({{ sequence.aliases|truncate(25) }})</small>{%endif%}</h1>
     <br />
     {%- if sequence.aliases -%}
     <p><strong>Aliases : </strong>{{sequence.aliases}}</p>
