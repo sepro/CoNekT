@@ -4,7 +4,7 @@ from coverage import coverage
 import unittest
 import os
 
-cov = coverage(branch=True, omit=['virtualenv/*', 'tests/*', 'config.py', 'utils/benchmark.py'])
+cov = coverage(branch=True, omit=['venv/*', 'tests/*', 'config.py', 'utils/benchmark.py'])
 cov.start()
 
 
