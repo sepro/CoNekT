@@ -175,7 +175,7 @@ def search_specific_profiles_json():
     :return: JSON object with available methods
     """
     species = Species.query.all()
-    methods = ExpressionSpecificityMethod.query.all()
+    methods = ExpressionSpecificityMethod.query.order_by(ExpressionSpecificityMethod.menu_order).all()
 
     output = [{'id': s.id,
                'name': s.name,
@@ -195,7 +195,7 @@ def search_specific_profiles_methods(species_id):
     :param species_id: species
     :return: JSON object with available methods
     """
-    methods = ExpressionSpecificityMethod.query.filter_by(species_id=species_id).all()
+    methods = ExpressionSpecificityMethod.query.filter_by(species_id=species_id).order_by(ExpressionSpecificityMethod.menu_order).all()
 
     return Response(json.dumps([{'id': m.id,
                                  'description': m.description,
