@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    {% if form %}
+        Compare specificity
+    {% else %}
+        {{ labels.left_species }} vs {{ labels.right_species }}
+    {% endif %}
+{% endblock %}
+
 {% block container %}
 <div class="top-pad">
     <ol class="breadcrumb">
