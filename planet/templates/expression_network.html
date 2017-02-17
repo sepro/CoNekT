@@ -1,5 +1,17 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    {% if networks %}
+        {% if species %}
+            {{ species.name }} networks
+        {% else %}
+            Network overview
+        {% endif %}
+    {% else %}
+        No network found !
+    {% endif %}
+{% endblock %}
+
 {% block container %}
 <div class="top-pad">
 

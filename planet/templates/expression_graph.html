@@ -1,5 +1,21 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    {% if node %}
+        {{ node.probe }} expression graph
+    {% elif cluster %}
+        {{ cluster.name }} expression graph
+    {% elif cluster_one %}
+        {{ cluster_one.name }} vs {{ cluster_two.name }} graph comparison
+    {% elif sequence %}
+        {{ sequence.name }} ecc graph
+    {% elif graph_data %}
+        Custom network graph
+    {% elif ecc_pair %}
+        ECC Pair graph
+    {% endif %}
+{% endblock %}
+
 {% block container %}
 <div class=container-fluid">
     <div class="row">

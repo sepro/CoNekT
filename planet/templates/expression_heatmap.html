@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    {% if order %}
+        Custom Heatmap
+    {% else %}
+        Create Custom Heatmap
+    {% endif %}
+{% endblock %}
+
 {% block container %}
 <div class="top-pad">
 
