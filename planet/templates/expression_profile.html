@@ -1,5 +1,17 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    {% if profile %}
+        {% if  profile.sequence %}
+            {{ profile.sequence.name }} expression profile
+        {% else %}
+            {{ profile.probe }} expression profile
+        {% endif %}
+    {% else %}
+        No profile found!
+    {% endif %}
+{% endblock %}
+
 {% block container %}
 <div class="top-pad">
 

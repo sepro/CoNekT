@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    {% if results%}
+        Enriched Clusters
+    {% else %}
+        Search Enriched Clusters
+    {% endif %}
+{% endblock %}
+
 {% block container %}
 {% import 'macros/cluster_actions.html' as ca %}
 <div class="top-pad">
