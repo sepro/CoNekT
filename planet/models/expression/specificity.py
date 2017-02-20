@@ -69,6 +69,7 @@ class ExpressionSpecificityMethod(db.Model):
         new_method = ExpressionSpecificityMethod()
         new_method.species_id = species_id
         new_method.description = description
+        new_method.menu_order = 0
         tissues = []
         for c in order:
             if c in condition_to_tissue.keys():
