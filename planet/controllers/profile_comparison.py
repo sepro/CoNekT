@@ -43,7 +43,7 @@ def profile_comparison_cluster(cluster_id, normalize=0):
     return render_template("expression_profile_comparison.html",
                            profiles=json.dumps(profile_chart),
                            normalize=normalize,
-                           cluster_id=cluster_id)
+                           cluster=cluster)
 
 
 @profile_comparison.route('/', methods=['GET', 'POST'])

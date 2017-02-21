@@ -199,10 +199,9 @@
             {% if node %}
             <h1>Expression Graph: <strong>{{ node.probe }}</strong><br /><small>({{ node.method.description }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
             {% elif cluster %}
-            {% import "macros/cluster_actions.html" as ca %}
             <h1>Coexpression cluster: <strong>{{ cluster.name }}</strong> <small>({{ cluster.method.method }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
-
-            <strong>View as: </strong>{{ ca.cluster_actions(cluster.id) }}
+            {% import "macros/cluster_actions.html" as ca %}
+            <p><strong>View as: </strong>{{ ca.cluster_actions(cluster.id, exclude=["graph"]) }}</p>
             {% elif cluster_one %}
             <h1>Comparing clusters: <strong>{{ cluster_one.name }}</strong> vs <strong>{{ cluster_two.name }}</strong><br /><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
             {% elif sequence %}
@@ -345,13 +344,16 @@
 {% block extrajs %}
 <script src="{{ url_for('static', filename='js/bootstrap-slider.min.js') }}"></script>
 <script>
-$('#cy-edge-score').slider({
-    formatter: function(value) {
-        return 'Cut-off: ' + value;
-    }
-});
-$('#cy-edge-score').on("slide", function(slideEvt) {
-    $("#cy-edge-score-value").text(slideEvt.value);
+$( document ).ready(function() {
+                $('[data-toggle="tooltip"]').tooltip();
+                $('#cy-edge-score').slider({
+                    formatter: function(value) {
+                        return 'Cut-off: ' + value;
+                    }
+                });
+                $('#cy-edge-score').on("slide", function(slideEvt) {
+                    $("#cy-edge-score-value").text(slideEvt.value);
+                });
 });
 </script>
 {% if graph_data %}

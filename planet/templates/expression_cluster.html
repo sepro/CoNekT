@@ -45,7 +45,7 @@
     {% elif cluster %}
         {% import "macros/cluster_actions.html" as ca %}
     <h1>Coexpression cluster: <strong>{{ cluster.name }}</strong> <small>({{ cluster.method.method }})</small></h1>
-        <strong>View as: </strong>{{ ca.cluster_actions(cluster.id) }}
+        <p><strong>View as: </strong>{{ ca.cluster_actions(cluster.id, exclude=["table"]) }}</p>
         <br /><br />
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
