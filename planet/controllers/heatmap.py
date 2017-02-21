@@ -29,7 +29,8 @@ def heatmap_cluster(cluster_id):
 
     return render_template("expression_heatmap.html",
                            order=current_heatmap['order'],
-                           profiles=current_heatmap['heatmap_data'])
+                           profiles=current_heatmap['heatmap_data'],
+                           cluster=cluster)
 
 
 @heatmap.route('/', methods=['GET', 'POST'])

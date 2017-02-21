@@ -2,7 +2,11 @@
 
 {% block title %}
     {% if order %}
-        Custom Heatmap
+        {% if cluster %}
+            {{cluster.name}} heatmap
+        {% else %}
+            Custom Heatmap
+        {% endif %}
     {% else %}
         Create Custom Heatmap
     {% endif %}
@@ -18,7 +22,13 @@
         <li><a href="{{ url_for('heatmap.heatmap_main') }}">Expression Heatmap</a></li>
         <li class="active"><strong>Results</strong></li>
     </ol>
-    <h1>Heatmap</h1>
+    {% if cluster %}
+        <h1>Heatmap: <strong>{{ cluster.name }}</strong> <small>({{ cluster.method.method }})</small></h1>
+        {% import "macros/cluster_actions.html" as ca %}
+        <p><strong>View as: </strong>{{ ca.cluster_actions(cluster.id, exclude=["heatmap"]) }}</p>
+    {% else %}
+        <h1>Heatmap</h1>
+    {% endif %}
      <div class="table-responsive">
         <table class="table">
             <thead>
