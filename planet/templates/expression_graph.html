@@ -199,9 +199,10 @@
             {% if node %}
             <h1>Expression Graph: <strong>{{ node.probe }}</strong><br /><small>({{ node.method.description }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
             {% elif cluster %}
-            <h1>Coexpression cluster: <strong>{{ cluster.name }}</strong><br /><small>{{ cluster.method.method }}</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            {% import "macros/cluster_actions.html" as ca %}
+            <h1>Coexpression cluster: <strong>{{ cluster.name }}</strong> <small>({{ cluster.method.method }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
 
-            <a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.id) }}">View table</a>
+            <strong>View as: </strong>{{ ca.cluster_actions(cluster.id) }}
             {% elif cluster_one %}
             <h1>Comparing clusters: <strong>{{ cluster_one.name }}</strong> vs <strong>{{ cluster_two.name }}</strong><br /><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
             {% elif sequence %}
