@@ -89,7 +89,7 @@ $(function () { // on dom ready
                         value: n.data('gene_id') !== null ? 'Planet : <a href="' + n.data('gene_link') + '">' + n.data('gene_name') + '</a>' : '<span class="text-muted">No sequence linked to probe</span>'
                     },
                     {
-                        value: n.data('description') !== null ? '<strong>' + n.data('description') + '</strong><br />' : '<span class="text-muted">No description available</span>'
+                        value: n.data('description') !== null ? '<strong>' + (n.data('description').length > 90 ? n.data('description').substring(0, 87) + "..." :  n.data('description')) + '</strong><br />' : '<span class="text-muted">No description available</span>'
                     },
                     {
                         value: n.data('tokens') !== null ? 'Other names: <strong>' + n.data('tokens') + '</strong><br />' : '<span class="text-muted">No alias available</span>'
