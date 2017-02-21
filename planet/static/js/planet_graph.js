@@ -67,6 +67,7 @@ $(function () { // on dom ready
     cy = cytoscape({
         container: document.getElementById('cy'),
         style: $.get(cycss_url),
+        wheelSensitivity: 0.333,
         elements: url !== undefined ? $.getJSON(url) : graph_data,
         layout: {
             name: 'concentric',
