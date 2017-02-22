@@ -89,20 +89,25 @@ def expression_profile_compare(first_profile_id, second_profile_id, normalize=0)
     second_profile = ExpressionProfile.query.get_or_404(second_profile_id)
 
     pcc = None
+    hrr = None
 
     networks = ExpressionNetwork.query.filter(ExpressionNetwork.sequence_id == first_profile.sequence_id).all()
 
     for n in networks:
         data = json.loads(n.network)
         for link in data:
-            if "gene_id" in link.keys() and "link_pcc" in link.keys() and link["gene_id"] == second_profile.sequence_id:
-                pcc = link["link_pcc"] if pcc is None or pcc < link["link_pcc"] else pcc
+            if "gene_id" in link.keys()and link["gene_id"] == second_profile.sequence_id:
+                if "link_pcc" in link.keys():
+                    pcc = link["link_pcc"] if pcc is None or pcc < link["link_pcc"] else pcc
+                if "hrr" in link.keys():
+                    hrr = link["hrr"] if hrr is None or hrr > link["hrr"] else hrr
 
     return render_template("compare_profiles.html",
                            first_profile=first_profile,
                            second_profile=second_profile,
                            normalize=normalize,
-                           pcc=pcc)
+                           pcc=pcc,
+                           hrr=hrr)
 
 
 @expression_profile.route('/compare_probes/<probe_a>/<probe_b>/<int:species_id>')
@@ -122,14 +127,18 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id, normalize=0)
     second_profile = ExpressionProfile.query.filter_by(probe=probe_b).filter_by(species_id=species_id).first_or_404()
 
     pcc = None
+    hrr = None
 
     networks = ExpressionNetwork.query.filter(ExpressionNetwork.sequence_id == first_profile.sequence_id).all()
 
     for n in networks:
         data = json.loads(n.network)
         for link in data:
-            if "gene_id" in link.keys() and "link_pcc" in link.keys() and link["gene_id"] == second_profile.sequence_id:
-                pcc = link["link_pcc"] if pcc is None or pcc < link["link_pcc"] else pcc
+            if "gene_id" in link.keys()and link["gene_id"] == second_profile.sequence_id:
+                if "link_pcc" in link.keys():
+                    pcc = link["link_pcc"] if pcc is None or pcc < link["link_pcc"] else pcc
+                if "hrr" in link.keys():
+                    hrr = link["hrr"] if hrr is None or hrr > link["hrr"] else hrr
 
     return render_template("compare_profiles.html",
                            probe_a=probe_a,
@@ -138,7 +147,8 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id, normalize=0)
                            second_profile=second_profile,
                            species_id=species_id,
                            normalize=normalize,
-                           pcc=pcc)
+                           pcc=pcc,
+                           hrr=hrr)
 
 
 @expression_profile.route('/json/plot/<profile_id>')
