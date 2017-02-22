@@ -12,6 +12,9 @@
         <li class="active"><strong>Compare Profiles</strong></li>
     </ol>
     <h1>Comparing profiles of <strong>{{ first_profile.probe }}</strong> and <strong>{{ second_profile.probe }}</strong></h1>
+    {% if pcc %}
+    <p><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='pcc') }}" data-target="#helpModal">PCC</abbr>: {{ pcc }}</p>
+    {% endif %}
     {% if species_id %}
         {% if normalize == 1 %}
             <span class="text-muted">Normalization: <strong>Enabled</strong></span> | (<a href="{{ url_for('expression_profile.expression_profile_compare_probes', probe_a=probe_a, probe_b=probe_b, species_id=species_id, normalize=0)}}">disable</a>)
