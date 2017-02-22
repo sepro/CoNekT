@@ -13,7 +13,8 @@ __TOPICS = {"gene_family": "modals/help/gene_family.html",
             "cluster": "modals/help/cluster.html",
             "neighborhood": "modals/help/neighborhood.html",
             "hrr": "modals/help/hrr.html",
-            "blast": "modals/help/blast.html"}
+            "blast": "modals/help/blast.html",
+            "pcc": "modals/help/pcc.html"}
 
 help = Blueprint('help', __name__)
 
