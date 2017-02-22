@@ -96,7 +96,7 @@ def expression_profile_compare(first_profile_id, second_profile_id, normalize=0)
     for n in networks:
         data = json.loads(n.network)
         for link in data:
-            if "gene_id" in link.keys()and link["gene_id"] == second_profile.sequence_id:
+            if "gene_id" in link.keys() and link["gene_id"] == second_profile.sequence_id:
                 if "link_pcc" in link.keys():
                     pcc = link["link_pcc"] if pcc is None or pcc < link["link_pcc"] else pcc
                 if "hrr" in link.keys():
@@ -134,7 +134,7 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id, normalize=0)
     for n in networks:
         data = json.loads(n.network)
         for link in data:
-            if "gene_id" in link.keys()and link["gene_id"] == second_profile.sequence_id:
+            if "gene_id" in link.keys() and link["gene_id"] == second_profile.sequence_id:
                 if "link_pcc" in link.keys():
                     pcc = link["link_pcc"] if pcc is None or pcc < link["link_pcc"] else pcc
                 if "hrr" in link.keys():
