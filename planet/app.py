@@ -99,7 +99,7 @@ def configure_blueprints(app):
     from planet.controllers.admin.controls import admin_controls
 
     LOGIN_ENABLED = app.config['LOGIN_ENABLED']
-    BLAST_ENABLED = app.config['LOGIN_ENABLED']
+    BLAST_ENABLED = app.config['BLAST_ENABLED']
 
     app.register_blueprint(main)
     if LOGIN_ENABLED:
