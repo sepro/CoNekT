@@ -15,7 +15,7 @@
         <li><a href="{{ url_for('main.features') }}">Tools</a></li>
         <li class="active"><strong>Compare Specific Profiles</strong></li>
     </ol>
-    <h1>Compare Specific Profiles</h1>
+    <h1>Compare Specificity</h1>
     {% if form %}
         <div class="row">
             <div class="col-md-10 col-md-offset-1 col-sm-12">
@@ -75,47 +75,49 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
-                <h3><em>{{ labels.left_species }}</em></h3>
-                <p>{{ labels.left_condition }} ({{ labels.left_method }})</p>
-                <hr />
-                {% for f in a_only %}
-                <p><a href="{{ url_for('family.family_view', family_id=f.id) }}">{{f.name}}</a> (
-                    {% for s in f.sequences %}
-                        <a href="{{ url_for('sequence.sequence_view', sequence_id=s.id) }}">{{s.name}}</a>
-                    {% endfor %}
-                    )</p>
-                {% else %}
-                    <span class="text-muted"><em>No families found</em></span>
-                {%endfor%}
-            </div>
-            <div class="col-md-4">
-                <h3>Intersection</h3>
-                <p>&nbsp;</p>
-                <hr />
-                {% for f in intersection %}
-                <p><a href="{{ url_for('family.family_view', family_id=f.id) }}">{{f.name}}</a> (
-                    {% for s in f.sequences %}
-                        <a href="{{ url_for('sequence.sequence_view', sequence_id=s.id) }}">{{s.name}}</a>
-                    {% endfor %}
-                    )</p>
-                {% else %}
-                    <span class="text-muted"><em>No families found</em></span>
-                {%endfor%}
-            </div>
-            <div class="col-md-4">
-                <h3><em>{{ labels.right_species }}</em></h3>
-                <p>{{ labels.right_condition }} ({{ labels.right_method }})</p>
-                <hr />
-                {% for f in b_only %}
-                <p><a href="{{ url_for('family.family_view', family_id=f.id) }}">{{f.name}}</a> (
-                    {% for s in f.sequences %}
-                        <a href="{{ url_for('sequence.sequence_view', sequence_id=s.id) }}">{{s.name}}</a>
-                    {% endfor %}
-                    )</p>
-                {% else %}
-                    <span class="text-muted"><em>No families found</em></span>
-                {%endfor%}
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table  table-striped" id="results">
+                        <thead>
+                            <tr>
+                                <th data-sort="string-ins">Gene Family</th>
+                                <th data-sort="string-ins"><em>{{ labels.left_species }}</em> {{ labels.left_condition }}</th>
+                                <th data-sort="string-ins"><em>{{ labels.right_species }}</em> {{ labels.right_condition }}</th>
+                                <th data-sort="string-ins">Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for current_type in ['intersection', 'left', 'right'] %}
+                                {% for fam_id, td in table_data.items() if td.type == current_type %}
+                                    <tr>
+                                        <td><a href="{{ url_for('family.family_view', family_id=fam_id) }}">{{td.name}}</a></td>
+                                        <td>
+                                            {% for l in td.left_genes %}
+                                                <a href="{{ url_for('sequence.sequence_view', sequence_id=l.id) }}">{{l.name}}</a>
+                                            {% else %}
+                                                <span class="text-muted text-center">-</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% for r in td.right_genes %}
+                                                <a href="{{ url_for('sequence.sequence_view', sequence_id=r.id) }}">{{r.name}}</a>
+                                            {% else %}
+                                                <span class="text-muted  text-center">-</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {{ td.type }}
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4"><em class="text-muted">No genes found matching those criteria </em></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     {% endif %}
@@ -289,10 +291,11 @@ $(function() {
      svg_venn = Pablo.load(svg_file, function(){
         this.appendTo($('#venn'));
         this.addClass('center-block');
-        svg_venn.find('#left_value').firstChild().content("{{ a_only|length }}");
-        svg_venn.find('#intersect_value').firstChild().content("{{ intersection|length }}");
-        svg_venn.find('#right_value').firstChild().content("{{ b_only|length }}");
+        svg_venn.find('#left_value').firstChild().content("{{ counts.left }}");
+        svg_venn.find('#intersect_value').firstChild().content("{{ counts.intersection }}");
+        svg_venn.find('#right_value').firstChild().content("{{ counts.right }}");
     });
+    $("#results").stupidtable();
 });
 </script>
 {% endif %}

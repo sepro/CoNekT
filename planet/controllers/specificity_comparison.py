@@ -59,14 +59,41 @@ def specificity_comparison_main():
         families_a = set([seq_to_fam[r.profile.sequence_id] for r in results_a if r.profile.sequence_id in seq_to_fam.keys()])
         families_b = set([seq_to_fam[r.profile.sequence_id] for r in results_b if r.profile.sequence_id in seq_to_fam.keys()])
 
-        a_only = [{'id': f, 'name': famID_to_name[f], 'sequences': fam_to_data[f]} for f in families_a.difference(families_b)]
-        intersection = [{'id': f, 'name': famID_to_name[f],  'sequences': fam_to_data[f]} for f in families_a.intersection(families_b)]
-        b_only = [{'id': f, 'name': famID_to_name[f], 'sequences': fam_to_data[f]} for f in families_b.difference(families_a)]
+        all_families = families_a.union(families_b)
 
-        return render_template('compare_specificity.html', a_only=a_only, b_only=b_only, intersection=intersection,
+        counts = {
+            'left': 0,
+            'right': 0,
+            'intersection': 0
+        }
+
+        table_data = {}
+
+        for f in all_families:
+            table_data[f] = {'id': f, 'name': famID_to_name[f], 'left_genes': [], 'right_genes': []}
+
+            # TODO: fix one-by-one fetching of names
+            table_data[f]['left_genes'] = [{'id': r.profile.sequence_id, 'name': r.profile.sequence.name} for r in results_a
+                                           if r.profile.sequence_id in seq_to_fam.keys() and seq_to_fam[r.profile.sequence_id] == f]
+            table_data[f]['right_genes'] = [{'id': r.profile.sequence_id, 'name': r.profile.sequence.name} for r in results_b
+                                            if r.profile.sequence_id in seq_to_fam.keys() and seq_to_fam[
+                                            r.profile.sequence_id] == f]
+
+            if len(table_data[f]['left_genes']) > 0 and len(table_data[f]['right_genes']) == 0:
+                table_data[f]['type'] = 'left'
+                counts['left'] += 1
+            elif len(table_data[f]['right_genes']) > 0 and len(table_data[f]['left_genes']) == 0:
+                table_data[f]['type'] = 'right'
+                counts['right'] += 1
+            else:
+                table_data[f]['type'] = 'intersection'
+                counts['intersection'] += 1
+
+        return render_template('compare_specificity.html', counts=counts,
+                               table_data=table_data,
                                labels={'left_species': species_a.name,
-                                        'right_species': species_b.name,
-                                        'left_method': method_a.description,
-                                        'right_method': method_b.description,
-                                        'left_condition': condition_a,
-                                        'right_condition': condition_b})
+                                       'right_species': species_b.name,
+                                       'left_method': method_a.description,
+                                       'right_method': method_b.description,
+                                       'left_condition': condition_a,
+                                       'right_condition': condition_b})
