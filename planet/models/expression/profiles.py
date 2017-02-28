@@ -31,11 +31,13 @@ class ExpressionProfile(db.Model):
         self.sequence_id = sequence_id
         self.profile = profile
 
-    def tissue_profile(self, condition_tissue_id):
+    def tissue_profile(self, condition_tissue_id, use_means=True):
         """
         Applies a conversion to the profile, grouping several condition into one more general feature (e.g. tissue).
 
         :param condition_tissue_id: identifier of the conversion table
+        :param use_means: store the mean of the condition rather than individual values. The matches the spm
+        calculations better.
         :return: parsed profile
         """
         ct = ConditionTissue.query.get(condition_tissue_id)
@@ -52,7 +54,10 @@ class ExpressionProfile(db.Model):
             valid_values = []
             for k, v in profile_data['data'].items():
                 if k in valid_conditions:
-                    valid_values += v
+                    if use_means:
+                        valid_values.append(mean(v))
+                    else:
+                        valid_values += v
 
             output[t] = valid_values if len(valid_values) > 0 else [0]
 
