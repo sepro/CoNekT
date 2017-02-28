@@ -54,7 +54,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h2>{{t.name}}</h2>
-                    <span class="text-muted"><strong>Note:</strong> SPM calculations for this profile are done using
+                    <span class="text-muted"><strong>Note:</strong> <abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr> calculations for this profile are done using
                     the <strong>maximum</strong> value.</span>
                     <div id="canvas-holder-{{ t.id }}" class="center-block">
                         <canvas id="chart-area-{{ t.id }}" class="center-block" width="800" height="600"/>
