@@ -29,9 +29,10 @@
                 <th data-sort="string-ins">Species</th>
                 <th data-sort="string-ins">Method</th>
                 <th data-sort="string-ins">Name</th>
-                <th data-sort="float">Enrichment</th>
-                <th data-sort="float">p-value</th>
-                <th data-sort="float">corrected p-value</th>
+                <th data-sort="float">Enrichment <span class="text-muted">(log2)</span></th>
+                <th data-sort="float">% <span class="text-muted">(in cluster)</span></th>
+                <th data-sort="float">p-Value</th>
+                <th data-sort="float">Corrected p-value</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -44,6 +45,7 @@
                         <td>{{ c.cluster.method.method }}</td>
                         <td>{{ c.cluster.name }}</td>
                         <td>{{ c.enrichment|round(2) }}</td>
+                        <td>{{ (c.cluster_count*100/c.cluster_size)|round(2) }}% <span class="text-muted">({{c.cluster_count}}/{{c.cluster_size}})</span> </td>
                         <td>{{ c.p_value|round(5) }}</td>
                         <td>{{ c.corrected_p_value|round(5) }}</td>
                         <td>
