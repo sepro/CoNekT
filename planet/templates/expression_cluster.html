@@ -59,7 +59,7 @@
                                         <th data-sort="string-ins">ID</th>
                                         <th data-sort="string-ins">Label</th>
                                         <th data-sort="float">% in cluster</th>
-                                        <th data-sort="float">Enrichment <span class="text-muted">log2-transformed</span></th>
+                                        <th data-sort="float">Enrichment <span class="text-muted">log2</span></th>
                                         <th data-sort="float">p-value</th>
                                         <th data-sort="float">Corrected p-value</th>
                                     </tr>
@@ -71,7 +71,7 @@
                                             <td><a href="{{ url_for('go.go_view', go_id=go.go.id) }}" data-toggle="tooltip"
                                                data-placement="top" title="{{ go.go.description }}">{{ go.go.label }}</a></td>
                                             <td>{{ go.go.name }}</td>
-                                            <td>{{ go.cluster_percentage|round(2) }} %</td>
+                                            <td>{{ go.cluster_percentage|round(2) }}% <span class="text-muted">({{go.cluster_count}}/{{go.cluster_size}})</span></td>
                                             <td>{{ go.enrichment|round(2) }}</td>
                                             <td>{{ go.p_value|round(6) }}</td>
                                             <td>{{ go.corrected_p_value|round(6) }}</td>
