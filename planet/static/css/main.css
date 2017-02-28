@@ -419,9 +419,6 @@ Equal height panels. Should be added to class=row !
 */
 
 .equal, .equal > div[class*='col-'] {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display:         flex;
   -webkit-flex-flow: row wrap;
   flex-flow: row wrap;
