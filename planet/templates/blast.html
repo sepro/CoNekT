@@ -63,10 +63,12 @@
 
 
     {% else %}
-
+    <p><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='blast') }}" data-target="#helpModal">BLAST</abbr> allows you to quickly find sequences in PlaNet that are similar to
+    an input sequence.</p>
         <div class="row">
-            <div class="col-md-8 col-md-offset-2 col-xs-12">
-                <div class="panel panel-default">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><strong>Enter sequence</strong></div>
                     <div class="panel-body">
                         <form method="POST"  action="{{ url_for('blast.blast_main') }}"  role="form">
                             {{ form.csrf_token }}
@@ -74,8 +76,22 @@
                             {{form.blast_type(class_="form-control") }}<br />
                             <label>Query sequence</label>
                             {{form.fasta(class_="form-control") }}<br />
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">BLAST sequence</button>
                         </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><strong>Help</strong></div>
+                    <div class="panel-body">
+                        If your input sequence is an amino acids sequence, <strong>blastp</strong> is required. Nucleotide sequences can
+                        be used to search the database in combination with <strong>blastn</strong>.
+                        <ul>
+                            <li>Select the appropriate BLAST version. <strong>blastp</strong> for amino acid, <strong>blastn</strong> for nucleotide input</li>
+                            <li>Paste the <strong>sequence</strong> in the text-box</li>
+                            <li>Click <strong>BLAST sequence</strong></li>
+                        </ul>
                     </div>
                 </div>
             </div>
