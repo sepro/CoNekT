@@ -16,20 +16,23 @@
         <li class="active"><strong>Compare Specific Profiles</strong></li>
     </ol>
     <h1>Compare Specificity</h1>
+    <p>Find out which genes are expressed specifically in species and/or conditions and have homologs expressed in a
+       different species and/or condition.</p>
     {% if form %}
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1 col-sm-12">
-                <div class="panel panel-default">
+        <div class="row equal">
+            <div class="col-md-8 col-sm-12 col-xs-12">
+                <div class="panel panel-primary">
                     <div class="panel-heading"><strong>Options</strong></div>
                     <div class="panel-body">
                         <form method="POST"  action="{{ url_for('specificity_comparison.specificity_comparison_main') }}"  role="form">
                             {{ form.csrf_token }}
                             <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-12 col-xs-12">
                                 <label>Gene Families</label>
                                 {{form.family_method(class_="form-control")}}
+                                <br />
                             </div>
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
                             <label>Species A</label>
                             {{form.speciesa(class_="form-control")}}<br/>
                             <label>Method</label>
@@ -44,7 +47,7 @@
                                                                     'data-slider-step': "0.01",
                                                                     'data-slider-value': "0.85"})}}<br/>
                             </div>
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
                             <label>Species B</label>
                             {{form.speciesb(class_="form-control")}}<br/>
                             <label>Method</label>
@@ -59,13 +62,30 @@
                                                                     'data-slider-step': "0.01",
                                                                     'data-slider-value': "0.85"})}}<br/>
                             </div>
+                            <br />
                             </div>
+                            <br />
                             <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Submit</button>
                         </form>
                     </form>
                 </div>
             </div>
         </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Help</strong></div>
+                <div class="panel-body">
+                    <ul>
+                        <li>First select which <strong>gene families</strong> to use for the comparison.</li>
+                        <li>Select the <strong>species and conditions</strong> to compare. <span class="text-muted">(Note that different methods might have different
+                    conditions associated with them)</span></li>
+                        <li>Set the desired <strong>SPM cutoff</strong> <span class="text-muted">(recommended: 0.85)</span></li>
+                        <li>Finally, click <strong>Search'</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
     </div>
     {% else %}
     <h2 class="text-muted"><em>{{ labels.left_species }}</em> {{ labels.left_condition }} vs <em>{{ labels.right_species }}</em> {{ labels.right_condition }}</h2>

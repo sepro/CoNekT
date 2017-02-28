@@ -419,7 +419,16 @@ Equal height panels. Should be added to class=row !
 */
 
 .equal, .equal > div[class*='col-'] {
-    display: -webkit-flex;
-    display: flex;
-    flex:1 1 auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-align-content: flex-end;
+  align-content: flex-end;
+}
+
+.panel-body > ul {
+    padding-left: 15px;
 }
