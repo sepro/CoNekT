@@ -27,6 +27,9 @@
     </div>
     <div class="form-group">
         {{ form.pcc_cutoff.label }}
+        <br/>
+        <span class="text-muted">Note that the default option (-2.0) effectively disables the PCC filter!</span>
+        <br/>
         {{ form.pcc_cutoff(class_="form-control") }}
     </div>
 
