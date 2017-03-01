@@ -42,6 +42,20 @@ def create():
 
 
 @manager.command
+def add_user(username, password):
+    if len(User.query.filter(User.username == username).all()) == 0:
+        db.session.add(User(username, password, "", is_admin=False))
+        db.session.commit()
+
+
+@manager.command
+def add_admin(username, password):
+    if len(User.query.filter(User.username == username).all()) == 0:
+        db.session.add(User(username, password, "", is_admin=True))
+        db.session.commit()
+
+
+@manager.command
 def migrate():
     v = api.db_version(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
     migration = SQLALCHEMY_MIGRATE_REPO + ('/versions/%03d_migration.py' % (v+1))
