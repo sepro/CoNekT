@@ -15,7 +15,7 @@
     <h1>Search results for: <strong>{{ keyword }}</strong></h1>
     <div class="row">
     {% if sequences %}
-    <div class="col-md-4 col-sm-12">
+    <div class="col-md-6 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">Found <strong>{{ sequences|length }}</strong> sequences</div>
             <div class="panel-scroll">
@@ -23,7 +23,11 @@
                 <table class="table">
                     <tbody>
                         {% for s in sequences %}
-                            <tr><td><a href="{{ url_for('sequence.sequence_view', sequence_id=s.id)}}">{{ s.name }}</a></td></tr>
+                            <tr>
+                                <td><a href="{{ url_for('sequence.sequence_view', sequence_id=s.id)}}">{{ s.name }}</a></td>
+                                <td>{{ s.aliases|truncate(20) }}</td>
+                                <td>{{ s.description|truncate(60) }}</a></td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -91,7 +95,7 @@
     {% endif %}
 
     {% if profiles %}
-    <div class="col-md-4 col-sm-12">
+    <div class="col-md-6 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">Found <strong>{{ profiles|length }}</strong> expression profiles</div>
             <div class="panel-scroll">
@@ -99,8 +103,14 @@
                 <table class="table">
                     <tbody>
                         {% for p in profiles %}
-                            <tr><td><a href="{{ url_for('expression_profile.expression_profile_view', profile_id=p.id)}}">{{ p.probe }}</a>
-                                {% if p.sequence %}: {{ p.sequence.name }} {% endif %}</td></tr>
+                            <tr>
+                                <td><a href="{{ url_for('expression_profile.expression_profile_view', profile_id=p.id)}}">{{ p.probe }}</a></td>
+                                {% if p.sequence %}
+                                    <td>{{ p.sequence.name }}</td>
+                                    <td>{{ p.sequence.aliases|truncate(20) }}</td>
+                                    <td>{{ p.sequence.description|truncate(60) }}</td>
+                                {% endif %}
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
