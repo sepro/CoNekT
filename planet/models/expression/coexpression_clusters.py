@@ -74,13 +74,14 @@ class CoexpressionClusteringMethod(db.Model):
 
         for p in probes:
             # Loop over probes and store hrr for all neighbors
-            neighborhood = json.loads(p.network)
-            network_data[p.sequence_id] = {nb["gene_id"]: nb["hrr"] for nb in neighborhood
-                                           if "gene_id" in nb.keys()
-                                           and "hrr" in nb.keys()
-                                           and nb["gene_id"] is not None}
+            if p.sequence_id is not None:
+                neighborhood = json.loads(p.network)
+                network_data[p.sequence_id] = {nb["gene_id"]: nb["hrr"] for nb in neighborhood
+                                               if "gene_id" in nb.keys()
+                                               and "hrr" in nb.keys()
+                                               and nb["gene_id"] is not None}
 
-            sequence_probe[p.sequence_id] = p.probe
+                sequence_probe[p.sequence_id] = p.probe
 
         # Double check edges are reciprocally defined
         for sequence, data in network_data.items():

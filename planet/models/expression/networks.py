@@ -415,6 +415,7 @@ class ExpressionNetwork(db.Model):
                                       "depth": 0,
                                       "link_score": n["link_score"],
                                       "link_pcc": n["link_pcc"] if "link_pcc" in n.keys() else None,
+                                      "hrr": n["hrr"] if "hrr" in n.keys() else None,
                                       "edge_type": p.method.edge_type})
                         existing_edges.append([source, n["probe_name"]])
                         existing_edges.append([n["probe_name"], source])
