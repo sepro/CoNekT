@@ -18,9 +18,10 @@
         <li class="active"><strong>Specific Profiles</strong></li>
     </ol>
     <h1>Specific Profiles</h1>
+    <p>Using the form below genes can be found which are expressed specifically under a desired condition.</p>
         <div class="row">
-            <div class="col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">
-                <div class="panel panel-default">
+            <div class="col-md-6 col-md-offset-1 col-xs-8">
+                <div class="panel panel-primary">
                     <div class="panel-heading"><strong>Search options</strong></div>
                     <div class="panel-body">
                         <form method="POST"  action="{{ url_for('search.search_specific_profiles') }}"  role="form">
@@ -38,8 +39,22 @@
                                                                     'data-slider-max':"1",
                                                                     'data-slider-step': "0.01",
                                                                     'data-slider-value': "0.85"})}}<br/>
-                            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Submit</button>
+                            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Find genes</button>
                         </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><strong>Help</strong></div>
+                    <div class="panel-body">
+                        <ul>
+                            <li>Select the <strong>species</strong> first</li>
+                            <li>Next select a <strong>method</strong>. Note that different methods can include different options or different level of details in conditions</li>
+                            <li>Select the desired condition/tissue</li>
+                            <li>Set the <abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr> cutoff (recommended setting: 0.85). Higher values are more specific, lower ones will include genes that are expressed more broadly</li>
+                            <li>Click <strong>Find genes</strong></li>
+                        </ul>
                     </div>
                 </div>
             </div>

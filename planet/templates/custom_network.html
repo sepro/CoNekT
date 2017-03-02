@@ -12,9 +12,11 @@
         <li class="active"><strong>Custom Network</strong></li>
     </ol>
 <h1>Custom network</h1>
+    <p>Using the form below you can draw a co-expression network which only included selected genes as nodes and edges
+    between them.</p>
 <div class="row">
-    <div class="col-md-4 col-md-offset-4 col-xs-8 col-xs-offset-2">
-        <div class="panel panel-default">
+    <div class="col-md-4 col-md-offset-2 col-xs-8">
+        <div class="panel panel-primary">
             <div class="panel-heading"><strong>Options</strong></div>
             <div class="panel-body">
                 <form method="POST"  action="{{ url_for('custom_network.custom_network_main') }}"  role="form">
@@ -25,8 +27,26 @@
                     {{form.family_method(class_="form-control") }}<br />
                     {{form.cluster_method(class_="form-control") }}<br />
                     {{form.specificity_method(class_="form-control") }}<br />
-                    <button type="submit" class="btn btn-primary"  data-toggle="modal" data-target="#loaderModal">Submit</button>
+                    <button type="submit" class="btn btn-primary"  data-toggle="modal" data-target="#loaderModal">Draw network</button>
                 </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xs-8">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Help</strong></div>
+            <div class="panel-body">
+                <ul>
+                    <li>Select the species (and network if multiple options exist)</li>
+                    <li>Enter a list of gene identifiers (separated by spaces, tabs or newlines) to include in the
+                    network.</li>
+                    <li>Click <strong>Draw network</strong></li>
+                </ul>
+                <br/><br/>
+                <h4>Advanced options</h4>
+                <p>The advanced settings can be used to specify which additional data is included in the network. These
+                    options allow color coding of nodes based on gene family, the cluster, which condition the genes are
+                    expressed in...</p>
             </div>
         </div>
     </div>
