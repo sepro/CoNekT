@@ -23,14 +23,26 @@ class SequenceSequenceECCAssociation(db.Model):
     query_network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'))
     target_network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'))
 
-    gene_family_method = db.relationship('GeneFamilyMethod', lazy='joined')
+    gene_family_method = db.relationship('GeneFamilyMethod', lazy='joined',
+                                         backref=db.backref('ecc_as_family_method',
+                                                            lazy='dynamic',
+                                                            cascade='all, delete-orphan')
+                                         )
 
     query_expression_network_method = db.relationship('ExpressionNetworkMethod',
                                                       foreign_keys=[query_network_method_id],
-                                                      lazy='joined')
+                                                      lazy='joined',
+                                                      backref=db.backref('ecc_as_query_method',
+                                                                         lazy='dynamic',
+                                                                         cascade='all, delete-orphan')
+                                                      )
     target_expression_network_method = db.relationship('ExpressionNetworkMethod',
                                                        foreign_keys=[target_network_method_id],
-                                                       lazy='joined')
+                                                       lazy='joined',
+                                                       backref=db.backref('ecc_as_target_method',
+                                                                          lazy='dynamic',
+                                                                          cascade='all, delete-orphan')
+                                                       )
 
     @staticmethod
     def get_ecc_network(sequence, network, family):
