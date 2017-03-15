@@ -99,8 +99,8 @@
         <table class="table  table-striped" id="coexpression_table">
             <thead>
                 <tr>
-                    <th data-sort="string-ins">Type</th>
-                    <th data-sort="string-ins">Description</th>
+                    <th data-sort="string-ins"><span class="sort-icon"></span>Type</th>
+                    <th data-sort="string-ins"><span class="sort-icon"></span>Description</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -133,11 +133,11 @@
         <table class="table  table-striped table-fixed" id="ecc_hits_table">
             <thead>
                 <tr>
-                    <th class="col-xs-3" data-sort="string-ins">Target</th>
-                    <th class="col-xs-1" data-sort="float"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr> score</th>
-                    <th class="col-xs-1" data-sort="float">p-Value</th>
-                    <th class="col-xs-1" data-sort="float">p-Value <span class="text-muted">(adjusted)</span></th>
-                    <th class="col-xs-4" data-sort="string-ins">Gene Family Method</th>
+                    <th class="col-xs-3" data-sort="string-ins"><span class="sort-icon"></span>Target</th>
+                    <th class="col-xs-1" data-sort="float"><span class="sort-icon"></span><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr> score</th>
+                    <th class="col-xs-1" data-sort="float"><span class="sort-icon"></span>p-Value</th>
+                    <th class="col-xs-1" data-sort="float"><span class="sort-icon"></span>p-Value <span class="text-muted">(adjusted)</span></th>
+                    <th class="col-xs-4" data-sort="string-ins"><span class="sort-icon"></span>Gene Family Method</th>
                     <th class="col-xs-2">Actions</th>
                 </tr>
             </thead>
@@ -176,9 +176,9 @@
                     <table class="table  table-striped table-fixed" id="go_table">
                         <thead>
                             <tr>
-                                <th class="col-xs-3" data-sort="string-ins"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr> Term</th>
-                                <th class="col-xs-7" data-sort="string-ins">Name</th>
-                                <th class="col-xs-2" data-sort="string-ins">Evidence</th>
+                                <th class="col-xs-3" data-sort="string-ins"><span class="sort-icon"></span><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr> Term</th>
+                                <th class="col-xs-7" data-sort="string-ins"><span class="sort-icon"></span>Name</th>
+                                <th class="col-xs-2" data-sort="string-ins"><span class="sort-icon"></span>Evidence</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -212,10 +212,10 @@
                     <table class="table table-striped table-fixed" id="interpro_table">
                         <thead>
                             <tr>
-                                <th class="col-xs-3" data-sort="string-ins"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='interpro_domain') }}" data-target="#helpModal">InterPro domains</abbr></th>
-                                <th class="col-xs-5" data-sort="string-ins">Description</th>
-                                <th class="col-xs-2" data-sort="int">Start</th>
-                                <th class="col-xs-2" data-sort="int">Stop</th>
+                                <th class="col-xs-3" data-sort="string-ins"><span class="sort-icon"></span><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='interpro_domain') }}" data-target="#helpModal">InterPro domains</abbr></th>
+                                <th class="col-xs-5" data-sort="string-ins"><span class="sort-icon"></span>Description</th>
+                                <th class="col-xs-2" data-sort="int"><span class="sort-icon"></span>Start</th>
+                                <th class="col-xs-2" data-sort="int"><span class="sort-icon"></span>Stop</th>
                             </tr>
                         </thead>
                         <tbody>

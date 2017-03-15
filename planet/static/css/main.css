@@ -335,6 +335,40 @@ table with scroll
   border-bottom-width: 0;
 }
 
+/*
+Sortable table
+*/
+
+th[data-sort] {
+    cursor: pointer;
+}
+
+
+
+th[data-sort] > span.sort-icon {
+  font: normal normal normal 14px/1 FontAwesome;
+  color: #ccc;
+  margin-right: 5px;
+}
+
+th[data-sort].sorting-asc > span.sort-icon, th[data-sort].sorting-desc > span.sort-icon {
+  color: #777;
+}
+
+th[data-sort] > .sort-icon:before {
+  content: "\f0dc";
+  margin-right: 5px;
+}
+
+th[data-sort].sorting-asc > .sort-icon:before {
+  content: "\f0de";
+  margin-right: 5px;
+}
+
+th[data-sort].sorting-desc > .sort-icon:before {
+  content: "\f0dd";
+  margin-right: 5px;
+}
 
 /*
 submenu
