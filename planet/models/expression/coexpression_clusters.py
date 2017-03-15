@@ -8,6 +8,8 @@ from sqlalchemy.orm import joinedload, load_only
 from planet import db
 from planet.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
 from planet.models.gene_families import GeneFamily
+from planet.models.interpro import Interpro
+from planet.models.go import GO
 from planet.models.relationships.cluster_similarity import CoexpressionClusterSimilarity
 from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
 from planet.models.relationships.sequence_family import SequenceFamilyAssociation
@@ -471,3 +473,20 @@ class CoexpressionCluster(db.Model):
         else:
             print("No similar clusters found!")
 
+    @property
+    def interpro_stats(self):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        return Interpro.sequence_stats(sequence_ids)
+
+    @property
+    def go_stats(self):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        return GO.sequence_stats(sequence_ids)
+
+    @property
+    def family_stats(self):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        return GeneFamily.sequence_stats(sequence_ids)

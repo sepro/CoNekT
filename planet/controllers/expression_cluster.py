@@ -139,3 +139,28 @@ def expression_cluster_json(cluster_id, family_method_id=None):
     network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
 
     return Response(json.dumps(network_cytoscape), mimetype='application/json')
+
+
+@expression_cluster.route('/ajax/interpro/<cluster_id>')
+@cache.cached()
+def cluster_interpro_ajax(cluster_id):
+    current_cluster = CoexpressionCluster.query.get(cluster_id)
+
+    return render_template('async/interpro_stats.html',
+                           interpro_stats=current_cluster.interpro_stats)
+
+
+@expression_cluster.route('/ajax/go/<cluster_id>')
+@cache.cached()
+def cluster_go_ajax(cluster_id):
+    current_cluster = CoexpressionCluster.query.get(cluster_id)
+
+    return render_template('async/go_stats.html', go_stats=current_cluster.go_stats)
+
+
+@expression_cluster.route('/ajax/family/<cluster_id>')
+@cache.cached()
+def cluster_family_ajax(cluster_id):
+    current_cluster = CoexpressionCluster.query.get(cluster_id)
+
+    return render_template('async/family_stats.html', family_stats=current_cluster.family_stats)

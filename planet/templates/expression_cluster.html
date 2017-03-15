@@ -10,6 +10,7 @@
 
 {% block container %}
 {% import 'macros/pagination.html' as macro %}
+{% import 'macros/ajax_table.html' as ajax %}
 <div class="top-pad">
 
     {% if overview %}
@@ -136,6 +137,29 @@
             url_for('expression_cluster.expression_cluster_download', cluster_id=cluster.id),
             'clusters'
         ) }}
+
+        <h3 class="banner-blue" id="associated_things">Associations</h3>
+
+    {{ ajax.ajax_table(
+        'InterPro Domains',
+        url_for('expression_cluster.cluster_interpro_ajax', cluster_id=cluster.id),
+        none,
+        'interpro_ajax'
+    ) }}
+
+    {{ ajax.ajax_table(
+        'GO Terms',
+        url_for('expression_cluster.cluster_go_ajax', cluster_id=cluster.id),
+        none,
+        'go_ajax'
+    ) }}
+
+    {{ ajax.ajax_table(
+        'Family Terms',
+        url_for('expression_cluster.cluster_family_ajax', cluster_id=cluster.id),
+        none,
+        'family_ajax'
+    ) }}
 
         <br /><br />
     {% endif %}
