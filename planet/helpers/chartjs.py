@@ -203,3 +203,20 @@ def prepare_profile_comparison(data_first, data_second, labels, normalize=1):
               }
 
     return output
+
+
+def prepare_doughnut(counts):
+    output = {
+        "data": {
+            "labels": [counts[s]["label"] for s in counts.keys()],
+            "datasets": [{
+                "data": [counts[s]["value"] for s in counts.keys()],
+                "backgroundColor": [counts[s]["color"] for s in counts.keys()],
+                "hoverBackgroundColor": [counts[s]["color"] for s in counts.keys()]
+            }]
+        }
+        ,
+        "type": "doughnut"
+    }
+
+    return output

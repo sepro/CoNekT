@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, url_for, render_template, Response, g
 from sqlalchemy.orm import joinedload
 
 from planet import cache
+from planet.helpers.chartjs import prepare_doughnut
 from planet.models.gene_families import GeneFamily
 from planet.models.sequences import Sequence
 
@@ -113,20 +114,9 @@ def family_json_species(family_id):
         else:
             counts[s.species.code]["value"] += 1
 
-    output = {
-        "data": {
-            "labels": [counts[s]["label"] for s in counts.keys()],
-            "datasets": [{
-                "data": [counts[s]["value"] for s in counts.keys()],
-                "backgroundColor": [counts[s]["color"] for s in counts.keys()],
-                "hoverBackgroundColor": [counts[s]["color"] for s in counts.keys()]
-            }]
-        }
-        ,
-        "type": "doughnut"
-    }
+    plot = prepare_doughnut(counts)
 
-    return Response(json.dumps(output), mimetype='application/json')
+    return Response(json.dumps(plot), mimetype='application/json')
 
 
 @family.route('/ajax/interpro/<family_id>')

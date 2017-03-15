@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, url_for, render_template, Response, g
 from sqlalchemy.orm import joinedload
 
 from planet import cache
+from planet.helpers.chartjs import prepare_doughnut
 from planet.models.go import GO
 from planet.models.sequences import Sequence
 
@@ -103,20 +104,9 @@ def go_json_species(go_id):
         else:
             counts[s.species.code]["value"] += 1
 
-    output = {
-        "data": {
-            "labels": [counts[s]["label"] for s in counts.keys()],
-            "datasets": [{
-                "data": [counts[s]["value"] for s in counts.keys()],
-                "backgroundColor": [counts[s]["color"] for s in counts.keys()],
-                "hoverBackgroundColor": [counts[s]["color"] for s in counts.keys()]
-            }]
-        }
-        ,
-        "type": "doughnut"
-    }
+    plot = prepare_doughnut(counts)
 
-    return Response(json.dumps(output), mimetype='application/json')
+    return Response(json.dumps(plot), mimetype='application/json')
 
 
 @go.route('/json/genes/<go_label>')
@@ -125,7 +115,8 @@ def go_genes_find(go_label):
     current_go = GO.query.filter_by(label=go_label).first()
 
     if current_go is not None:
-        return Response(json.dumps([association.sequence_id for association in current_go.sequence_associations]), mimetype='application/json')
+        return Response(json.dumps([association.sequence_id for association in current_go.sequence_associations]),
+                        mimetype='application/json')
     else:
         return Response(json.dumps([]), mimetype='application/json')
 
