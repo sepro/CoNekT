@@ -19,6 +19,17 @@ $( document ).ready(function() {
                 }
             },
             callbacks: {
+                afterTitle: function(tooltipItems, data) {
+                    if (data.counts[tooltipItems[0].index] == null) {
+                        return null;
+                    } else {
+                        if (data.counts[tooltipItems[0].index] == 1) {
+                            return '(1 sample)';
+                        } else {
+                            return '(' + data.counts[tooltipItems[0].index] + ' samples)';
+                        }
+                    }
+                },
                 label: function(tooltipItems, data) {
                     return data.datasets[tooltipItems.datasetIndex].label + ': ' + tooltipItems.yLabel.toFixed(2);
                 }

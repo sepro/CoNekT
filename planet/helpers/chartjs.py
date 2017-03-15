@@ -70,21 +70,24 @@ def prepare_profiles(profiles, normalize=False):
     return output
 
 
-def prepare_expression_profile(data):
+def prepare_expression_profile(data, show_sample_count=False):
     """
+    Converts data from Expression Profile to a format compatible with Chart.js
 
-
-    :param data:
-    :return:
+    :param data: dat from Expression Profile model
+    :param show_sample_count: includes the number of samples in the plot
+    :return: dict compatible with Chart.js
     """
     processed_means = {}
     processed_mins = {}
     processed_maxs = {}
+    counts = {}
 
     for key, expression_values in data["data"].items():
         processed_means[key] = mean(expression_values)
         processed_mins[key] = min(expression_values)
         processed_maxs[key] = max(expression_values)
+        counts[key] = len(expression_values)
 
     background_color = data["colors"] if "colors" in data.keys() else "rgba(175,175,175,0.2)"
     point_color = "rgba(55,55,55,0.8)" if "colors" in data.keys() else "rgba(220,22,22,1)"
@@ -92,6 +95,7 @@ def prepare_expression_profile(data):
     output = {"type": "bar",
               "data": {
                       "labels": list(data["order"]),
+                      "counts": list([counts[c] for c in data["order"]]) if show_sample_count else [None]*len(data["order"]),
                       "datasets": [
                           {
                             "type": "line",
@@ -140,6 +144,7 @@ def prepare_expression_profile(data):
               }
 
     return output
+
 
 def prepare_profile_comparison(data_first, data_second, labels, normalize=1):
     processed_first_means = {}

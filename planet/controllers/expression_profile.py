@@ -162,7 +162,7 @@ def expression_profile_plot_json(profile_id):
     current_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(profile_id)
     data = json.loads(current_profile.profile)
 
-    plot = prepare_expression_profile(data)
+    plot = prepare_expression_profile(data, show_sample_count=True)
 
     return Response(json.dumps(plot), mimetype='application/json')
 
