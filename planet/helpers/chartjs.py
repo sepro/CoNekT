@@ -68,3 +68,133 @@ def prepare_profiles(profiles, normalize=False):
     }
 
     return output
+
+
+def prepare_expression_profile(data):
+    """
+
+
+    :param data:
+    :return:
+    """
+    processed_means = {}
+    processed_mins = {}
+    processed_maxs = {}
+
+    for key, expression_values in data["data"].items():
+        processed_means[key] = mean(expression_values)
+        processed_mins[key] = min(expression_values)
+        processed_maxs[key] = max(expression_values)
+
+    background_color = data["colors"] if "colors" in data.keys() else "rgba(175,175,175,0.2)"
+    point_color = "rgba(55,55,55,0.8)" if "colors" in data.keys() else "rgba(220,22,22,1)"
+
+    output = {"type": "bar",
+              "data": {
+                      "labels": list(data["order"]),
+                      "datasets": [
+                          {
+                            "type": "line",
+                            "label": "Minimum",
+                            "fill": False,
+                            "showLine": False,
+                            "pointBorderColor": point_color,
+                            "pointBackgroundColor": point_color,
+                            "data": list([processed_mins[c] for c in data["order"]])},
+                          {
+                            "type": "line",
+                            "label": "Maximum",
+                            "fill": False,
+                            "showLine": False,
+                            "pointBorderColor": point_color,
+                            "pointBackgroundColor": point_color,
+                            "data": list([processed_maxs[c] for c in data["order"]])},
+                          {
+                            "label": "Mean",
+                            "backgroundColor": background_color,
+                            "data": list([processed_means[c] for c in data["order"]])}]
+                      },
+              "options": {
+                  "legend": {
+                    "display": False
+                  },
+                  "scales": {
+                      "xAxes": [{
+                        "gridLines": {
+                            "display": False
+                        },
+                        "ticks": {
+                            "maxRotation": 90,
+                            "minRotation": 90
+                        }
+                      }
+                      ],
+                      "yAxes": [{
+                        "ticks": {
+                            "beginAtZero": True
+                        }
+                      }
+                      ]
+                  }
+              }
+              }
+
+    return output
+
+def prepare_profile_comparison(data_first, data_second, labels, normalize=1):
+    processed_first_means = {}
+    processed_second_means = {}
+
+    for key, expression_values in data_first["data"].items():
+        processed_first_means[key] = mean(expression_values)
+    for key, expression_values in data_second["data"].items():
+        processed_second_means[key] = mean(expression_values)
+
+    first_max = max([v for _, v in processed_first_means.items()])
+    second_max = max([v for _, v in processed_second_means.items()])
+
+    if normalize == 1:
+        for k, v in processed_first_means.items():
+            processed_first_means[k] = v/first_max
+
+        for k, v in processed_second_means.items():
+            processed_second_means[k] = v/second_max
+
+    output = {"type": "bar",
+              "data": {
+                          "labels": list(data_first["order"]),
+                          "datasets": [{
+                              "label": labels[0],
+                              "backgroundColor": "rgba(220,22,22,0.5)",
+                              "data": list([processed_first_means[c] for c in data_first["order"]])},
+                              {
+                              "label": labels[1],
+                              "backgroundColor": "rgba(22,22,220,0.5)",
+                              "data": list([processed_second_means[c] for c in data_second["order"]])}]
+              },
+              "options": {
+                  "legend": {
+                    "display": True
+                  },
+                  "scales": {
+                      "xAxes": [{
+                        "gridLines": {
+                            "display": False
+                        },
+                        "ticks": {
+                            "maxRotation": 90,
+                            "minRotation": 90
+                        }
+                      }
+                      ],
+                      "yAxes": [{
+                        "ticks": {
+                            "beginAtZero": True
+                        }
+                      }
+                      ]
+                  }
+              }
+              }
+
+    return output

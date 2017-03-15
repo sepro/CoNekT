@@ -1,10 +1,10 @@
 import json
-from statistics import mean
 
 from flask import Blueprint, redirect, url_for, render_template, Response
 from sqlalchemy.orm import undefer
 
 from planet import cache
+from planet.helpers.chartjs import prepare_expression_profile, prepare_profile_comparison
 from planet.models.condition_tissue import ConditionTissue
 from planet.models.expression.profiles import ExpressionProfile
 from planet.models.expression.networks import ExpressionNetwork
@@ -162,69 +162,9 @@ def expression_profile_plot_json(profile_id):
     current_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(profile_id)
     data = json.loads(current_profile.profile)
 
-    processed_means = {}
-    processed_mins = {}
-    processed_maxs = {}
+    plot = prepare_expression_profile(data)
 
-    for key, expression_values in data["data"].items():
-        processed_means[key] = mean(expression_values)
-        processed_mins[key] = min(expression_values)
-        processed_maxs[key] = max(expression_values)
-
-    background_color = data["colors"] if "colors" in data.keys() else "rgba(175,175,175,0.2)"
-    point_color = "rgba(55,55,55,0.8)" if "colors" in data.keys() else "rgba(220,22,22,1)"
-
-    output = {"type": "bar",
-              "data": {
-                      "labels": list(data["order"]),
-                      "datasets": [
-                          {
-                            "type": "line",
-                            "label": "Minimum",
-                            "fill": False,
-                            "showLine": False,
-                            "pointBorderColor": point_color,
-                            "pointBackgroundColor": point_color,
-                            "data": list([processed_mins[c] for c in data["order"]])},
-                          {
-                            "type": "line",
-                            "label": "Maximum",
-                            "fill": False,
-                            "showLine": False,
-                            "pointBorderColor": point_color,
-                            "pointBackgroundColor": point_color,
-                            "data": list([processed_maxs[c] for c in data["order"]])},
-                          {
-                            "label": "Mean",
-                            "backgroundColor": background_color,
-                            "data": list([processed_means[c] for c in data["order"]])}]
-                      },
-              "options": {
-                  "legend": {
-                    "display": False
-                  },
-                  "scales": {
-                      "xAxes": [{
-                        "gridLines": {
-                            "display": False
-                        },
-                        "ticks": {
-                            "maxRotation": 90,
-                            "minRotation": 90
-                        }
-                      }
-                      ],
-                      "yAxes": [{
-                        "ticks": {
-                            "beginAtZero": True
-                        }
-                      }
-                      ]
-                  }
-              }
-              }
-
-    return Response(json.dumps(output), mimetype='application/json')
+    return Response(json.dumps(plot), mimetype='application/json')
 
 
 @expression_profile.route('/json/plot/<profile_id>/<condition_tissue_id>')
@@ -239,68 +179,9 @@ def expression_profile_plot_tissue_json(profile_id, condition_tissue_id):
     current_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(profile_id)
     data = current_profile.tissue_profile(condition_tissue_id)
 
-    processed_means = {}
-    processed_maxs = {}
-    processed_mins = {}
+    plot = prepare_expression_profile(data)
 
-    for key, expression_values in data["data"].items():
-        processed_means[key] = mean(expression_values)
-
-        processed_maxs[key] = max(expression_values)
-        processed_mins[key] = min(expression_values)
-
-    background_color = data["colors"] if "colors" in data.keys() else "rgba(175,175,175,0.2)"
-    point_color = "rgba(55,55,55,0.8)" if "colors" in data.keys() else "rgba(220,22,22,1)"
-
-    output = {"type": "bar",
-              "data": {
-                  "labels": list(data["order"]),
-                  "datasets": [{"type": "line",
-                                "label": "Maximum",
-                                "fill": False,
-                                "showLine": False,
-                                "pointBorderColor": point_color,
-                                "pointBackgroundColor": point_color,
-                                "data": list([processed_maxs[c] for c in data["order"]])},
-                               {
-                                "type": "line",
-                                "label": "Minimum",
-                                "fill": False,
-                                "showLine": False,
-                                "pointBorderColor": point_color,
-                                "pointBackgroundColor": point_color,
-                                "data": list([processed_mins[c] for c in data["order"]])},
-                               {
-                                "label": "Mean",
-                                "backgroundColor": background_color,
-                                "data": list([processed_means[c] for c in data["order"]])}]
-                  },
-              "options": {
-                  "legend": {
-                    "display": False
-                  },
-                  "scales": {
-                      "xAxes": [{
-                        "gridLines": {
-                            "display": False
-                        },
-                        "ticks": {
-                            "maxRotation": 90,
-                            "minRotation": 90
-                        }
-                      }
-                      ],
-                      "yAxes": [{
-                        "ticks": {
-                            "beginAtZero": True
-                        }
-                      }
-                      ]
-                  }
-              }
-              }
-
-    return Response(json.dumps(output), mimetype='application/json')
+    return Response(json.dumps(plot), mimetype='application/json')
 
 
 @expression_profile.route('/json/compare_plot/<first_profile_id>/<second_profile_id>')
@@ -310,66 +191,18 @@ def expression_profile_compare_plot_json(first_profile_id, second_profile_id, no
     """
     Generates a JSON object with two profiles that can be rendered using Chart.js line plots
 
-    :param profile_id: ID of the profile to render
+    :param first_profile_id:
+    :param second_profile_id:
+    :param normalize:
+    :return:
     """
     first_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(first_profile_id)
     second_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(second_profile_id)
     data_first = json.loads(first_profile.profile)
     data_second = json.loads(second_profile.profile)
 
-    processed_first_means = {}
-    processed_second_means = {}
+    plot = prepare_profile_comparison(data_first, data_second,
+                                      (first_profile.probe, second_profile.probe),
+                                      normalize=normalize)
 
-    for key, expression_values in data_first["data"].items():
-        processed_first_means[key] = mean(expression_values)
-    for key, expression_values in data_second["data"].items():
-        processed_second_means[key] = mean(expression_values)
-
-    first_max = max([v for _, v in processed_first_means.items()])
-    second_max = max([v for _, v in processed_second_means.items()])
-
-    if normalize == 1:
-        for k, v in processed_first_means.items():
-            processed_first_means[k] = v/first_max
-
-        for k, v in processed_second_means.items():
-            processed_second_means[k] = v/second_max
-
-    output = {"type": "bar",
-              "data": {
-                          "labels": list(data_first["order"]),
-                          "datasets": [{
-                              "label": first_profile.probe,
-                              "backgroundColor": "rgba(220,22,22,0.5)",
-                              "data": list([processed_first_means[c] for c in data_first["order"]])},
-                              {
-                              "label": second_profile.probe,
-                              "backgroundColor": "rgba(22,22,220,0.5)",
-                              "data": list([processed_second_means[c] for c in data_second["order"]])}]
-              },
-              "options": {
-                  "legend": {
-                    "display": True
-                  },
-                  "scales": {
-                      "xAxes": [{
-                        "gridLines": {
-                            "display": False
-                        },
-                        "ticks": {
-                            "maxRotation": 90,
-                            "minRotation": 90
-                        }
-                      }
-                      ],
-                      "yAxes": [{
-                        "ticks": {
-                            "beginAtZero": True
-                        }
-                      }
-                      ]
-                  }
-              }
-              }
-
-    return Response(json.dumps(output), mimetype='application/json')
+    return Response(json.dumps(plot), mimetype='application/json')
