@@ -25,8 +25,8 @@
                         {% for s in sequences %}
                             <tr>
                                 <td><a href="{{ url_for('sequence.sequence_view', sequence_id=s.id)}}">{{ s.name }}</a></td>
-                                <td>{{ s.aliases|truncate(20) }}</td>
-                                <td>{{ s.description|truncate(60) }}</a></td>
+                                <td>{%- if s.aliases -%}{{ s.aliases|truncate(20) }}{% endif %}</td>
+                                <td>{%- if s.description -%}{{ s.description|truncate(60) }}{% endif %}</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -107,8 +107,8 @@
                                 <td><a href="{{ url_for('expression_profile.expression_profile_view', profile_id=p.id)}}">{{ p.probe }}</a></td>
                                 {% if p.sequence %}
                                     <td>{{ p.sequence.name }}</td>
-                                    <td>{{ p.sequence.aliases|truncate(20) }}</td>
-                                    <td>{{ p.sequence.description|truncate(60) }}</td>
+                                    <td>{%- if p.sequence.aliases -%}{{ p.sequence.aliases|truncate(20) }}{% endif %}</td>
+                                    <td>{%- if p.sequence.description -%}{{ p.sequence.description|truncate(60) }}{% endif %}</td>
                                 {% endif %}
                             </tr>
                         {% endfor %}

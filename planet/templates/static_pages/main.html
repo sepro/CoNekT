@@ -55,7 +55,7 @@
                   {% for n in news %}
                   <div>
                       <p>{{ n.message_markup }}</p>
-                      <p class="text-muted text-right">by {{ n.posted_by }} (<strong>{{n.posted}}</strong>)</p>
+                      <p class="text-muted text-right">by {{ n.posted_by }} (<strong>{{n.posted_formatted}}</strong>)</p>
                       {% if not loop.last %}
                         <hr />
                       {% endif %}

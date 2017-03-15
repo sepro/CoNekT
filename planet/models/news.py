@@ -17,3 +17,7 @@ class News(db.Model):
     @property
     def message_markup(self):
         return Markup(markdown(self.message))
+
+    @property
+    def posted_formatted(self):
+        return self.posted.strftime("%Y-%m-%d %H:%M")
