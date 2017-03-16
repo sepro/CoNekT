@@ -50,6 +50,7 @@
             {% endfor %}
             </tbody>
         </table>
+
         </div>
         {% else %}
         <ol class="breadcrumb">
@@ -98,6 +99,7 @@
 {% endblock %}
 
 {% block extrajs %}
+{% if order %}
 <script src="{{ url_for('static', filename='js/jquery.hottie.js') }}"></script>
 <script>
     $('td.value').hottie({
@@ -108,4 +110,7 @@
     ], symmetrical : true
 });
 </script>
+
+{% endif %}
+
 {% endblock %}
