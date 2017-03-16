@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if order %}
+        {% if cluster %}
+            {{cluster.name}} heatmap
+        {% else %}
+            Custom Heatmap
+        {% endif %}
+    {% else %}
+        Create Custom Heatmap
+    {% endif %}
+{% endblock %}
+
+{% block container %}
+<div class="top-pad">
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li><a href="{{ url_for('main.features') }}">Tools</a></li>
+    </ol>
+
+    <h1>InCHLib Heatmap</h1>
+
+    <div id="inchlib"></div>
+
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{{ url_for('static', filename='js/kinetic-v5.1.0.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/inchlib-1.2.0.min.js') }}"></script>
+<script>
+    $(document).ready(function() { //run when the whole page is loaded
+        window.inchlib = new InCHlib({ //instantiate InCHlib
+            target: "inchlib", //ID of a target HTML element
+            dendrogram: false,  //turn off row dendrogram
+            draw_row_ids: true,
+            heatmap_part_width: 1,
+            max_column_width: 8,
+            max_row_height: 16,
+            independent_columns: false,
+            navigation_toggle: {color_scale: true, distance_scale: true, export_button: true, filter_button: true, hint_button: false},
+            max_height: 1200, //set maximum height of visualization in pixels
+            width: 1000, //set width of visualization in pixels
+            heatmap_colors: "BuWhRd", //set color scale for clustered data
+        });
+
+        inchlib.read_data_from_file("{{ url_for('heatmap.heatmap_inchlib_json', cluster_id=cluster_id) }}"); //read input json file
+        inchlib.draw(); //draw cluster heatmap
+    });
+</script>
+
+
+{% endblock %}
