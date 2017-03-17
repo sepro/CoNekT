@@ -13,6 +13,13 @@
     <a class="btn btn-default" href="{{ url_for('admin_controls.clear_cache') }}">Clear</a>
 </div>
 
+<h3>Whooshee re-index</h3>
+<p>The whooshee search (used for large text fields) needs a pre-computed index. To rebuild this index click the
+    button below.</p>
+<div class="btn-group">
+    <a class="btn btn-default" href="{{ url_for('admin_controls.reindex_whooshee') }}">Rebuild index</a>
+</div>
+
 {% if g.blast_enabled %}
 <h3>Blast</h3>
 <p>This will build the Blast DB</p>
@@ -22,7 +29,7 @@
 {% endif %}
 
 <h3>Export</h3>
-<p>This will export the data to the FTP folder sepcified in the configuration.</p>
+<p>This will export the data to the FTP folder specified in the configuration.</p>
 <div class="btn-group">
     <a class="btn btn-default" href="{{ url_for('admin_controls.export_ftp') }}">FTP</a>
 </div>

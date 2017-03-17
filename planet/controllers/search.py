@@ -13,6 +13,8 @@ from planet.models.search import Search
 from planet.models.species import Species
 from planet.models.sequences import Sequence
 
+from utils.benchmark import benchmark
+
 search = Blueprint('search', __name__)
 
 
@@ -232,7 +234,16 @@ def search_typeahead_prefetch():
 
 
 @search.route('/whooshee/<keyword>')
+@benchmark
 def search_whooshee(keyword):
     results = Sequence.query.whooshee_search(keyword).all()
+
+    return Response(json.dumps([r.name for r in results]), mimetype='application/json')
+
+
+@search.route('/no_whooshee/<keyword>')
+@benchmark
+def search_no_whooshee(keyword):
+    results = Sequence.query.filter(Sequence.description.ilike("%" + keyword + "%")).all()
 
     return Response(json.dumps([r.name for r in results]), mimetype='application/json')
