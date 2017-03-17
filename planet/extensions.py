@@ -4,10 +4,11 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_htmlmin import HTMLMIN
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_whooshee import Whooshee
 
 from planet.flask_blast import BlastThread
 
-__all__ = ['db', 'login_manager', 'cache', 'htmlmin', 'blast_thread', 'compress']
+__all__ = ['db', 'login_manager', 'cache', 'htmlmin', 'blast_thread', 'compress', 'whooshee']
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -16,3 +17,4 @@ cache = Cache()
 htmlmin = HTMLMIN()
 blast_thread = BlastThread()
 compress = Compress()
+whooshee = Whooshee()

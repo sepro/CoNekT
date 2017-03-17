@@ -13,11 +13,11 @@ Everything that needs to be set up to get flask running is initialized in this f
 
   * set up global things like the search form and custom 403/404 error messages
 """
-from flask import Flask, render_template, g, url_for
+from flask import Flask, render_template, g
 from flask_admin import Admin
 from flask_admin.menu import MenuLink
 
-from planet.extensions import toolbar, db, login_manager, cache, htmlmin, blast_thread, compress
+from planet.extensions import toolbar, db, login_manager, cache, htmlmin, blast_thread, compress, whooshee
 
 
 def create_app(config):
@@ -40,8 +40,10 @@ def configure_extensions(app):
     db.app = app
     db.init_app(app)
 
-    # Enable login manager
+    # Enable Whooshee
+    whooshee.init_app(app)
 
+    # Enable login manager
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
 

@@ -1,4 +1,4 @@
-from planet import db
+from planet import db, whooshee
 
 from planet.models.relationships import sequence_go, sequence_interpro, sequence_family, sequence_coexpression_cluster
 from planet.models.relationships import sequence_xref, sequence_sequence_ecc
@@ -11,6 +11,7 @@ import operator
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
+@whooshee.register_model('description')
 class Sequence(db.Model):
     __tablename__ = 'sequences'
     id = db.Column(db.Integer, primary_key=True)

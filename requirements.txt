@@ -13,6 +13,7 @@ Flask-Login==0.4.0
 Flask-Script==2.0.5
 Flask-SQLAlchemy==2.1
 Flask-Testing==0.6.1
+flask-whooshee==0.4.1
 Flask-WTF==0.14.2
 htmlmin==0.1.10
 itsdangerous==0.24
@@ -31,4 +32,5 @@ sqlparse==0.2.2
 Tempita==0.5.2
 Werkzeug==0.11.15
 wheel==0.29.0
+Whoosh==2.7.4
 WTForms==2.1

@@ -5,7 +5,7 @@ from tempfile import mkstemp
 from flask import Blueprint, Markup, redirect, url_for, request, flash, abort, current_app
 from flask_login import login_required
 
-from planet import cache
+from planet import cache, whooshee
 from planet.forms.admin.add_clades import AddCladesForm
 from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClustersForm
 from planet.forms.admin.build_coexpression_clusters import BuildCoexpressionClustersForm
@@ -110,6 +110,24 @@ def update_clades():
         flash('All clades updated', 'success')
 
     return redirect(url_for('admin.index'))
+
+
+@admin_controls.route('/reindex/whooshee')
+@login_required
+def reindex_whooshee():
+    """
+    Touching this endpoint reindex Whooshee
+
+    :return: Redirect to admin controls
+    """
+    try:
+        whooshee.reindex()
+    except Exception as e:
+        flash('An error occurred while reindexing whooshee', 'danger')
+    else:
+        flash('Whooshee index rebuilt', 'success')
+
+    return redirect(url_for('admin.controls.index'))
 
 
 @admin_controls.route('/clear/cache')

@@ -11,6 +11,7 @@ from planet.models.expression.specificity import ExpressionSpecificityMethod, Ex
 from planet.models.go import GO
 from planet.models.search import Search
 from planet.models.species import Species
+from planet.models.sequences import Sequence
 
 search = Blueprint('search', __name__)
 
@@ -228,3 +229,10 @@ def search_typeahead_prefetch():
     go = GO.query.filter(GO.obsolete == 0).filter(func.length(GO.name) < 7).order_by(func.length(GO.name)).all()
 
     return Response(json.dumps([{'value': g.name, 'tokens': g.name.split()} for g in go]), mimetype='application/json')
+
+
+@search.route('/whooshee/<keyword>')
+def search_whooshee(keyword):
+    results = Sequence.query.whooshee_search(keyword).all()
+
+    return Response(json.dumps([r.name for r in results]), mimetype='application/json')
