@@ -169,6 +169,52 @@ class ControlsView(AdminBaseView):
         return self.render('admin/controls.html', gene_family_methods=gene_family_methods)
 
 
+class GOEnrichmentView(AdminBaseView):
+    """
+    Control panel for administrators. Contains links to
+    """
+    @expose('/')
+    def index(self):
+        message = Markup('<strong>Note: </strong> some operations on this page can take a long time and slow down the '
+                         'database. This can effect the user-experience of others negatively.<br />Also avoid running '
+                         'multiple updates simultaniously.')
+        flash(message, 'danger')
+
+        return self.render('admin/build/go_enrichment.html')
+
+
+class ClusterSimilaritiesView(AdminBaseView):
+    """
+    Control panel for administrators. Contains links to
+    """
+    @expose('/')
+    def index(self):
+        message = Markup('<strong>Note: </strong> some operations on this page can take a long time and slow down the '
+                         'database. This can effect the user-experience of others negatively.<br />Also avoid running '
+                         'multiple updates simultaniously.')
+        flash(message, 'danger')
+
+        gene_family_methods = GeneFamilyMethod.query.all()
+
+        return self.render('admin/build/cluster_similarities.html', gene_family_methods=gene_family_methods)
+
+
+class ECCView(AdminBaseView):
+    """
+    Control panel for administrators. Contains links to
+    """
+    @expose('/')
+    def index(self):
+        message = Markup('<strong>Note: </strong> some operations on this page can take a long time and slow down the '
+                         'database. This can effect the user-experience of others negatively.<br />Also avoid running '
+                         'multiple updates simultaniously.')
+        flash(message, 'danger')
+
+        gene_family_methods = GeneFamilyMethod.query.all()
+
+        return self.render('admin/build/ecc.html', gene_family_methods=gene_family_methods)
+
+
 class AddSpeciesView(AdminBaseView):
     """
     Admin page to add a new species to the database

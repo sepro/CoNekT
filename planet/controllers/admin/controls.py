@@ -51,17 +51,45 @@ def update_counts():
     """
     try:
         CoexpressionClusteringMethod.update_counts()
+    except Exception as e:
+        print("ERROR:", e)
+        flash('An error occurred while re-doing CoexpressionClusteringMethod counts', 'danger')
+    else:
+        flash('CoexpressionClusteringMethod count updated', 'success')
+
+    try:
         ExpressionNetworkMethod.update_count()
+    except Exception as e:
+        print("ERROR:", e)
+        flash('An error occurred while re-doing ExpressionNetworkMethod counts', 'danger')
+    else:
+        flash('ExpressionNetworkMethod counts updated', 'success')
+
+    try:
         GeneFamilyMethod.update_count()
+    except Exception as e:
+        print("ERROR:", e)
+        flash('An error occurred while re-doing GeneFamilyMethod counts', 'danger')
+    else:
+        flash('GeneFamilyMethod count updated', 'success')
+
+    try:
         Species.update_counts()
+    except Exception as e:
+        print("ERROR:", e)
+        flash('An error occurred while re-doing Species counts', 'danger')
+    else:
+        flash('Species count updated', 'success')
+
+    try:
         GO.update_species_counts()
     except Exception as e:
-        print(e)
-        flash('An error occurred while re-doing counts', 'danger')
+        print("ERROR:", e)
+        flash('An error occurred while re-doing GO counts', 'danger')
     else:
-        flash('All counts updated', 'success')
+        flash('GO count updated', 'success')
 
-    return redirect(url_for('admin.controls.index'))
+    return redirect(url_for('admin.index'))
 
 
 @admin_controls.route('/update/clades')
@@ -81,7 +109,7 @@ def update_clades():
     else:
         flash('All clades updated', 'success')
 
-    return redirect(url_for('admin.controls.index'))
+    return redirect(url_for('admin.index'))
 
 
 @admin_controls.route('/clear/cache')

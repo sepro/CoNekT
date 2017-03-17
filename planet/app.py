@@ -13,7 +13,7 @@ Everything that needs to be set up to get flask running is initialized in this f
 
   * set up global things like the search form and custom 403/404 error messages
 """
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, url_for
 from flask_admin import Admin
 from flask_admin.menu import MenuLink
 
@@ -143,7 +143,8 @@ def configure_admin_panel(app):
             ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView, AddXRefsView, \
             AddXRefsFamiliesView, AddFamiliesView, AddExpressionProfilesView, AddCoexpressionClustersView, \
             AddCoexpressionNetworkView, AddGOView, AddInterProView, AddCladesView, AddSpecificityView, \
-            AddSequenceDescriptionsView, NewsAdminView, BuildCoexpressionClustersView
+            AddSequenceDescriptionsView, NewsAdminView, BuildCoexpressionClustersView, GOEnrichmentView, \
+            ClusterSimilaritiesView, ECCView
 
         from planet.models.users import User
         from planet.models.species import Species
@@ -221,9 +222,20 @@ def configure_admin_panel(app):
                                             url='add/xrefs_families/', category='Add'))
 
         # Build Menu
+        admin.add_menu_item(MenuLink("Assign Clades", url="/admin_controls/update/clades"),
+                            target_category='Build')
+        admin.add_view(ClusterSimilaritiesView(name='Cluster Similarities', endpoint='admin.clustersimilarities',
+                                               url='build/cluster_similarities/',
+                                               category='Build'))
+        admin.add_view(ECCView(name='Expression Context Conservations (ECC)', endpoint='admin.ecc',
+                               url='build/ecc/', category='Build'))
+        admin.add_view(GOEnrichmentView(name='GO Enrichment', endpoint='admin.goenrichment', url='build/go_enrichment/',
+                                        category='Build'))
         admin.add_view(BuildCoexpressionClustersView(name='HCCA Clusters',
                                                      endpoint='admin.build.hcca_clusters',
                                                      url='build/hcca_clusters/', category='Build'))
+        admin.add_menu_item(MenuLink("Update Counts", class_name="", url="/admin_controls/update/counts"),
+                            target_category='Build')
 
         # Control panel
         admin.add_view(ControlsView(name='Controls', endpoint='admin.controls', url='controls/'))

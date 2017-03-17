@@ -1,0 +1,18 @@
+{% extends 'admin/master.html' %}
+
+{% block brand %}
+<a class="navbar-brand" href="{{ url_for('main.screen') }}"><img src="{{ url_for('static', filename='img/icon-48x48.png') }}" style="max-width:100px;margin-left:-7px;margin-top: -13px;float:left;margin-right:5px;" width="48px"/></a>
+{% endblock %}
+
+{% block body %}
+<h1>Expression Context Conservation (ECC)</h1>
+<p>Calculates ECC values between genes, currently <strong>without</strong> statistical validation or any filtering.</p>
+<div class="btn-group">
+    <label>Select gene families to use for ECC calculations:</label><br/>
+    {% for gfm in gene_family_methods %}
+        <a class="btn btn-default" href="{{ url_for('admin_controls.calculate_ecc', gf_method_id=gfm.id) }}">{{ gfm.method }} </a>
+    {% else%}
+        <p>No gene families defined. Unable to ECC values</p>
+    {% endfor %}
+</div>
+{% endblock %}
