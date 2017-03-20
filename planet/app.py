@@ -225,7 +225,7 @@ def configure_admin_panel(app):
                                             url='add/xrefs_families/', category='Add'))
 
         # Build Menu
-        admin.add_menu_item(MenuLink("Assign Clades (direct start)", url="/admin_controls/update/clades"),
+        admin.add_menu_item(MenuLink("Assign Clades", url="/admin_controls/update/clades", class_name="confirmation"),
                             target_category='Build')
         admin.add_view(ClusterSimilaritiesView(name='Cluster Similarities', endpoint='admin.clustersimilarities',
                                                url='build/cluster_similarities/',
@@ -237,7 +237,7 @@ def configure_admin_panel(app):
         admin.add_view(BuildCoexpressionClustersView(name='HCCA Clusters',
                                                      endpoint='admin.build.hcca_clusters',
                                                      url='build/hcca_clusters/', category='Build'))
-        admin.add_menu_item(MenuLink("Update Counts (direct start)", url="/admin_controls/update/counts"),
+        admin.add_menu_item(MenuLink("Update Counts", url="/admin_controls/update/counts", class_name="confirmation"),
                             target_category='Build')
 
         # Control panel

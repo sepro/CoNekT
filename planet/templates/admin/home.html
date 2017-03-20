@@ -1,8 +1,4 @@
-{% extends 'admin/master.html' %}
-
-{% block brand %}
-<a class="navbar-brand" href="{{ url_for('main.screen') }}"><img src="{{ url_for('static', filename='img/icon-48x48.png') }}" style="max-width:100px;margin-left:-7px;margin-top: -13px;float:left;margin-right:5px;" width="48px"/></a>
-{% endblock %}
+{% extends 'admin/my_base.html' %}
 
 {% block body %}
     <h1>PlaNet Admin panel</h1>
@@ -11,5 +7,4 @@
     <div class="text-center">
         <img src="{{url_for('static', filename='img/caution.png')}}" />
     </div>
-
 {% endblock %}
