@@ -16,8 +16,8 @@ class CustomNetworkForm(FlaskForm):
     specificity_method = SelectField('specificity_method', coerce=int)
 
     def populate_method(self):
-        self.method_id.choices = [(s.id, s.description) for s in ExpressionNetworkMethod.query.order_by(ExpressionNetworkMethod.description)]
+        self.method_id.choices = [(0, 'Select method')]
 
         self.family_method.choices = [(m.id, m.method) for m in GeneFamilyMethod.query.order_by(GeneFamilyMethod.id)]
-        self.cluster_method.choices = [(m.id, m.method) for m in CoexpressionClusteringMethod.query.order_by(CoexpressionClusteringMethod.id)]
-        self.specificity_method.choices = [(m.id, m.description) for m in ExpressionSpecificityMethod.query.order_by(ExpressionSpecificityMethod.id)]
+        self.cluster_method.choices = [(0, 'Select method first')]
+        self.specificity_method.choices = [(0, 'Select method first')]

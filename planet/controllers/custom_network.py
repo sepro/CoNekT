@@ -4,7 +4,7 @@ from flask import Blueprint, request, render_template, Response, Markup
 
 from planet.forms.custom_network import CustomNetworkForm
 from planet.helpers.cytoscape import CytoscapeHelper
-from planet.models.expression.networks import ExpressionNetwork
+from planet.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
 from planet.models.sequences import Sequence
 
 custom_network = Blueprint('custom_network', __name__)
@@ -50,6 +50,30 @@ def custom_network_main():
         return render_template("expression_graph.html", graph_data=Markup(json.dumps(network_cytoscape)))
     else:
         return render_template("custom_network.html", form=form)
+
+
+@custom_network.route('/form_data')
+def custom_network_form_data():
+    """
+    Returns a JSON object with valid options for
+
+    :return: JSON object with network methods and associated clustering methods and specificity methods
+    """
+
+    output = []
+
+    network_methods = ExpressionNetworkMethod.query.all()
+
+    for nm in network_methods:
+        output.append({
+            'id': nm.id,
+            'name': nm.description,
+            'clustering_methods': [{'id': c.id, 'method': c.method} for c in nm.clustering_methods],
+            'species': nm.species.name,
+            'specificity_methods': [{'id': es.id, 'method': es.description} for es in nm.species.expression_specificities]
+        })
+
+    return Response(json.dumps(output), mimetype='application/json')
 
 
 @custom_network.route('/json', methods=['POST'])

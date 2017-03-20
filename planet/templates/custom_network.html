@@ -25,8 +25,8 @@
                     {{form.probes(class_="form-control") }}<br />
                     <h3>Advanced</h3>
                     {{form.family_method(class_="form-control") }}<br />
-                    {{form.cluster_method(class_="form-control") }}<br />
-                    {{form.specificity_method(class_="form-control") }}<br />
+                    {{form.cluster_method(class_="form-control", disabled=True) }}<br />
+                    {{form.specificity_method(class_="form-control", disabled=True) }}<br />
                     <button type="submit" class="btn btn-primary pull-right"  data-toggle="modal" data-target="#loaderModal">Draw network</button>
                 </form>
             </div>
@@ -54,4 +54,67 @@
 
 
 </div>
+{% endblock %}
+{% block extrajs %}
+<script>
+    $(function () {
+        var formdata = [];
+
+        var populate_networks = function(data) {
+            $('#method_id').find('option').remove();
+            $.each(data, function () {
+                $('#method_id').append($("<option />").val(this.id).text(this.name));
+            });
+            $('#method_id').trigger('change');
+        };
+
+        var populate_cluster_methods = function(data) {
+            $('#cluster_method').find('option').remove();
+            $.each(data, function () {
+                $('#cluster_method').append($("<option />").val(this.id).text(this.method));
+            });
+
+            if ($('#cluster_method').find('option').length > 0) {
+                $('#cluster_method').prop('disabled', false);
+            } else {
+                $('#cluster_method').prop('disabled', 'disabled');
+                $('#cluster_method').append($("<option />").val(0).text("Not available"));
+            }
+
+            $('#cluster_method').trigger('change');
+        }
+
+        var populate_specificity_methods = function(data) {
+            $('#specificity_method').find('option').remove();
+            $.each(data, function () {
+                $('#specificity_method').append($("<option />").val(this.id).text(this.method));
+            });
+
+            if ($('#specificity_method').find('option').length > 0) {
+                $('#specificity_method').prop('disabled', false);
+            } else {
+                $('#specificity_method').prop('disabled', 'disabled');
+                $('#specificity_method').append($("<option />").val(0).text("Not available"));
+            }
+
+            $('#specificity_method').trigger('change');
+        }
+
+        $('#method_id').change(function(ev) {
+            var valueSelected = this.value;
+             $.each(formdata, function () {
+                  if (this.id == valueSelected) {
+                    populate_cluster_methods(this.clustering_methods);
+                    populate_specificity_methods(this.specificity_methods);
+                  }
+             });
+        });
+
+        $.getJSON("{{ url_for('custom_network.custom_network_form_data') }}", function(json) {
+              formdata = json;
+              console.log(formdata);
+              populate_networks(formdata);
+            });
+        });
+</script>
 {% endblock %}
