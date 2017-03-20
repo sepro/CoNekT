@@ -11,54 +11,67 @@
 {% block body %}
 {% if form %}
 <h1>Add Species</h1>
-<p>Use the panel below to add a new species</p>
-<form method="POST"  action="{{ url_for('admin_controls.add_species') }}"  role="form" enctype="multipart/form-data">
-    {{ form.csrf_token }}
-    <div class="form-group">
-        <label>{{ form.name.label }}</label>
-        {{form.name(class_="form-control", placeholder="Species Name") }}
-    </div>
-    <div class="form-group">
-        <label>{{ form.code.label }}</label>
-        {{form.code(class_="form-control", placeholder="three letter code") }}
-    </div>
-    <div class="form-group">
-        <label>{{ form.data_type.label }}</label><br />
-        {% for option in form.data_type %}
-            <div class="radio-inline">
-                <label>
-                {{ option }}
-                {{ option.label }}
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+        <p>Use the panel below to add a new species</p>
+        <form method="POST"  action="{{ url_for('admin_controls.add_species') }}"  role="form" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                <label>{{ form.name.label }}</label>
+                {{form.name(class_="form-control", placeholder="Species Name") }}
+            </div>
+            <div class="form-group">
+                <label>{{ form.code.label }}</label>
+                {{form.code(class_="form-control", placeholder="three letter code") }}
+            </div>
+            <div class="form-group">
+                <label>{{ form.data_type.label }}</label><br />
+                {% for option in form.data_type %}
+                    <div class="radio-inline">
+                        <label>
+                        {{ option }}
+                        {{ option.label }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <label>{{ form.color.label }}</label>
+                {{form.color(class_="form-control jscolor", placeholder="CDCDCD", value="CDCDCD") }}
+            </div>
+            <div class="form-group">
+                <label>{{ form.highlight.label }}</label>
+                {{form.highlight(class_="form-control jscolor", placeholder="DDDDDD", value="DDDDDD") }}
+            </div>
+
+            <div class="form-group">
+                <label>{{ form.description.label }} (supports markdown)</label>
+                {{form.description(class_="form-control", placeholder="") }}
+            </div>
+
+            <div class="form-group">
+                <p>Add FASTA file containing all genes, with the gene name in the header. Note that uploading compressed (gzip) files is supported.</p>
+                <label class="btn btn-default" for="fasta" id="my-file-button">
+                    {{ form.fasta(style="display:none;", onchange="")}}
+                    <span id="file-selector-text">Select Fasta File</span>
                 </label>
             </div>
-        {% endfor %}
-    </div>
 
-    <div class="form-group">
-        <label>{{ form.color.label }}</label>
-        {{form.color(class_="form-control jscolor", placeholder="CDCDCD", value="CDCDCD") }}
-    </div>
-    <div class="form-group">
-        <label>{{ form.highlight.label }}</label>
-        {{form.highlight(class_="form-control jscolor", placeholder="DDDDDD", value="DDDDDD") }}
-    </div>
+        <button type="submit" class="btn btn-primary pull-right">Add species</button>
 
-    <div class="form-group">
-        <label>{{ form.description.label }} (supports markdown)</label>
-        {{form.description(class_="form-control", placeholder="") }}
+        </form>
     </div>
-
-    <div class="form-group">
-        <p>Add FASTA file containing all genes, with the gene name in the header. Note that uploading compressed (gzip) files is supported.</p>
-        <label class="btn btn-default" for="fasta" id="my-file-button">
-            {{ form.fasta(style="display:none;", onchange="")}}
-            <span id="file-selector-text">Select Fasta File</span>
-        </label>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Help</strong></div>
+            <div class="panel-body">
+                Adds a new species to the database. Make sure the fasta file contains only the gene name in the header,
+                and that name matches other types of data that will be added later (GO, InterPro, ...).
+            </div>
+        </div>
     </div>
-
-<button type="submit" class="btn btn-primary">Add species</button>
-
-</form>
+</div>
 {% endif %}
 
 {% endblock %}
