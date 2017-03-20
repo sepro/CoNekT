@@ -5,47 +5,85 @@
 <h1>Add Expression Specificity</h1>
 {% if condition_form %}
 <h2>Condition Specificity</h2>
-<p>Takes all conditions sampled into account.</p>
-<form method="POST"  action="{{ url_for('admin_controls.add_condition_specificity') }}"  role="form" enctype="multipart/form-data">
-    {{ condition_form.csrf_token }}
-    <div class="form-group">
-        {{ condition_form.species_id.label }}
-        {{ condition_form.species_id(class_="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ condition_form.description.label }}
-        {{ condition_form.description(class_="form-control") }}
-    </div>
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
 
-    <button type="submit" class="btn btn-primary pull-right">Add Expression Specificities</button>
-</form>
+    <p>Takes all conditions sampled into account.</p>
+    <form method="POST"  action="{{ url_for('admin_controls.add_condition_specificity') }}"  role="form" enctype="multipart/form-data">
+        {{ condition_form.csrf_token }}
+        <div class="form-group">
+            {{ condition_form.species_id.label }}
+            {{ condition_form.species_id(class_="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ condition_form.description.label }}
+            {{ condition_form.description(class_="form-control") }}
+        </div>
+
+        <button type="submit" class="btn btn-primary pull-right">Add Expression Specificities</button>
+    </form>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Help</strong></div>
+            <div class="panel-body">
+                Calculates SPM, Tau and entropy for all conditions.
+            </div>
+        </div>
+    </div>
+</div>
 {% endif %}
 
 {% if tissue_form %}
 <h2>Tissue Specificity</h2>
-<p>Takes all conditions sampled into account.</p>
-<form method="POST"  action="{{ url_for('admin_controls.add_tissue_specificity') }}"  role="form" enctype="multipart/form-data">
-    {{ tissue_form.csrf_token }}
-    <div class="form-group">
-        {{ tissue_form.species_id.label }}
-        {{ tissue_form.species_id(class_="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ tissue_form.description.label }}
-        {{ tissue_form.description(class_="form-control") }}
-    </div>
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+        <p>Takes all conditions sampled into account.</p>
+        <form method="POST"  action="{{ url_for('admin_controls.add_tissue_specificity') }}"  role="form" enctype="multipart/form-data">
+            {{ tissue_form.csrf_token }}
+            <div class="form-group">
+                {{ tissue_form.species_id.label }}
+                {{ tissue_form.species_id(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ tissue_form.description.label }}
+                {{ tissue_form.description(class_="form-control") }}
+            </div>
 
-    <p>Add a file to convert conditions to tissues.</p>
-    <div class="form-group">
-        <label class="btn btn-default" for="file" id="my-file-button">
-            {{ tissue_form.file(style="display:none;", onchange="")}}
-            <span id="file-selector-text">Select File</span>
-        </label>
+            <p>Add a file to convert conditions to tissues.</p>
+            <div class="form-group">
+                <label class="btn btn-default" for="file" id="my-file-button">
+                    {{ tissue_form.file(style="display:none;", onchange="")}}
+                    <span id="file-selector-text">Select File</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add Expression Specificities</button>
+        </form>
     </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Help</strong></div>
+            <div class="panel-body">
+                Creates a profile where multiple conditions are collapsed into one. Then calculates the SPM, Tau and
+                entropy for this profile. One file is required, describing which conditions should be grouped, and which
+                color that bar should have in profile plot.
 
-    <button type="submit" class="btn btn-primary">Add Expression Specificities</button>
-</form>
-
+                Example input, a tab-delimited file with three columns. First the condition, then the more general group
+                (e.g. tissue, organ, ...) then the color to use.
+                <br /><br />
+                <div clas="well">
+                    Roots (apex), 7 DAG&nbsp;&nbsp;&nbsp;&nbsp;Roots&nbsp;&nbsp;&nbsp;&nbsp;rgba(153, 51, 0, 0.5)
+                    Roots (differentation zone), 4 DAP&nbsp;&nbsp;&nbsp;&nbsp;Roots&nbsp;&nbsp;&nbsp;&nbsp;rgba(153, 51, 0, 0.5)
+                    Roots (elongation zone), 4 DAP&nbsp;&nbsp;&nbsp;&nbsp;Roots&nbsp;&nbsp;&nbsp;&nbsp;rgba(153, 51, 0, 0.5)
+                    Roots (meristematic zone), 4 DAP&nbsp;&nbsp;&nbsp;&nbsp;Roots&nbsp;&nbsp;&nbsp;&nbsp;rgba(153, 51, 0, 0.5)
+                    Roots (QC cells), 6 DAS&nbsp;&nbsp;&nbsp;&nbsp;Roots&nbsp;&nbsp;&nbsp;&nbsp;rgba(153, 51, 0, 0.5)
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endif %}
 

@@ -243,7 +243,11 @@ class AdminTest(TestCase):
         # Updates, ...
         response = self.client.get('/admin_controls/update/counts', follow_redirects=True)
         self.assert200(response)
-        self.assertTrue('All counts updated' in response.data.decode('utf-8'))  # Check for flash message
+        self.assertTrue('CoexpressionClusteringMethod count updated' in response.data.decode('utf-8'))  # Check for flash message
+        self.assertTrue('ExpressionNetworkMethod counts updated' in response.data.decode('utf-8'))  # Check for flash message
+        self.assertTrue('GeneFamilyMethod count updated' in response.data.decode('utf-8'))  # Check for flash message
+        self.assertTrue('Species count updated' in response.data.decode('utf-8'))  # Check for flash message
+        self.assertTrue('GO count updated' in response.data.decode('utf-8'))  # Check for flash message
 
         response = self.client.get('/admin_controls/calculate_enrichment', follow_redirects=True)
         self.assert200(response)
