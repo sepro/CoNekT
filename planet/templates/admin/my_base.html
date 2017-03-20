@@ -1,0 +1,5 @@
+{% extends 'admin/base.html' %}
+
+{% block brand %}
+<a class="navbar-brand" href="{{ url_for('main.screen') }}"><img src="{{ url_for('static', filename='img/icon-48x48.png') }}" style="max-width:100px;margin-left:-7px;margin-top: -13px;float:left;margin-right:5px;" width="48px"/></a>
+{% endblock %}
