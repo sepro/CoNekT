@@ -10,26 +10,49 @@
 {% block body %}
 {% if form %}
 <h1>Add XRefs <small>(to sequences)</small></h1>
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+        <form method="POST"  action="{{ url_for('admin_controls.add_xrefs') }}"  role="form" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                {{ form.species_id.label }}
+                {{ form.species_id(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.platforms.label }}
+                {{ form.platforms(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                <label class="btn btn-default" for="file" id="my-file-button">
+                    {{ form.file(style="display:none;", onchange="")}}
+                    <span id="file-selector-text">Select File</span>
+                </label>
+            </div>
 
-<form method="POST"  action="{{ url_for('admin_controls.add_xrefs') }}"  role="form" enctype="multipart/form-data">
-    {{ form.csrf_token }}
-    <div class="form-group">
-        {{ form.species_id.label }}
-        {{ form.species_id(class_="form-control") }}
+            <button type="submit" class="btn btn-primary">Add XRefs</button>
+        </form>
     </div>
-    <div class="form-group">
-        {{ form.platforms.label }}
-        {{ form.platforms(class_="form-control") }}
-    </div>
-    <div class="form-group">
-        <label class="btn btn-default" for="file" id="my-file-button">
-            {{ form.file(style="display:none;", onchange="")}}
-            <span id="file-selector-text">Select File</span>
-        </label>
-    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Help</strong></div>
+            <div class="panel-body">
+                If gene identifiers match PLAZA 3.0 dicots or EVEX, one of those platforms can be selected and links
+                generated automatically. To add custom XRefs use a definitions file matching the format below.
+                <br /><br />
 
-    <button type="submit" class="btn btn-primary">Add XRefs</button>
-</form>
+                Example input: four columns are required (tab delimited), the sequence identifier, the name in the referenced platform, the name of the platform and the
+                url.
+                <br/><br/>
+                <div class="well">
+                    gene01   gene01   external_website    http://url.com/gene01<br/>
+                    gene02   gene02   external_website    http://url.com/gene02<br/>
+                    gene03   gene03   external_website    http://url.com/gene03<br/>
+                    ...<br/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endif %}
 
 {% endblock %}
