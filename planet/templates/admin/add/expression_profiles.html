@@ -10,47 +10,85 @@
 {% block body %}
 {% if form %}
 <h1>Add Expression Profile</h1>
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+        <form method="POST"  action="{{ url_for('admin_controls.add_expression_profiles') }}"  role="form" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                {{ form.species_id.label }}
+                {{ form.species_id(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.source.label }}
+                {{ form.source(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                <label>The normalized matrix file</label>
+                <p>Normalized expression matrix generated using LSTrAP, sequence names should match the names in the database</p>
+                <label class="btn btn-default" for="matrix_file" id="matrix-file-button">
+                    {{ form.matrix_file(style="display:none;", onchange="")}}
+                    <span id="matrix-file-selector-text">Select File</span>
+                </label>
+            </div>
 
-<form method="POST"  action="{{ url_for('admin_controls.add_expression_profiles') }}"  role="form" enctype="multipart/form-data">
-    {{ form.csrf_token }}
-    <div class="form-group">
-        {{ form.species_id.label }}
-        {{ form.species_id(class_="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.source.label }}
-        {{ form.source(class_="form-control") }}
-    </div>
-    <div class="form-group">
-        <label>The normalized matrix file</label>
-        <p>Normalized expression matrix generated using LSTrAP, sequence names should match the names in the database</p>
-        <label class="btn btn-default" for="matrix_file" id="matrix-file-button">
-            {{ form.matrix_file(style="display:none;", onchange="")}}
-            <span id="matrix-file-selector-text">Select File</span>
-        </label>
-    </div>
+            <div class="form-group">
+                <label>Annotation file</label>
+                <p>Text file with two tab-delimited columns with one line header. The first is the sample name, the second a
+                condition. Samples with the same condition will be merged.</p>
+                <label class="btn btn-default" for="annotation_file" id="annotation-file-button">
+                    {{ form.annotation_file(style="display:none;", onchange="")}}
+                    <span id="annotation-file-selector-text">Select File</span>
+                </label>
+            </div>
+            <div class="form-group">
+                <label>The order and colors for the plot (optional)</label>
+                <p>Tab delimited file with the various conditions in order of desired appearance in the plots, here also colors
+                can be assigned to each condition in rgba(10,10,10,0.5) format</p>
+                <label class="btn btn-default" for="order_colors_file" id="order-colors-file-button">
+                    {{ form.order_colors_file(style="display:none;", onchange="")}}
+                    <span id="order-colors-file-selector-text">Select File</span>
+                </label>
+            </div>
 
-    <div class="form-group">
-        <label>Annotation file</label>
-        <p>Text file with two tab-delimited columns with one line header. The first is the sample name, the second a
-        condition. Samples with the same condition will be merged.</p>
-        <label class="btn btn-default" for="annotation_file" id="annotation-file-button">
-            {{ form.annotation_file(style="display:none;", onchange="")}}
-            <span id="annotation-file-selector-text">Select File</span>
-        </label>
+            <button type="submit" class="btn btn-primary pull-right">Add Expression Profiles</button>
+        </form>
     </div>
-    <div class="form-group">
-        <label>The order and colors for the plot (optional)</label>
-        <p>Tab delimited file with the various conditions in order of desired appearance in the plots, here also colors
-        can be assigned to each condition in rgba(10,10,10,0.5) format</p>
-        <label class="btn btn-default" for="order_colors_file" id="order-colors-file-button">
-            {{ form.order_colors_file(style="display:none;", onchange="")}}
-            <span id="order-colors-file-selector-text">Select File</span>
-        </label>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Help</strong></div>
+            <div class="panel-body">
+                An RPKM or TPM normalized matrix from LSTrAP can be directly used. Furthermore you should include sample
+                annotation.
+                <br /><br />
+                Example for sample annotatation (note the header), two columns are required. The first is the sample ID,
+                as it occurs in the matrix (omit the suffix '.htseq'), the second column indicates the condition sampled.
+                <br /><br />
+                <div class="well">
+                    SampleID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ConditionDescription
+                    SRR068956&nbsp;&nbsp;&nbsp;&nbsp;Endosperm
+                    SRR068957&nbsp;&nbsp;&nbsp;&nbsp;Endosperm
+                    SRR068958&nbsp;&nbsp;&nbsp;&nbsp;Endosperm
+                    SRR068959&nbsp;&nbsp;&nbsp;&nbsp;Endosperm
+                    SRR068971&nbsp;&nbsp;&nbsp;&nbsp;Endosperm
+                    SRR068975&nbsp;&nbsp;&nbsp;&nbsp;Endosperm
+                    SRR068976&nbsp;&nbsp;&nbsp;&nbsp;Endosperm
+                    SRR068977&nbsp;&nbsp;&nbsp;&nbsp;Endosperm
+                    SRR068987&nbsp;&nbsp;&nbsp;&nbsp;Endosperm
+                    ...
+                </div>
+                Furthermore a file to color code tissues can be provided. Here for each condition a color (that will be
+                used in profile plots needs to be specified. Note that the order in this fill will be the order in
+                profile plots! Colors need to be in rgba(0-255,0-255,0-255,0-1) format.
+                <br /><br />
+                <div class="well">
+                    Roots (apex), 7 DAG&nbsp;&nbsp;&nbsp;&nbsp;rgba(153, 51, 0, 0.5)
+                    Roots (differentation zone), 4 DAP&nbsp;&nbsp;&nbsp;&nbsp;rgba(153, 51, 0, 0.5)
+                    ...
+                </div>
+            </div>
+        </div>
     </div>
-
-    <button type="submit" class="btn btn-primary pull-right">Add Expression Profiles</button>
-</form>
+</div>
 {% endif %}
 
 {% endblock %}
