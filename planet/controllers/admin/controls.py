@@ -761,12 +761,12 @@ def add_tissue_specificity():
                     order.append(tissue)
                     colors.append(color)
 
-            ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description,
-                                                                       condition_tissue,
-                                                                       conditions,
-                                                                       use_max=True,
-                                                                       remove_background=False)
-            ConditionTissue.add(species_id, description, condition_tissue, order, colors)
+            specificity_method_id = ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description,
+                                                                                               condition_tissue,
+                                                                                               conditions,
+                                                                                               use_max=True,
+                                                                                               remove_background=False)
+            ConditionTissue.add(species_id, condition_tissue, order, colors, specificity_method_id)
 
         flash('Calculated tissue specificities for species %d' % species_id, 'success')
         return redirect(url_for('admin.index'))

@@ -20,6 +20,7 @@ class Species(db.Model):
     networks = db.relationship('ExpressionNetworkMethod', backref='species', lazy='dynamic', cascade='all, delete-orphan')
     profiles = db.relationship('ExpressionProfile', backref='species', lazy='dynamic', cascade='all, delete-orphan')
     expression_specificities = db.relationship('ExpressionSpecificityMethod', backref='species', lazy='dynamic', cascade='all, delete-orphan')
+    condition_tissues = db.relationship('ConditionTissue', backref='species', lazy='dynamic', cascade='all, delete-orphan')
 
     def __init__(self, code, name, data_type='genome',
                  color="#C7C7C7", highlight="#DEDEDE", description=None):

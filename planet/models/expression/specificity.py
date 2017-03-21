@@ -21,7 +21,13 @@ class ExpressionSpecificityMethod(db.Model):
                                     lazy='dynamic',
                                     cascade='all, delete-orphan')
 
+    condition_tissue = db.relationship('ConditionTissue', backref='expression_specificity_method', lazy='joined',
+                                        cascade='all, delete-orphan', uselist=False)
+
     menu_order = db.Column(db.Integer)
+
+    def __repr__(self):
+        return str(self.id) + ". " + self.description + ' [' + self.species.name + ']'
 
     @staticmethod
     def calculate_specificities(species_id, description, remove_background=False):
@@ -49,7 +55,7 @@ class ExpressionSpecificityMethod(db.Model):
 
         # convert list into dictionary and run function
         conditions_dict = {k: k for k in conditions}
-        ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description, conditions_dict, conditions, remove_background=remove_background)
+        return ExpressionSpecificityMethod.calculate_tissue_specificities(species_id, description, conditions_dict, conditions, remove_background=remove_background)
 
     @staticmethod
     def calculate_tissue_specificities(species_id, description, condition_to_tissue, order, remove_background=False, use_max=True):
@@ -65,6 +71,7 @@ class ExpressionSpecificityMethod(db.Model):
         :param order: preferred order of the conditions, will match tissues to it
         :param remove_background: substracts the lowest value to correct for background noise
         :param use_max: uses the maximum of mean values instead of the mean of all values
+        :return id of the new method
         """
         new_method = ExpressionSpecificityMethod()
         new_method.species_id = species_id
@@ -146,6 +153,7 @@ class ExpressionSpecificityMethod(db.Model):
 
         # write remaining specificities to the db
         db.engine.execute(ExpressionSpecificity.__table__.insert(), specificities)
+        return new_method.id
 
 
 class ExpressionSpecificity(db.Model):

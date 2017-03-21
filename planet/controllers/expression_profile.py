@@ -8,6 +8,7 @@ from planet.helpers.chartjs import prepare_expression_profile, prepare_profile_c
 from planet.models.condition_tissue import ConditionTissue
 from planet.models.expression.profiles import ExpressionProfile
 from planet.models.expression.networks import ExpressionNetwork
+from planet.models.expression.specificity import ExpressionSpecificityMethod
 
 expression_profile = Blueprint('expression_profile', __name__)
 
@@ -30,12 +31,15 @@ def expression_profile_view(profile_id):
     """
     current_profile = ExpressionProfile.query.get_or_404(profile_id)
 
-    condition_tissue = ConditionTissue.query.filter(ConditionTissue.species_id == current_profile.species_id).all()
+    expression_specificity_methods = ExpressionSpecificityMethod.query.filter(ExpressionSpecificityMethod.species_id == current_profile.species_id).all()
 
     tissues = []
 
-    for ct in condition_tissue:
-        tissues.append({'id': ct.id, 'name': ct.name})
+    for esm in expression_specificity_methods:
+        if esm.condition_tissue is not None:
+            tissues.append({'id': esm.condition_tissue.id,
+                            'name': esm.description,
+                            'description': esm.condition_tissue.description})
 
     return render_template("expression_profile.html", profile=current_profile, tissues=tissues)
 

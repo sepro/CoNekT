@@ -3,6 +3,7 @@
 virtualenv/
 db/
 venv/
+whooshee/
 
 tmp
 bin
