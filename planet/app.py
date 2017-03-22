@@ -146,7 +146,7 @@ def configure_admin_panel(app):
             AddXRefsFamiliesView, AddFamiliesView, AddExpressionProfilesView, AddCoexpressionClustersView, \
             AddCoexpressionNetworkView, AddGOView, AddInterProView, AddCladesView, AddSpecificityView, \
             AddSequenceDescriptionsView, NewsAdminView, BuildCoexpressionClustersView, GOEnrichmentView, \
-            ClusterSimilaritiesView, ECCView
+            ClusterSimilaritiesView, ECCView, BuildNeighorhoodToClustersView
 
         from planet.models.users import User
         from planet.models.species import Species
@@ -237,6 +237,9 @@ def configure_admin_panel(app):
         admin.add_view(BuildCoexpressionClustersView(name='HCCA Clusters',
                                                      endpoint='admin.build.hcca_clusters',
                                                      url='build/hcca_clusters/', category='Build'))
+        admin.add_view(BuildNeighorhoodToClustersView(name='Neighborhood to clusters',
+                                                      endpoint='admin.build.neighborhood_to_clusters',
+                                                      url='build/neighborhood_to_clusters/', category='Build'))
         admin.add_menu_item(MenuLink("Update Counts", url="/admin_controls/update/counts", class_name="confirmation"),
                             target_category='Build')
 

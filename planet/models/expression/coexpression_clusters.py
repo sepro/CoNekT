@@ -52,6 +52,43 @@ class CoexpressionClusteringMethod(db.Model):
             print(e)
 
     @staticmethod
+    def clusters_from_neighborhoods(method, network_method_id):
+        probes = ExpressionNetwork.query.filter_by(method_id=network_method_id).all()  # Load all probes
+
+        clusters = []
+
+        for p in probes:
+            # Only consider probes linked with sequences
+            if p.sequence_id is not None:
+                neighborhood = json.loads(p.network)
+                sequence_ids = [n.gene_id for n in neighborhood if n.gene_id is not None]
+
+                # check if there are neighbors for this sequence
+                if len(sequence_ids) > 0:
+                    pass
+
+        # If there are valid clusters add them to the database
+        if len(clusters) > 0:
+
+            # Add new method first
+            new_method = CoexpressionClusteringMethod()
+
+            new_method.network_method_id = network_method_id
+            new_method.method = method
+            new_method.cluster_count = len(clusters)
+
+            db.session.add(new_method)
+
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+
+
+
+
+    @staticmethod
     def build_hcca_clusters(method, network_method_id, step_size=3, hrr_cutoff=30, min_cluster_size=40, max_cluster_size=200):
         """
         method to build HCCA clusters for a certain network

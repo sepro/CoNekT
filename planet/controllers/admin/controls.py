@@ -9,6 +9,7 @@ from planet import cache, whooshee
 from planet.forms.admin.add_clades import AddCladesForm
 from planet.forms.admin.add_coexpression_clusters import AddCoexpressionClustersForm
 from planet.forms.admin.build_coexpression_clusters import BuildCoexpressionClustersForm
+from planet.forms.admin.neighborhood_to_clusters import NeighborhoodToClustersForm
 from planet.forms.admin.add_coexpression_network import AddCoexpressionNetworkForm
 from planet.forms.admin.add_expression_profiles import AddExpressionProfilesForm
 from planet.forms.admin.add_expression_specificity import AddTissueSpecificityForm, AddConditionSpecificityForm
@@ -606,6 +607,26 @@ def add_coexpression_network():
         else:
             flash('Empty or no file provided, cannot add coexpression network', 'warning')
 
+        return redirect(url_for('admin.index'))
+    else:
+        if not form.validate():
+            flash('Unable to validate data, potentially missing fields', 'danger')
+            return redirect(url_for('admin.index'))
+        else:
+            abort(405)
+
+
+@admin_controls.route('/build/neighborhoods_to_clusters', methods=['POST'])
+@login_required
+def neighborhoods_to_clusters():
+    form = NeighborhoodToClustersForm(request.form)
+    form.populate_networks()
+    if request.method == 'POST' and form.validate():
+        network_method_id = int(request.form.get('network_id'))
+        description = request.form.get('description')
+        CoexpressionClusteringMethod.clusters_from_neighborhoods(description, network_method_id)
+
+        flash('Succesfully build clusters from neighborhoods.', 'success')
         return redirect(url_for('admin.index'))
     else:
         if not form.validate():
