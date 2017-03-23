@@ -11,5 +11,8 @@
         <p>No gene families defined. Unable to calculate similarites between co-expression clusters</p>
     {% endfor %}
 </div>
+<br /><br /><br />
+<label>Delete all similarities</label><br/>
+<a class="btn btn-danger" href="{{ url_for('admin_controls.delete_cluster_similarity') }}"><span class="glyphicon glyphicon-trash"></span> Delete</a>
 
 {% endblock %}

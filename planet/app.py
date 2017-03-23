@@ -225,14 +225,21 @@ def configure_admin_panel(app):
                                             url='add/xrefs_families/', category='Add'))
 
         # Build Menu
+        admin.add_menu_item(MenuLink("Update Counts", url="/admin_controls/update/counts", class_name="confirmation"),
+                            target_category='Build')
+        admin.add_menu_item(MenuLink("------------", class_name="divider", url='#'), target_category='Build')
         admin.add_menu_item(MenuLink("Assign Clades", url="/admin_controls/update/clades", class_name="confirmation"),
                             target_category='Build')
+        admin.add_view(ECCView(name='Expression Context Conservations (ECC)', endpoint='admin.ecc',
+                               url='build/ecc/', category='Build'))
+        admin.add_menu_item(MenuLink("------------", class_name="divider", url='#'), target_category='Build')
+        admin.add_menu_item(MenuLink("Co-expression Clusters", class_name="disabled", url="#"), target_category='Build')
+
         admin.add_view(ClusterSimilaritiesView(name='Cluster Similarities', endpoint='admin.clustersimilarities',
                                                url='build/cluster_similarities/',
                                                category='Build'))
-        admin.add_view(ECCView(name='Expression Context Conservations (ECC)', endpoint='admin.ecc',
-                               url='build/ecc/', category='Build'))
-        admin.add_view(GOEnrichmentView(name='GO Enrichment', endpoint='admin.goenrichment', url='build/go_enrichment/',
+        admin.add_view(GOEnrichmentView(name='Cluster GO Enrichment', endpoint='admin.goenrichment',
+                                        url='build/go_enrichment/',
                                         category='Build'))
         admin.add_view(BuildCoexpressionClustersView(name='HCCA Clusters',
                                                      endpoint='admin.build.hcca_clusters',
@@ -240,9 +247,6 @@ def configure_admin_panel(app):
         admin.add_view(BuildNeighorhoodToClustersView(name='Neighborhood to clusters',
                                                       endpoint='admin.build.neighborhood_to_clusters',
                                                       url='build/neighborhood_to_clusters/', category='Build'))
-        admin.add_menu_item(MenuLink("Update Counts", url="/admin_controls/update/counts", class_name="confirmation"),
-                            target_category='Build')
-
         # Control panel
         admin.add_view(ControlsView(name='Controls', endpoint='admin.controls', url='controls/'))
 

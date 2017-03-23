@@ -38,6 +38,7 @@ from planet.models.interpro import Interpro
 from planet.models.sequences import Sequence
 from planet.models.species import Species
 from planet.models.xrefs import XRef
+from planet.models.relationships.cluster_similarity import CoexpressionClusterSimilarity
 
 admin_controls = Blueprint('admin_controls', __name__)
 
@@ -845,6 +846,20 @@ def calculate_cluster_similarity(gf_method_id):
     CoexpressionCluster.calculate_similarities(gene_family_method_id=gf_method_id)
 
     flash('Successfully calculated co-expression clustering similarities', 'success')
+    return redirect(url_for('admin.controls.index'))
+
+
+@admin_controls.route('/delete_cluster_similarity')
+@login_required
+def delete_cluster_similarity():
+    """
+    Controller to delete all existing cluster cluster similarities
+
+    :return: Redirect to admin main screen
+    """
+    CoexpressionClusterSimilarity.empty_table()
+
+    flash('Successfully removed similarities between co-expression clusters', 'success')
     return redirect(url_for('admin.controls.index'))
 
 

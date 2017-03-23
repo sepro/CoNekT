@@ -27,3 +27,7 @@ class CoexpressionClusterSimilarity(db.Model):
                              , lazy='joined', foreign_keys=[target_id])
 
     gene_family_method = db.relationship('GeneFamilyMethod', lazy='joined')
+
+    @staticmethod
+    def empty_table():
+        CoexpressionClusterSimilarity.query.delete()
