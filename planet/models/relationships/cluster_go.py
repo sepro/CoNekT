@@ -9,6 +9,16 @@ class ClusterGOEnrichment(db.Model):
     cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
     go_id = db.Column(db.Integer, db.ForeignKey('go.id'))
 
+    cluster = db.relationship('CoexpressionCluster', backref=db.backref('go_enrichment',
+                                                                        lazy='dynamic',
+                                                                        cascade='all, delete-orphan'),
+                              lazy='joined')
+
+    go = db.relationship('GO', backref=db.backref('enriched_clusters',
+                                                  lazy='dynamic',
+                                                  cascade='all, delete-orphan'),
+                         lazy='joined')
+
     """
     Counts required to calculate the enrichment,
     store here for quick access

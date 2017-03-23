@@ -30,10 +30,7 @@ class GO(db.Model):
     # Other properties
     #
     # sequence_associations declared in 'SequenceGOAssociation'
-
-    enriched_clusters = db.relationship('ClusterGOEnrichment',
-                                        backref=db.backref('go', lazy='joined'),
-                                        lazy='dynamic')
+    # enriched_clusters declared in 'ClusterGOEnrichment'
 
     def __init__(self, label, name, go_type, description, obsolete, is_a, extended_go):
         self.label = label
