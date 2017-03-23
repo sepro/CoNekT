@@ -60,7 +60,8 @@ def simple():
         flash("Empty search term", "warning")
         return redirect(url_for('main.screen'))
     else:
-        results = Search.simple(g.search_form.terms.data)
+        # results = Search.simple(g.search_form.terms.data)
+        results = Search.whooshee_simple(g.search_form.terms.data)
 
         # If the result is unique redirect to the corresponding page
         if len(results["sequences"]) + len(results["go"]) + \

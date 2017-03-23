@@ -48,6 +48,41 @@ class Search:
                 "profiles": profiles}
 
     @staticmethod
+    def whooshee_simple(term_string):
+        """
+        Private function to be used internally by the simple search. Performs an intuitive search on various fields.
+
+        all terms are converted into uppercase to make searches case insensitive
+
+        :param term_string: space-separated strings to search for
+        :return: dict with results per type
+        """
+        terms = term_string.upper().split()
+
+        sequences = Sequence.query.filter(or_(or_(*[Sequence.name.ilike(term+"%") for term in terms
+                                                    if len(term) > 5]),
+                                              *[Sequence.xrefs.any(name=term) for term in terms]
+                                              )
+                                          ).all()
+        whooshee_sequences = Sequence.query.whooshee_search(term_string, limit=50).all()
+
+        go = GO.query.filter(GO.label.in_(terms)).all()
+        whooshee_go = GO.query.whooshee_search(term_string, limit=50).all()
+
+        interpro = Interpro.query.filter(Interpro.label.in_(terms)).all()
+        whooshee_interpro = Interpro.query.whooshee_search(term_string, limit=50).all()
+
+        families = GeneFamily.query.filter(func.upper(GeneFamily.name).in_(terms)).all()
+        profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(terms)).all()
+
+        return {"go": go + whooshee_go,
+                "interpro": interpro + whooshee_interpro,
+                "sequences": sequences + whooshee_sequences,
+                "families": families,
+                "profiles": profiles}
+
+
+    @staticmethod
     def keyword(keyword):
         """
         Keyword search, this is potentially faster than the simple search

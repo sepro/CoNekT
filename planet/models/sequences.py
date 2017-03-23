@@ -53,7 +53,7 @@ class Sequence(db.Model):
                                               backref=db.backref('target_sequence', lazy='joined'),
                                               lazy='dynamic')
 
-    xrefs = db.relationship('XRef', secondary=sequence_xref, lazy='dynamic')
+    xrefs = db.relationship('XRef', secondary=sequence_xref, lazy='joined')
 
     def __init__(self, species_id, name, coding_sequence, type='protein_coding', is_chloroplast=False,
                  is_mitochondrial=False, description=None):
