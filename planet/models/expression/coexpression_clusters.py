@@ -60,9 +60,12 @@ class CoexpressionClusteringMethod(db.Model):
         clusters = defaultdict(list)
         clusters_orm = {}
 
+        sequence_to_probe = {}
+
         for p in probes:
             # Only consider probes linked with sequences
             if p.sequence_id is not None:
+                sequence_to_probe[p.sequence_id] = p.probe
                 neighborhood = json.loads(p.network)
                 sequence_ids = [n["gene_id"] for n in neighborhood if "gene_id" in n.keys()
                                 and n["gene_id"] is not None]
@@ -90,7 +93,7 @@ class CoexpressionClusteringMethod(db.Model):
                 print(e)
 
         # Add Clusters
-        for cluster, members in clusters.items():
+        for cluster in clusters.keys():
             clusters_orm[cluster] = CoexpressionCluster()
             clusters_orm[cluster].method_id = new_method.id
             clusters_orm[cluster].name = cluster
@@ -109,6 +112,26 @@ class CoexpressionClusteringMethod(db.Model):
             print(e)
 
         # Add sequence cluster relations
+        for i, (cluster, members) in enumerate(clusters.items()):
+            for sequence_id in members:
+                relation = SequenceCoexpressionClusterAssociation()
+                relation.sequence_id = sequence_id
+                relation.coexpression_cluster_id = clusters_orm[cluster].id
+                relation.probe = sequence_to_probe[sequence_id] if sequence_id in sequence_to_probe.keys() else None
+
+                db.session.add(relation)
+
+            if i % 20 == 0:
+                try:
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+                    print(e)
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(e)
 
     @staticmethod
     def build_hcca_clusters(method, network_method_id, step_size=3, hrr_cutoff=30, min_cluster_size=40, max_cluster_size=200):
