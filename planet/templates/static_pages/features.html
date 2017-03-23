@@ -18,24 +18,97 @@
     each page (search box top right corner), though for more complex searches users have the tools below at their
     disposal.</p>
 
-    <ul>
+    <div class="row equal">
         {% if g.blast_enabled %}
-        <li><a href="{{ url_for('blast.blast_main') }}">BLAST</a>: Find <strong>sequences</strong> in PlaNet 2.0 similar to a query sequence</li>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" >
+            <div class="panel panel-default panel-card">
+            <div class="panel-heading">BLAST</div>
+                <a href="{{ url_for('blast.blast_main') }}">
+                    <img class="img-responsive img-card" src="{{ url_for('static', filename='img/cards/blast.png') }}"/>
+                </a>
+            <div class="panel-body">
+                <p>Find <strong>sequences</strong> in PlaNet 2.0 similar to a query sequence</p>
+            </div>
+        </div>
+        </div>
         {% endif %}
-        <li><a href="{{ url_for('search.search_enriched_clusters') }}">Enriched clusters</a>: Find <strong>clusters</strong> enriched for a selected GO-term</li>
-        <li><a href="{{ url_for('search.search_specific_profiles') }}">Specific profiles</a>: Find <strong>sequences</strong> which are expressed specifically in certain conditions or tissues</li>
-    </ul>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" >
+            <div class="panel panel-default panel-card">
+            <div class="panel-heading">Enriched clusters</div>
+                <a href="{{ url_for('search.search_enriched_clusters') }}">
+                    <img class="img-responsive img-card" src="{{ url_for('static', filename='img/cards/enrichment.png') }}"/>
+                </a>
+            <div class="panel-body">
+                <p>Find <strong>clusters</strong> enriched for a selected GO-term</p>
+            </div>
+        </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" >
+            <div class="panel panel-default panel-card">
+            <div class="panel-heading">Specific profiles</div>
+                <a href="{{ url_for('search.search_specific_profiles') }}">
+                    <img class="img-responsive img-card" src="{{ url_for('static', filename='img/cards/specific_profile.png') }}" />
+                </a>
+            <div class="panel-body">
+                <p>Find <strong>sequences</strong> which are expressed specifically in certain conditions or tissues</p>
+            </div>
+        </div>
+        </div>
+
+    </div>
 
     <h3 class="banner-blue" >Tools</h3>
 
     <p>Tools allow users to either compare data included in PlaNet 2.0 or create plots using a custom set of genes.</p>
+    <div class="row equal">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 panel-card" >
+            <div class="panel panel-default">
+                <div class="panel-heading">Compare profiles</div>
+                <a href="{{ url_for('profile_comparison.profile_comparison_main') }}">
+                    <img class="img-responsive img-card" src="{{ url_for('static', filename='img/cards/profile_comparison.png') }}" />
+                </a>
+                <div class="panel-body">
+                    <p>Allows users to <strong>compare the expression profiles</strong> from a custom set of genes in a graph</p>
+                </div>
+            </div>
+        </div>
 
-    <ul>
-        <li><a href="{{ url_for('profile_comparison.profile_comparison_main') }}">Compare profiles</a>: Allows users to <strong>compare the expression profiles</strong> from a custom set of genes in a graph</li>
-        <li><a href="{{ url_for('specificity_comparison.specificity_comparison_main') }}">Conserved specificity</a>: <strong>Compare genes specifically expressed</strong> in a certain conditions in two species</li>
-        <li><a href="{{ url_for('custom_network.custom_network_main') }}">Custom network</a>: <strong>Show co-expression network</strong> only taking a custom set of genes into account</li>
-        <li><a href="{{ url_for('heatmap.heatmap_main') }}">Heatmap</a>: Allows users to <strong>compare the expression profiles</strong> from a custom set of genes in a heatmap</li>
-    </ul>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 panel-card" >
+            <div class="panel panel-default">
+                <div class="panel-heading">Conserved specificity</div>
+                <a href="{{ url_for('specificity_comparison.specificity_comparison_main') }}">
+                    <img class="img-responsive img-card" src="{{ url_for('static', filename='img/cards/specificity.png') }}" />
+                </a>
+                <div class="panel-body">
+                    <p><strong>Compare genes specifically expressed</strong> in a certain conditions in two species</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 panel-card" >
+            <div class="panel panel-default">
+                <div class="panel-heading">Custom network</div>
+                <a href="{{ url_for('custom_network.custom_network_main') }}">
+                    <img class="img-responsive img-card" src="{{ url_for('static', filename='img/cards/network.png') }}" />
+                </a>
+                <div class="panel-body">
+                    <p><strong>Show co-expression network</strong> only taking a custom set of genes into account</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 panel-card" >
+            <div class="panel panel-default">
+                <div class="panel-heading">Heatmap</div>
+                <a href="{{ url_for('heatmap.heatmap_main') }}">
+                    <img class="img-responsive img-card" src="{{ url_for('static', filename='img/cards/heatmap.png') }}" />
+                </a>
+                <div class="panel-body">
+                    <p>Allows users to <strong>compare the expression profiles</strong> from a custom set of genes in a heatmap</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
