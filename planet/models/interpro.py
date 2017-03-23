@@ -1,4 +1,4 @@
-from planet import db
+from planet import db, whooshee
 from planet.models.relationships import sequence_interpro
 from planet.models.relationships.sequence_interpro import SequenceInterproAssociation
 from planet.models.sequences import Sequence
@@ -8,11 +8,11 @@ from utils.parser.interpro import DomainParser as InterproDomainParser
 
 from sqlalchemy.orm import joinedload
 
-from utils.benchmark import benchmark
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
+@whooshee.register_model('label', 'description')
 class Interpro(db.Model):
     __tablename__ = 'interpro'
     id = db.Column(db.Integer, primary_key=True)

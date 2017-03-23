@@ -1,4 +1,4 @@
-from planet import db
+from planet import db, whooshee
 from planet.models.species import Species
 from planet.models.gene_families import GeneFamilyMethod
 
@@ -6,6 +6,7 @@ from planet.models.gene_families import GeneFamilyMethod
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
+@whooshee.register_model('name')
 class XRef(db.Model):
     __tablename__ = 'xrefs'
     id = db.Column(db.Integer, primary_key=True)

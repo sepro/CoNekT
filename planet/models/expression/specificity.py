@@ -1,13 +1,14 @@
 import json
 from statistics import mean
 
-from planet import db
+from planet import db, whooshee
 from planet.models.expression.profiles import ExpressionProfile
 from utils.entropy import entropy_from_values
 from utils.expression import expression_specificity
 from utils.tau import tau
 
 
+@whooshee.register_model('description')
 class ExpressionSpecificityMethod(db.Model):
     __tablename__ = 'expression_specificity_method'
 

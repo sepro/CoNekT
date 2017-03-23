@@ -1,4 +1,4 @@
-from planet import db
+from planet import db, whooshee
 from planet.models.relationships import sequence_go
 from planet.models.relationships.sequence_go import SequenceGOAssociation
 from planet.models.sequences import Sequence
@@ -13,6 +13,7 @@ import json
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
+@whooshee.register_model('name', 'description')
 class GO(db.Model):
     __tablename__ = 'go'
     id = db.Column(db.Integer, primary_key=True)
