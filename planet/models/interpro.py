@@ -12,7 +12,7 @@ from sqlalchemy.orm import joinedload
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
 
-@whooshee.register_model('label', 'description')
+@whooshee.register_model('description')
 class Interpro(db.Model):
     __tablename__ = 'interpro'
     id = db.Column(db.Integer, primary_key=True)

@@ -8,6 +8,8 @@ from planet.models.interpro import Interpro
 from planet.models.relationships.cluster_go import ClusterGOEnrichment
 from planet.models.sequences import Sequence
 
+import re
+
 
 class Search:
     @staticmethod
@@ -64,23 +66,32 @@ class Search:
                                               *[Sequence.xrefs.any(name=term) for term in terms]
                                               )
                                           ).all()
-        whooshee_sequences = Sequence.query.whooshee_search(term_string, limit=50).all()
 
         go = GO.query.filter(GO.label.in_(terms)).all()
-        whooshee_go = GO.query.whooshee_search(term_string, limit=50).all()
-
         interpro = Interpro.query.filter(Interpro.label.in_(terms)).all()
-        whooshee_interpro = Interpro.query.whooshee_search(term_string, limit=50).all()
 
         families = GeneFamily.query.filter(func.upper(GeneFamily.name).in_(terms)).all()
         profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(terms)).all()
+
+        # Whooshee searches
+        # First remove non-alphanumerical characters and digits from the string. Split in terms and remove terms
+        # that are too short
+        whooshee_search_terms = [t for t in re.sub('(\W|\d)+', ' ', term_string).split() if len(t) > 3]
+        whooshee_search_string = ' '.join(whooshee_search_terms)
+
+        whooshee_sequences, whooshee_go, whooshee_interpro = [], [], []
+
+        if all([len(t) == 0 for t in [sequences, go, interpro, families, profiles]]) and len(whooshee_search_string) > 2:
+            # didn't find a term by ID, try description
+            whooshee_go = GO.query.whooshee_search(whooshee_search_string, limit=50).all()
+            whooshee_sequences = Sequence.query.whooshee_search(whooshee_search_string, limit=50).all()
+            whooshee_interpro = Interpro.query.whooshee_search(whooshee_search_string, limit=50).all()
 
         return {"go": go + whooshee_go,
                 "interpro": interpro + whooshee_interpro,
                 "sequences": sequences + whooshee_sequences,
                 "families": families,
                 "profiles": profiles}
-
 
     @staticmethod
     def keyword(keyword):
