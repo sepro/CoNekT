@@ -13,6 +13,11 @@
         <li class="active"><strong>{{ keyword }}</strong></li>
     </ol>
     <h1>Search results for: <strong>{{ keyword }}</strong></h1>
+
+    {% if ((sequences|length > 49) or (go|length > 49) or (interpro|length > 49) or (families|length > 49) or (profiles|length > 49)) %}
+
+
+    {% endif %}
     <div class="row">
     {% if sequences %}
     <div class="col-md-6 col-sm-12">
@@ -122,7 +127,7 @@
 
     {% if not (sequences or go or interpro or families or profiles) %}
     <div class="col-md-12">
-        <p>No results found for <strong>{{ keyword }}</strong></p>
+        <p>No results found for <strong>{{ keyword }}</strong>, try a more general term or the <a href="{{ url_for('search.advanced') }}">advanced search</a>.</p>
     </div>
     {% endif %}
     </div>

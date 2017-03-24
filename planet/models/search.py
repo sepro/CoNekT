@@ -81,7 +81,7 @@ class Search:
 
         whooshee_sequences, whooshee_go, whooshee_interpro = [], [], []
 
-        if all([len(t) == 0 for t in [sequences, go, interpro, families, profiles]]) and len(whooshee_search_string) > 2:
+        if all([len(t) == 0 for t in [sequences, go, interpro, families, profiles]]) and len(whooshee_search_string) > 3:
             # didn't find a term by ID, try description
             whooshee_go = GO.query.whooshee_search(whooshee_search_string, limit=50).all()
             whooshee_sequences = Sequence.query.whooshee_search(whooshee_search_string, limit=50).all()

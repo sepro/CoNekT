@@ -53,7 +53,7 @@
                         <li>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Search <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li class="disabled"><a href="#">Search <span class="text-muted">(advanced)</span></a></li>
+                                <li><a href="{{ url_for('search.advanced') }}">Search <span class="text-muted">(advanced)</span></a></li>
                                 <li class="divider"></li>
                                 <li><a href="{{ url_for('search.search_enriched_clusters') }}">Enriched clusters</a></li>
                                 <li><a href="{{ url_for('search.search_specific_profiles') }}">Specific profiles</a></li>

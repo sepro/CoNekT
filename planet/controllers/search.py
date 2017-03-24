@@ -87,6 +87,11 @@ def simple():
                                profiles=results["profiles"])
 
 
+@search.route('/advanced', methods=['GET', 'POST'])
+def advanced():
+    return render_template("search_advanced.html")
+
+
 @search.route('/json/genes/<label>')
 @cache.cached()
 def search_json_genes(label):
