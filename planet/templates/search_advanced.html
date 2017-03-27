@@ -27,7 +27,7 @@
                     {% for go_term in adv_sequence_form.go_terms %}
                         <div class="dynamic-entry">
                             <div class="input-group">
-                            {{ go_term.form.go_term(class_="form-control") }}
+                            {{ go_term.form.go_term(class_="form-control typeahead") }}
                             <span class="input-group-btn">
                                 <button class="btn btn-success btn-add" type="button">
                                    <span class="glyphicon glyphicon-plus"></span>
@@ -46,12 +46,39 @@
 {% endblock %}
 
 {% block extrajs %}
+<script src="{{ url_for('static', filename='js/typeahead.bundle.min.js') }}"></script>
 <script>
-$(function()
-{
+$(function () {
+    function typeahead_init () {
+        var go = new Bloodhound({
+          datumTokenizer: Bloodhound.tokenizers.whitespace,
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          prefetch: '{{url_for('search.search_typeahead_prefetch')}}',
+          remote: {
+                url:'{{url_for('search.search_typeahead_go', term='%QUERY')}}',
+                wildcard: '%25QUERY'
+            }
+        });
+
+
+        $('.typeahead').typeahead({
+            minLength: 3,
+            highlight: true
+        },
+        {
+          name: 'go',
+          display: 'value',
+          source: go
+        });
+    };
+
+    typeahead_init();
+
     $(document).on('click', '.btn-add', function(e)
     {
         e.preventDefault();
+
+        $('.typeahead').typeahead('destroy');
 
         var controlForm = $('.dynamic-form'),
             currentEntry = $(this).parents('.dynamic-entry:first'),
@@ -62,6 +89,9 @@ $(function()
             .removeClass('btn-add').addClass('btn-remove')
             .removeClass('btn-success').addClass('btn-danger')
             .html('<span class="glyphicon glyphicon-minus"></span>');
+
+        typeahead_init();
+
     }).on('click', '.btn-remove', function(e)
     {
 		$(this).parents('.dynamic-entry:first').remove();
