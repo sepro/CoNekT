@@ -25,7 +25,15 @@
     {% if cluster %}
         <h1>Heatmap: <strong>{{ cluster.name }}</strong> <small>({{ cluster.method.method }})</small></h1>
         {% import "macros/cluster_actions.html" as ca %}
-        <p><strong>View as: </strong>{{ ca.cluster_actions(cluster.id, exclude=["heatmap"]) }}</p>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6 col-xs-12">
+                <p><strong>View as: </strong>{{ ca.cluster_actions(cluster.id, exclude=["heatmap"]) }}</p>
+            </div>
+            <div class="col-lg-6 col-sm-6 col-xs-12">
+                <p>View using InCHLib : <a href="{{ url_for('heatmap.heatmap_inchlib', cluster_id=cluster.id) }}">here</a>
+                <span class="text-muted">(<i class="fa fa-flask" aria-hidden="true"></i> <em>Experimental feature, still under development</em>)</span></p>
+            </div>
+        </div>
     {% else %}
         <h1>Heatmap</h1>
     {% endif %}
