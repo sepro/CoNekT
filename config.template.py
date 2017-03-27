@@ -7,11 +7,11 @@ import os
 import tempfile
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# Flask settings, make sure to set the SECRET_KEY and turn DEBUG and TESTING to False for production
+# Flask settings, make sure to turn DEBUG and TESTING to False for production
 DEBUG = True
 TESTING = True
 
-SECRET_KEY = 'change me !'
+SECRET_KEY = os.urandom(24)
 
 # Login settings + admin account
 LOGIN_ENABLED = True

@@ -7,6 +7,7 @@ from sqlalchemy.sql import or_
 from planet import cache
 from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
 from planet.forms.search_specific_profiles import SearchSpecificProfilesForm
+from planet.forms.advanced_search import AdvancedSequenceSearchForm
 from planet.models.expression.specificity import ExpressionSpecificityMethod, ExpressionSpecificity
 from planet.models.go import GO
 from planet.models.search import Search
@@ -89,7 +90,14 @@ def simple():
 
 @search.route('/advanced', methods=['GET', 'POST'])
 def advanced():
-    return render_template("search_advanced.html")
+
+    adv_sequence_form = AdvancedSequenceSearchForm()
+    adv_sequence_form.populate_species()
+
+    if request.method == 'GET':
+        return render_template("search_advanced.html", adv_sequence_form=adv_sequence_form)
+    else:
+        pass
 
 
 @search.route('/json/genes/<label>')

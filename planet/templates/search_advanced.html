@@ -11,9 +11,64 @@
         <li><span class="text-muted"><strong>Search</strong> (Advanced)</span></li>
     </ol>
     <h1>Search <small>(Advanced)</small></h1>
+
+    {% if adv_sequence_form %}
+            <div class="controls">
+                <form method="POST"  action="{{ url_for('search.advanced') }}"  role="form">
+                    {{ adv_sequence_form.csrf_token }}
+                    <label>Species</label>
+                    {{adv_sequence_form.species(class_="form-control")}}<br/>
+                    <label>Contains (OR)</label>
+                    {{adv_sequence_form.any_field(class_="form-control")}}<br/>
+                    <label>Contains (AND)</label>
+                    {{adv_sequence_form.all_field(class_="form-control")}}<br/>
+                    <label>Required GO Terms</label><br />
+                    <div class="dynamic-form">
+                    {% for go_term in adv_sequence_form.go_terms %}
+                        <div class="dynamic-entry">
+                            <div class="input-group">
+                            {{ go_term.form.go_term(class_="form-control") }}
+                            <span class="input-group-btn">
+                                <button class="btn btn-success btn-add" type="button">
+                                   <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </span>
+                            </div>
+                            <br />
+                        </div>
+                    {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary pull-right" data-toggle="modal" data-target="#loaderModal">Find genes</button>
+                </form>
+            </div>
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block extrajs %}
+<script>
+$(function()
+{
+    $(document).on('click', '.btn-add', function(e)
+    {
+        e.preventDefault();
 
+        var controlForm = $('.dynamic-form'),
+            currentEntry = $(this).parents('.dynamic-entry:first'),
+            newEntry = $(currentEntry.clone()).appendTo(controlForm);
+
+        newEntry.find('input').val('');
+        controlForm.find('.dynamic-entry:not(:last) .btn-add')
+            .removeClass('btn-add').addClass('btn-remove')
+            .removeClass('btn-success').addClass('btn-danger')
+            .html('<span class="glyphicon glyphicon-minus"></span>');
+    }).on('click', '.btn-remove', function(e)
+    {
+		$(this).parents('.dynamic-entry:first').remove();
+
+		e.preventDefault();
+		return false;
+	});
+});
+</script>
 {% endblock %}
