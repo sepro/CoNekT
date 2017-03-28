@@ -156,7 +156,15 @@ $(function () {
     {
       name: 'go',
       display: 'value',
-      source: go
+      source: go,
+      templates: {
+          empty: [
+            '<div class="tt-suggestion"><p class="text-muted"><em>',
+              'unable to find any GO terms winners that match the current query',
+            '</em></p></div>'
+          ].join('\n'),
+          suggestion: function(data) {return '<div>' + data.label + ' : <em>' + data.value + '</em></div>'}
+          }
     });
 
     var csv_data = $("#results_table").table2CSV({delivery:'value'});

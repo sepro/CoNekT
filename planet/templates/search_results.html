@@ -15,8 +15,10 @@
     <h1>Search results for: <strong>{{ keyword }}</strong></h1>
 
     {% if ((sequences|length > 49) or (go|length > 49) or (interpro|length > 49) or (families|length > 49) or (profiles|length > 49)) %}
-
-
+    <div class="alert alert-info">
+        <strong>Info!</strong> Results are limited to <strong>50</strong> items per category. Try a <strong>more specific</strong> term or use the
+        <strong><a href="{{url_for('search.advanced')}}">advanced search</a></strong> to get more accurate results.
+    </div>
     {% endif %}
     <div class="row">
     {% if sequences %}

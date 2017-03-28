@@ -31,17 +31,17 @@ class Search:
                                                      if len(term) > 3]),
                                               *[Sequence.xrefs.any(name=term) for term in terms]
                                               )
-                                          ).all()
+                                          ).limit(50).all()
 
         go = GO.query.filter(or_(and_(*[GO.description.ilike("%"+term+"%") for term in terms]),
                                  and_(*[GO.name.ilike("%"+term+"%") for term in terms]),
-                                 GO.label.in_(terms))).all()
+                                 GO.label.in_(terms))).limit(50).all()
 
         interpro = Interpro.query.filter(or_(and_(*[Interpro.description.ilike("%"+term+"%") for term in terms]),
-                                             Interpro.label.in_(terms))).all()
+                                             Interpro.label.in_(terms))).limit(50).all()
 
-        families = GeneFamily.query.filter(func.upper(GeneFamily.name).in_(terms)).all()
-        profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(terms)).all()
+        families = GeneFamily.query.filter(func.upper(GeneFamily.name).in_(terms)).limit(50).all()
+        profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(terms)).limit(50).all()
 
         return {"go": go,
                 "interpro": interpro,
@@ -65,13 +65,13 @@ class Search:
                                                     if len(term) > 5]),
                                               *[Sequence.xrefs.any(name=term) for term in terms]
                                               )
-                                          ).all()
+                                          ).limit(50).all()
 
         go = GO.query.filter(GO.label.in_(terms)).all()
         interpro = Interpro.query.filter(Interpro.label.in_(terms)).all()
 
-        families = GeneFamily.query.filter(func.upper(GeneFamily.name).in_(terms)).all()
-        profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(terms)).all()
+        families = GeneFamily.query.filter(func.upper(GeneFamily.name).in_(terms)).limit(50).all()
+        profiles = ExpressionProfile.query.filter(ExpressionProfile.probe.in_(terms)).limit(50).all()
 
         # Whooshee searches
         # First remove non-alphanumerical characters and digits from the string. Split in terms and remove terms
@@ -87,9 +87,9 @@ class Search:
             whooshee_sequences = Sequence.query.whooshee_search(whooshee_search_string, limit=50).all()
             whooshee_interpro = Interpro.query.whooshee_search(whooshee_search_string, limit=50).all()
 
-        return {"go": go + whooshee_go,
-                "interpro": interpro + whooshee_interpro,
-                "sequences": sequences + whooshee_sequences,
+        return {"go": (go + whooshee_go)[:50],
+                "interpro": (interpro + whooshee_interpro)[:50],
+                "sequences": (sequences + whooshee_sequences)[:50],
                 "families": families,
                 "profiles": profiles}
 
@@ -105,17 +105,17 @@ class Search:
                                               Sequence.description.ilike("%"+keyword+"%"),
                                               Sequence.xrefs.any(name=keyword)
                                               )
-                                          ).all()
+                                          ).limit(50).all()
 
         go = GO.query.filter(or_(GO.description.ilike("%"+keyword+"%"),
                                  GO.name.ilike("%"+keyword+"%"),
-                                 GO.label == keyword)).all()
+                                 GO.label == keyword)).limit(50).all()
 
         interpro = Interpro.query.filter(or_(Interpro.description.ilike("%"+keyword+"%"),
-                                             Interpro.label == keyword)).all()
+                                             Interpro.label == keyword)).limit(50).all()
 
-        families = GeneFamily.query.filter(GeneFamily.name == keyword).all()
-        profiles = ExpressionProfile.query.filter(ExpressionProfile.probe == keyword).all()
+        families = GeneFamily.query.filter(GeneFamily.name == keyword).limit(50).all()
+        profiles = ExpressionProfile.query.filter(ExpressionProfile.probe == keyword).limit(50).all()
 
         return {"go": go,
                 "interpro": interpro,
