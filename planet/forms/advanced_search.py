@@ -1,7 +1,7 @@
 from planet.models.species import Species
 
 from flask_wtf import FlaskForm
-from wtforms import Form, FormField, FieldList,StringField, SelectField
+from wtforms import Form, FormField, FieldList,StringField, SelectField, RadioField
 from wtforms.validators import InputRequired
 
 
@@ -15,10 +15,13 @@ class InterProField(Form):
 
 class AdvancedSequenceSearchForm(FlaskForm):
     species = SelectField('species', coerce=int)
-    any_field = StringField('any_field')
-    all_field = StringField('all_field')
+    terms_rules = RadioField('term_rules', choices=[('all', 'All'), ('any', 'Any'), ('exact', 'Exact')], default='all')
+    terms = StringField('term')
 
+    go_rules = RadioField('go_rules', choices=[('all', 'All'), ('any', 'Any')], default='all')
     go_terms = FieldList(FormField(GOField), min_entries=1)
+
+    interpro_rules = RadioField('interpro_rules', choices=[('all', 'All'), ('any', 'Any')], default='all')
     interpro_domains = FieldList(FormField(InterProField), min_entries=1)
 
     def populate_species(self):

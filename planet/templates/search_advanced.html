@@ -11,52 +11,88 @@
         <li><span class="text-muted"><strong>Search</strong> (Advanced)</span></li>
     </ol>
     <h1>Search <small>(Advanced)</small></h1>
-
+    <p>Using the advanced search you can look for sequences using a combination of search parameters.</p>
     {% if adv_sequence_form %}
-            <div class="controls">
-                <form method="POST"  action="{{ url_for('search.advanced') }}"  role="form">
-                    {{ adv_sequence_form.csrf_token }}
-                    <label>Species</label>
-                    {{adv_sequence_form.species(class_="form-control")}}<br/>
-                    <label>Contains (OR)</label>
-                    {{adv_sequence_form.any_field(class_="form-control")}}<br/>
-                    <label>Contains (AND)</label>
-                    {{adv_sequence_form.all_field(class_="form-control")}}<br/>
-                    <label>Required GO Terms</label><br />
-                    <div class="dynamic-form-go">
-                    {% for go_term in adv_sequence_form.go_terms %}
-                        <div class="dynamic-entry">
-                            <div class="input-group">
-                            {{ go_term.form.go_term(class_="form-control typeahead-go go-input") }}
-                            <span class="input-group-btn">
-                                <button class="btn btn-success btn-add-go" type="button">
-                                   <span class="glyphicon glyphicon-plus"></span>
-                                </button>
-                            </span>
-                            </div>
-                            <br />
+    <div class="row equal">
+        <div class="col-md-8 col-sm-6 col-xs-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><strong>Search parameters</strong></div>
+                    <div class="panel-body">
+                        <div class="controls">
+                            <form method="POST"  action="{{ url_for('search.advanced') }}"  role="form">
+                                {{ adv_sequence_form.csrf_token }}
+                                <label>Species</label>
+                                {{adv_sequence_form.species(class_="form-control")}}
+                                <hr />
+                                <div class="row">
+                                    <div class="col-xs-4 col-lg-2"><label>Terms</label></div>
+                                    <div class="col-xs-8 col-lg-10">{{adv_sequence_form.terms_rules(class_="list-inline")}}</div>
+                                </div>
+                                <p><span class="text-muted">(in description, ids and aliases)</span></p>
+                                {{adv_sequence_form.terms(class_="form-control")}}
+                                <hr />
+                                <div class="row">
+                                    <div class="col-xs-4 col-lg-2"><label>GO Terms</label></div>
+                                    <div class="col-xs-8 col-lg-10">{{adv_sequence_form.go_rules(class_="list-inline")}}</div>
+                                </div>
+                                <div class="dynamic-form-go">
+                                {% for go_term in adv_sequence_form.go_terms %}
+                                    <div class="dynamic-entry">
+                                        <div class="input-group">
+                                        {{ go_term.form.go_term(class_="form-control typeahead-go go-input") }}
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-success btn-add-go" type="button">
+                                               <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                        </span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-xs-4 col-lg-2"><label>InterPro domains</label></div>
+                                    <div class="col-xs-8 col-lg-10">{{adv_sequence_form.interpro_rules(class_="list-inline")}}</div>
+                                </div>
+                                <div class="dynamic-form-interpro">
+                                {% for interpro_domain in adv_sequence_form.interpro_domains %}
+                                    <div class="dynamic-entry">
+                                        <div class="input-group">
+                                        {{ interpro_domain.form.interpro_domain(class_="form-control typeahead-interpro interpro-input") }}
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-success btn-add-interpro" type="button">
+                                               <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                        </span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                                <br />
+                                <button type="submit" class="btn btn-primary pull-right" data-toggle="modal" data-target="#loaderModal">Find genes</button>
+                            </form>
                         </div>
-                    {% endfor %}
                     </div>
-                    <label>Required InterPro domains</label><br />
-                    <div class="dynamic-form-interpro">
-                    {% for interpro_domain in adv_sequence_form.interpro_domains %}
-                        <div class="dynamic-entry">
-                            <div class="input-group">
-                            {{ interpro_domain.form.interpro_domain(class_="form-control typeahead-interpro interpro-input") }}
-                            <span class="input-group-btn">
-                                <button class="btn btn-success btn-add-interpro" type="button">
-                                   <span class="glyphicon glyphicon-plus"></span>
-                                </button>
-                            </span>
-                            </div>
-                            <br />
-                        </div>
-                    {% endfor %}
-                    </div>
-                    <button type="submit" class="btn btn-primary pull-right" data-toggle="modal" data-target="#loaderModal">Find genes</button>
-                </form>
             </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Help</strong></div>
+                <div class="panel-body">
+                    <p>The advanced search allow you to find sequences based on the combination of various elements. The
+                    <strong>species</strong> can be defined, <strong>search terms</strong> (separated by spaces) for
+                    descriptions, IDs and aliases, <strong>GO terms</strong> and <strong>InterPro domains</strong>. The
+                    radio buttons define if <strong>all</strong> terms are required, only one (<strong>any</strong>) or
+                    if text should match <strong>exact</strong>ly.</p>
+                    <p>Additional GO terms and InterPro domains can be selected using the
+                       <span class="glyphicon glyphicon-plus"></span> buttons. Remove terms again using the
+                       <span class="glyphicon glyphicon-minus"></span> button</p>
+                    <p>Click <strong>Find genes</strong> to start the search</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
     {% endif %}
 </div>
 {% endblock %}

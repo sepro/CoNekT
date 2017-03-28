@@ -99,7 +99,7 @@ def advanced():
         return render_template("search_advanced.html", adv_sequence_form=adv_sequence_form)
     else:
         print(adv_sequence_form.data.items())
-        return json.dumps(adv_sequence_form.data)
+        return render_template("search_advanced.html", adv_sequence_form=adv_sequence_form)
 
 
 @search.route('/json/genes/<label>')
