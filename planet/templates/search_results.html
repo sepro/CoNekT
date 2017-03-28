@@ -12,13 +12,22 @@
         <li>Results</li>
         <li class="active"><strong>{{ keyword }}</strong></li>
     </ol>
-    <h1>Search results for: <strong>{{ keyword }}</strong></h1>
 
-    {% if ((sequences|length > 49) or (go|length > 49) or (interpro|length > 49) or (families|length > 49) or (profiles|length > 49)) %}
-    <div class="alert alert-info">
-        <strong>Info!</strong> Results are limited to <strong>50</strong> items per category. Try a <strong>more specific</strong> term or use the
-        <strong><a href="{{url_for('search.advanced')}}">advanced search</a></strong> to get more accurate results.
-    </div>
+    {% if advanced %}
+        <h1>Advanced Search Results</h1>
+        {% if sequences|length > 199 %}
+        <div class="alert alert-info">
+            <strong>Info!</strong> Advanced search results are limited to <strong>200</strong> items. Try a <strong>more specific</strong> term query to narrow down search results.
+        </div>
+        {% endif %}
+    {% else %}
+        <h1>Search results for: <strong>{{ keyword }}</strong></h1>
+        {% if ((sequences|length > 49) or (go|length > 49) or (interpro|length > 49) or (families|length > 49) or (profiles|length > 49)) %}
+        <div class="alert alert-info">
+            <strong>Info!</strong> Results are limited to <strong>50</strong> items per category. Try a <strong>more specific</strong> term or use the
+            <strong><a href="{{url_for('search.advanced')}}">advanced search</a></strong> to get more accurate results.
+        </div>
+        {% endif %}
     {% endif %}
     <div class="row">
     {% if sequences %}

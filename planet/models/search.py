@@ -7,8 +7,10 @@ from planet.models.go import GO
 from planet.models.interpro import Interpro
 from planet.models.relationships.cluster_go import ClusterGOEnrichment
 from planet.models.sequences import Sequence
+from planet.models.species import Species
 
 import re
+import whoosh
 
 
 class Search:
@@ -122,6 +124,53 @@ class Search:
                 "sequences": sequences,
                 "families": families,
                 "profiles": profiles}
+
+    @staticmethod
+    def advanced_sequence_search(species_id, terms, term_rules, go_terms, go_rules, interpro_domains, interpro_rules):
+        valid_species_ids = [s.id for s in Species.query.all()]
+
+        query = Sequence.query
+
+        # Add species filter if necessary
+        if species_id is not None and species_id in valid_species_ids:
+            query = query.filter(Sequence.species_id == species_id)
+
+        # Add terms filter if necessary
+        if len(terms.strip()) > 5:
+            if term_rules == 'exact':
+                # EXACT MATCH
+                query = query.filter(or_(Sequence.description.ilike("%" + terms + "%"),
+                                         Sequence.name == terms,
+                                         Sequence.xrefs.any(name=terms)))
+            else:
+                # Prepare whooshee search (remove short strings)
+                whooshee_search_terms = [t for t in re.sub('(\W|\d)+', ' ', terms).split() if len(t) > 3]
+                whooshee_search_string = ' '.join(whooshee_search_terms)
+
+                if term_rules == 'all':
+                    # AND logic
+                    query = query.whooshee_search(whooshee_search_string, group=whoosh.qparser.AndGroup)
+                else:
+                    # OR logic
+                    query = query.whooshee_search(whooshee_search_string, group=whoosh.qparser.OrGroup)
+
+        # Filter for GO terms
+        if go_terms is not None and len(go_terms) > 0:
+            if go_rules == 'all':
+                query = query.filter(and_(*[Sequence.go_labels.any(name=t) for t in go_terms]))
+            else:
+                query = query.filter(or_(*[Sequence.go_labels.any(name=t) for t in go_terms]))
+
+        # Filter for InterPro domains
+        if interpro_domains is not None and len(interpro_domains) > 0:
+            if interpro_rules == 'all':
+                query = query.filter(and_(*[Sequence.interpro_domains.any(description=t) for t in interpro_domains]))
+            else:
+                query = query.filter(or_(*[Sequence.interpro_domains.any(description=t) for t in interpro_domains]))
+
+        sequences = query.limit(200).all()
+
+        return sequences
 
     @staticmethod
     def enriched_clusters(go_id, method=-1, min_enrichment=None, max_p=None, max_corrected_p=None):

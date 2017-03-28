@@ -98,8 +98,26 @@ def advanced():
     if request.method == 'GET':
         return render_template("search_advanced.html", adv_sequence_form=adv_sequence_form)
     else:
-        print(adv_sequence_form.data.items())
-        return render_template("search_advanced.html", adv_sequence_form=adv_sequence_form)
+        species_id = int(request.form.get('species'))
+        terms = request.form.get('terms')
+        terms_rules = request.form.get('terms_rules')
+
+        go_rules = request.form.get('go_rules')
+        go_terms = [gt.data['go_term'] for gt in adv_sequence_form.go_terms.entries if gt.data['go_term'] != ""]
+
+        interpro_rules = request.form.get('interpro_rules')
+        interpro_terms = [it.data['interpro_domain']
+                          for it in adv_sequence_form.interpro_domains.entries if it.data['interpro_domain'] != ""]
+
+        print(species_id, terms, terms_rules, go_terms, go_rules, interpro_terms, interpro_rules)
+
+        results = Search.advanced_sequence_search(species_id,
+                                                  terms, terms_rules,
+                                                  go_terms, go_rules,
+                                                  interpro_terms, interpro_rules)
+
+        return render_template("search_results.html", keyword="Advanced search results",
+                               sequences=results, advanced=True)
 
 
 @search.route('/json/genes/<label>')
@@ -231,7 +249,11 @@ def search_typeahead_interpro(term):
     :param term: partial search term
     :return: JSON object compatible with typeahead.js
     """
-    interpro = Interpro.query.filter(Interpro.description.ilike("%"+term+"%")).order_by(func.length(Interpro.description)).all()
+    if len(term) > 7:
+        interpro = Interpro.query.filter(or_(Interpro.description.ilike("%" + term + "%"), Interpro.label.ilike(term + "%"))).order_by(
+            func.length(Interpro.description)).all()
+    else:
+        interpro = Interpro.query.filter(Interpro.description.ilike("%"+term+"%")).order_by(func.length(Interpro.description)).all()
 
     return Response(json.dumps([{'value': i.description, 'tokens': i.description.split() + [i.label], 'label': i.label} for i in interpro]),
                     mimetype='application/json')
