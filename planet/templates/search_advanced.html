@@ -53,7 +53,7 @@ $(function () {
         var go = new Bloodhound({
           datumTokenizer: Bloodhound.tokenizers.whitespace,
           queryTokenizer: Bloodhound.tokenizers.whitespace,
-          prefetch: '{{url_for('search.search_typeahead_prefetch')}}',
+          prefetch: '{{url_for('search.search_typeahead_prefetch_go')}}',
           remote: {
                 url:'{{url_for('search.search_typeahead_go', term='%QUERY')}}',
                 wildcard: '%25QUERY'
@@ -68,7 +68,15 @@ $(function () {
         {
           name: 'go',
           display: 'value',
-          source: go
+          source: go,
+            templates: {
+                empty: [
+                  '<div class="tt-suggestion"><p class="text-muted"><em>',
+                    'unable to find any GO terms winners that match the current query',
+                  '</em></p></div>'
+                ].join('\n'),
+                suggestion: function(data) {return '<div>' + data.label + ' : <em>' + data.value + '</em></div>'}
+                }
         });
     };
 

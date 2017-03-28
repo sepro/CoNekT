@@ -141,7 +141,7 @@ $(function () {
     var go = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.whitespace,
       queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: '{{url_for('search.search_typeahead_prefetch')}}',
+      prefetch: '{{url_for('search.search_typeahead_prefetch_go')}}',
       remote: {
             url:'{{url_for('search.search_typeahead_go', term='%QUERY')}}',
             wildcard: '%25QUERY'

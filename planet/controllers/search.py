@@ -9,6 +9,7 @@ from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
 from planet.forms.search_specific_profiles import SearchSpecificProfilesForm
 from planet.forms.advanced_search import AdvancedSequenceSearchForm
 from planet.models.expression.specificity import ExpressionSpecificityMethod, ExpressionSpecificity
+from planet.models.interpro import Interpro
 from planet.models.go import GO
 from planet.models.search import Search
 from planet.models.species import Species
@@ -220,6 +221,36 @@ def search_specific_profiles_methods(species_id):
                                  } for m in methods]), mimetype='application/json')
 
 
+@search.route('/typeahead/interpro/<term>.json')
+@cache.cached()
+def search_typeahead_interpro(term):
+    """
+    Controller required for populating predictive search forms using typeahead.js.
+
+    :param term: partial search term
+    :return: JSON object compatible with typeahead.js
+    """
+    interpro = Interpro.query.filter(Interpro.description.ilike("%"+term+"%")).order_by(func.length(Interpro.description)).all()
+
+    return Response(json.dumps([{'value': i.description, 'tokens': i.description.split()} for i in interpro]),
+                    mimetype='application/json')
+
+
+@search.route('/typeahead/interpro/prefetch')
+@cache.cached()
+def search_typeahead_prefetch_interpro():
+    """
+    Controller returning a small subset of GO terms (the short ones) to be used as the prefetched data for typeahead.js
+
+    :param term: partial search term
+    :return: JSON object compatible with typeahead.js
+    """
+    interpro = Interpro.query.filter(func.length(Interpro.description) < 7).order_by(func.length(GO.name)).all()
+
+    return Response(json.dumps([{'value': i.description, 'tokens': i.description.split()} for i in interpro]),
+                    mimetype='application/json')
+
+
 @search.route('/typeahead/go/<term>.json')
 @cache.cached()
 def search_typeahead_go(term):
@@ -229,14 +260,17 @@ def search_typeahead_go(term):
     :param term: partial search term
     :return: JSON object compatible with typeahead.js
     """
-    go = GO.query.filter(GO.obsolete == 0).filter(GO.name.ilike("%"+term+"%")).order_by(func.length(GO.name)).all()
+    if term.lower().startswith('go:') and len(term) > 7:
+        go = GO.query.filter(GO.obsolete == 0).filter(GO.label.ilike(term + "%")).all()
+    else:
+        go = GO.query.filter(GO.obsolete == 0).filter(GO.name.ilike("%"+term+"%")).order_by(func.length(GO.name)).all()
 
-    return Response(json.dumps([{'value': g.name, 'tokens': g.name.split()} for g in go]), mimetype='application/json')
+    return Response(json.dumps([{'value': g.name, 'tokens': g.name.split() + [g.label], 'label': g.label} for g in go]), mimetype='application/json')
 
 
 @search.route('/typeahead/go/prefetch')
 @cache.cached()
-def search_typeahead_prefetch():
+def search_typeahead_prefetch_go():
     """
     Controller returning a small subset of GO terms (the short ones) to be used as the prefetched data for typeahead.js
 
@@ -244,7 +278,7 @@ def search_typeahead_prefetch():
     """
     go = GO.query.filter(GO.obsolete == 0).filter(func.length(GO.name) < 7).order_by(func.length(GO.name)).all()
 
-    return Response(json.dumps([{'value': g.name, 'tokens': g.name.split()} for g in go]), mimetype='application/json')
+    return Response(json.dumps([{'value': g.name, 'tokens': g.name.split() + [g.label], 'label': g.label} for g in go]), mimetype='application/json')
 
 
 @search.route('/whooshee/<keyword>')
