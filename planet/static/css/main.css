@@ -470,14 +470,14 @@ Equal height panels. Should be added to class=row !
 
 .panel-card:hover
 {
-    box-shadow: 0px 5px 5px rgba(0,0,0,0.5)
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.5)
     z-index: 2;
     -webkit-transition: all 150ms ease-in;
-    -webkit-transform: scale(1.05);
+    -webkit-transform: scale(1.02);
     -ms-transition: all 150ms ease-in;
-    -ms-transform: scale(1.05);
+    -ms-transform: scale(1.02);
     -moz-transition: all 150ms ease-in;
-    -moz-transform: scale(1.05);
+    -moz-transform: scale(1.02);
     transition: all 150ms ease-in;
-    transform: scale(1.05);
+    transform: scale(1.02);
 }

@@ -23,13 +23,29 @@
                     <label>Contains (AND)</label>
                     {{adv_sequence_form.all_field(class_="form-control")}}<br/>
                     <label>Required GO Terms</label><br />
-                    <div class="dynamic-form">
+                    <div class="dynamic-form-go">
                     {% for go_term in adv_sequence_form.go_terms %}
                         <div class="dynamic-entry">
                             <div class="input-group">
-                            {{ go_term.form.go_term(class_="form-control typeahead") }}
+                            {{ go_term.form.go_term(class_="form-control typeahead-go go-input") }}
                             <span class="input-group-btn">
-                                <button class="btn btn-success btn-add" type="button">
+                                <button class="btn btn-success btn-add-go" type="button">
+                                   <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </span>
+                            </div>
+                            <br />
+                        </div>
+                    {% endfor %}
+                    </div>
+                    <label>Required InterPro domains</label><br />
+                    <div class="dynamic-form-interpro">
+                    {% for interpro_domain in adv_sequence_form.interpro_domains %}
+                        <div class="dynamic-entry">
+                            <div class="input-group">
+                            {{ interpro_domain.form.interpro_domain(class_="form-control typeahead-interpro interpro-input") }}
+                            <span class="input-group-btn">
+                                <button class="btn btn-success btn-add-interpro" type="button">
                                    <span class="glyphicon glyphicon-plus"></span>
                                 </button>
                             </span>
@@ -49,7 +65,7 @@
 <script src="{{ url_for('static', filename='js/typeahead.bundle.min.js') }}"></script>
 <script>
 $(function () {
-    function typeahead_init () {
+    function typeahead_init_go () {
         var go = new Bloodhound({
           datumTokenizer: Bloodhound.tokenizers.whitespace,
           queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -61,7 +77,7 @@ $(function () {
         });
 
 
-        $('.typeahead').typeahead({
+        $('.typeahead-go').typeahead({
             minLength: 3,
             highlight: true
         },
@@ -72,7 +88,7 @@ $(function () {
             templates: {
                 empty: [
                   '<div class="tt-suggestion"><p class="text-muted"><em>',
-                    'unable to find any GO terms winners that match the current query',
+                    'unable to find any GO terms that match the current query',
                   '</em></p></div>'
                 ].join('\n'),
                 suggestion: function(data) {return '<div>' + data.label + ' : <em>' + data.value + '</em></div>'}
@@ -80,31 +96,124 @@ $(function () {
         });
     };
 
-    typeahead_init();
 
-    $(document).on('click', '.btn-add', function(e)
+    typeahead_init_go();
+
+
+    $(document).on('click', '.btn-add-go', function(e)
     {
         e.preventDefault();
 
-        $('.typeahead').typeahead('destroy');
+        $('.typeahead-go').typeahead('destroy');
 
-        var controlForm = $('.dynamic-form'),
+        var controlForm = $('.dynamic-form-go'),
             currentEntry = $(this).parents('.dynamic-entry:first'),
             newEntry = $(currentEntry.clone()).appendTo(controlForm);
 
         newEntry.find('input').val('');
-        controlForm.find('.dynamic-entry:not(:last) .btn-add')
-            .removeClass('btn-add').addClass('btn-remove')
+        controlForm.find('.dynamic-entry:not(:last) .btn-add-go')
+            .removeClass('btn-add-go').addClass('btn-remove-go')
             .removeClass('btn-success').addClass('btn-danger')
             .html('<span class="glyphicon glyphicon-minus"></span>');
 
-        typeahead_init();
+        controlForm.find('.go-input').each( function(i) {
+            $(this).attr('id', 'go_terms-' + i + '-go_term');
+            $(this).attr('name', 'go_terms-' + i + '-go_term');
+        });
 
-    }).on('click', '.btn-remove', function(e)
+        typeahead_init_go();
+
+    }).on('click', '.btn-remove-go', function(e)
     {
-		$(this).parents('.dynamic-entry:first').remove();
+        e.preventDefault();
+        $('.typeahead-go').typeahead('destroy');
 
-		e.preventDefault();
+		$(this).parents('.dynamic-entry:first').remove();
+        var controlForm = $('.dynamic-form-go');
+        controlForm.find('.go-input').each( function(i) {
+            $(this).attr('id', 'go_terms-' + i + '-go_term');
+            $(this).attr('name', 'go_terms-' + i + '-go_term');
+        });
+
+        typeahead_init_go();
+
+		return false;
+	});
+/* END TYPEAHEAD GO */
+/* BEGIN TYPEAHEAD INTERPRO */
+
+    function typeahead_init_interpro () {
+        var interpro = new Bloodhound({
+          datumTokenizer: Bloodhound.tokenizers.whitespace,
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          prefetch: '{{url_for('search.search_typeahead_prefetch_interpro')}}',
+          remote: {
+                url:'{{url_for('search.search_typeahead_interpro', term='%QUERY')}}',
+                wildcard: '%25QUERY'
+            }
+        });
+
+
+        $('.typeahead-interpro').typeahead({
+            minLength: 3,
+            highlight: true
+        },
+        {
+          name: 'interpro',
+          display: 'value',
+          source: interpro,
+            templates: {
+                empty: [
+                  '<div class="tt-suggestion"><p class="text-muted"><em>',
+                    'unable to find any InterPro domains that match the current query',
+                  '</em></p></div>'
+                ].join('\n'),
+                suggestion: function(data) {return '<div>' + data.label + ' : <em>' + data.value + '</em></div>'}
+                }
+        });
+    };
+
+	typeahead_init_interpro();
+
+
+    $(document).on('click', '.btn-add-interpro', function(e)
+    {
+        e.preventDefault();
+
+        $('.typeahead-interpro').typeahead('destroy');
+
+        var controlForm = $('.dynamic-form-interpro'),
+            currentEntry = $(this).parents('.dynamic-entry:first'),
+            newEntry = $(currentEntry.clone()).appendTo(controlForm);
+
+        newEntry.find('input').val('');
+        controlForm.find('.dynamic-entry:not(:last) .btn-add-interpro')
+            .removeClass('btn-add-interpro').addClass('btn-remove-interpro')
+            .removeClass('btn-success').addClass('btn-danger')
+            .html('<span class="glyphicon glyphicon-minus"></span>');
+
+        controlForm.find('.interpro-input').each( function(i) {
+            $(this).attr('id', 'interpro_domains-' + i + '-interpro_domain');
+            $(this).attr('name', 'interpro_domains-' + i + '-interpro_domain');
+        });
+
+        typeahead_init_interpro();
+
+    }).on('click', '.btn-remove-interpro', function(e)
+    {
+    	e.preventDefault();
+
+        $('.typeahead-interpro').typeahead('destroy');
+
+		$(this).parents('.dynamic-entry:first').remove();
+        var controlForm = $('.dynamic-form-interpro');
+        controlForm.find('.interpro-input').each( function(i) {
+            $(this).attr('id', 'interpro_domains-' + i + '-interpro_domain');
+            $(this).attr('name', 'interpro_domains-' + i + '-interpro_domain');
+        });
+
+        typeahead_init_interpro();
+
 		return false;
 	});
 });

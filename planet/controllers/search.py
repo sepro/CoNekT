@@ -92,13 +92,14 @@ def simple():
 @search.route('/advanced', methods=['GET', 'POST'])
 def advanced():
 
-    adv_sequence_form = AdvancedSequenceSearchForm()
+    adv_sequence_form = AdvancedSequenceSearchForm(request.form)
     adv_sequence_form.populate_species()
 
     if request.method == 'GET':
         return render_template("search_advanced.html", adv_sequence_form=adv_sequence_form)
     else:
-        pass
+        print(adv_sequence_form.data.items())
+        return json.dumps(adv_sequence_form.data)
 
 
 @search.route('/json/genes/<label>')
@@ -232,7 +233,7 @@ def search_typeahead_interpro(term):
     """
     interpro = Interpro.query.filter(Interpro.description.ilike("%"+term+"%")).order_by(func.length(Interpro.description)).all()
 
-    return Response(json.dumps([{'value': i.description, 'tokens': i.description.split()} for i in interpro]),
+    return Response(json.dumps([{'value': i.description, 'tokens': i.description.split() + [i.label], 'label': i.label} for i in interpro]),
                     mimetype='application/json')
 
 
@@ -245,9 +246,9 @@ def search_typeahead_prefetch_interpro():
     :param term: partial search term
     :return: JSON object compatible with typeahead.js
     """
-    interpro = Interpro.query.filter(func.length(Interpro.description) < 7).order_by(func.length(GO.name)).all()
+    interpro = Interpro.query.filter(func.length(Interpro.description) < 7).order_by(func.length(Interpro.description)).all()
 
-    return Response(json.dumps([{'value': i.description, 'tokens': i.description.split()} for i in interpro]),
+    return Response(json.dumps([{'value': i.description, 'tokens': i.description.split() + [i.label], 'label': i.label} for i in interpro]),
                     mimetype='application/json')
 
 
