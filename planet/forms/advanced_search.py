@@ -18,7 +18,7 @@ class AdvancedSequenceSearchForm(FlaskForm):
     gene_ids = TextAreaField('gene list', render_kw={'placeholder': 'Enter a list of gene identifiers or names to filter'})
 
     terms_rules = RadioField('term_rules', choices=[('all', 'All'), ('any', 'Any'), ('exact', 'Exact')], default='all')
-    terms = StringField('term')
+    adv_terms = StringField('term')
 
     go_rules = RadioField('go_rules', choices=[('all', 'All'), ('any', 'Any')], default='all')
     go_terms = FieldList(FormField(GOField), min_entries=1)

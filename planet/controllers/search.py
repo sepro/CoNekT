@@ -102,7 +102,7 @@ def advanced():
 
         gene_ids = request.form.get('gene_ids')
 
-        terms = request.form.get('terms')
+        terms = request.form.get('adv_terms')
         terms_rules = request.form.get('terms_rules')
 
         go_rules = request.form.get('go_rules')
