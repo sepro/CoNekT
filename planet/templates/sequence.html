@@ -19,7 +19,9 @@
             <ul class="nav nav-pills nav-stacked" data-spy="affix">
               <li><a href="#expression_profile">Profile</a></li>
               <li><a href="#coexpression_networks">Networks</a></li>
-              <li><a href="#expression_conservation">ECC</a></li>
+              {% if ecc_query_associations|count > 0 %}
+                <li><a href="#expression_conservation">ECC</a></li>
+              {% endif %}
               <li><a href="#annotation">Annotation</a></li>
               <li><a href="#links">Links</a></li>
             </ul>
@@ -127,8 +129,8 @@
     {% endif %}
     </div>
     <br />
-    <h3 class="banner-blue" id="expression_conservation">Expression Context Conservation (<abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr>)</h3>
     {% if ecc_query_associations|count > 0 %}
+    <h3 class="banner-blue" id="expression_conservation">Expression Context Conservation (<abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr>)</h3>
     <div class="table-responsive">
         <table class="table  table-striped table-fixed" id="ecc_hits_table">
             <thead>
@@ -156,8 +158,6 @@
             </tbody>
         </table>
     </div>
-    {% else %}
-        <p><span class="text-muted"><em>No conserved co-expression found</em></span></p>
     {% endif %}
     <br />
     <h3 class="banner-blue" id="annotation">Functional Annotation</h3>
