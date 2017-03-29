@@ -126,7 +126,7 @@ class Search:
                 "profiles": profiles}
 
     @staticmethod
-    def advanced_sequence_search(species_id, terms, term_rules, go_terms, go_rules, interpro_domains, interpro_rules):
+    def advanced_sequence_search(species_id, gene_list, terms, term_rules, go_terms, go_rules, interpro_domains, interpro_rules):
         valid_species_ids = [s.id for s in Species.query.all()]
 
         query = Sequence.query
@@ -135,24 +135,26 @@ class Search:
         if species_id is not None and species_id in valid_species_ids:
             query = query.filter(Sequence.species_id == species_id)
 
+        if len(gene_list) > 0:
+            query = query.filter(or_(*[or_(Sequence.name == gene,
+                                           Sequence.xrefs.any(name=gene)) for gene in gene_list]))
+
         # Add terms filter if necessary
         if len(terms.strip()) > 5:
             if term_rules == 'exact':
                 # EXACT MATCH
-                query = query.filter(or_(Sequence.description.ilike("%" + terms + "%"),
-                                         Sequence.name == terms,
-                                         Sequence.xrefs.any(name=terms)))
+                query = query.filter(Sequence.description.ilike("%" + terms + "%"))
             else:
                 # Prepare whooshee search (remove short strings)
                 whooshee_search_terms = [t for t in re.sub('(\W|\d)+', ' ', terms).split() if len(t) > 3]
                 whooshee_search_string = ' '.join(whooshee_search_terms)
-
-                if term_rules == 'all':
-                    # AND logic
-                    query = query.whooshee_search(whooshee_search_string, group=whoosh.qparser.AndGroup)
-                else:
-                    # OR logic
-                    query = query.whooshee_search(whooshee_search_string, group=whoosh.qparser.OrGroup)
+                if len(whooshee_search_string) > 5:
+                    if term_rules == 'all':
+                        # AND logic
+                        query = query.whooshee_search(whooshee_search_string, group=whoosh.qparser.AndGroup)
+                    else:
+                        # OR logic
+                        query = query.whooshee_search(whooshee_search_string, group=whoosh.qparser.OrGroup)
 
         # Filter for GO terms
         if go_terms is not None and len(go_terms) > 0:

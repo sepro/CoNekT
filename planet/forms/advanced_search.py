@@ -1,7 +1,7 @@
 from planet.models.species import Species
 
 from flask_wtf import FlaskForm
-from wtforms import Form, FormField, FieldList,StringField, SelectField, RadioField
+from wtforms import Form, FormField, FieldList,StringField, SelectField, RadioField, TextAreaField
 from wtforms.validators import InputRequired
 
 
@@ -15,6 +15,8 @@ class InterProField(Form):
 
 class AdvancedSequenceSearchForm(FlaskForm):
     species = SelectField('species', coerce=int)
+    gene_ids = TextAreaField('gene list', render_kw={'placeholder': 'Enter a list of gene identifiers or names to filter'})
+
     terms_rules = RadioField('term_rules', choices=[('all', 'All'), ('any', 'Any'), ('exact', 'Exact')], default='all')
     terms = StringField('term')
 

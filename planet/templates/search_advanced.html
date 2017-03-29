@@ -24,15 +24,17 @@
                                 <label>Species</label>
                                 {{adv_sequence_form.species(class_="form-control")}}
                                 <hr />
+                                <label>Gene identifiers / names filter</label>
+                                {{adv_sequence_form.gene_ids(class_="form-control")}}
+                                <hr />
                                 <div class="row">
-                                    <div class="col-xs-4 col-lg-2"><label>Terms</label></div>
+                                    <div class="col-xs-4 col-lg-2"><label>Description</label></div>
                                     <div class="col-xs-8 col-lg-10">{{adv_sequence_form.terms_rules(class_="list-inline")}}</div>
                                 </div>
-                                <p><span class="text-muted">(in description, ids and aliases)</span></p>
                                 {{adv_sequence_form.terms(class_="form-control")}}
                                 <hr />
                                 <div class="row">
-                                    <div class="col-xs-4 col-lg-2"><label>GO Terms</label></div>
+                                    <div class="col-xs-4 col-lg-2"><label><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr> Terms</label></div>
                                     <div class="col-xs-8 col-lg-10">{{adv_sequence_form.go_rules(class_="list-inline")}}</div>
                                 </div>
                                 <div class="dynamic-form-go">
@@ -51,7 +53,7 @@
                                 </div>
                                 <hr />
                                 <div class="row">
-                                    <div class="col-xs-4 col-lg-2"><label>InterPro domains</label></div>
+                                    <div class="col-xs-4 col-lg-2"><label><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='interpro_domain') }}" data-target="#helpModal">InterPro</abbr> domains</label></div>
                                     <div class="col-xs-8 col-lg-10">{{adv_sequence_form.interpro_rules(class_="list-inline")}}</div>
                                 </div>
                                 <div class="dynamic-form-interpro">

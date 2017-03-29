@@ -99,6 +99,9 @@ def advanced():
         return render_template("search_advanced.html", adv_sequence_form=adv_sequence_form)
     else:
         species_id = int(request.form.get('species'))
+
+        gene_ids = request.form.get('gene_ids')
+
         terms = request.form.get('terms')
         terms_rules = request.form.get('terms_rules')
 
@@ -109,9 +112,8 @@ def advanced():
         interpro_terms = [it.data['interpro_domain']
                           for it in adv_sequence_form.interpro_domains.entries if it.data['interpro_domain'] != ""]
 
-        print(species_id, terms, terms_rules, go_terms, go_rules, interpro_terms, interpro_rules)
-
         results = Search.advanced_sequence_search(species_id,
+                                                  gene_ids.strip().split(),
                                                   terms, terms_rules,
                                                   go_terms, go_rules,
                                                   interpro_terms, interpro_rules)
