@@ -99,6 +99,7 @@ def configure_blueprints(app):
     from planet.controllers.ecc import ecc
     from planet.controllers.specificity_comparison import specificity_comparison
     from planet.controllers.admin.controls import admin_controls
+    from planet.controllers.tree import tree
 
     LOGIN_ENABLED = app.config['LOGIN_ENABLED']
     BLAST_ENABLED = app.config['BLAST_ENABLED']
@@ -131,6 +132,7 @@ def configure_blueprints(app):
     app.register_blueprint(clade, url_prefix='/clade')
     app.register_blueprint(ecc, url_prefix='/ecc')
     app.register_blueprint(specificity_comparison, url_prefix='/specificity_comparison')
+    app.register_blueprint(tree, url_prefix='/tree')
 
 
 def configure_admin_panel(app):

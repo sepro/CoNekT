@@ -67,6 +67,9 @@ class GeneFamily(db.Model):
     name = db.Column(db.String(50, collation=SQL_COLLATION), unique=True, index=True)
     clade_id = db.Column(db.Integer, db.ForeignKey('clades.id'), index=True)
 
+    # Original name is used to keep track of the original ID from OrthoFinder (required to link back to trees)
+    original_name = db.Column(db.String(50, collation=SQL_COLLATION), index=True, default=None)
+
     sequences = db.relationship('Sequence', secondary=sequence_family, lazy='dynamic')
 
     xrefs = db.relationship('XRef', secondary=family_xref, lazy='dynamic')
@@ -257,6 +260,7 @@ class GeneFamily(db.Model):
                 parts = line.strip().split()
 
                 new_family = GeneFamily('%s_%02d_%08d' % (prefix, method.id, i))
+                new_family.original_name = None
                 new_family.method_id = method.id
 
                 families.append(new_family)
@@ -304,6 +308,7 @@ class GeneFamily(db.Model):
                 orthofinder_id = orthofinder_id.rstrip(':')
 
                 new_family = GeneFamily(orthofinder_id.replace('OG', 'OG_%02d_' % method.id))
+                new_family.original_name = orthofinder_id
                 new_family.method_id = method.id
 
                 families.append(new_family)

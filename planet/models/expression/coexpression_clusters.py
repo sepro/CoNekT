@@ -337,13 +337,15 @@ class CoexpressionCluster(db.Model):
     method_id = db.Column(db.Integer, db.ForeignKey('coexpression_clustering_methods.id'))
     name = db.Column(db.String(50), index=True)
 
-    # sequences = db.relationship('Sequence', secondary=sequence_coexpression_cluster, lazy='dynamic')
+    trees = db.relationship('Tree',
+                            backref=db.backref('cluster', lazy='joined'),
+                            lazy='dynamic',
+                            cascade='all, delete-orphan')
 
     # Other properties
     # sequences defined in Sequence
     # sequence_associations defined in SequenceCoexpressionClusterAssociation'
     # go_enrichment defined in ClusterGOEnrichment
-
 
     @staticmethod
     def get_cluster(cluster_id):
