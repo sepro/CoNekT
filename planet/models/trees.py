@@ -24,7 +24,8 @@ class Tree(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     label = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
-    data = db.Column(db.Text)
+    data_newick = db.Column(db.Text)
+    data_phyloxml = db.Column(db.Text)
 
     method_id = db.Column(db.Integer, db.ForeignKey('tree_methods.id'), index=True)
     cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'), index=True)

@@ -161,8 +161,46 @@
         <script src="{{ url_for('static', filename='js/planet_loader.js') }}"></script>
         <script src="{{ url_for('static', filename='js/planet_pagination.js') }}"></script>
         <script src="{{ url_for('static', filename='js/planet_ajax_table.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery.qtip.min.js') }}"></script>
         <!-- code to reload modal on each click -->
         <script>
+          $(function () {
+                 $('.qtip_tooltip').each(function() {
+                     $(this).qtip({
+                        content: {
+                            text: function(event, api) {
+                                $.ajax({
+                                    url: api.elements.target.attr('qtip_href')
+                                })
+                                .then(function(content) {
+                                    // Set the tooltip content upon successful retrieval
+                                    api.set('content.text', content);
+                                }, function(xhr, status, error) {
+                                    // Upon failure... set the tooltip content to error
+                                    api.set('content.text', status + ': ' + error);
+                                });
+
+                                return 'Loading...'; // Set some initial text
+                            }
+                        },
+                        show: {
+                            effect: function() {
+                                $(this).fadeTo(500, 1);
+                            }
+                        },
+                        hide: {
+                            effect: function() {
+                                $(this).fadeTo(500, 0);
+                            }
+                        },
+                        position: {
+                            viewport: $(window)
+                        },
+                        style: 'qtip-bootstrap'
+                     });
+                 });
+             });
+
             $(function () {
 
               $("#leafy_loader").html(get_loader_svg('loader_leafy'));

@@ -50,7 +50,13 @@
             <tbody>
             {% for p in profiles  %}
                 <tr class="heatmap">
-                    <td>{{ p.name }}</td>
+                    {% if p.sequence_id %}
+                        <td><a href="{{ url_for('sequence.sequence_view', sequence_id=p.sequence_id) }}"
+                               class="qtip_tooltip"
+                               qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=p.sequence_id) }}">{{ p.name }}</a></td>
+                    {% else %}
+                        <td>{{ p.name }}</td>
+                    {% endif %}
                     {% for o in order %}
                     <td class="value">{{ p['values'][o]|round(2) }}</td>
                     {% endfor %}

@@ -100,7 +100,7 @@ class ExpressionProfile(db.Model):
                 else:
                     values[o] = log(values[o]/row_mean, 2)
 
-            output.append({"name": name, "values": values})
+            output.append({"name": name, "values": values, "sequence_id": profile.sequence_id})
 
         return {'order': order, 'heatmap_data': output}
 

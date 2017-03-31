@@ -252,6 +252,10 @@ class WebsiteTest(TestCase):
         self.assert_template_used('sequence.html')
         self.assert200(response)
 
+        response = self.client.get("/sequence/tooltip/%d" % sequence.id)
+        self.assert_template_used('tooltips/sequence.html')
+        self.assert200(response)
+
         response = self.client.get("/sequence/fasta/coding/%d" % sequence.id)
         self.assert200(response)
         data = response.data.decode("utf-8").strip()
@@ -678,7 +682,7 @@ class WebsiteTest(TestCase):
         response = self.client.post('/heatmap/', data=dict(probes=profile.probe, species_id=profile.species_id))
         self.assert_template_used('expression_heatmap.html')
         self.assert200(response)
-        self.assertTrue('<td>' + profile.probe + '</td>' in response.data.decode('utf-8'))
+        self.assertTrue(profile.probe in response.data.decode('utf-8'))
 
         response = self.client.get('/heatmap/cluster/%d' % cluster.id)
         self.assert_template_used('expression_heatmap.html')

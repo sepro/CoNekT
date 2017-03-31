@@ -52,6 +52,19 @@ def sequence_view(sequence_id):
                            )
 
 
+@sequence.route('/tooltip/<sequence_id>')
+@cache.cached()
+def sequence_tooltip(sequence_id):
+    """
+    Get a sequence based on the ID and show the details for this sequence
+
+    :param sequence_id: ID of the sequence
+    """
+    current_sequence = Sequence.query.get_or_404(sequence_id)
+
+    return render_template('tooltips/sequence.html', sequence=current_sequence)
+
+
 @sequence.route('/modal/coding/<sequence_id>')
 def sequence_modal_coding(sequence_id):
     """

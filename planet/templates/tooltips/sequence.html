@@ -1,0 +1,11 @@
+<div>
+    {% if sequence.aliases %}
+    <div><strong>Aliases: </strong>{{ sequence.aliases }}</div>
+    <hr />
+    {% endif %}
+    {% if sequence.description %}
+        <div><strong>Description: </strong>{{ sequence.description }}</div>
+    {% else %}
+        <div><em class="text-muted">No description available</em></div>
+    {% endif %}
+</div>
