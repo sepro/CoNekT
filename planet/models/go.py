@@ -180,12 +180,19 @@ class GO(db.Model):
 
         obo_parser.extend_go()
 
-        for term in obo_parser.terms:
+        for i, term in enumerate(obo_parser.terms):
             go = GO(term.id, term.name, term.namespace, term.definition, term.is_obsolete, ";".join(term.is_a),
                     ";".join(term.extended_go))
 
             db.session.add(go)
 
+            if i % 40 == 0:
+                # commit to the db frequently to allow WHOOSHEE's indexing function to work without timing out
+                try:
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+                    print(e)
         try:
             db.session.commit()
         except Exception as e:

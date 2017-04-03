@@ -12,21 +12,21 @@ class SequenceSequenceECCAssociation(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    query_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
-    target_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
+    query_id = db.Column(db.Integer, db.ForeignKey('sequences.id', ondelete='CASCADE'))
+    target_id = db.Column(db.Integer, db.ForeignKey('sequences.id', ondelete='CASCADE'))
 
     ecc = db.Column(db.Float)
     p_value = db.Column(db.Float)
     corrected_p_value = db.Column(db.Float)
 
-    gene_family_method_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id'))
-    query_network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'))
-    target_network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'))
+    gene_family_method_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id', ondelete='CASCADE'))
+    query_network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id', ondelete='CASCADE'))
+    target_network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id', ondelete='CASCADE'))
 
     gene_family_method = db.relationship('GeneFamilyMethod', lazy='joined',
                                          backref=db.backref('ecc_as_family_method',
                                                             lazy='dynamic',
-                                                            cascade='all, delete-orphan')
+                                                            passive_deletes=True)
                                          )
 
     query_expression_network_method = db.relationship('ExpressionNetworkMethod',
@@ -34,14 +34,14 @@ class SequenceSequenceECCAssociation(db.Model):
                                                       lazy='joined',
                                                       backref=db.backref('ecc_as_query_method',
                                                                          lazy='dynamic',
-                                                                         cascade='all, delete-orphan')
+                                                                         passive_deletes=True)
                                                       )
     target_expression_network_method = db.relationship('ExpressionNetworkMethod',
                                                        foreign_keys=[target_network_method_id],
                                                        lazy='joined',
                                                        backref=db.backref('ecc_as_target_method',
                                                                           lazy='dynamic',
-                                                                          cascade='all, delete-orphan')
+                                                                          passive_deletes=True)
                                                        )
 
     @staticmethod

@@ -24,7 +24,8 @@ class GeneFamilyMethod(db.Model):
 
     families = db.relationship('GeneFamily', backref=db.backref('method', lazy='joined'),
                                lazy='dynamic',
-                               cascade='all, delete-orphan')
+                               cascade="all, delete-orphan",
+                               passive_deletes=True)
 
     def __init__(self, method):
         self.method = method
@@ -63,9 +64,9 @@ class GeneFamilyMethod(db.Model):
 class GeneFamily(db.Model):
     __tablename__ = 'gene_families'
     id = db.Column(db.Integer, primary_key=True)
-    method_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id'), index=True)
+    method_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id', ondelete='CASCADE'), index=True)
     name = db.Column(db.String(50, collation=SQL_COLLATION), unique=True, index=True)
-    clade_id = db.Column(db.Integer, db.ForeignKey('clades.id'), index=True)
+    clade_id = db.Column(db.Integer, db.ForeignKey('clades.id', ondelete='SET NULL'), index=True)
 
     # Original name is used to keep track of the original ID from OrthoFinder (required to link back to trees)
     original_name = db.Column(db.String(50, collation=SQL_COLLATION), index=True, default=None)

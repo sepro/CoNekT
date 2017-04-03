@@ -19,7 +19,7 @@ class Interpro(db.Model):
     label = db.Column(db.String(50, collation=SQL_COLLATION), unique=True, index=True)
     description = db.Column(db.Text)
 
-    clade_id = db.Column(db.Integer, db.ForeignKey('clades.id'), index=True)
+    clade_id = db.Column(db.Integer, db.ForeignKey('clades.id', ondelete='SET NULL'), index=True)
 
     sequences = db.relationship('Sequence', secondary=sequence_interpro, lazy='dynamic')
 
@@ -141,10 +141,19 @@ class Interpro(db.Model):
 
         interpro_parser.readfile(filename)
 
-        for domain in interpro_parser.domains:
+        for i, domain in enumerate(interpro_parser.domains):
             interpro = Interpro(domain.label, domain.description)
 
             db.session.add(interpro)
+
+            if i % 40 == 0:
+                # commit to the db frequently to allow WHOOSHEE's indexing function to work without timing out
+                try:
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+                    print(e)
+
         try:
             db.session.commit()
         except Exception as e:

@@ -15,15 +15,17 @@ class ExpressionSpecificityMethod(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text)
     conditions = db.Column(db.Text)
-    species_id = db.Column(db.Integer, db.ForeignKey('species.id'), index=True)
+    species_id = db.Column(db.Integer, db.ForeignKey('species.id', ondelete='CASCADE'), index=True)
 
     specificities = db.relationship('ExpressionSpecificity',
                                     backref='method',
                                     lazy='dynamic',
-                                    cascade='all, delete-orphan')
+                                    cascade="all, delete-orphan",
+                                    passive_deletes=True)
 
     condition_tissue = db.relationship('ConditionTissue', backref='expression_specificity_method', lazy='joined',
-                                        cascade='all, delete-orphan', uselist=False)
+                                       cascade="all, delete-orphan",
+                                       passive_deletes=True, uselist=False)
 
     menu_order = db.Column(db.Integer)
 

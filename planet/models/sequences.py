@@ -15,7 +15,7 @@ SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 class Sequence(db.Model):
     __tablename__ = 'sequences'
     id = db.Column(db.Integer, primary_key=True)
-    species_id = db.Column(db.Integer, db.ForeignKey('species.id'), index=True)
+    species_id = db.Column(db.Integer, db.ForeignKey('species.id', ondelete='CASCADE'), index=True)
     name = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
     description = db.Column(db.Text)
     coding_sequence = db.deferred(db.Column(db.Text))
@@ -25,8 +25,13 @@ class Sequence(db.Model):
 
     expression_profiles = db.relationship('ExpressionProfile', backref=db.backref('sequence', lazy='joined'),
                                           lazy='dynamic',
-                                          cascade='all, delete-orphan')
-    network_nodes = db.relationship('ExpressionNetwork', backref='sequence', lazy='dynamic')
+                                          cascade="all, delete-orphan",
+                                          passive_deletes=True)
+    network_nodes = db.relationship('ExpressionNetwork',
+                                    backref='sequence',
+                                    lazy='dynamic',
+                                    cascade="all, delete-orphan",
+                                    passive_deletes=True)
 
     # Other properties
     #

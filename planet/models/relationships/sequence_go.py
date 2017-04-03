@@ -6,8 +6,8 @@ class SequenceGOAssociation(db.Model):
     __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
-    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'))
-    go_id = db.Column(db.Integer, db.ForeignKey('go.id'))
+    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id', ondelete='CASCADE'))
+    go_id = db.Column(db.Integer, db.ForeignKey('go.id', ondelete='CASCADE'))
 
     evidence = db.Column(db.Enum('EXP', 'IDA', 'IPI', 'IMP', 'IGI', 'IEP',
                                  'ISS', 'ISO', 'ISA', 'ISM', 'IGC', 'IBA', 'IBD', 'IKR', 'IRD', 'RCA',
@@ -16,8 +16,8 @@ class SequenceGOAssociation(db.Model):
 
     sequence = db.relationship('Sequence', backref=db.backref('go_associations',
                                                               lazy='dynamic',
-                                                              cascade='all, delete-orphan'), lazy='joined')
+                                                              passive_deletes=True), lazy='joined')
 
     go = db.relationship('GO', backref=db.backref('sequence_associations',
                                                   lazy='dynamic',
-                                                  cascade='all, delete-orphan'), lazy='joined')
+                                                  passive_deletes=True), lazy='joined')

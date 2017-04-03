@@ -27,14 +27,15 @@ from utils.hcca import HCCA
 class CoexpressionClusteringMethod(db.Model):
     __tablename__ = 'coexpression_clustering_methods'
     id = db.Column(db.Integer, primary_key=True)
-    network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'), index=True)
+    network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id', ondelete='CASCADE'), index=True)
     method = db.Column(db.Text)
     cluster_count = db.Column(db.Integer)
 
     clusters = db.relationship('CoexpressionCluster',
                                backref=db.backref('method', lazy='joined'),
                                lazy='dynamic',
-                               cascade='all, delete-orphan')
+                               cascade="all, delete-orphan",
+                               passive_deletes=True)
 
     @staticmethod
     def update_counts():
@@ -334,13 +335,14 @@ class CoexpressionClusteringMethod(db.Model):
 class CoexpressionCluster(db.Model):
     __tablename__ = 'coexpression_clusters'
     id = db.Column(db.Integer, primary_key=True)
-    method_id = db.Column(db.Integer, db.ForeignKey('coexpression_clustering_methods.id'))
+    method_id = db.Column(db.Integer, db.ForeignKey('coexpression_clustering_methods.id', ondelete='CASCADE'))
     name = db.Column(db.String(50), index=True)
 
     trees = db.relationship('Tree',
                             backref=db.backref('cluster', lazy='joined'),
                             lazy='dynamic',
-                            cascade='all, delete-orphan')
+                            cascade="all, delete-orphan",
+                            passive_deletes=True)
 
     # Other properties
     # sequences defined in Sequence

@@ -16,15 +16,16 @@ SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 class ExpressionProfile(db.Model):
     __tablename__ = 'expression_profiles'
     id = db.Column(db.Integer, primary_key=True)
-    species_id = db.Column(db.Integer, db.ForeignKey('species.id'), index=True)
+    species_id = db.Column(db.Integer, db.ForeignKey('species.id', ondelete='CASCADE'), index=True)
     probe = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
-    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'), index=True)
+    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id', ondelete='CASCADE'), index=True)
     profile = db.deferred(db.Column(db.Text))
 
     specificities = db.relationship('ExpressionSpecificity',
                                     backref=db.backref('profile', lazy='joined'),
                                     lazy='dynamic',
-                                    cascade='all, delete-orphan')
+                                    cascade="all, delete-orphan",
+                                    passive_deletes=True)
 
     def __init__(self, probe, sequence_id, profile):
         self.probe = probe

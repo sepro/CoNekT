@@ -75,9 +75,11 @@ class WebsiteTest(TestCase):
         test_sequence.go_labels.append(test_go)
 
         test_sequence2 = Sequence(test_species.id, 'TEST_SEQ_02', 'ATG', description='test sequence')
-
+        test_sequence3 = Sequence(test_species.id, 'TEST_SEQ_03', 'ATG', description='test sequence')
+        test_sequence3.type = 'TE';
         db.session.add(test_sequence)
         db.session.add(test_sequence2)
+        db.session.add(test_sequence3)
         db.session.commit()
 
         test_profile = ExpressionProfile('test_probe', test_sequence.id, '{"data": {"seedling - hypocotyl 17d": [29.0, 44.0, 35.0], "stage 15 flower - pedicel +21d": [39.0, 18.0, 28.0], "senescing leaf 35d": [104.0, 95.0, 121.0], "stage 12 flower - stamen +21d": [56.0, 41.0, 40.0], "seed - triangle stage 56d": [18.0, 21.0, 37.0], "pollen - uninuclear stage": [17.0, 17.0], "seed - globular stage 56d": [17.0, 28.0, 25.0], "root 21d": [49000.0, 46000.0, 49000.0], "stage 12 flower - carpel +21d": [29.0, 34.0, 38.0], "quiescent center and endodermis, beyond the mature hair zone": [5.0, 5.0, 17.0], "stage 12 flower +21d": [26.0, 39.0, 41.0], "mature seed 56d": [14.0, 12.0, 11.0], "shoot 21d": [94.0, 63.0, 75.0], "stage 10 flower +21d": [83.0, 112.0, 99.0], "stage 12 flower - petal +21d": [68.0, 57.0, 47.0], "seed - heart stage 56d": [44.0, 39.0, 17.0], "stage 1 flower 21d": [126.0, 120.0, 116.0], "stem 2nd internode +21d": [41.0, 42.0, 41.0], "pollen stage 10 - pollen sac  42d": [22.0, 46.0, 31.0], "endodermis, cortex and quiescent center": [13.0, 20.0, 13.0], "rosette leaf 10d": [40.0, 27.0, 44.0], "root 17d": [44.0, 53.0, 51.0], "stage 12 flower - sepal +21d": [56.0, 39.0, 53.0], "stage 9 flower +21d": [113.0, 107.0, 143.0], "~0.15 mm from the root tip": [58.0, 35.0, 17.0, 15.0], "stage 15 flower - carpel +21d": [33.0, 22.0, 24.0], "~0.30 mm from the root tip": [13.0, 13.0, 24.0, 66.0], "rosette leaf - distal half 17d": [18.0, 25.0, 20.0], "petiole 17d": [28.0, 19.0, 20.0], "pollen - bicellular stage": [26.0, 16.0], "atrichoblasts from the quiescent center up": [7.0, 20.0, 8.0], "~0.45 to 2 mm from the root tip": [0.0, 23.0, 20.0, 3.0], "complete rosette 22d": [19.0, 29.0, 24.0], "pollen - tricellular stage": [22.0, 32.0], "stem 1st internode +21d": [72.0, 78.0, 63.0], "stage 15 flower +21d": [32.0, 38.0, 39.0], "pollen - mature": [31.0, 46.0, 22.0], "cauline leaf +21d": [58.0, 41.0, 51.0], "seedling - shoot apex 7d": [27.0, 23.0, 43.0], "complete rosette 23d": [21.0, 20.0, 20.0], "seedling - rosette leaf 7d": [42.0, 40.0, 33.0], "complete rosette 21d": [21.0, 26.0, 22.0], "rosette leaf 17d": [62.0, 57.0, 29.0], "seed - torpedo stage 56d": [24.0, 32.0, 23.0], "rosette leaf - proximal half 17d": [26.0, 17.0, 21.0], "seedling - cotyledon 7d": [50.0, 31.0, 25.0], "stage 15 flower - stamen +21d": [30.0, 18.0, 28.0], "root stele to elongation zone": [20.0, 9.0, 11.0], "stage 15 flower - sepal +21d": [49.0, 28.0, 22.0], "stage 15 flower - petal +21d": [30.0, 19.0, 45.0], "seed - curled cotyledon stage 56d": [16.0, 15.0, 15.0], "lateral root cap and epidermis": [12.0, 6.0, 5.0]}, "order": ["seedling - cotyledon 7d", "seedling - hypocotyl 17d", "seedling - rosette leaf 7d", "seedling - shoot apex 7d", "root 17d", "root 21d", "~0.15 mm from the root tip", "~0.30 mm from the root tip", "~0.45 to 2 mm from the root tip", "atrichoblasts from the quiescent center up", "endodermis, cortex and quiescent center", "lateral root cap and epidermis", "quiescent center and endodermis, beyond the mature hair zone", "root stele to elongation zone", "rosette leaf 10d", "rosette leaf 17d", "rosette leaf - distal half 17d", "rosette leaf - proximal half 17d", "complete rosette 21d", "complete rosette 22d", "complete rosette 23d", "senescing leaf 35d", "cauline leaf +21d", "petiole 17d", "shoot 21d", "stem 1st internode +21d", "stem 2nd internode +21d", "stage 1 flower 21d", "stage 9 flower +21d", "stage 10 flower +21d", "stage 12 flower - carpel +21d", "stage 12 flower - petal +21d", "stage 12 flower - sepal +21d", "stage 12 flower - stamen +21d", "stage 12 flower +21d", "stage 15 flower - carpel +21d", "stage 15 flower - pedicel +21d", "stage 15 flower - petal +21d", "stage 15 flower - sepal +21d", "stage 15 flower - stamen +21d", "stage 15 flower +21d", "seed - curled cotyledon stage 56d", "seed - globular stage 56d", "seed - heart stage 56d", "seed - torpedo stage 56d", "seed - triangle stage 56d", "mature seed 56d", "pollen stage 10 - pollen sac  42d", "pollen - uninuclear stage", "pollen - bicellular stage", "pollen - tricellular stage", "pollen - mature"]}')
@@ -248,12 +250,23 @@ class WebsiteTest(TestCase):
 
         sequence = Sequence.query.first()
 
+        response = self.client.get("/sequence/")
+        self.assertRedirects(response, '/')
+
         response = self.client.get("/sequence/view/%d" % sequence.id)
         self.assert_template_used('sequence.html')
         self.assert200(response)
 
         response = self.client.get("/sequence/tooltip/%d" % sequence.id)
         self.assert_template_used('tooltips/sequence.html')
+        self.assert200(response)
+
+        response = self.client.get("/sequence/modal/coding/%d" % sequence.id)
+        self.assert_template_used('modals/sequence.html')
+        self.assert200(response)
+
+        response = self.client.get("/sequence/modal/protein/%d" % sequence.id)
+        self.assert_template_used('modals/sequence.html')
         self.assert200(response)
 
         response = self.client.get("/sequence/fasta/coding/%d" % sequence.id)
@@ -625,6 +638,14 @@ class WebsiteTest(TestCase):
             self.assertTrue('value' in d.keys())
             self.assertTrue('tokens' in d.keys())
 
+    def test_advanced_search(self):
+        """
+        Test different components of the search function
+        """
+        response = self.client.get('/search/advanced')
+        self.assert200(response)
+        self.assert_template_used('search_advanced.html')
+
     @unittest.skipIf(not LOGIN_ENABLED, "Skipping test_auth because LOGIN is not enabled")
     def test_auth(self):
         """
@@ -686,6 +707,17 @@ class WebsiteTest(TestCase):
 
         response = self.client.get('/heatmap/cluster/%d' % cluster.id)
         self.assert_template_used('expression_heatmap.html')
+        self.assert200(response)
+
+        response = self.client.get('/heatmap/inchlib/j/%d.json' % cluster.id)
+        self.assert200(response)
+        data = json.loads(response.data.decode('utf-8'))
+        self.assertTrue("data" in data.keys())
+        self.assertTrue("nodes" in data["data"])
+        self.assertTrue("feature_names" in data["data"])
+
+        response = self.client.get('/heatmap/inchlib/%d' % cluster.id)
+        self.assert_template_used('inchlib_heatmap.html')
         self.assert200(response)
 
     def test_profile_comparison(self):

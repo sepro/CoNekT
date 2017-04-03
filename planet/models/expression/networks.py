@@ -30,12 +30,14 @@ class ExpressionNetworkMethod(db.Model):
     probes = db.relationship('ExpressionNetwork',
                              backref=db.backref('method', lazy='joined'),
                              lazy='dynamic',
-                             cascade='all, delete-orphan')
+                             cascade="all, delete-orphan",
+                             passive_deletes=True)
 
     clustering_methods = db.relationship('CoexpressionClusteringMethod',
                                          backref='network_method',
                                          lazy='dynamic',
-                                         cascade='all, delete-orphan')
+                                         cascade='all, delete-orphan',
+                                         passive_deletes=True)
 
     def __init__(self, species_id, description, edge_type="rank"):
         self.species_id = species_id
@@ -251,9 +253,9 @@ class ExpressionNetwork(db.Model):
     __tablename__ = 'expression_networks'
     id = db.Column(db.Integer, primary_key=True)
     probe = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
-    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id'), index=True)
+    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id', ondelete='CASCADE'), index=True)
     network = db.Column(db.Text)
-    method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id'), index=True)
+    method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id', ondelete='CASCADE'), index=True)
 
     def __init__(self, probe, sequence_id, network, method_id):
         self.probe = probe

@@ -16,7 +16,10 @@ required_endpoints = ['/admin/add/species/', '/admin/add/expression_profiles/',
                       '/admin/add/interpro/', '/admin/add/clades/', '/admin/add/xrefs/',
                       '/admin/add/xrefs_families/', '/admin/controls/', '/admin/species/', '/admin/clades/',
                       '/admin/families/', '/admin/networks/', '/admin/clusters/', '/admin/specificity/',
-                      '/admin/condition_tissue/', '/admin/add/functional_data/', '/admin/add/sequence_descriptions/']
+                      '/admin/condition_tissue/', '/admin/add/functional_data/', '/admin/add/sequence_descriptions/',
+                      '/admin_controls/update/counts', '/admin_controls/update/clades', '/admin/build/ecc/',
+                      '/admin/build/cluster_similarities/', '/admin/build/go_enrichment', '/admin/build/hcca_clusters/',
+                      '/admin/build/neighborhood_to_clusters/']
 
 
 class AdminTest(TestCase):
@@ -65,6 +68,7 @@ class AdminTest(TestCase):
 
         for required_endpoint in required_endpoints:
             response = self.client.get(required_endpoint, follow_redirects=True)
+            # print(required_endpoint)
             self.assert200(response)
 
     @unittest.skipIf(not LOGIN_ENABLED, "Skipping test_admin_views because LOGIN is not enabled")
@@ -256,6 +260,10 @@ class AdminTest(TestCase):
         response = self.client.get('/admin_controls/clear/cache', follow_redirects=True)
         self.assert200(response)
         self.assertTrue('Cache cleared' in response.data.decode('utf-8'))  # Check for flash message
+
+        response = self.client.get('/admin_controls/update/clades', follow_redirects=True)
+        self.assert200(response)
+        self.assertTrue('All clades updated' in response.data.decode('utf-8'))  # Check for flash message
 
         response = self.client.get('/admin_controls/update/clades', follow_redirects=True)
         self.assert200(response)

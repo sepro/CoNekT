@@ -6,17 +6,17 @@ class ClusterGOEnrichment(db.Model):
     __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
-    cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id'))
-    go_id = db.Column(db.Integer, db.ForeignKey('go.id'))
+    cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id', ondelete='CASCADE'))
+    go_id = db.Column(db.Integer, db.ForeignKey('go.id', ondelete='CASCADE'))
 
     cluster = db.relationship('CoexpressionCluster', backref=db.backref('go_enrichment',
                                                                         lazy='dynamic',
-                                                                        cascade='all, delete-orphan'),
+                                                                        passive_deletes=True),
                               lazy='joined')
 
     go = db.relationship('GO', backref=db.backref('enriched_clusters',
                                                   lazy='dynamic',
-                                                  cascade='all, delete-orphan'),
+                                                  passive_deletes=True),
                          lazy='joined')
 
     """
