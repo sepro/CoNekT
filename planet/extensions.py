@@ -8,6 +8,7 @@ from flask_whooshee import Whooshee
 
 from sqlalchemy.engine import Engine
 from sqlalchemy import event
+from sqlite3 import Connection as SQLite3Connection
 
 from planet.flask_blast import BlastThread
 
@@ -21,9 +22,10 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
     """
         Will force sqlite contraint foreign keys
     """
-    cursor = dbapi_connection.cursor()
-    cursor.execute("PRAGMA foreign_keys=ON")
-    cursor.close()
+    if isinstance(dbapi_connection, SQLite3Connection):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
 
 login_manager = LoginManager()
 toolbar = DebugToolbarExtension()
