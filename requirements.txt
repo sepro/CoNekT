@@ -22,13 +22,13 @@ Mako==1.0.6
 Markdown==2.6.8
 MarkupSafe==1.0
 mpmath==0.19
-pbr==1.10.0
+pbr==3.0.0
 python-editor==1.0.3
 python-magic==0.4.12
 six==1.10.0
 SQLAlchemy==1.1.9
-sqlalchemy-migrate==0.10.0
-sqlparse==0.2.2
+sqlalchemy-migrate==0.11.0
+sqlparse==0.2.3
 Tempita==0.5.2
 Werkzeug==0.11.15
 wheel==0.29.0
