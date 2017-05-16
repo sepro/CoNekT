@@ -7,6 +7,7 @@ from utils.parser.fasta import Fasta
 
 from sqlalchemy.orm import undefer
 import operator
+import sys
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
@@ -147,10 +148,13 @@ class Sequence(db.Model):
 
         with open(filename, "r") as f_in:
             for i, line in enumerate(f_in):
-                name, description = line.strip().split('\t')
-
-                if name in seq_dict.keys():
-                    seq_dict[name].description = description
+                try:
+                    name, description = line.strip().split('\t')
+                except ValueError:
+                    print("Cannot parse line %d: \"%s\"" % (i, line), file=sys.stderr)
+                finally:
+                    if name in seq_dict.keys():
+                        seq_dict[name].description = description
 
                 if i % 400 == 0:
                     db.session.commit()
