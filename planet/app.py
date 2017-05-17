@@ -141,14 +141,33 @@ def configure_admin_panel(app):
     if LOGIN_ENABLED:
         from planet.controllers.admin.views import MyAdminIndexView
 
-        from planet.controllers.admin.views import SpeciesAdminView, GeneFamilyMethodAdminView, \
-            ExpressionNetworkMethodAdminView, \
-            CoexpressionClusteringMethodAdminView, CladesAdminView, ExpressionSpecificityMethodAdminView, \
-            ConditionTissueAdminView, ControlsView, AddSpeciesView, AddFunctionalDataView, AddXRefsView, \
-            AddXRefsFamiliesView, AddFamiliesView, AddExpressionProfilesView, AddCoexpressionClustersView, \
-            AddCoexpressionNetworkView, AddGOView, AddInterProView, AddCladesView, AddSpecificityView, \
-            AddSequenceDescriptionsView, NewsAdminView, BuildCoexpressionClustersView, GOEnrichmentView, \
-            ClusterSimilaritiesView, ECCView, BuildNeighorhoodToClustersView
+        from planet.controllers.admin.views.ecc import ECCView
+        from planet.controllers.admin.views.sequences import AddSequenceDescriptionsView
+        from planet.controllers.admin.views.expression_profiles import AddExpressionProfilesView
+        from planet.controllers.admin.views.expression_networks import AddCoexpressionNetworkView
+        from planet.controllers.admin.views.expression_networks import ExpressionNetworkMethodAdminView
+        from planet.controllers.admin.views.expression_specificity import AddSpecificityView
+        from planet.controllers.admin.views.expression_specificity import ConditionTissueAdminView
+        from planet.controllers.admin.views.expression_specificity import ExpressionSpecificityMethodAdminView
+        from planet.controllers.admin.views.go_interpro import AddInterProView
+        from planet.controllers.admin.views.go_interpro import AddGOView
+        from planet.controllers.admin.views.go_interpro import AddFunctionalDataView
+        from planet.controllers.admin.views.go_interpro import GOEnrichmentView
+        from planet.controllers.admin.views.families import AddFamiliesView
+        from planet.controllers.admin.views.families import GeneFamilyMethodAdminView
+        from planet.controllers.admin.views.species import AddSpeciesView
+        from planet.controllers.admin.views.species import SpeciesAdminView
+        from planet.controllers.admin.views.expression_clusters import BuildNeighorhoodToClustersView
+        from planet.controllers.admin.views.expression_clusters import BuildCoexpressionClustersView
+        from planet.controllers.admin.views.expression_clusters import AddCoexpressionClustersView
+        from planet.controllers.admin.views.expression_clusters import ClusterSimilaritiesView
+        from planet.controllers.admin.views.expression_clusters import CoexpressionClusteringMethodAdminView
+        from planet.controllers.admin.views.clades import AddCladesView
+        from planet.controllers.admin.views.clades import CladesAdminView
+        from planet.controllers.admin.views.xrefs import AddXRefsFamiliesView
+        from planet.controllers.admin.views.xrefs import AddXRefsView
+        from planet.controllers.admin.views.controls import ControlsView
+        from planet.controllers.admin.views.news import NewsAdminView
 
         from planet.models.users import User
         from planet.models.species import Species
