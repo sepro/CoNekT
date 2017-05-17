@@ -163,9 +163,9 @@ class ExpressionSpecificity(db.Model):
     __tablename__ = 'expression_specificity'
 
     id = db.Column(db.Integer, primary_key=True)
-    profile_id = db.Column(db.Integer, db.ForeignKey('expression_profiles.id'), index=True)
+    profile_id = db.Column(db.Integer, db.ForeignKey('expression_profiles.id', ondelete='CASCADE'), index=True)
     condition = db.Column(db.String(255), index=True)
     score = db.Column(db.Float, index=True)
     entropy = db.Column(db.Float, index=True)
     tau = db.Column(db.Float, index=True)
-    method_id = db.Column(db.Integer, db.ForeignKey('expression_specificity_method.id'), index=True)
+    method_id = db.Column(db.Integer, db.ForeignKey('expression_specificity_method.id', ondelete='CASCADE'), index=True)

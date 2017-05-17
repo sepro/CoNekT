@@ -87,8 +87,8 @@ class ExpressionNetworkMethod(db.Model):
             current_network = db.engine.execute(db.select([ExpressionNetwork.__table__.c.sequence_id,
                                                            ExpressionNetwork.__table__.c.network,
                                                            ExpressionNetwork.__table__.c.method_id]).
-                                                   where(ExpressionNetwork.__table__.c.method_id == n).
-                                                   where(ExpressionNetwork.__table__.c.sequence_id != None)
+                                                where(ExpressionNetwork.__table__.c.method_id == n).
+                                                where(ExpressionNetwork.__table__.c.sequence_id is not None)
                                                 ).fetchall()
 
             for sequence, network, network_method_id in current_network:
@@ -472,9 +472,14 @@ class ExpressionNetwork(db.Model):
         scores = defaultdict(lambda: defaultdict(lambda: None))     # Score for non-existing pairs will be None
 
         with open(network_file) as fin:
-            for line in fin:
-                query, hits = line.strip().split(' ')
-                query = query.replace(':', '')
+            for linenr, line in enumerate(fin):
+                try:
+                    query, hits = line.strip().split(' ')
+                    query = query.replace(':', '')
+                except ValueError:
+                    print("Error parsing line %d: \"%s\"" % (linenr, line))
+                    # skip this line and continue
+                    continue
 
                 network[query] = {
                     "probe": query,
