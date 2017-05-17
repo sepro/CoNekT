@@ -111,7 +111,10 @@ def expression_cluster_graph(cluster_id, family_method_id=None):
 
     if family_method_id is None:
         family_method = GeneFamilyMethod.query.first()
-        family_method_id = family_method.id
+        if family_method_id is not None:
+            family_method_id = family_method.id
+        else:
+            family_method_id = None
 
     return render_template("expression_graph.html", cluster=cluster, family_method_id=family_method_id)
 
@@ -130,7 +133,10 @@ def expression_cluster_json(cluster_id, family_method_id=None):
 
     if family_method_id is None:
         family_method = GeneFamilyMethod.query.first()
-        family_method_id = family_method.id
+        if family_method is not None:
+            family_method_id = family_method.id
+        else:
+            family_method_id = None
 
     network_cytoscape = CytoscapeHelper.parse_network(network)
     network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, family_method_id)

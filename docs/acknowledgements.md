@@ -21,4 +21,5 @@
   * [jQuery File Uploader](https://github.com/danielm/uploader)
   * [Kinetic.js](http://kineticjs.com/)
   * [InCHLib](http://www.openscreen.cz/software/inchlib/home/)
+  * [Cookie Consent](https://cookieconsent.insites.com/)
   
