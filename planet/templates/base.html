@@ -13,6 +13,25 @@
         <link href="{{ url_for('static', filename='css/typeahead.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/tabbed_panel.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+
+        {% if g.login_enabled %}
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/cookieconsent.min.css') }}" />
+        <script src="{{ url_for('static', filename='js/cookieconsent.min.js') }}"></script>
+        <script>
+        window.addEventListener("load", function(){
+        window.cookieconsent.initialise({
+          "palette": {
+            "popup": {
+              "background": "#000"
+            },
+            "button": {
+              "background": "#f1d600"
+            }
+          },
+          "position": "bottom-right"
+        })});
+        </script>
+        {% endif %}
     </head>
     <body data-spy="scroll" data-target="#navbar-side" data-offset="55">
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
