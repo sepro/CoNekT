@@ -357,3 +357,18 @@ class GO(db.Model):
                         associations = []
 
         db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
+
+    @staticmethod
+    def predict_from_network(expression_network_method_id, threshold=3, drop_predicted=True):
+        from planet.models.expression.networks import ExpressionNetworkMethod
+
+        expression_network_method = ExpressionNetworkMethod.query.get(expression_network_method_id)
+
+        if expression_network_method is None:
+            print("ERROR: Network Method ID %d not found" % expression_network_method_id)
+            return
+
+        probes = expression_network_method.probes.all()
+
+        for i, probe in enumerate(probes):
+            print("Predicting GO for gene: %s (%d out of %d)" % (probe.sequence.name, i, expression_network_method.probe_count))

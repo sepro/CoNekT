@@ -184,3 +184,11 @@ def delete_enrichment():
 
     flash('Successfully removed GO enrichment for co-expression clusters', 'success')
     return redirect(url_for('admin.controls.index'))
+
+
+@admin_controls.route('/network_predict')
+# @login_required
+def predict_from_network():
+    GO.predict_from_network(2)
+
+    return "Attempted prediction"

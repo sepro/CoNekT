@@ -29,7 +29,7 @@ class Sequence(db.Model):
                                           cascade="all, delete-orphan",
                                           passive_deletes=True)
     network_nodes = db.relationship('ExpressionNetwork',
-                                    backref='sequence',
+                                    backref=db.backref('sequence', lazy='joined'),
                                     lazy='dynamic',
                                     cascade="all, delete-orphan",
                                     passive_deletes=True)
