@@ -359,8 +359,11 @@ class GO(db.Model):
         db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
 
     @staticmethod
-    def predict_from_network(expression_network_method_id, threshold=3, drop_predicted=True):
+    def predict_from_network(expression_network_method_id, threshold=3,
+                             drop_predicted=True, source="PlaNet Prediction"):
         from planet.models.expression.networks import ExpressionNetworkMethod
+
+        # TODO drop predicted terms if drop_predicted == True
 
         expression_network_method = ExpressionNetworkMethod.query.get(expression_network_method_id)
 
@@ -370,5 +373,44 @@ class GO(db.Model):
 
         probes = expression_network_method.probes.all()
 
+        new_associations = []
+
         for i, probe in enumerate(probes):
-            print("Predicting GO for gene: %s (%d out of %d)" % (probe.sequence.name, i, expression_network_method.probe_count))
+            print("Predicting GO for gene: %d, %s (%d out of %d)" %
+                  (probe.sequence_id, probe.sequence.name, i, expression_network_method.probe_count))
+
+            # Get neighborhood from database
+            neighborhood = json.loads(probe.network)
+
+            # Get sequence ids from genes in first level neighborhood
+            sequence_ids = [n['gene_id'] for n in neighborhood if 'gene_id' in n]
+
+            # If the number of genes in the neighborhood is smaller than the threshold skip (no prediction possible)
+            # If there is no sequence associated with the probe skip as well
+            if len(sequence_ids) < threshold or probe.sequence_id is None:
+                continue
+
+            # Get own GO terms
+            own_associations = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id == probe.sequence_id)
+            own_terms = list(set([a.go_id for a in own_associations]))
+
+            # Get GO terms from neighbors
+            # TODO: ignore terms from predictions to avoid circular reasoning
+            associations = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id.in_(sequence_ids)).all()
+
+            # Make GO terms from neighbors unique and ignore terms the current gene has already
+            unique_associations = set([(a.sequence_id, a.go_id) for a in associations if a.go_id not in own_terms])
+
+            go_counts = defaultdict(lambda: 0)
+
+            for ua in unique_associations:
+                go_counts[ua[1]] += 1
+
+            # Determine new terms (that occurred equal or more times than the desired threshold
+            new_terms = [k for k, v in go_counts.items() if v >= threshold]
+
+            print(own_terms)
+            print(unique_associations)
+            print(go_counts)
+            print(new_terms)
+            print('---')
