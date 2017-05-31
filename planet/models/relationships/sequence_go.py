@@ -1,5 +1,7 @@
 from planet import db
 
+import json
+
 
 class SequenceGOAssociation(db.Model):
     __tablename__ = 'sequence_go'
@@ -24,3 +26,15 @@ class SequenceGOAssociation(db.Model):
     go = db.relationship('GO', backref=db.backref('sequence_associations',
                                                   lazy='dynamic',
                                                   passive_deletes=True), lazy='joined')
+
+    def __init__(self, sequence_id, go_id, evidence, source, predicted=False, prediction_data=None):
+        self.sequence_id = sequence_id
+        self.go_id = go_id
+        self.evidence = evidence
+        self.source = source
+        self.predicted = predicted
+        self.prediction_data = prediction_data
+
+    @property
+    def data(self):
+        return json.loads(self.prediction_data)

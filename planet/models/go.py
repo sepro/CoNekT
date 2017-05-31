@@ -102,6 +102,17 @@ class GO(db.Model):
         return output
 
     @property
+    def short_type(self):
+        if self.type == 'biological_process':
+            return 'BP'
+        elif self.type == 'molecular_function':
+            return 'MF'
+        elif self.type =='cellular_component':
+            return 'CC'
+        else:
+            return 'UNK'
+
+    @property
     def interpro_stats(self):
         from planet.models.interpro import Interpro
         sequence_ids = [s.id for s in self.sequences.all()]
@@ -359,11 +370,8 @@ class GO(db.Model):
         db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
 
     @staticmethod
-    def predict_from_network(expression_network_method_id, threshold=3,
-                             drop_predicted=True, source="PlaNet Prediction"):
+    def predict_from_network(expression_network_method_id, threshold=5, source="PlaNet Prediction"):
         from planet.models.expression.networks import ExpressionNetworkMethod
-
-        # TODO drop predicted terms if drop_predicted == True
 
         expression_network_method = ExpressionNetworkMethod.query.get(expression_network_method_id)
 
@@ -395,8 +403,8 @@ class GO(db.Model):
             own_terms = list(set([a.go_id for a in own_associations]))
 
             # Get GO terms from neighbors
-            # TODO: ignore terms from predictions to avoid circular reasoning
-            associations = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id.in_(sequence_ids)).all()
+            associations = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id.in_(sequence_ids)).\
+                filter(SequenceGOAssociation.predicted == 0).all()
 
             # Make GO terms from neighbors unique and ignore terms the current gene has already
             unique_associations = set([(a.sequence_id, a.go_id) for a in associations if a.go_id not in own_terms])
@@ -407,10 +415,25 @@ class GO(db.Model):
                 go_counts[ua[1]] += 1
 
             # Determine new terms (that occurred equal or more times than the desired threshold
-            new_terms = [k for k, v in go_counts.items() if v >= threshold]
+            new_terms = [{
+                'go_id': k,
+                'score': v
+            } for k, v in go_counts.items() if v >= threshold]
 
-            print(own_terms)
-            print(unique_associations)
-            print(go_counts)
-            print(new_terms)
-            print('---')
+            # Store new terms in a list that can be added to the database
+            for nt in new_terms:
+                new_associations.append({
+                    'sequence_id': probe.sequence_id,
+                    'go_id': nt['go_id'],
+                    'evidence': 'IEP',
+                    'source': source,
+                    'predicted': True,
+                    'prediction_data': json.dumps({'score': nt['score'],
+                                                   'threshold': threshold,
+                                                   'network_method': expression_network_method_id
+                                                   })
+                })
+
+        # Add new labels to the database in chuncks of 400
+        for i in range(0, len(new_associations), 400):
+            db.engine.execute(SequenceGOAssociation.__table__.insert(), new_associations[i: i + 400])
