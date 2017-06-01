@@ -68,17 +68,23 @@ class GO(db.Model):
         return count
 
     @staticmethod
-    def sequence_stats(sequence_ids):
+    def sequence_stats(sequence_ids, exclude_predicted=True):
         """
         Takes a list of sequence IDs and returns InterPro stats for those sequences
 
         :param sequence_ids: list of sequence ids
+        :param exclude_predicted: if True (default) predicted GO labels will be excluded
         :return: dict with for each InterPro domain linked with any of the input sequences stats
         """
 
         output = {}
 
-        data = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id.in_(sequence_ids)).all()
+        query = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id.in_(sequence_ids))
+
+        if exclude_predicted:
+            query = query.filter(SequenceGOAssociation.predicted == 0)
+
+        data = query.all()
 
         for d in data:
             if d.go_id not in output.keys():
@@ -135,7 +141,9 @@ class GO(db.Model):
     @staticmethod
     def update_species_counts():
         """
-        adds phylo-profile to each go-label, results are stored in the database
+        Adds phylo-profile to each go-label, results are stored in the database
+
+        :param exclude_predicted: if True (default) predicted GO labels will be excluded
         """
         # link species to sequences
         sequences = db.engine.execute(db.select([Sequence.__table__.c.id, Sequence.__table__.c.species_id])).fetchall()
@@ -148,7 +156,8 @@ class GO(db.Model):
         # get go for all genes
         associations = db.engine.execute(
             db.select([SequenceGOAssociation.__table__.c.sequence_id,
-                       SequenceGOAssociation.__table__.c.go_id], distinct=True))\
+                       SequenceGOAssociation.__table__.c.go_id,
+                       SequenceGOAssociation.__table__.c.predicted], distinct=True))\
             .fetchall()
 
         count = {}
@@ -175,7 +184,8 @@ class GO(db.Model):
         Parses GeneOntology's OBO file and adds it to the database
 
         :param filename: Path to the OBO file to parse
-        :param empty: Empty the database first (yes if True)
+        :param compressed: load data from .gz file if true (default: False)
+        :param empty: Empty the database first when true (default: True)
         """
         # If required empty the table first
         if empty:
@@ -371,6 +381,14 @@ class GO(db.Model):
 
     @staticmethod
     def predict_from_network(expression_network_method_id, threshold=5, source="PlaNet Prediction"):
+        """
+        Function to transfer GO terms from neighbors in the network. If n or more (based on threshold) neighbors have a
+        GO label (excluding other predicted labels) the term is transferred.
+
+        :param expression_network_method_id: Expression network as input
+        :param threshold: number of neighboring genes that should have the label to allow transfor
+        :param source: Value for the source field
+        """
         from planet.models.expression.networks import ExpressionNetworkMethod
 
         expression_network_method = ExpressionNetworkMethod.query.get(expression_network_method_id)
@@ -430,6 +448,70 @@ class GO(db.Model):
                     'predicted': True,
                     'prediction_data': json.dumps({'score': nt['score'],
                                                    'threshold': threshold,
+                                                   'network_method': expression_network_method_id
+                                                   })
+                })
+
+        # Add new labels to the database in chuncks of 400
+        for i in range(0, len(new_associations), 400):
+            db.engine.execute(SequenceGOAssociation.__table__.insert(), new_associations[i: i + 400])
+
+    @staticmethod
+    def predict_from_network_enrichment(expression_network_method_id, cutoff=0.05, source="PlaNet Prediction"):
+        from planet.models.expression.networks import ExpressionNetworkMethod
+
+        expression_network_method = ExpressionNetworkMethod.query.get(expression_network_method_id)
+
+        if expression_network_method is None:
+            print("ERROR: Network Method ID %d not found" % expression_network_method_id)
+            return
+
+        probes = expression_network_method.probes.all()
+
+        new_associations = []
+
+        for i, probe in enumerate(probes):
+            print("Predicting GO for gene: %d, %s (%d out of %d)" %
+                  (probe.sequence_id, probe.sequence.name, i, expression_network_method.probe_count))
+
+            # Get neighborhood from database
+            neighborhood = json.loads(probe.network)
+
+            # Get sequence ids from genes in first level neighborhood
+            sequence_ids = [n['gene_id'] for n in neighborhood if 'gene_id' in n]
+
+            # Get own GO terms
+            own_associations = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id == probe.sequence_id)
+            own_terms = list(set([a.go_id for a in own_associations]))
+
+            # Get GO terms from neighbors
+            associations = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id.in_(sequence_ids)).\
+                filter(SequenceGOAssociation.predicted == 0).all()
+
+            # Make GO terms from neighbors unique and ignore terms the current gene has already
+            unique_associations = set([(a.sequence_id, a.go_id) for a in associations if a.go_id not in own_terms])
+
+            go_counts = defaultdict(lambda: 0)
+
+            for ua in unique_associations:
+                go_counts[ua[1]] += 1
+
+            # Determine new terms (that occurred equal or more times than the desired threshold
+            new_terms = [{
+                'go_id': k,
+                'score': v
+            } for k, v in go_counts.items()]
+
+            # Store new terms in a list that can be added to the database
+            for nt in new_terms:
+                new_associations.append({
+                    'sequence_id': probe.sequence_id,
+                    'go_id': nt['go_id'],
+                    'evidence': 'IEP',
+                    'source': source,
+                    'predicted': True,
+                    'prediction_data': json.dumps({'score': nt['score'],
+                                                   'p-cutoff': cutoff,
                                                    'network_method': expression_network_method_id
                                                    })
                 })

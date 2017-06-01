@@ -37,4 +37,10 @@ class SequenceGOAssociation(db.Model):
 
     @property
     def data(self):
+        """
+        Property to get the information in the prediction_data as a dict. Useful for showing these values in e.g. jinja2
+        templates
+
+        :return: de-serialized prediction_data (json)
+        """
         return json.loads(self.prediction_data)
