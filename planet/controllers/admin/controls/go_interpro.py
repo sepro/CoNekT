@@ -9,6 +9,7 @@ from werkzeug.utils import redirect
 
 from planet.controllers.admin.controls import admin_controls
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
+from planet.forms.admin.predict_go import PredictGOForm
 from planet.forms.admin.add_go_sequences import AddGOForm
 from planet.forms.admin.add_interpro_sequences import AddInterProForm
 from planet.models.expression.coexpression_clusters import CoexpressionCluster
@@ -186,9 +187,21 @@ def delete_enrichment():
     return redirect(url_for('admin.controls.index'))
 
 
-@admin_controls.route('/network_predict')
-# @login_required
+@admin_controls.route('/network_predict', methods=['POST'])
+@login_required
 def predict_from_network():
-    GO.predict_from_network(2)
+    form = PredictGOForm(request.form)
+    form.populate_networks()
 
-    return "Attempted prediction"
+    if request.method == 'POST':
+        network_method_id = int(request.form.get('network_id'))
+        description = request.form.get('description')
+        p_cutoff = float(request.form.get('p_cutoff'))
+        try:
+            GO.predict_from_network_enrichment(network_method_id, cutoff=p_cutoff, source=description)
+            flash('Predicted GO terms from network %d' % network_method_id, 'success')
+        except Exception as e:
+            print(e)
+            flash('Failed to predicted GO terms from network %d' % network_method_id, 'danger')
+
+    return redirect(url_for('admin.index'))

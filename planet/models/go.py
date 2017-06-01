@@ -5,6 +5,7 @@ from planet.models.sequences import Sequence
 
 from utils.parser.obo import Parser as OBOParser
 from utils.parser.plaza.go import Parser as GOParser
+from utils.enrichment import hypergeo_sf, fdr_correction
 
 from collections import defaultdict
 
@@ -156,8 +157,7 @@ class GO(db.Model):
         # get go for all genes
         associations = db.engine.execute(
             db.select([SequenceGOAssociation.__table__.c.sequence_id,
-                       SequenceGOAssociation.__table__.c.go_id,
-                       SequenceGOAssociation.__table__.c.predicted], distinct=True))\
+                       SequenceGOAssociation.__table__.c.go_id], distinct=True))\
             .fetchall()
 
         count = {}
@@ -397,6 +397,7 @@ class GO(db.Model):
             print("ERROR: Network Method ID %d not found" % expression_network_method_id)
             return
 
+        # Get all genes that belong to the network
         probes = expression_network_method.probes.all()
 
         new_associations = []
@@ -448,7 +449,8 @@ class GO(db.Model):
                     'predicted': True,
                     'prediction_data': json.dumps({'score': nt['score'],
                                                    'threshold': threshold,
-                                                   'network_method': expression_network_method_id
+                                                   'network_method': expression_network_method_id,
+                                                   'prediction_method': 'Neighbor counting'
                                                    })
                 })
 
@@ -467,6 +469,18 @@ class GO(db.Model):
             return
 
         probes = expression_network_method.probes.all()
+
+        # Get all GO terms and get background
+        # Important, counts are obtained from precomputed counts in the species_counts field !!
+        go_data = db.engine.execute(db.select([GO.__table__.c.id, GO.__table__.c.species_counts])).fetchall()
+
+        go_background = defaultdict(lambda: 0)
+
+        for go_id, counts_json in go_data:
+            if counts_json is not "":
+                counts = json.loads(counts_json)
+                if str(expression_network_method.species_id) in counts.keys():
+                    go_background[go_id] = counts[str(expression_network_method.species_id)]
 
         new_associations = []
 
@@ -490,29 +504,35 @@ class GO(db.Model):
 
             # Make GO terms from neighbors unique and ignore terms the current gene has already
             unique_associations = set([(a.sequence_id, a.go_id) for a in associations if a.go_id not in own_terms])
-
             go_counts = defaultdict(lambda: 0)
 
             for ua in unique_associations:
                 go_counts[ua[1]] += 1
 
-            # Determine new terms (that occurred equal or more times than the desired threshold
-            new_terms = [{
-                'go_id': k,
-                'score': v
-            } for k, v in go_counts.items()]
+            # find significantly enriched GO terms and store them
+            enriched_go = []
 
-            # Store new terms in a list that can be added to the database
-            for nt in new_terms:
+            for go_id, count in go_counts.items():
+                p_value = hypergeo_sf(count, len(sequence_ids), go_background[go_id], len(probes))
+                if p_value < cutoff:
+                    enriched_go.append((go_id, p_value))
+
+            # apply FDR correction to the p-values
+            corrected_p = fdr_correction([a[1] for a in enriched_go])
+
+            # push new prediction in a dict that will be added to the DB
+            for corrected_p, (go_id, p_value) in zip(corrected_p, enriched_go):
                 new_associations.append({
                     'sequence_id': probe.sequence_id,
-                    'go_id': nt['go_id'],
+                    'go_id': go_id,
                     'evidence': 'IEP',
                     'source': source,
                     'predicted': True,
-                    'prediction_data': json.dumps({'score': nt['score'],
-                                                   'p-cutoff': cutoff,
-                                                   'network_method': expression_network_method_id
+                    'prediction_data': json.dumps({'p-cutoff': cutoff,
+                                                   'p-value': p_value,
+                                                   'p-value (FDR)': corrected_p,
+                                                   'network_method': expression_network_method_id,
+                                                   'prediction_method': 'Neighborhood enrichment'
                                                    })
                 })
 

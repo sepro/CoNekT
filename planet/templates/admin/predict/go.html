@@ -1,0 +1,38 @@
+{% extends 'admin/my_base.html' %}
+{% block body %}
+{% if form %}
+<h1>Predict GO terms from Neighborhoods</h1>
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+        <form method="POST"  action="{{ url_for('admin_controls.predict_from_network') }}"  role="form">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                {{ form.network_id.label }}
+                {{ form.network_id(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.description.label }}
+                {{ form.description(class_="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.p_cutoff.label }}
+                {{ form.p_cutoff(class_="form-control") }}
+            </div>
+
+            <button type="submit" class="btn btn-primary pull-right">Predict GO</button>
+        </form>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Help</strong></div>
+            <div class="panel-body">
+                Predict GO terms based on the co-expression network. GO-terms enriched in the direct (first-level)
+                neighborhood of each gene in the networks are tested for enrichment and enriched terms are added to the
+                source gene.
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -153,6 +153,7 @@ def configure_admin_panel(app):
         from planet.controllers.admin.views.go_interpro import AddGOView
         from planet.controllers.admin.views.go_interpro import AddFunctionalDataView
         from planet.controllers.admin.views.go_interpro import GOEnrichmentView
+        from planet.controllers.admin.views.go_interpro import PredictGOView
         from planet.controllers.admin.views.families import AddFamiliesView
         from planet.controllers.admin.views.families import GeneFamilyMethodAdminView
         from planet.controllers.admin.views.species import AddSpeciesView
@@ -268,6 +269,10 @@ def configure_admin_panel(app):
         admin.add_view(BuildNeighorhoodToClustersView(name='Neighborhood to clusters',
                                                       endpoint='admin.build.neighborhood_to_clusters',
                                                       url='build/neighborhood_to_clusters/', category='Build'))
+        admin.add_menu_item(MenuLink("------------", class_name="divider", url='#'), target_category='Build')
+        admin.add_view(PredictGOView(name='Predict GO from neighborhood', endpoint='admin.predict.go',
+                                     url='predict/go', category='Build'))
+
         # Control panel
         admin.add_view(ControlsView(name='Controls', endpoint='admin.controls', url='controls/'))
 

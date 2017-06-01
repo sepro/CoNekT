@@ -5,6 +5,7 @@ from markupsafe import Markup
 from planet.controllers.admin.views import AdminBaseView
 from planet.forms.admin.add_go_interpro import AddFunctionalDataForm
 from planet.forms.admin.add_go_sequences import AddGOForm
+from planet.forms.admin.predict_go import PredictGOForm
 from planet.forms.admin.add_interpro_sequences import AddInterProForm
 
 
@@ -43,6 +44,18 @@ class AddGOView(AdminBaseView):
         form.populate_species()
 
         return self.render('admin/add/go.html', form=form)
+
+
+class PredictGOView(AdminBaseView):
+    """
+    Admin page to add GO terms for one species to the database
+    """
+    @expose('/')
+    def index(self):
+        form = PredictGOForm()
+        form.populate_networks()
+
+        return self.render('admin/predict/go.html', form=form)
 
 
 class AddInterProView(AdminBaseView):
