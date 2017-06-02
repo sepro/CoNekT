@@ -409,6 +409,7 @@ class CoexpressionCluster(db.Model):
 
         associations = SequenceGOAssociation.query\
             .filter(SequenceGOAssociation.sequence_id.in_([s.id for s in sequences]))\
+            .filter(SequenceGOAssociation.predicted == 0)\
             .options(load_only("sequence_id", "go_id"))\
             .group_by(SequenceGOAssociation.sequence_id, SequenceGOAssociation.go_id)
 

@@ -165,27 +165,26 @@
     <div class="panel-heading">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab1default" data-toggle="tab">GO</a></li>
-                <li><a href="#tab2default" data-toggle="tab">InterPro</a></li>
+                <li><a href="#tab2default" data-toggle="tab">Predicted GO</a></li>
+                <li><a href="#tab3default" data-toggle="tab">InterPro</a></li>
             </ul>
     </div>
     <div>
         <div class="tab-content">
             <div class="tab-pane fade in active" id="tab1default">
-                {% if go_associations|count > 0 %}
                 <div class="table-responsive">
                     <table class="table table-striped table-fixed" id="go_table">
                         <thead>
                             <tr>
                                 <th class="col-xs-1" data-sort="string-ins"><span class="sort-icon"></span>Type</th>
                                 <th class="col-xs-2" data-sort="string-ins"><span class="sort-icon"></span><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr> Term</th>
-                                <th class="col-xs-4" data-sort="string-ins"><span class="sort-icon"></span>Name</th>
-                                <th class="col-xs-2" data-sort="string-ins"><span class="sort-icon"></span>Evidence</th>
+                                <th class="col-xs-6" data-sort="string-ins"><span class="sort-icon"></span>Name</th>
+                                <th class="col-xs-1" data-sort="string-ins"><span class="sort-icon"></span>Evidence</th>
                                 <th class="col-xs-2" data-sort="string-ins"><span class="sort-icon"></span>Source</th>
-                                <th class="col-xs-1" data-sort="string-ins"><span class="sort-icon"></span>Predicted</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for go_association in go_associations %}
+                            {% for go_association in go_associations if not go_association.predicted %}
                             {% if go_association.evidence == None %}
                             <tr class="parent_term" style="display: none" style="clear:both;">
                             {% else %}
@@ -194,17 +193,15 @@
                                 <td class="col-xs-1">{{ go_association.go.short_type }}</td>
                                 <td class="col-xs-2"><a href="{{ url_for('go.go_view', go_id=go_association.go.id) }}" data-toggle="tooltip"
                                        data-placement="top" title="{{ go_association.go.description }}">{{ go_association.go.label }}</a></td>
-                                <td class="col-xs-4">{{ go_association.go.name }}</td>
-                                <td class="col-xs-2">{{ go_association.evidence }}</td>
+                                <td class="col-xs-6">{{ go_association.go.name }}</td>
+                                <td class="col-xs-1">{{ go_association.evidence }}</td>
                                 <td class="col-xs-2">{{ go_association.source }}</td>
-                                <td class="col-xs-1">
-                                    {% if go_association.predicted %}
-                                    <i class="fa fa-check" aria-hidden="true"></i>
-                                    {% else %}
-                                    &nbsp;
-                                    {% endif %}
-                                </td>
                             </tr>
+                            {% else %}
+                            <tr>
+                                <td class="col-xs-12"><p>No GO annotation available for this sequence</p></td>
+                            </tr>
+
                             {% endfor %}
                         </tbody>
                     </table>
@@ -212,13 +209,46 @@
                 <div class="panel-body">
                     <a href="#" id="go_toggle">Toggle parental</a>
                 </div>
-                {% else %}
-                <div class="panel-body">
-                    <p>No GO annotation available for this sequence</p>
-                </div>
-                {% endif %}
             </div>
+
             <div class="tab-pane fade" id="tab2default">
+                <div class="table-responsive">
+                    <table class="table table-striped table-fixed" id="predicted_go_table">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-1" data-sort="string-ins"><span class="sort-icon"></span>Type</th>
+                                <th class="col-xs-2" data-sort="string-ins"><span class="sort-icon"></span><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr> Term</th>
+                                <th class="col-xs-6" data-sort="string-ins"><span class="sort-icon"></span>Name</th>
+                                <th class="col-xs-1" data-sort="string-ins"><span class="sort-icon"></span>Evidence</th>
+                                <th class="col-xs-2" data-sort="string-ins"><span class="sort-icon"></span>Source</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for go_association in go_associations if go_association.predicted %}
+                            {% if go_association.evidence == None %}
+                            <tr class="parent_term" style="display: none" style="clear:both;">
+                            {% else %}
+                            <tr style="clear:both;">
+                            {% endif %}
+                                <td class="col-xs-1">{{ go_association.go.short_type }}</td>
+                                <td class="col-xs-2"><a href="{{ url_for('go.go_view', go_id=go_association.go.id) }}" data-toggle="tooltip"
+                                       data-placement="top" title="{{ go_association.go.description }}">{{ go_association.go.label }}</a></td>
+                                <td class="col-xs-6">{{ go_association.go.name }}</td>
+                                <td class="col-xs-1">{{ go_association.evidence }}</td>
+                                <td class="col-xs-2">{{ go_association.source }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td class="col-xs-12"><p>No Predicted GO terms available for this sequence</p></td>
+                            </tr>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="tab3default">
                 {% if interpro_associations|count > 0 %}
                 <div class="table-responsive">
                     <table class="table table-striped table-fixed" id="interpro_table">
@@ -317,6 +347,7 @@
 
 $(function () {
   $("#go_table").stupidtable();
+  $("#predicted_go_table").stupidtable();
   $("#interpro_table").stupidtable();
   $("#ecc_hits_table").stupidtable();
   $("#coexpression_table").stupidtable();

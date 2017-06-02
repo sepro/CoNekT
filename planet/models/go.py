@@ -52,6 +52,37 @@ class GO(db.Model):
         self.extended_go = extended_go
         self.species_counts = ""
 
+    @property
+    def short_type(self):
+        if self.type == 'biological_process':
+            return 'BP'
+        elif self.type == 'molecular_function':
+            return 'MF'
+        elif self.type == 'cellular_component':
+            return 'CC'
+        else:
+            return 'UNK'
+
+    @property
+    def interpro_stats(self):
+        from planet.models.interpro import Interpro
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        return Interpro.sequence_stats(sequence_ids)
+
+    @property
+    def go_stats(self):
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        return GO.sequence_stats(sequence_ids)
+
+    @property
+    def family_stats(self):
+        from planet.models.gene_families import GeneFamily
+        sequence_ids = [s.id for s in self.sequences.all()]
+
+        return GeneFamily.sequence_stats(sequence_ids)
+
     def species_occurrence(self, species_id):
         """
         count how many genes have the current GO term in a given species
@@ -108,37 +139,6 @@ class GO(db.Model):
 
         return output
 
-    @property
-    def short_type(self):
-        if self.type == 'biological_process':
-            return 'BP'
-        elif self.type == 'molecular_function':
-            return 'MF'
-        elif self.type =='cellular_component':
-            return 'CC'
-        else:
-            return 'UNK'
-
-    @property
-    def interpro_stats(self):
-        from planet.models.interpro import Interpro
-        sequence_ids = [s.id for s in self.sequences.all()]
-
-        return Interpro.sequence_stats(sequence_ids)
-
-    @property
-    def go_stats(self):
-        sequence_ids = [s.id for s in self.sequences.all()]
-
-        return GO.sequence_stats(sequence_ids)
-
-    @property
-    def family_stats(self):
-        from planet.models.gene_families import GeneFamily
-        sequence_ids = [s.id for s in self.sequences.all()]
-
-        return GeneFamily.sequence_stats(sequence_ids)
-
     @staticmethod
     def update_species_counts():
         """
@@ -157,7 +157,8 @@ class GO(db.Model):
         # get go for all genes
         associations = db.engine.execute(
             db.select([SequenceGOAssociation.__table__.c.sequence_id,
-                       SequenceGOAssociation.__table__.c.go_id], distinct=True))\
+                       SequenceGOAssociation.__table__.c.go_id], distinct=True)\
+            .where(SequenceGOAssociation.__table__.c.predicted == 0))\
             .fetchall()
 
         count = {}
