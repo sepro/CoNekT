@@ -130,6 +130,8 @@ def search_json_genes(label):
     This search function is used by the cytoscape.js GUI we implemented. It will look for genes with a specific GO
     label associated with them. It will return a JSON object
 
+    Note predicted GO terms are excluded
+
     :param label: GO-label to look for
     :return: JSON object with gene IDs that can be used by our GUI
     """
@@ -138,7 +140,9 @@ def search_json_genes(label):
 
     if current_go is not None:
         for association in current_go.sequence_associations:
-            output.append(association.sequence_id)
+            # Exclude predictions
+            if association.predicted == 0:
+                output.append(association.sequence_id)
 
     return Response(json.dumps(output), mimetype='application/json')
 
