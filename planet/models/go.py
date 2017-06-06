@@ -64,6 +64,17 @@ class GO(db.Model):
             return 'UNK'
 
     @property
+    def readable_type(self):
+        if self.type == 'biological_process':
+            return 'Biological process'
+        elif self.type == 'molecular_function':
+            return 'Molecular function'
+        elif self.type == 'cellular_component':
+            return 'Cellular component'
+        else:
+            return 'Unknown type'
+
+    @property
     def interpro_stats(self):
         from planet.models.interpro import Interpro
         sequence_ids = [s.id for s in self.sequences.all()]

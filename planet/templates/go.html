@@ -20,7 +20,7 @@
         <li><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr></li>
         <li class="active"><strong>{{ go.label }}</strong></li>
     </ol>
-    <h1>{{ go.label }}: <strong>{{ go.name }}</strong> <small>({{ go.type }})</small></h1>
+    <h1>{{ go.label }}: <strong>{{ go.name }}</strong> <small>({{ go.readable_type }})</small></h1>
 
     <p>{{ go.description }}</p>
     <br />
