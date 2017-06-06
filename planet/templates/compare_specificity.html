@@ -31,6 +31,8 @@
                                 <label>Gene Families</label>
                                 {{form.family_method(class_="form-control")}}
                                 <br />
+                                <label>{{form.use_interpro()}} Use InterPro <span class="text-muted">(instead of gene families)</span></label>
+                                <br /><br />
                             </div>
                             <div class="col-md-6 col-sm-12 col-xs-12">
                             <label>Species A</label>
@@ -100,7 +102,11 @@
                     <table class="table  table-striped" id="results">
                         <thead>
                             <tr>
-                                <th data-sort="string-ins"><span class="sort-icon"></span>Gene Family</th>
+                                {% if use_interpro%}
+                                    <th data-sort="string-ins"><span class="sort-icon"></span>InterPro domain</th>
+                                {% else%}
+                                    <th data-sort="string-ins"><span class="sort-icon"></span>Gene Family</th>
+                                {% endif %}
                                 <th data-sort="string-ins"><span class="sort-icon"></span><em>{{ labels.left_species }}</em> {{ labels.left_condition }}</th>
                                 <th data-sort="string-ins"><span class="sort-icon"></span><em>{{ labels.right_species }}</em> {{ labels.right_condition }}</th>
                                 <th data-sort="string-ins"><span class="sort-icon"></span>Type</th>
@@ -108,9 +114,13 @@
                         </thead>
                         <tbody>
                             {% for current_type in ['intersection', 'left', 'right'] %}
-                                {% for fam_id, td in table_data.items() if td.type == current_type %}
+                                {% for feat_id, td in table_data.items() if td.type == current_type %}
                                     <tr>
-                                        <td><a href="{{ url_for('family.family_view', family_id=fam_id) }}">{{td.name}}</a></td>
+                                        {% if use_interpro%}
+                                            <td><a href="{{ url_for('interpro.interpro_view', interpro_id=feat_id) }}">{{td.name}}</a></td>
+                                        {% else%}
+                                            <td><a href="{{ url_for('family.family_view', family_id=feat_id) }}">{{td.name}}</a></td>
+                                        {% endif %}
                                         <td>
                                             {% for l in td.left_genes %}
                                                 <a href="{{ url_for('sequence.sequence_view', sequence_id=l.id) }}">{{l.name}}</a>

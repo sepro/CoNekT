@@ -9,6 +9,8 @@ from planet.models.gene_families import GeneFamilyMethod
 class CompareSpecificityForm(FlaskForm):
     family_method = SelectField('family_method')
 
+    use_interpro = BooleanField('Use InterPro')
+
     speciesa = SelectField('Speciesa')
     methodsa = SelectField('Methoda')
     conditionsa = SelectField('Conditiona')

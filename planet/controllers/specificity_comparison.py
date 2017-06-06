@@ -5,6 +5,7 @@ from flask import Blueprint, request, render_template
 from planet.forms.compare_specificity import CompareSpecificityForm
 from planet.models.expression.specificity import ExpressionSpecificityMethod, ExpressionSpecificity
 from planet.models.relationships.sequence_family import SequenceFamilyAssociation
+from planet.models.relationships.sequence_interpro import SequenceInterproAssociation
 from planet.models.species import Species
 
 specificity_comparison = Blueprint('specificity_comparison', __name__)
@@ -24,6 +25,8 @@ def specificity_comparison_main():
         return render_template('compare_specificity.html', form=form)
     else:
         family_method = request.form.get('family_method')
+
+        use_interpro = request.form.get('use_interpro') == 'y'
 
         species_a_id = request.form.get('speciesa')
         method_a_id = request.form.get('methodsa')
@@ -49,23 +52,6 @@ def specificity_comparison_main():
 
         sequence_ids = [r.profile.sequence_id for r in results_a] + [r.profile.sequence_id for r in results_b]
 
-        family_associations = SequenceFamilyAssociation.query.\
-            filter(SequenceFamilyAssociation.family.has(method_id=family_method)).\
-            filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids)).all()
-
-        seq_to_fam = {f.sequence_id: f.gene_family_id for f in family_associations}
-        fam_to_data = defaultdict(list)
-        famID_to_name = {}
-
-        for f in family_associations:
-            fam_to_data[f.gene_family_id].append({'id': f.sequence_id, 'name': f.sequence.name})
-            famID_to_name[f.gene_family_id] = f.family.name
-
-        families_a = set([seq_to_fam[r.profile.sequence_id] for r in results_a if r.profile.sequence_id in seq_to_fam.keys()])
-        families_b = set([seq_to_fam[r.profile.sequence_id] for r in results_b if r.profile.sequence_id in seq_to_fam.keys()])
-
-        all_families = families_a.union(families_b)
-
         counts = {
             'left': 0,
             'right': 0,
@@ -74,25 +60,78 @@ def specificity_comparison_main():
 
         table_data = {}
 
-        for f in all_families:
-            table_data[f] = {'id': f, 'name': famID_to_name[f], 'left_genes': [], 'right_genes': []}
+        if use_interpro:
+            interpro_associations = SequenceInterproAssociation.query.\
+                filter(SequenceInterproAssociation.sequence_id.in_(sequence_ids)).all()
 
-            # TODO: fix one-by-one fetching of names
-            table_data[f]['left_genes'] = [{'id': r.profile.sequence_id, 'name': r.profile.sequence.name} for r in results_a
-                                           if r.profile.sequence_id in seq_to_fam.keys() and seq_to_fam[r.profile.sequence_id] == f]
-            table_data[f]['right_genes'] = [{'id': r.profile.sequence_id, 'name': r.profile.sequence.name} for r in results_b
-                                            if r.profile.sequence_id in seq_to_fam.keys() and seq_to_fam[
-                                            r.profile.sequence_id] == f]
+            sequence_id_left = [r.profile.sequence_id for r in results_a if r.profile.sequence_id is not None]
+            sequence_id_right = [r.profile.sequence_id for r in results_b if r.profile.sequence_id is not None]
 
-            if len(table_data[f]['left_genes']) > 0 and len(table_data[f]['right_genes']) == 0:
-                table_data[f]['type'] = 'left'
-                counts['left'] += 1
-            elif len(table_data[f]['right_genes']) > 0 and len(table_data[f]['left_genes']) == 0:
-                table_data[f]['type'] = 'right'
-                counts['right'] += 1
-            else:
-                table_data[f]['type'] = 'intersection'
-                counts['intersection'] += 1
+            interpro_id_left = [ia.interpro_id for ia in interpro_associations if ia.sequence_id in sequence_id_left]
+            interpro_id_right = [ia.interpro_id for ia in interpro_associations if ia.sequence_id in sequence_id_right]
+
+            interpro_ids = list(set(interpro_id_left + interpro_id_right))
+
+            interpro_id_to_name = {i.interpro_id: i.domain.label for i in interpro_associations}
+
+            for ii in interpro_ids:
+                table_data[ii] = {'id': ii, 'name': interpro_id_to_name[ii], 'left_genes': [], 'right_genes': []}
+
+                left_genes = list(set([(i.sequence_id, i.sequence.name)
+                                       for i in interpro_associations if i.sequence_id in sequence_id_left and i.interpro_id == ii]))
+                right_genes = list(set([(i.sequence_id, i.sequence.name)
+                                        for i in interpro_associations if i.sequence_id in sequence_id_right and i.interpro_id == ii]))
+
+                table_data[ii]['left_genes'] = [{'id': d[0], 'name': d[1]} for d in left_genes]
+                table_data[ii]['right_genes'] = [{'id': d[0], 'name': d[1]} for d in right_genes]
+
+                if len(table_data[ii]['left_genes']) > 0 and len(table_data[ii]['right_genes']) == 0:
+                    table_data[ii]['type'] = 'left'
+                    counts['left'] += 1
+                elif len(table_data[ii]['right_genes']) > 0 and len(table_data[ii]['left_genes']) == 0:
+                    table_data[ii]['type'] = 'right'
+                    counts['right'] += 1
+                else:
+                    table_data[ii]['type'] = 'intersection'
+                    counts['intersection'] += 1
+
+        else:
+            family_associations = SequenceFamilyAssociation.query.\
+                filter(SequenceFamilyAssociation.family.has(method_id=family_method)).\
+                filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids)).all()
+
+            seq_to_fam = {f.sequence_id: f.gene_family_id for f in family_associations}
+            fam_to_data = defaultdict(list)
+            famID_to_name = {}
+
+            for f in family_associations:
+                fam_to_data[f.gene_family_id].append({'id': f.sequence_id, 'name': f.sequence.name})
+                famID_to_name[f.gene_family_id] = f.family.name
+
+            families_a = set([seq_to_fam[r.profile.sequence_id] for r in results_a if r.profile.sequence_id in seq_to_fam.keys()])
+            families_b = set([seq_to_fam[r.profile.sequence_id] for r in results_b if r.profile.sequence_id in seq_to_fam.keys()])
+
+            all_families = families_a.union(families_b)
+
+            for f in all_families:
+                table_data[f] = {'id': f, 'name': famID_to_name[f], 'left_genes': [], 'right_genes': []}
+
+                # TODO: fix one-by-one fetching of names
+                table_data[f]['left_genes'] = [{'id': r.profile.sequence_id, 'name': r.profile.sequence.name} for r in results_a
+                                               if r.profile.sequence_id in seq_to_fam.keys() and seq_to_fam[r.profile.sequence_id] == f]
+                table_data[f]['right_genes'] = [{'id': r.profile.sequence_id, 'name': r.profile.sequence.name} for r in results_b
+                                                if r.profile.sequence_id in seq_to_fam.keys() and seq_to_fam[
+                                                r.profile.sequence_id] == f]
+
+                if len(table_data[f]['left_genes']) > 0 and len(table_data[f]['right_genes']) == 0:
+                    table_data[f]['type'] = 'left'
+                    counts['left'] += 1
+                elif len(table_data[f]['right_genes']) > 0 and len(table_data[f]['left_genes']) == 0:
+                    table_data[f]['type'] = 'right'
+                    counts['right'] += 1
+                else:
+                    table_data[f]['type'] = 'intersection'
+                    counts['intersection'] += 1
 
         return render_template('compare_specificity.html', counts=counts,
                                table_data=table_data,
@@ -101,4 +140,5 @@ def specificity_comparison_main():
                                        'left_method': method_a.description,
                                        'right_method': method_b.description,
                                        'left_condition': condition_a,
-                                       'right_condition': condition_b})
+                                       'right_condition': condition_b},
+                               use_interpro=use_interpro)
