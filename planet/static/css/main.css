@@ -481,3 +481,11 @@ Equal height panels. Should be added to class=row !
     transition: all 150ms ease-in;
     transform: scale(1.02);
 }
+
+
+/*
+    Force text-deco to none, conflict with more recent versions of chrome and firefox and the bootstrap version we use
+*/
+abbr[title] {
+  text-decoration: none !important;
+}
