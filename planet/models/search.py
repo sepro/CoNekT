@@ -126,7 +126,8 @@ class Search:
                 "profiles": profiles}
 
     @staticmethod
-    def advanced_sequence_search(species_id, gene_list, terms, term_rules, go_terms, go_rules, interpro_domains, interpro_rules):
+    def advanced_sequence_search(species_id, gene_list, terms, term_rules, go_terms, go_rules, interpro_domains,
+                                 interpro_rules, include_predictions=False):
         valid_species_ids = [s.id for s in Species.query.all()]
 
         query = Sequence.query
@@ -158,10 +159,22 @@ class Search:
 
         # Filter for GO terms
         if go_terms is not None and len(go_terms) > 0:
+            selected_go_id = [go.id for go in GO.query.filter(GO.name.in_(go_terms)).all()]
+
             if go_rules == 'all':
-                query = query.filter(and_(*[Sequence.go_labels.any(name=t) for t in go_terms]))
+                if include_predictions:
+                    query = query.filter(and_(*[Sequence.go_associations.any(go_id=go_id) for go_id in selected_go_id]))
+                else:
+                    query = query.filter(and_(*[Sequence.go_associations.any(go_id=go_id, predicted=0)
+                                                for go_id in selected_go_id]))
             else:
-                query = query.filter(or_(*[Sequence.go_labels.any(name=t) for t in go_terms]))
+                if include_predictions:
+                    query = query.filter(or_(*[Sequence.go_associations.any(go_id=go_id) for go_id in selected_go_id]))
+                else:
+                    query = query.filter(or_(*[Sequence.go_associations.any(go_id=go_id, predicted=0)
+                                               for go_id in selected_go_id]))
+
+        # exclude predicted GO !
 
         # Filter for InterPro domains
         if interpro_domains is not None and len(interpro_domains) > 0:

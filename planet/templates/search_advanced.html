@@ -35,7 +35,8 @@
                                 <hr />
                                 <div class="row">
                                     <div class="col-xs-4 col-lg-2"><label><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr> Terms</label></div>
-                                    <div class="col-xs-8 col-lg-10">{{adv_sequence_form.go_rules(class_="list-inline")}}</div>
+                                    <div class="col-xs-8 col-lg-5">{{adv_sequence_form.go_rules(class_="list-inline")}}</div>
+                                    <div class="col-xs-12 col-lg-5"><label>{{adv_sequence_form.include_predictions(checked=False, class_="")}} Include predictions ?</label></div>
                                 </div>
                                 <div class="dynamic-form-go">
                                 {% for go_term in adv_sequence_form.go_terms %}

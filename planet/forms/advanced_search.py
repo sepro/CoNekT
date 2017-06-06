@@ -1,7 +1,7 @@
 from planet.models.species import Species
 
 from flask_wtf import FlaskForm
-from wtforms import Form, FormField, FieldList,StringField, SelectField, RadioField, TextAreaField
+from wtforms import Form, FormField, FieldList,StringField, SelectField, RadioField, TextAreaField, BooleanField
 from wtforms.validators import InputRequired
 
 
@@ -22,6 +22,7 @@ class AdvancedSequenceSearchForm(FlaskForm):
 
     go_rules = RadioField('go_rules', choices=[('all', 'All'), ('any', 'Any')], default='all')
     go_terms = FieldList(FormField(GOField), min_entries=1)
+    include_predictions = BooleanField('include predictions')
 
     interpro_rules = RadioField('interpro_rules', choices=[('all', 'All'), ('any', 'Any')], default='all')
     interpro_domains = FieldList(FormField(InterProField), min_entries=1)

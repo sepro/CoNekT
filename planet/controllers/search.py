@@ -107,6 +107,7 @@ def advanced():
 
         go_rules = request.form.get('go_rules')
         go_terms = [gt.data['go_term'] for gt in adv_sequence_form.go_terms.entries if gt.data['go_term'] != ""]
+        include_predictions = request.form.get('include_predictions') == 'y'
 
         interpro_rules = request.form.get('interpro_rules')
         interpro_terms = [it.data['interpro_domain']
@@ -116,7 +117,7 @@ def advanced():
                                                   gene_ids.strip().split(),
                                                   terms, terms_rules,
                                                   go_terms, go_rules,
-                                                  interpro_terms, interpro_rules)
+                                                  interpro_terms, interpro_rules, include_predictions=include_predictions)
 
         return render_template("search_results.html", keyword="Advanced search results",
                                sequences=results, advanced=True)
