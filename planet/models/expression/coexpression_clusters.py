@@ -338,12 +338,6 @@ class CoexpressionCluster(db.Model):
     method_id = db.Column(db.Integer, db.ForeignKey('coexpression_clustering_methods.id', ondelete='CASCADE'))
     name = db.Column(db.String(50), index=True)
 
-    trees = db.relationship('Tree',
-                            backref=db.backref('cluster', lazy='joined'),
-                            lazy='dynamic',
-                            cascade="all, delete-orphan",
-                            passive_deletes=True)
-
     # Other properties
     # sequences defined in Sequence
     # sequence_associations defined in SequenceCoexpressionClusterAssociation'

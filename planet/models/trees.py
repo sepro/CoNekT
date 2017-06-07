@@ -9,9 +9,8 @@ class TreeMethod(db.Model):
 
     description = db.Column(db.Text)
 
-    coexpression_clustering_method_id = db.Column(db.Integer,
-                                                  db.ForeignKey('coexpression_clustering_methods.id', ondelete='CASCADE'),
-                                                  index=True)
+    gene_family_method_id = db.Column(db.Integer,
+                                      db.ForeignKey('gene_family_methods.id', ondelete='CASCADE'), index=True)
 
     trees = db.relationship('Tree',
                             backref=db.backref('method', lazy='joined'),
@@ -28,5 +27,5 @@ class Tree(db.Model):
     data_newick = db.Column(db.Text)
     data_phyloxml = db.Column(db.Text)
 
+    gf_id = db.Column(db.Integer, db.ForeignKey('gene_families.id', ondelete='CASCADE'), index=True)
     method_id = db.Column(db.Integer, db.ForeignKey('tree_methods.id', ondelete='CASCADE'), index=True)
-    cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id', ondelete='CASCADE'), index=True)
