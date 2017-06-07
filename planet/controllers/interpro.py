@@ -136,3 +136,16 @@ def interpro_family_ajax(interpro_id):
     current_interpro = Interpro.query.get(interpro_id)
 
     return render_template('async/family_stats.html', family_stats=current_interpro.family_stats)
+
+
+@interpro.route('/tooltip/<interpro_id>')
+@cache.cached()
+def interpro_tooltip(interpro_id):
+    """
+    Get an interpro domain based and render in tooltip template
+
+    :param interpro_id: ID of the interpro domain
+    """
+    current_interpro = Interpro.query.get_or_404(interpro_id)
+
+    return render_template('tooltips/interpro.html', interpro=current_interpro)

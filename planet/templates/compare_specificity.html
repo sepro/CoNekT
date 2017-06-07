@@ -117,20 +117,26 @@
                                 {% for feat_id, td in table_data.items() if td.type == current_type %}
                                     <tr>
                                         {% if use_interpro%}
-                                            <td><a href="{{ url_for('interpro.interpro_view', interpro_id=feat_id) }}">{{td.name}}</a></td>
+                                            <td><a href="{{ url_for('interpro.interpro_view', interpro_id=feat_id) }}"
+                                                class="qtip_tooltip"
+                                                qtip_href="{{ url_for('interpro.interpro_tooltip', interpro_id=feat_id) }}">{{td.name}}</a></td>
                                         {% else%}
                                             <td><a href="{{ url_for('family.family_view', family_id=feat_id) }}">{{td.name}}</a></td>
                                         {% endif %}
                                         <td>
                                             {% for l in td.left_genes %}
-                                                <a href="{{ url_for('sequence.sequence_view', sequence_id=l.id) }}">{{l.name}}</a>
+                                                <a href="{{ url_for('sequence.sequence_view', sequence_id=l.id) }}"
+                                                class="qtip_tooltip"
+                                                qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=l.id) }}">{{l.name}}</a>
                                             {% else %}
                                                 <span class="text-muted text-center">-</span>
                                             {% endfor %}
                                         </td>
                                         <td>
                                             {% for r in td.right_genes %}
-                                                <a href="{{ url_for('sequence.sequence_view', sequence_id=r.id) }}">{{r.name}}</a>
+                                                <a href="{{ url_for('sequence.sequence_view', sequence_id=r.id) }}"
+                                                class="qtip_tooltip"
+                                                qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=r.id) }}">{{r.name}}</a>
                                             {% else %}
                                                 <span class="text-muted  text-center">-</span>
                                             {% endfor %}

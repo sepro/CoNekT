@@ -1,0 +1,7 @@
+<div>
+    <div>{{ interpro.label }}: <strong>{{ interpro.description }}</strong></div>
+    {% if interpro.clade_id %}
+    <hr />
+    <div>Specific for <strong><a href="{{ url_for('clade.clade_view', clade_id=interpro.clade_id) }}">{{ interpro.clade.name}}</a></strong></div>
+    {% endif %}
+</div>
