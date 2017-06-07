@@ -11,7 +11,6 @@ class AddTreesForm(FlaskForm):
 
     tree_directory = FileField()
 
-
     def populate_methods(self):
         self.gene_family_method_id.choices = [(gfm.id, gfm.method) for gfm in GeneFamilyMethod.query.all()]
 

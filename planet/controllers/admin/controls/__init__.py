@@ -15,6 +15,7 @@ from .ftp import export_ftp
 from .go_interpro import add_functional_data, add_go, add_interpro, calculate_enrichment, delete_enrichment
 from .sequences import add_descriptions
 from .species import add_species
+from .trees import add_trees
 from .whooshee import reindex_whooshee
 from .xrefs import add_xrefs, add_xrefs_family
 

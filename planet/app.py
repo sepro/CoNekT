@@ -158,6 +158,7 @@ def configure_admin_panel(app):
         from planet.controllers.admin.views.families import GeneFamilyMethodAdminView
         from planet.controllers.admin.views.species import AddSpeciesView
         from planet.controllers.admin.views.species import SpeciesAdminView
+        from planet.controllers.admin.views.trees import AddTreesView
         from planet.controllers.admin.views.expression_clusters import BuildNeighorhoodToClustersView
         from planet.controllers.admin.views.expression_clusters import BuildCoexpressionClustersView
         from planet.controllers.admin.views.expression_clusters import AddCoexpressionClustersView
@@ -230,6 +231,10 @@ def configure_admin_panel(app):
         admin.add_view(AddFamiliesView(name='Gene Families',
                                        endpoint='admin.add.families',
                                        url='add/families/', category='Add'))
+
+        admin.add_view(AddTreesView(name='Trees',
+                                    endpoint='admin.add.trees',
+                                    url='add/trees/', category='Add'))
 
         admin.add_view(AddCladesView(name='Clades',
                                      endpoint='admin.add.clades',
