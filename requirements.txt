@@ -22,6 +22,7 @@ Mako==1.0.6
 Markdown==2.6.8
 MarkupSafe==1.0
 mpmath==0.19
+newick==0.8.0
 pbr==3.0.0
 python-editor==1.0.3
 python-magic==0.4.12

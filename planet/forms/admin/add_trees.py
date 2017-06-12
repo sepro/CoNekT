@@ -10,6 +10,7 @@ class AddTreesForm(FlaskForm):
     description = TextAreaField('Description', [InputRequired()])
 
     tree_directory = FileField()
+    sequence_ids = FileField()
 
     def populate_methods(self):
         self.gene_family_method_id.choices = [(gfm.id, gfm.method) for gfm in GeneFamilyMethod.query.all()]

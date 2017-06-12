@@ -13,13 +13,13 @@ import os
 required_endpoints = ['/admin/add/species/', '/admin/add/expression_profiles/',
                       '/admin/add/coexpression_network/', '/admin/add/coexpression_clusters/',
                       '/admin/add/expression_specificity/', '/admin/add/families/', '/admin/add/go/',
-                      '/admin/add/interpro/', '/admin/add/clades/', '/admin/add/xrefs/',
+                      '/admin/add/interpro/', '/admin/add/clades/', 'admin/add/trees/', '/admin/add/xrefs/',
                       '/admin/add/xrefs_families/', '/admin/controls/', '/admin/species/', '/admin/clades/',
                       '/admin/families/', '/admin/networks/', '/admin/clusters/', '/admin/specificity/',
                       '/admin/condition_tissue/', '/admin/add/functional_data/', '/admin/add/sequence_descriptions/',
                       '/admin_controls/update/counts', '/admin_controls/update/clades', '/admin/build/ecc/',
                       '/admin/build/cluster_similarities/', '/admin/build/go_enrichment', '/admin/build/hcca_clusters/',
-                      '/admin/build/neighborhood_to_clusters/']
+                      '/admin/build/neighborhood_to_clusters/', '/admin/predict/go/']
 
 
 class AdminTest(TestCase):

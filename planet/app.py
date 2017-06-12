@@ -170,6 +170,7 @@ def configure_admin_panel(app):
         from planet.controllers.admin.views.xrefs import AddXRefsView
         from planet.controllers.admin.views.controls import ControlsView
         from planet.controllers.admin.views.news import NewsAdminView
+        from planet.controllers.admin.views.trees import TreeMethodAdminView
 
         from planet.models.users import User
         from planet.models.species import Species
@@ -180,6 +181,7 @@ def configure_admin_panel(app):
         from planet.models.condition_tissue import ConditionTissue
         from planet.models.clades import Clade
         from planet.models.news import News
+        from planet.models.trees import TreeMethod
 
         admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'), template_mode='bootstrap3',
                       base_template='admin/my_base.html')
@@ -295,6 +297,8 @@ def configure_admin_panel(app):
 
         admin.add_view(GeneFamilyMethodAdminView(GeneFamilyMethod, db.session, url='families/', category="Browse",
                                                  name='Gene Families'))
+        admin.add_view(TreeMethodAdminView(TreeMethod, db.session, url='trees/', category="Browse",
+                                           name='Tree Methods'))
         admin.add_view(ExpressionNetworkMethodAdminView(ExpressionNetworkMethod, db.session, url='networks/',
                                                         category="Browse", name='Expression Networks'))
         admin.add_view(CoexpressionClusteringMethodAdminView(CoexpressionClusteringMethod, db.session, url='clusters/',

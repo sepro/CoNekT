@@ -16,6 +16,12 @@
                 {{ form.description(class_="form-control") }}
             </div>
             <div class="form-group">
+                <label class="btn btn-default" for="sequence_ids" id="my-sequence-button">
+                    {{ form.sequence_ids(style="display:none;", onchange="")}}
+                    <span id="sequence-selector-text">Select SequenceIDs.txt</span>
+                </label>
+            </div>
+            <div class="form-group">
                 <label class="btn btn-default" for="tree_directory" id="my-file-button">
                     {{ form.tree_directory(style="display:none;", onchange="", **{'webkitdirectory':'', 'mozdirectory':''})}}
                     <span id="file-selector-text">Select Directory</span>
@@ -31,7 +37,7 @@
             <div class="panel-body">
                 Adds trees generated using OrthoFinder.
 
-                <!-- TODO ADD HELP HERE -->
+                Select the <strong>directory</strong> that contains the trees from orthofinder.
             </div>
         </div>
     </div>
@@ -43,16 +49,20 @@
 {% block tail %}
 <script>
     $(function() {
-        $("#file").change(function() {
-            $('#file-selector-text').html($(this).val().replace(/^.*\\/, '') + ' selected');$('#my-file-button').toggleClass('btn-default btn-success');
+        $("#tree_directory").change(function() {
+            $('#file-selector-text').html('Directory selected');$('#my-file-button').toggleClass('btn-default btn-success');
         });
 
-        var inps = document.querySelectorAll('input');
+        $("#sequence_ids").change(function() {
+            $('#sequence-selector-text').html('SequenceIDs.txt selected');$('#my-sequence-button').toggleClass('btn-default btn-success');
+        });
+
+        /*var inps = document.querySelectorAll('input');
         [].forEach.call(inps, function(inp) {
             inp.onchange = function(e) {
                 console.log(this.files);
             };
-        });
+        });*/
     });
 </script>
 {{ super() }}

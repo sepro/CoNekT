@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if tree %}
+        {{ tree.label }} details
+    {% else %}
+        Tree Methods
+    {% endif %}
+{% endblock %}
+
+{% block container %}
+{% import 'macros/pagination.html' as macro %}
+<div class="top-pad">
+
+    {% if trees %}
+        <ol class="breadcrumb">
+            <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+            <li class="active"><strong  >Trees</strong></li>
+        </ol>
+        <h1><strong><em>Tree Methods</em></strong></h1>
+
+        <div class="table-responsive">
+            <table class="table" style="margin-bottom:100px;" id="methods_table">
+                <thead>
+                    <tr>
+                        {% if g.debug %}<th data-sort="int"><span class="sort-icon"></span>ID</th>{% endif %}
+                        <th data-sort="string-ins"><span class="sort-icon"></span>Name</th>
+                        <th data-sort="string-ins"><span class="sort-icon"></span>based on</th>
+                        <!--<th data-sort="int"><span class="sort-icon"></span>count</th>-->
+                    </tr>
+                </thead>
+                <tbody>
+                {% for tm in trees  %}
+                    <tr>
+                        {% if g.debug %}<td>{{ tm.id }}</td>{% endif %}
+                        <td>{{ tm.description }}</td>
+                        <td>{{ tm.gf_method.method }}</td>
+                        <!--<td>NOT IMPLEMENTED</td>-->
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+         </div>
+
+    {% elif tree %}
+        <ol class="breadcrumb">
+            <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+            <li><a href="{{ url_for('tree.trees_overview') }}">Trees</a></li>
+            <li>View</li>
+            <li><strong>{{ tree.label }}</strong></li>
+        </ol>
+     <h1>{{ tree.label }}: <strong>{{ tree.method.description }}</strong></h1>
+    <strong>Download:</strong>
+    <a href="{{ url_for('tree.newick', tree_id=tree.id) }}" download>Newick</a> |
+    <a href="{{ url_for('tree.newick_no_branch_lengths', tree_id=tree.id) }}" download>Newick</a>
+    <span class="text-muted">(without branch lengths)</span>
+    <div>
+        <pre>{{ tree.ascii_art }}</pre>
+    </div>
+
+    {{ macro.pagination('Sequences',
+        url_for('tree.tree_sequences', tree_id=tree.id),
+        tree.count,
+        url_for('tree.tree_sequences_table', tree_id=tree.id),
+        'tree'
+    ) }}
+
+    {% endif %}
+</div>
+
+</div>
+{% endblock %}
+
+{% block extrajs %}
+    {% if trees %}
+        <script>
+            $(function () {
+                $("#methods_table").stupidtable();
+            });
+        </script>
+    {% endif %}
+{% endblock %}

@@ -27,8 +27,16 @@ class GeneFamilyMethod(db.Model):
                                cascade="all, delete-orphan",
                                passive_deletes=True)
 
+    tree_methods = db.relationship('TreeMethod', backref=db.backref('gf_method', lazy='joined'),
+                                   lazy='dynamic',
+                                   cascade="all, delete-orphan",
+                                   passive_deletes=True)
+
     def __init__(self, method):
         self.method = method
+
+    def __str__(self):
+        return "%d. %s" % (self.id, self.method)
 
     @staticmethod
     def update_count():
