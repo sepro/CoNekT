@@ -2,23 +2,12 @@ from planet import db
 from planet.models.sequences import Sequence
 from planet.models.clades import Clade
 
+import utils.phylo as phylo
+
 import newick
 import json
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
-
-
-def __get_clade(species, clades_to_species):
-    """
-    Checks for a list of species which clade matches best (fewest other species in the clade).
-
-
-    :param species: list of species for which the best clade needs to be determined
-    :param clades_to_species: dict with clade names (keys) and lists of species (values)
-    :return: tuple of the clade name
-    """
-    for c, s in sorted(clades_to_species.items(), key=lambda k:  len(clades_to_species[k])):
-        print(c, s)
 
 
 class TreeMethod(db.Model):
@@ -36,29 +25,7 @@ class TreeMethod(db.Model):
                             cascade="all, delete-orphan",
                             passive_deletes=True)
 
-    @staticmethod
-    def __get_clade(species, clades_to_species):
-        """
-        Checks for a list of species which clade matches best (fewest other species in the clade).
 
-
-        :param species: list of species for which the best clade needs to be determined
-        :param clades_to_species: dict with clade names (keys) and lists of species (values)
-        :return: tuple of the clade name
-        """
-        for c in sorted(clades_to_species.keys(), key=lambda k: len(clades_to_species[k])):
-            cs = clades_to_species[c]
-            if all([s in cs for s in species]):
-                return c, cs
-        else:
-            return None, []
-
-    @staticmethod
-    def __duplication(set_one, set_two, clades_to_species):
-        _, species_one = TreeMethod.__get_clade(set_one, clades_to_species)
-        _, species_two = TreeMethod.__get_clade(set_two, clades_to_species)
-
-        return any([s in species_two for s in species_one])
 
     def reconcile_trees(self):
         # Fetch required data from the database
@@ -89,9 +56,13 @@ class TreeMethod(db.Model):
 
                 all_species = branch_one_species.union(branch_two_species)
 
-                c, s = TreeMethod.__get_clade(all_species, clade_to_species)
-                duplication = TreeMethod.__duplication(branch_one_species, branch_two_species, clade_to_species)
-                print(t.id, c, s, "Dup" if duplication else "Spe", branch_one_species, branch_two_species)
+                c, s = phylo.get_clade(all_species, clade_to_species)
+                duplication = phylo.is_duplication(branch_one_species, branch_two_species, clade_to_species)
+
+                if c is not None:
+                    node.name = "%s_%s" % (c, "D" if duplication else "S")
+
+            print(newick.dumps([tree]))
 
 
 class Tree(db.Model):
