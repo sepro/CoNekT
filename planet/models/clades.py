@@ -2,6 +2,8 @@ from planet import db
 from planet.models.gene_families import GeneFamily
 from planet.models.interpro import Interpro
 
+from utils.phylo import get_clade
+
 import json
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
@@ -57,6 +59,9 @@ class Clade(db.Model):
         clades = Clade.query.all()
         families = GeneFamily.query.all()
 
+        clade_to_species = {c.name: json.loads(c.species) for c in clades}
+        clade_to_id = {c.name: c.id for c in clades}
+
         for f in families:
             family_species = f.species_codes
 
@@ -66,23 +71,11 @@ class Clade(db.Model):
                 continue
 
             # find the clade with the fewest species that contains all the codes
-            selected_clade = None
-            for c in clades:
-                clade_species = json.loads(c.species)
-
-                overlap = set(family_species).intersection(clade_species)
-
-                if len(overlap) == len(family_species):
-                    if selected_clade is None:
-                        selected_clade = c
-                    else:
-                        if selected_clade.species_count > c.species_count:
-                            selected_clade = c
+            selected_clade, _  = get_clade(family_species, clade_to_species)
+            if selected_clade is None:
+                f.clade_id = None
             else:
-                if selected_clade is None:
-                    print("An error occurred, no clades found, check the clades in the database!")
-                else:
-                    f.clade_id = selected_clade.id
+                f.clade_id = clade_to_id[selected_clade]
 
         try:
             db.session.commit()
@@ -98,6 +91,9 @@ class Clade(db.Model):
         clades = Clade.query.all()
         interpro= Interpro.query.all()
 
+        clade_to_species = {c.name: json.loads(c.species) for c in clades}
+        clade_to_id = {c.name: c.id for c in clades}
+
         for i in interpro:
             interpro_species = i.species_codes
 
@@ -107,23 +103,11 @@ class Clade(db.Model):
                 continue
 
             # find the clade with the fewest species that contains all the codes
-            selected_clade = None
-            for c in clades:
-                clade_species = json.loads(c.species)
-
-                overlap = set(interpro_species).intersection(clade_species)
-
-                if len(overlap) == len(interpro_species):
-                    if selected_clade is None:
-                        selected_clade = c
-                    else:
-                        if selected_clade.species_count > c.species_count:
-                            selected_clade = c
+            selected_clade, _ = get_clade(interpro_species, clade_to_species)
+            if selected_clade is None:
+                i.clade_id = None
             else:
-                if selected_clade is None:
-                    print("An error occurred, no clades found, check the clades in the database!")
-                else:
-                    i.clade_id = selected_clade.id
+                i.clade_id = clade_to_id[selected_clade]
 
         try:
             db.session.commit()

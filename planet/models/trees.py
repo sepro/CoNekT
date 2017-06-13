@@ -25,8 +25,6 @@ class TreeMethod(db.Model):
                             cascade="all, delete-orphan",
                             passive_deletes=True)
 
-
-
     def reconcile_trees(self):
         # Fetch required data from the database
         sequences = Sequence.query.all()
@@ -40,12 +38,11 @@ class TreeMethod(db.Model):
             tree = newick.loads(t.data_newick)[0]
 
             for node in tree.walk():
-                if not node.is_binary:
-                    print("[%d, %s] Skipping node... Can only reconcile binary nodes ..." % (tree.id, tree.label))
-                    continue
-
                 if len(node.descendants) != 2:
-                    # no need to reconcile leaf nodes
+                    if not node.is_binary:
+                        # Print warning in case there is a non-binary node
+                        print("[%d, %s] Skipping node... Can only reconcile binary nodes ..." % (tree.id, tree.label))
+                    # Otherwise it is a leaf node and can be skipped
                     continue
 
                 branch_one_seq = [l.name for l in node.descendants[0].get_leaves()]
