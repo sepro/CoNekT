@@ -54,6 +54,17 @@ def __replace_ids(tree_string, conversion_table):
     return newick.dumps([tree])
 
 
+@admin_controls.route('/reconcile/trees/<int:method_id>')
+# @login_required
+def recincile_trees(method_id):
+    tree_method = TreeMethod.query.get_or_404(method_id)
+
+    tree_method.reconcile_trees()
+
+    flash('Reconciled Trees for method %d' % method_id, 'success')
+    return redirect(url_for('admin.index'))
+
+
 @admin_controls.route('/add/trees', methods=['POST'])
 @login_required
 def add_trees():

@@ -1,9 +1,24 @@
 from planet import db
 from planet.models.sequences import Sequence
+from planet.models.clades import Clade
 
 import newick
+import json
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
+
+
+def __get_clade(species, clades_to_species):
+    """
+    Checks for a list of species which clade matches best (fewest other species in the clade).
+
+
+    :param species: list of species for which the best clade needs to be determined
+    :param clades_to_species: dict with clade names (keys) and lists of species (values)
+    :return: tuple of the clade name
+    """
+    for c, s in sorted(clades_to_species.items(), key=lambda k:  len(clades_to_species[k])):
+        print(c, s)
 
 
 class TreeMethod(db.Model):
@@ -20,6 +35,63 @@ class TreeMethod(db.Model):
                             lazy='dynamic',
                             cascade="all, delete-orphan",
                             passive_deletes=True)
+
+    @staticmethod
+    def __get_clade(species, clades_to_species):
+        """
+        Checks for a list of species which clade matches best (fewest other species in the clade).
+
+
+        :param species: list of species for which the best clade needs to be determined
+        :param clades_to_species: dict with clade names (keys) and lists of species (values)
+        :return: tuple of the clade name
+        """
+        for c in sorted(clades_to_species.keys(), key=lambda k: len(clades_to_species[k])):
+            cs = clades_to_species[c]
+            if all([s in cs for s in species]):
+                return c, cs
+        else:
+            return None, []
+
+    @staticmethod
+    def __duplication(set_one, set_two, clades_to_species):
+        _, species_one = TreeMethod.__get_clade(set_one, clades_to_species)
+        _, species_two = TreeMethod.__get_clade(set_two, clades_to_species)
+
+        return any([s in species_two for s in species_one])
+
+    def reconcile_trees(self):
+        # Fetch required data from the database
+        sequences = Sequence.query.all()
+        clades = Clade.query.all()
+
+        seq_to_species = {s.name: s.species.code for s in sequences}
+        clade_to_species = {c.name: json.loads(c.species) for c in clades}
+
+        for t in self.trees:
+            # Load tree from Newick string and start reconciliating
+            tree = newick.loads(t.data_newick)[0]
+
+            for node in tree.walk():
+                if not node.is_binary:
+                    print("[%d, %s] Skipping node... Can only reconcile binary nodes ..." % (tree.id, tree.label))
+                    continue
+
+                if len(node.descendants) != 2:
+                    # no need to reconcile leaf nodes
+                    continue
+
+                branch_one_seq = [l.name for l in node.descendants[0].get_leaves()]
+                branch_two_seq = [l.name for l in node.descendants[1].get_leaves()]
+
+                branch_one_species = set([seq_to_species[s] for s in branch_one_seq if s in seq_to_species.keys()])
+                branch_two_species = set([seq_to_species[s] for s in branch_two_seq if s in seq_to_species.keys()])
+
+                all_species = branch_one_species.union(branch_two_species)
+
+                c, s = TreeMethod.__get_clade(all_species, clade_to_species)
+                duplication = TreeMethod.__duplication(branch_one_species, branch_two_species, clade_to_species)
+                print(t.id, c, s, "Dup" if duplication else "Spe", branch_one_species, branch_two_species)
 
 
 class Tree(db.Model):
