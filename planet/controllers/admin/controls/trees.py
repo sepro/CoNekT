@@ -44,6 +44,9 @@ def __replace_ids(tree_string, conversion_table):
     """
     tree = newick.loads(tree_string.strip(), strip_comments=True)[0]
 
+    # Remove internal names, and need to be replaced with proper reconciliation.
+    tree.remove_internal_names()
+
     for leaf in tree.get_leaves():
         if leaf.name in conversion_table.keys():
             leaf.name = conversion_table[leaf.name]
