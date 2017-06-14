@@ -29,3 +29,17 @@ def is_duplication(set_one, set_two, clades_to_species):
     _, species_two = get_clade(set_two, clades_to_species)
 
     return any([s in species_two for s in species_one])
+
+
+def duplication_consistency(set_one, set_two):
+    """
+    Calculates the duplication consistency score for two sets of species
+
+    :param set_one: set/list of species
+    :param set_two: set/list of species
+    :return: float with duplication consistency score
+    """
+    union_size = len(set(set_one).union(set(set_two)))
+    intersection_size = len(set(set_one).intersection(set(set_two)))
+
+    return intersection_size/union_size

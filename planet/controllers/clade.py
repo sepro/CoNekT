@@ -35,10 +35,11 @@ def clade_view(clade_id):
 
     families_count = current_clade.families.count()
     interpro_count = current_clade.interpro.count()
+    association_count = current_clade.sequence_sequence_clade_associations.count()
 
     return render_template('clade.html', clade=current_clade,
                            families_count=families_count, interpro_count=interpro_count,
-                           species=species)
+                           association_count=association_count, species=species)
 
 
 @clade.route('/families/<int:clade_id>/')
@@ -105,3 +106,16 @@ def clade_interpro_table(clade_id):
     interpro = Clade.query.get(clade_id).interpro.order_by(Interpro.label)
 
     return Response(render_template('tables/interpro.csv', interpro=interpro), mimetype='text/plain')
+
+
+@clade.route('/associations/<int:clade_id>/')
+@clade.route('/associations/<int:clade_id>/<int:page>')
+@cache.cached()
+def clade_associations(clade_id, page=1):
+
+    current_clade = Clade.query.get_or_404(clade_id)
+    associations = current_clade.sequence_sequence_clade_associations.paginate(page,
+                                                                               g.page_items,
+                                                                               False).items
+
+    return render_template('pagination/clade_relations.html', relations=associations)

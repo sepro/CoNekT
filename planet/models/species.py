@@ -16,11 +16,11 @@ class Species(db.Model):
     profile_count = db.Column(db.Integer)
     description = db.Column(db.Text)
 
-    sequences = db.relationship('Sequence', backref='species', lazy='dynamic', cascade="all, delete-orphan",passive_deletes=True)
-    networks = db.relationship('ExpressionNetworkMethod', backref='species', lazy='dynamic', cascade="all, delete-orphan",passive_deletes=True)
-    profiles = db.relationship('ExpressionProfile', backref='species', lazy='dynamic', cascade="all, delete-orphan",passive_deletes=True)
-    expression_specificities = db.relationship('ExpressionSpecificityMethod', backref='species', lazy='dynamic', cascade="all, delete-orphan",passive_deletes=True)
-    condition_tissues = db.relationship('ConditionTissue', backref='species', lazy='dynamic', cascade="all, delete-orphan",passive_deletes=True)
+    sequences = db.relationship('Sequence', backref='species', lazy='dynamic', cascade="all, delete-orphan", passive_deletes=True)
+    networks = db.relationship('ExpressionNetworkMethod', backref='species', lazy='dynamic', cascade="all, delete-orphan", passive_deletes=True)
+    profiles = db.relationship('ExpressionProfile', backref='species', lazy='dynamic', cascade="all, delete-orphan", passive_deletes=True)
+    expression_specificities = db.relationship('ExpressionSpecificityMethod', backref='species', lazy='dynamic', cascade="all, delete-orphan", passive_deletes=True)
+    condition_tissues = db.relationship('ConditionTissue', backref='species', lazy='dynamic', cascade="all, delete-orphan", passive_deletes=True)
 
     def __init__(self, code, name, data_type='genome',
                  color="#C7C7C7", highlight="#DEDEDE", description=None):

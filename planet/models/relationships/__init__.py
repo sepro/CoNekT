@@ -44,6 +44,12 @@ sequence_sequence_ecc = db.Table('sequence_sequence_ecc',
                                  db.Column('target_id', db.Integer, db.ForeignKey('sequences.id'), index=True)
                                  )
 
+sequence_sequence_clade = db.Table('sequence_sequence_clade',
+                                   db.Column('id', db.Integer, primary_key=True),
+                                   db.Column('sequence_one_id', db.Integer, db.ForeignKey('sequences.id'), index=True),
+                                   db.Column('sequence_two_id', db.Integer, db.ForeignKey('sequences.id'), index=True)
+                                   )
+
 family_xref = db.Table('family_xref',
                        db.Column('id', db.Integer, primary_key=True),
                        db.Column('gene_family_id', db.Integer, db.ForeignKey('gene_families.id'), index=True),

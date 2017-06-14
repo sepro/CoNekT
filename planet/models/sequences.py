@@ -59,6 +59,16 @@ class Sequence(db.Model):
                                               backref=db.backref('target_sequence', lazy='joined'),
                                               lazy='dynamic')
 
+    clade_associations_one = db.relationship('SequenceSequenceCladeAssociation',
+                                             primaryjoin="SequenceSequenceCladeAssociation.sequence_one_id == Sequence.id",
+                                             backref=db.backref('sequence_one', lazy='joined'),
+                                             lazy='dynamic')
+
+    clade_associations_two = db.relationship('SequenceSequenceCladeAssociation',
+                                             primaryjoin="SequenceSequenceCladeAssociation.sequence_two_id == Sequence.id",
+                                             backref=db.backref('sequence_two', lazy='joined'),
+                                             lazy='dynamic')
+
     xrefs = db.relationship('XRef', secondary=sequence_xref, lazy='joined')
 
     def __init__(self, species_id, name, coding_sequence, type='protein_coding', is_chloroplast=False,

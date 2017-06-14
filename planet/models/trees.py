@@ -1,6 +1,7 @@
 from planet import db
 from planet.models.sequences import Sequence
 from planet.models.clades import Clade
+from planet.models.relationships.sequence_sequence_clade import SequenceSequenceCladeAssociation
 
 import utils.phylo as phylo
 
@@ -22,7 +23,6 @@ class TreeMethod(db.Model):
     trees = db.relationship('Tree',
                             backref=db.backref('method', lazy='joined'),
                             lazy='dynamic',
-                            cascade="all, delete-orphan",
                             passive_deletes=True)
 
     def reconcile_trees(self):
@@ -31,7 +31,11 @@ class TreeMethod(db.Model):
         clades = Clade.query.all()
 
         seq_to_species = {s.name: s.species.code for s in sequences}
+        seq_to_id = {s.name: s.id for s in sequences}
         clade_to_species = {c.name: json.loads(c.species) for c in clades}
+        clade_to_id = {c.name: c.id for c in clades}
+
+        new_associations = []
 
         for t in self.trees:
             # Load tree from Newick string and start reconciliating
@@ -53,13 +57,38 @@ class TreeMethod(db.Model):
 
                 all_species = branch_one_species.union(branch_two_species)
 
-                c, s = phylo.get_clade(all_species, clade_to_species)
+                clade, _ = phylo.get_clade(all_species, clade_to_species)
                 duplication = phylo.is_duplication(branch_one_species, branch_two_species, clade_to_species)
 
-                if c is not None:
-                    node.name = "%s_%s" % (c, "D" if duplication else "S")
+                duplication_consistency = None
+                if duplication:
+                    duplication_consistency = phylo.duplication_consistency(branch_one_species, branch_two_species)
 
-            print(newick.dumps([tree]))
+                if clade is not None:
+                    for seq_one in branch_one_seq:
+                        for seq_two in branch_two_seq:
+                            new_associations.append({
+                                'sequence_one_id': seq_to_id[seq_one],
+                                'sequence_two_id': seq_to_id[seq_two],
+                                'tree_id': t.id,
+                                'clade_id': clade_to_id[clade],
+                                'duplication': 1 if duplication else 0,
+                                'duplication_consistency_score': duplication_consistency
+                            })
+                            new_associations.append({
+                                'sequence_one_id': seq_to_id[seq_two],
+                                'sequence_two_id': seq_to_id[seq_one],
+                                'tree_id': t.id,
+                                'clade_id': clade_to_id[clade],
+                                'duplication': 1 if duplication else 0,
+                                'duplication_consistency_score': duplication_consistency
+                            })
+
+            if len(new_associations) > 400:
+                db.engine.execute(SequenceSequenceCladeAssociation.__table__.insert(), new_associations)
+                new_associations = []
+
+        db.engine.execute(SequenceSequenceCladeAssociation.__table__.insert(), new_associations)
 
 
 class Tree(db.Model):
