@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, g, make_response, Response, Markup
 from planet import db, cache
 from planet.models.trees import TreeMethod, Tree
 from planet.models.sequences import Sequence
+from planet.models.relationships.sequence_sequence_clade import SequenceSequenceCladeAssociation
 
 from sqlalchemy.orm import joinedload
 
@@ -21,8 +22,9 @@ def trees_overview():
 @cache.cached()
 def trees_view(tree_id):
     tree = Tree.query.get_or_404(tree_id)
+    association_count = SequenceSequenceCladeAssociation.query.filter(SequenceSequenceCladeAssociation.tree_id ==tree_id).count()
 
-    return render_template('tree.html', tree=tree)
+    return render_template('tree.html', tree=tree, association_count=association_count)
 
 
 @tree.route('/sequences/<tree_id>/')
@@ -55,6 +57,24 @@ def tree_sequences_table(tree_id):
         .order_by(Sequence.name)
 
     return Response(render_template('tables/sequences.csv', sequences=sequences), mimetype='text/plain')
+
+
+@tree.route('/associations/<tree_id>/')
+@tree.route('/associations/<tree_id>/<int:page>')
+@cache.cached()
+def tree_associations(tree_id, page=1):
+    relations = SequenceSequenceCladeAssociation.query.filter(SequenceSequenceCladeAssociation.tree_id ==tree_id).\
+        paginate(page, g.page_items, False).items
+
+    return render_template('pagination/clade_relations.html', relations=relations)
+
+
+@tree.route('/associations/table/<tree_id>/')
+@cache.cached()
+def tree_associations_table(tree_id):
+    relations = SequenceSequenceCladeAssociation.query.filter(SequenceSequenceCladeAssociation.tree_id ==tree_id).all()
+
+    return Response(render_template('tables/clade_associations.csv', relations=relations), mimetype='text/plain')
 
 
 @tree.route('/newick/<tree_id>')

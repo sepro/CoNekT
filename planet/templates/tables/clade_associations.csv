@@ -1,0 +1,4 @@
+"sequence_one","sequence_two","clade","type","score","tree"
+{% for r in relations -%}
+"{{ r.sequence_one.name }}","{{ r.sequence_two.name }}","{{ r.clade.name }}","{{ r.readable_type }}",{{ r.readable_score }},"{{ r.tree.label }}"
+{% endfor %}

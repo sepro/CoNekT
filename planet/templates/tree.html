@@ -65,6 +65,8 @@
         'tree'
     ) }}
 
+    {{ macro.pagination('Associations', url_for('tree.tree_associations', tree_id=tree.id), association_count, url_for('tree.tree_associations_table', tree_id=tree.id), 'association') }}
+
     {% endif %}
 </div>
 
