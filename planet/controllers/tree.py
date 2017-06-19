@@ -118,7 +118,7 @@ def ascii_tree(tree_id):
 def phyloxml(tree_id):
     tree = Tree.query.get_or_404(tree_id)
 
-    response = make_response(tree.phyxml_test)
+    response = make_response(tree.phyxml)
     response.headers["Content-Disposition"] = ("attachment; filename=" + tree.label + ".xml")
     response.headers['Content-type'] = 'application/xml'
 
