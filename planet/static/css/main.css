@@ -490,6 +490,10 @@ abbr[title] {
   text-decoration: none !important;
 }
 
+/*
+  Full width fix for phyd3 (used to view phylogenetic trees)
+*/
+
 div#phyd3 > svg {
     width: 100%;
 }
