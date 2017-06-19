@@ -191,8 +191,8 @@ class Tree(db.Model):
         doc, tag, text, line = Doc().ttl()
         with tag('phyloxml'):
             with tag('phylogeny', rooted="True"):
-                line('name', self.label)
-                line('description', "PlaNet 2.0 PhyloXML tree")
+                # line('name', self.label)
+                # line('description', "PlaNet 2.0 PhyloXML tree")
                 Tree.__yattag_node(tree, tag, text, line, id_to_clade, seq_to_species)
 
             with tag('taxonomies'):

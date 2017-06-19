@@ -50,16 +50,50 @@
             <li><strong>{{ tree.label }}</strong></li>
         </ol>
      <h1>{{ tree.label }}: <strong>{{ tree.method.description }}</strong></h1>
-    <strong>Download:</strong>
-    <a href="{{ url_for('tree.newick', tree_id=tree.id) }}" download>Newick</a> |
-    <a href="{{ url_for('tree.newick_no_branch_lengths', tree_id=tree.id) }}" download>Newick</a>
-    <span class="text-muted">(without branch lengths)</span> |
-    <a href="{{ url_for('tree.ascii_tree', tree_id=tree.id) }}" download> ascii</a> |
-    <a href="{{ url_for('tree.phyloxml', tree_id=tree.id) }}" download>PhyloXML</a>
-    <div>
-        <div id="phyd3"></div>
-    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="phyd3" style="height:600px"></div>
+            <hr />
+        </div>
 
+        <div class="col-sm-4">
+            <div class="btn-group dropup">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Download Tree <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="{{ url_for('tree.newick', tree_id=tree.id) }}" download>Newick</a></li>
+                    <li><a href="{{ url_for('tree.phyloxml', tree_id=tree.id) }}" download>PhyloXML</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{{ url_for('tree.ascii_tree', tree_id=tree.id) }}" download>ASCII</a></li>
+                    <li class="divider"></li>
+                    <li class="dropdown-header">Image</li>
+                    <li><a href="#" id="linkSVG">SVG</a></li>
+                    <li><a href="#" id="linkPNG">PNG</a></li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                      <input id="dynamicHide" type="checkbox" checked="checked"> Dynamic node hiding
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                      <input id="phylogram" type="checkbox" checked="checked"> Show phylogram
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br /><br />
     {{ macro.pagination('Sequences',
         url_for('tree.tree_sequences', tree_id=tree.id),
         tree.count,
@@ -87,11 +121,35 @@
         <script src="{{ url_for('static', filename='js/phyd3.min.js') }}"></script>
         <script>
             $(function () {
-                console.log("loading phyloxml")
+                        var opts = {
+                            dynamicHide: true,
+                            height: 600,
+                            invertColors: false,
+                            lineupNodes: true,
+                            showDomains: true,
+                            showDomainNames: false,
+                            showDomainColors: true,
+                            showGraphs: true,
+                            showGraphLegend: true,
+                            showSupportValues: false,
+                            maxDecimalsSupportValues: 1,
+                            showLengthValues: false,
+                            maxDecimalsLengthValues: 3,
+                            showLength: false,
+                            showNodeNames: true,
+                            showNodesType: "all",
+                            showPhylogram: false,
+                            showTaxonomy: false,
+                            showFullTaxonomy: true,
+                            showSequences: false,
+                            showTaxonomyColors: true,
+                            backgroundColor: "#ffffff",
+                            foregroundColor: "#000000",
+                        };
                 d3.xml("{{ url_for('tree.phyloxml', tree_id=tree.id) }}", "application/xml", function(xml) {
                     console.log(xml);
                     var tree = phyd3.phyloxml.parse(xml);
-                    phyd3.phylogram.build("#phyd3", tree, {});
+                    phyd3.phylogram.build("#phyd3", tree, opts);
                 });
             });
         </script>
