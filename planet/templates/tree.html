@@ -55,7 +55,7 @@
     <a href="{{ url_for('tree.newick_no_branch_lengths', tree_id=tree.id) }}" download>Newick</a>
     <span class="text-muted">(without branch lengths)</span> |
     <a href="{{ url_for('tree.ascii_tree', tree_id=tree.id) }}" download> ascii</a> |
-    <a href="{{ url_for('tree.phyloxml', tree_id=tree.id) }}">PhyloXML (development)</a>
+    <a href="{{ url_for('tree.phyloxml', tree_id=tree.id) }}" download>PhyloXML (development)</a>
     <div>
         <pre>{{ tree.ascii_art }}</pre>
     </div>

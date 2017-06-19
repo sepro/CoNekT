@@ -118,8 +118,8 @@ def ascii_tree(tree_id):
 def phyloxml(tree_id):
     tree = Tree.query.get_or_404(tree_id)
 
-    # response = make_response(tree.tree_stripped)
-    # response.headers["Content-Disposition"] = ("attachment; filename=" + tree.label + ".no_branch_lengths.newick")
-    # response.headers['Content-type'] = 'text/plain'
+    response = make_response(tree.phyxml_test)
+    response.headers["Content-Disposition"] = ("attachment; filename=" + tree.label + ".phyloxml")
+    response.headers['Content-type'] = 'text/plain'
 
-    return tree.phyxml_test
+    return response

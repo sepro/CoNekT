@@ -5,6 +5,7 @@ from planet.models.relationships.sequence_sequence_clade import SequenceSequence
 
 import utils.phylo as phylo
 
+from yattag import Doc, indent
 import newick
 import json
 
@@ -114,14 +115,14 @@ class Tree(db.Model):
         return tree.ascii_art()
 
     @staticmethod
-    def __print_node(node, depth=0):
-        if node.name is not None:
-            yield '**'*depth + node.name + ' ' + ('L' if node.is_leaf else 'N')
-        else:
-            yield '**'*depth + 'n%d' % depth + ' ' + ('L' if node.is_leaf else 'N')
-        if not node.is_leaf:
-            for d in node.descendants:
-                yield from Tree.__print_node(d, depth=depth + 1)
+    def __yattag_node(node, tag, text, line, depth=0):
+        with tag('clade'):
+            if node.is_leaf:
+                with tag('sequence'):
+                    line('name', node.name)
+            else:
+                for d in node.descendants:
+                    Tree.__yattag_node(d, tag, text, line, depth=depth + 1)
 
     @property
     def phyxml_test(self):
@@ -133,9 +134,14 @@ class Tree(db.Model):
         """
         tree = newick.loads(self.data_newick)[0]
 
-        output = [t for t in Tree.__print_node(tree, depth=0)]
+        doc, tag, text, line = Doc().ttl()
 
-        return '<br />'.join(output)
+        with tag('phylogeny', rooted="True"):
+            line('name', self.label)
+            line('description', "PlaNet 2.0 PhyloXML tree")
+            Tree.__yattag_node(tree, tag, text, line, depth=0)
+
+        return indent(doc.getvalue())
 
     @property
     def count(self):
