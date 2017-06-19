@@ -145,6 +145,7 @@
                             showTaxonomyColors: true,
                             backgroundColor: "#ffffff",
                             foregroundColor: "#000000",
+                            popupWidth: 300,
                         };
                 d3.xml("{{ url_for('tree.phyloxml', tree_id=tree.id) }}", "application/xml", function(xml) {
                     console.log(xml);
