@@ -489,3 +489,7 @@ Equal height panels. Should be added to class=row !
 abbr[title] {
   text-decoration: none !important;
 }
+
+div#phyd3 > svg {
+    width: 100%;
+}
