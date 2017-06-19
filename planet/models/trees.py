@@ -5,6 +5,7 @@ from planet.models.relationships.sequence_sequence_clade import SequenceSequence
 
 import utils.phylo as phylo
 
+from flask import url_for
 from yattag import Doc, indent
 import newick
 import json
@@ -38,6 +39,8 @@ class TreeMethod(db.Model):
 
         new_associations = []
 
+        phyloxml_data = {}
+
         for t in self.trees:
             # Load tree from Newick string and start reconciliating
             tree = newick.loads(t.data_newick)[0]
@@ -65,6 +68,12 @@ class TreeMethod(db.Model):
                 if duplication:
                     duplication_consistency = phylo.duplication_consistency(branch_one_species, branch_two_species)
 
+                tags = [clade_to_id[clade] if clade is not None else 0,
+                        'D' if duplication else 'S',
+                        duplication_consistency if duplication else 0]
+
+                node.name = '_'.join([str(t) for t in tags])
+
                 if clade is not None:
                     for seq_one in branch_one_seq:
                         for seq_two in branch_two_seq:
@@ -89,7 +98,17 @@ class TreeMethod(db.Model):
                 db.engine.execute(SequenceSequenceCladeAssociation.__table__.insert(), new_associations)
                 new_associations = []
 
+            # add newick tree to memory
+            phyloxml_data[t.id] = newick.dumps([tree])
+
         db.engine.execute(SequenceSequenceCladeAssociation.__table__.insert(), new_associations)
+
+        # Update PhyloXML data file for all trees
+        for t in self.trees:
+            if t.id in phyloxml_data.keys():
+                t.data_phyloxml = phyloxml_data[t.id]
+
+        db.session.commit()
 
 
 class Tree(db.Model):
@@ -115,14 +134,36 @@ class Tree(db.Model):
         return tree.ascii_art()
 
     @staticmethod
-    def __yattag_node(node, tag, text, line, depth=0):
+    def __yattag_node(node, tag, text, line, id_to_clade, seq_to_species):
         with tag('clade'):
+            line('branch_length', node.length)
             if node.is_leaf:
-                with tag('sequence'):
                     line('name', node.name)
+                    if node.name in seq_to_species.keys():
+                        with tag('taxonomy'):
+                            line('code', seq_to_species[node.name])
             else:
+                clade_id, duplication, dup_score = node.name.split('_')
+
+                clade_id = int(clade_id)
+                duplication = True if duplication == 'D' else False
+                dup_score = float(dup_score)
+
+                if clade_id in id_to_clade.keys():
+                    with tag('taxonomy'):
+                        line('code', id_to_clade[clade_id])
+
+                if duplication:
+                    line('property', str(dup_score), applies_to="clade",
+                         datatype="xksd:double", ref="Duplication consistency score")
+                    with tag('events'):
+                        line('duplications', 1)
+                else:
+                    with tag('events'):
+                        line('speciations', 1)
+
                 for d in node.descendants:
-                    Tree.__yattag_node(d, tag, text, line, depth=depth + 1)
+                    Tree.__yattag_node(d, tag, text, line, id_to_clade, seq_to_species)
 
     @property
     def phyxml_test(self):
@@ -132,14 +173,40 @@ class Tree(db.Model):
 
         :return:
         """
-        tree = newick.loads(self.data_newick)[0]
+        # Load Tree with addition information
+        tree = newick.loads(self.data_phyloxml)[0]
 
+        # Load Additional information from the database
+        clades = Clade.query.all()
+        id_to_clade = {c.id: c.name for c in clades}
+        seq_to_species = {}
+        species = []
+
+        for s in self.sequences.all():
+            seq_to_species[s.name] = s.species.code
+            if s.species not in species:
+                species.append(s.species)
+
+        # Start constructing PhyloXML
         doc, tag, text, line = Doc().ttl()
+        with tag('phyloxml'):
+            with tag('phylogeny', rooted="True"):
+                line('name', self.label)
+                line('description', "PlaNet 2.0 PhyloXML tree")
+                Tree.__yattag_node(tree, tag, text, line, id_to_clade, seq_to_species)
 
-        with tag('phylogeny', rooted="True"):
-            line('name', self.label)
-            line('description', "PlaNet 2.0 PhyloXML tree")
-            Tree.__yattag_node(tree, tag, text, line, depth=0)
+            with tag('taxonomies'):
+                for s in species:
+                    with tag('taxonomy', code=s.code):
+                        line('color', s.color.replace("#", "0x"))
+                        line('name', s.name)
+                        line('url', url_for('species.species_view', species_id=s.id, _external=True))
+
+                for c in clades:
+                    with tag('taxonomy', code=c.name):
+                        line('color', '0x000000')
+                        line('name', c.name)
+                        line('url', url_for('clade.clade_view', clade_id=c.id, _external=True))
 
         return indent(doc.getvalue())
 
@@ -159,7 +226,5 @@ class Tree(db.Model):
     def tree_stripped(self):
         tree = newick.loads(self.data_newick)[0]
         tree.remove_lengths()
-
-        print(newick.dumps([tree]))
 
         return newick.dumps([tree])

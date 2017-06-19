@@ -57,7 +57,7 @@
     <a href="{{ url_for('tree.ascii_tree', tree_id=tree.id) }}" download> ascii</a> |
     <a href="{{ url_for('tree.phyloxml', tree_id=tree.id) }}" download>PhyloXML (development)</a>
     <div>
-        <pre>{{ tree.ascii_art }}</pre>
+        <div id="phyd3"></div>
     </div>
 
     {{ macro.pagination('Sequences',
@@ -80,6 +80,19 @@
         <script>
             $(function () {
                 $("#methods_table").stupidtable();
+            });
+        </script>
+    {% else %}
+        <script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/phyd3.min.js') }}"></script>
+        <script>
+            $(function () {
+                console.log("loading phyloxml")
+                d3.xml("{{ url_for('tree.phyloxml', tree_id=tree.id) }}", "application/xml", function(xml) {
+                    console.log(xml);
+                    var tree = phyd3.phyloxml.parse(xml);
+                    phyd3.phylogram.build("#phyd3", tree, {});
+                });
             });
         </script>
     {% endif %}

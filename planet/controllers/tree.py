@@ -113,13 +113,13 @@ def ascii_tree(tree_id):
     return response
 
 
-@tree.route('/phyloxml/<tree_id>')
+@tree.route('/phyloxml/<tree_id>.xml')
 @cache.cached()
 def phyloxml(tree_id):
     tree = Tree.query.get_or_404(tree_id)
 
     response = make_response(tree.phyxml_test)
-    response.headers["Content-Disposition"] = ("attachment; filename=" + tree.label + ".phyloxml")
-    response.headers['Content-type'] = 'text/plain'
+    response.headers["Content-Disposition"] = ("attachment; filename=" + tree.label + ".xml")
+    response.headers['Content-type'] = 'application/xml'
 
     return response
