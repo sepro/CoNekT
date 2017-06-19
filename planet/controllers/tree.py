@@ -99,3 +99,27 @@ def newick_no_branch_lengths(tree_id):
     response.headers['Content-type'] = 'text/plain'
 
     return response
+
+
+@tree.route('/ascii/<tree_id>')
+@cache.cached()
+def ascii_tree(tree_id):
+    tree = Tree.query.get_or_404(tree_id)
+
+    response = make_response(tree.ascii_art)
+    response.headers["Content-Disposition"] = ("attachment; filename=" + tree.label + ".ascii.txt")
+    response.headers['Content-type'] = 'text/plain'
+
+    return response
+
+
+@tree.route('/phyloxml/<tree_id>')
+@cache.cached()
+def phyloxml(tree_id):
+    tree = Tree.query.get_or_404(tree_id)
+
+    # response = make_response(tree.tree_stripped)
+    # response.headers["Content-Disposition"] = ("attachment; filename=" + tree.label + ".no_branch_lengths.newick")
+    # response.headers['Content-type'] = 'text/plain'
+
+    return tree.phyxml_test

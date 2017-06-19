@@ -113,6 +113,30 @@ class Tree(db.Model):
 
         return tree.ascii_art()
 
+    @staticmethod
+    def __print_node(node, depth=0):
+        if node.name is not None:
+            yield '**'*depth + node.name + ' ' + ('L' if node.is_leaf else 'N')
+        else:
+            yield '**'*depth + 'n%d' % depth + ' ' + ('L' if node.is_leaf else 'N')
+        if not node.is_leaf:
+            for d in node.descendants:
+                yield from Tree.__print_node(d, depth=depth + 1)
+
+    @property
+    def phyxml_test(self):
+        """
+        Function to test newick to phyxml conversion. (needs to be integrated with tree reconciliation so node
+        annotation can be preserved)
+
+        :return:
+        """
+        tree = newick.loads(self.data_newick)[0]
+
+        output = [t for t in Tree.__print_node(tree, depth=0)]
+
+        return '<br />'.join(output)
+
     @property
     def count(self):
         tree = newick.loads(self.data_newick)[0]
