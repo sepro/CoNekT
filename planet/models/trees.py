@@ -166,7 +166,7 @@ class Tree(db.Model):
                     Tree.__yattag_node(d, tag, text, line, id_to_clade, seq_to_species)
 
     @property
-    def phyxml(self):
+    def phyloxml(self):
         """
         Function to test newick to phyxml conversion. (needs to be integrated with tree reconciliation so node
         annotation can be preserved)
