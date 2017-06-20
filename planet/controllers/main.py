@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, redirect, g, flash, url_for
 
 from planet.models.news import News
 
@@ -48,3 +48,20 @@ def disclaimer():
     Shows the disclaimer
     """
     return render_template('static_pages/disclaimer.html')
+
+
+@main.route('/privacy')
+def privacy_policy():
+    """
+    Shows the privacy policy
+    """
+    return render_template('static_pages/privacy_policy.html')
+
+
+@main.route('/imprint')
+def imprint():
+    if g.imprint is not None:
+        return redirect(g.imprint)
+    else:
+        flash("No Imprint URL defined", "warning")
+        redirect(url_for("main.main"))

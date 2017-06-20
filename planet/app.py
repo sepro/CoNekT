@@ -330,6 +330,7 @@ def configure_hooks(app):
     LOGIN_ENABLED = app.config['LOGIN_ENABLED']
     BLAST_ENABLED = app.config['BLAST_ENABLED']
     TWITTER_HANDLE = app.config['TWITTER_HANDLE'] if 'TWITTER_HANDLE' in app.config.keys() else None
+    IMPRINT = app.config['IMPRINT_URL'] if 'IMPRINT_URL' in app.config.keys() else None
 
     @app.before_request
     def before_request():
@@ -337,6 +338,8 @@ def configure_hooks(app):
         g.blast_enabled = BLAST_ENABLED
         g.search_form = BasicSearchForm()
         g.twitter_handle = TWITTER_HANDLE
+        g.imprint = IMPRINT
+
         g.page_items = 30
 
         g.debug = app.config['DEBUG'] if 'DEBUG' in app.config else False

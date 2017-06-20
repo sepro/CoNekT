@@ -73,3 +73,6 @@ KEYWORD_EXAMPLES = ['AT1G01720', 'GO:0005737', 'Auxin']
 # Can be used to announce maintenance, ...
 GLOB_MSG = None
 GLOB_MSG_TITLE = 'Info'
+
+# Customize link to Imprint (legal requirement in Germany)
+IMPRINT_URL = None
