@@ -42,9 +42,9 @@ def contact():
     return render_template('static_pages/contact.html')
 
 
-@main.route('/license')
-def license():
+@main.route('/disclaimer')
+def disclaimer():
     """
-    Shows the license
+    Shows the disclaimer
     """
-    return render_template('static_pages/license.html')
+    return render_template('static_pages/disclaimer.html')

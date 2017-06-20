@@ -230,8 +230,8 @@ class WebsiteTest(TestCase):
         self.assert_template_used('static_pages/contact.html')
         self.assert200(response)
 
-        response = self.client.get("/license")
-        self.assert_template_used('static_pages/license.html')
+        response = self.client.get("/disclaimer")
+        self.assert_template_used('static_pages/disclaimer.html')
         self.assert200(response)
 
         response = self.client.get("/features")
