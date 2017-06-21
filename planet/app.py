@@ -325,10 +325,10 @@ def configure_error_handlers(app):
 
     @app.errorhandler(403)
     def access_denied(e):
-        next = request.url_rule
+        next_page = request.url_rule
         flash("Log in first...", "info")
 
-        return redirect(url_for('auth.login', next=next))
+        return redirect(url_for('auth.login', next=next_page))
 
 
 def configure_hooks(app):
