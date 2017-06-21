@@ -2,6 +2,7 @@ from flask import g, Blueprint, flash, redirect, url_for, render_template, reque
 from flask_login import current_user, login_user, logout_user, login_required
 
 from planet import login_manager, db
+from planet.helpers.url import is_safe_url
 from planet.models.users import User
 from planet.forms.login import LoginForm
 from planet.forms.registration import RegistrationForm
@@ -72,6 +73,11 @@ def login():
         flash('You are already logged in.')
         return redirect(url_for('main.screen'))
 
+    # Use next in case you were redirected from an unaccessible page
+    next_page = str(request.args.get('next'))
+    # Sometimes double slashes are present, remove these
+    next_page = next_page.replace('//', '/')
+
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
         username = request.form.get('username')
@@ -81,16 +87,24 @@ def login():
 
         if not (existing_user and existing_user.check_password(password)):
             flash('Invalid username or password. Please try again.', 'danger')
-            return render_template('login.html', form=form)
+            return render_template('login.html', form=form, next=next_page)
 
         login_user(existing_user, remember=keep_logged)
         flash('You have successfully logged in.', 'success')
-        return redirect(url_for('main.screen'))
+
+        if next_page is not None:
+            if is_safe_url(next_page):
+                return redirect(next_page)
+            else:
+                flash('UNSAFE LINK DETECTED ! Redirecting to main screen instead.', 'Warning')
+                return redirect(url_for('main.screen'))
+        else:
+            return redirect(url_for('main.screen'))
 
     if form.errors:
         flash(form.errors, 'danger')
 
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, next=next_page)
 
 
 @auth.route('/logout')

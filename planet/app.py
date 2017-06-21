@@ -13,7 +13,7 @@ Everything that needs to be set up to get flask running is initialized in this f
 
   * set up global things like the search form and custom 403/404 error messages
 """
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, request, url_for, flash, redirect
 from flask_admin import Admin
 from flask_admin.menu import MenuLink
 
@@ -325,7 +325,10 @@ def configure_error_handlers(app):
 
     @app.errorhandler(403)
     def access_denied(e):
-        return render_template('error/403.html'), 403
+        next = request.url_rule
+        flash("Log in first...", "info")
+
+        return redirect(url_for('auth.login', next=next))
 
 
 def configure_hooks(app):

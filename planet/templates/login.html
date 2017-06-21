@@ -15,7 +15,11 @@
             <div class="panel panel-default">
                 <div class="panel-heading"><strong>Log in</strong></div>
                 <div class="panel-body">
-                    <form method="POST"  action="{{ url_for('auth.login') }}"  role="form">
+                    {% if next %}
+                        <form method="POST"  action="{{ url_for('auth.login', next=next) }}"  role="form">
+                    {% else %}
+                        <form method="POST"  action="{{ url_for('auth.login') }}"  role="form">
+                    {% endif %}
                     {{ form.csrf_token }}
                         <div class="input-group"><span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span> {{form.username(class_="form-control") }}</div><br />
                         <div class="input-group"><span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span> {{form.password(class_="form-control") }}</div><br />
