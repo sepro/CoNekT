@@ -98,9 +98,8 @@ def add_trees():
         # Get original gene family names (used to link trees to families
         gfs = GeneFamily.query.filter(GeneFamily.method_id == new_method.gene_family_method_id).all()
         ori_name_to_id = {gf.original_name: gf.id for gf in gfs}
-        print(ori_name_to_id)
-
         uploaded_files = request.files.getlist("tree_directory")
+
         new_trees = []
         for f in uploaded_files:
             # remove path from f.filename
