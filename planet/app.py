@@ -171,6 +171,7 @@ def configure_admin_panel(app):
         from planet.controllers.admin.views.controls import ControlsView
         from planet.controllers.admin.views.news import NewsAdminView
         from planet.controllers.admin.views.trees import TreeMethodAdminView
+        from planet.controllers.admin.views.trees import ReconcileTreesView
 
         from planet.models.users import User
         from planet.models.species import Species
@@ -259,6 +260,10 @@ def configure_admin_panel(app):
         admin.add_menu_item(MenuLink("------------", class_name="divider", url='#'), target_category='Build')
         admin.add_menu_item(MenuLink("Assign Clades", url="/admin_controls/update/clades", class_name="confirmation"),
                             target_category='Build')
+
+        admin.add_view(ReconcileTreesView(name='Reconcile Trees', endpoint='admin.reconcile_trees',
+                                          url='build/reconciled_trees', category='Build'))
+
         admin.add_view(ECCView(name='Expression Context Conservations (ECC)', endpoint='admin.ecc',
                                url='build/ecc/', category='Build'))
         admin.add_menu_item(MenuLink("------------", class_name="divider", url='#'), target_category='Build')

@@ -12,6 +12,7 @@ from planet import db
 
 from planet.controllers.admin.controls import admin_controls
 from planet.forms.admin.add_trees import AddTreesForm
+from planet.forms.admin.reconcile_trees import ReconcileTreesForm
 from planet.models.trees import TreeMethod
 from planet.models.trees import Tree
 from planet.models.gene_families import GeneFamily
@@ -54,15 +55,18 @@ def __replace_ids(tree_string, conversion_table):
     return newick.dumps([tree])
 
 
-@admin_controls.route('/reconcile/trees/<int:method_id>')
-# @login_required
-def recincile_trees(method_id):
-    tree_method = TreeMethod.query.get_or_404(method_id)
+@admin_controls.route('/reconcile/trees/', methods=['POST'])
+@login_required
+def reconcile_trees():
+    if request.method == 'POST':
+        method_id = int(request.form.get('tree_method_id'))
 
-    tree_method.reconcile_trees()
+        tree_method = TreeMethod.query.get_or_404(method_id)
 
-    flash('Reconciled Trees for method %d' % method_id, 'success')
-    return redirect(url_for('admin.index'))
+        tree_method.reconcile_trees()
+
+        flash('Reconciled Trees for method %d' % method_id, 'success')
+        return redirect(url_for('admin.index'))
 
 
 @admin_controls.route('/add/trees', methods=['POST'])

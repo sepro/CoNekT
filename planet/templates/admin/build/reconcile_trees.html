@@ -1,0 +1,31 @@
+{% extends 'admin/my_base.html' %}
+
+{% block body %}
+{% if form %}
+<h1>Reconcile Trees</h1>
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+        <form method="POST"  action="{{ url_for('admin_controls.reconcile_trees') }}"  role="form">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                {{ form.tree_method_id.label }}
+                {{ form.tree_method_id(class_="form-control") }}
+            </div>
+
+            <button type="submit" class="btn btn-primary pull-right">Reconcile Trees</button>
+        </form>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Help</strong></div>
+            <div class="panel-body">
+                Select a method and click reconcile trees to determine which nodes are speciation and duplication events,
+                their age and duplication consistency score. This will also generate the data required to show trees on
+                the website.
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

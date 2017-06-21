@@ -491,9 +491,20 @@ abbr[title] {
 }
 
 /*
-  Full width fix for phyd3 (used to view phylogenetic trees)
+  PhyD3 stuff
 */
 
 div#phyd3 > svg {
     width: 100%;
+}
+
+div#phyd3 .table-responsive {
+  padding: 0px;
+  border-top: 0px;
+  font-size: 80%;
+}
+
+div#phyd3 .table-responsive > table {
+  border: 0px;
+  margin-bottom: 0px;
 }
