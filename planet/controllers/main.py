@@ -55,7 +55,11 @@ def privacy_policy():
     """
     Shows the privacy policy
     """
-    return render_template('static_pages/privacy_policy.html')
+    if g.imprint is not None:
+        return redirect(g.privacy)
+    else:
+        flash("No Privacy Policy URL defined", "warning")
+        redirect(url_for("main.main"))
 
 
 @main.route('/imprint')

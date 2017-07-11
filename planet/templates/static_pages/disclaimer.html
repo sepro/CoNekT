@@ -25,6 +25,10 @@
         Furthermore, under no circumstances and under no legal theory, whether tort (including negligence), contract, or otherwise, shall MPG be liable to you
         for any direct, indirect, special, incidental, or consequential damages of any character including, without limitation, damages for lost profits, loss
         of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses.</p>
+
+    {% if g.privacy %}
+        <p>By using this site, you agree to the Terms of Use and <a href="{{ url_for('main.privacy_policy') }}" class="text-muted">Privacy policy</a>.</p>
+    {% endif %}
 </p>
 </div>
 

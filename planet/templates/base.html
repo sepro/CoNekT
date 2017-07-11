@@ -152,7 +152,9 @@
                   <div class="col-xs-2"><a href="{{ url_for('main.about') }}" class="text-muted">About</a></div>
                   <div class="col-xs-2"><a href="{{ url_for('main.contact') }}" class="text-muted">Contact</a></div>
                   <div class="col-xs-2"><a href="{{ url_for('main.disclaimer') }}" class="text-muted">Disclaimer</a></div>
-                  <div class="col-xs-2"><a href="{{ url_for('main.privacy_policy') }}" class="text-muted">Privacy policy</a></div>
+                  {% if g.privacy %}
+                    <div class="col-xs-2"><a href="{{ url_for('main.privacy_policy') }}" class="text-muted">Privacy policy</a></div>
+                  {% endif %}
                   {% if g.imprint %}
                     <div class="col-xs-2"><a href="{{ url_for('main.imprint') }}" class="text-muted">Imprint</a></div>
                   {% endif %}

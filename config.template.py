@@ -74,5 +74,6 @@ KEYWORD_EXAMPLES = ['AT1G01720', 'GO:0005737', 'Auxin']
 GLOB_MSG = None
 GLOB_MSG_TITLE = 'Info'
 
-# Customize link to Imprint (legal requirement in Germany)
+# Customize link to Imprint and Privacy Policy(legal requirement in Germany)
 IMPRINT_URL = None
+PRIVACY_POLICY_URL = None
