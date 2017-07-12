@@ -1,5 +1,5 @@
 from flask import flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.utils import redirect
 
 from planet.controllers.admin.controls import admin_controls
@@ -11,7 +11,7 @@ from planet.models.species import Species
 
 
 @admin_controls.route('/update/counts')
-@login_required
+@admin_required
 def update_counts():
     """
     Controller that will update pre-computed counts in the database.

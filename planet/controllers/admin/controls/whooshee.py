@@ -1,5 +1,5 @@
 from flask import flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.utils import redirect
 
 from planet import whooshee
@@ -7,7 +7,7 @@ from planet.controllers.admin.controls import admin_controls
 
 
 @admin_controls.route('/reindex/whooshee')
-@login_required
+@admin_required
 def reindex_whooshee():
     """
     Touching this endpoint reindex Whooshee

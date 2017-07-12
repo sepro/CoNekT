@@ -1,5 +1,5 @@
 from flask import flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.utils import redirect
 
 from planet.controllers.admin.controls import admin_controls
@@ -7,7 +7,7 @@ from planet.models.blast_db import BlastDB
 
 
 @admin_controls.route('/build_blast_db')
-@login_required
+@admin_required
 def build_blast_db():
     """
     Touching this endpoint will export cds and protein fasta files and build a database using those files. Paths

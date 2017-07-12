@@ -1,7 +1,7 @@
 import json
 
 from flask import flash, url_for, request
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -11,7 +11,7 @@ from planet.models.clades import Clade
 
 
 @admin_controls.route('/update/clades')
-@login_required
+@admin_required
 def update_clades():
     """
     Controller that will update the clade information for gene families and interpro domains. It will detect in which
@@ -31,7 +31,7 @@ def update_clades():
 
 
 @admin_controls.route('/add/clades', methods=['POST'])
-@login_required
+@admin_required
 def add_clades():
     """
     Adds clades to the database based on a structured JSON object.

@@ -2,7 +2,7 @@ import os
 from tempfile import mkstemp
 
 from flask import request, flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -12,7 +12,7 @@ from planet.models.xrefs import XRef
 
 
 @admin_controls.route('/add/xrefs', methods=['POST'])
-@login_required
+@admin_required
 def add_xrefs():
     """
     Adds external references to sequences. A few platforms are included by default (note that this only works if the
@@ -65,7 +65,7 @@ def add_xrefs():
 
 
 @admin_controls.route('/add/xrefs_family', methods=['POST'])
-@login_required
+@admin_required
 def add_xrefs_family():
     """
     Adds external references to gene families. A tab-delimited text-file can be uploaded with the following structure:

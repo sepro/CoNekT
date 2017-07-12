@@ -2,7 +2,7 @@ import os
 from tempfile import mkstemp
 
 from flask import request, flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -12,7 +12,7 @@ from planet.models.expression.networks import ExpressionNetwork
 
 
 @admin_controls.route('/add/coexpression_network', methods=['POST'])
-@login_required
+@admin_required
 def add_coexpression_network():
     """
     Adds the co-expression network for a species based on LSTrAP output

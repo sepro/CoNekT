@@ -1,5 +1,5 @@
 from flask import request, flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -10,7 +10,7 @@ from planet.models.expression.specificity import ExpressionSpecificityMethod
 
 
 @admin_controls.route('/add/condition_specificity', methods=['POST'])
-@login_required
+@admin_required
 def add_condition_specificity():
     form = AddConditionSpecificityForm(request.form)
     form.populate_species()
@@ -32,7 +32,7 @@ def add_condition_specificity():
 
 
 @admin_controls.route('/add/tissue_specificity', methods=['POST'])
-@login_required
+@admin_required
 def add_tissue_specificity():
     form = AddTissueSpecificityForm(request.form)
     form.populate_species()

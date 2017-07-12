@@ -2,7 +2,7 @@ import os
 from tempfile import mkstemp
 
 from flask import request, flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -15,7 +15,7 @@ from planet.models.relationships.cluster_similarity import CoexpressionClusterSi
 
 
 @admin_controls.route('/build/neighborhoods_to_clusters', methods=['POST'])
-@login_required
+@admin_required
 def neighborhoods_to_clusters():
     form = NeighborhoodToClustersForm(request.form)
     form.populate_networks()
@@ -35,7 +35,7 @@ def neighborhoods_to_clusters():
 
 
 @admin_controls.route('/build/hcca_clusters', methods=['POST'])
-@login_required
+@admin_required
 def build_hcca_clusters():
     """
     Controller that will start building HCCA clusters for a selected network
@@ -60,7 +60,7 @@ def build_hcca_clusters():
 
 
 @admin_controls.route('/add/coexpression_clusters', methods=['POST'])
-@login_required
+@admin_required
 def add_coexpression_clusters():
     """
     Add co-expression clusters, based on LSTrAP output (MCL clusters)
@@ -102,7 +102,7 @@ def add_coexpression_clusters():
 
 
 @admin_controls.route('/calculate_cluster_similarity/<int:gf_method_id>')
-@login_required
+@admin_required
 def calculate_cluster_similarity(gf_method_id):
     """
     Calculate similarities between co-expression clusterings based on content. Homologous genes are used to indicate the
@@ -118,7 +118,7 @@ def calculate_cluster_similarity(gf_method_id):
 
 
 @admin_controls.route('/delete_cluster_similarity')
-@login_required
+@admin_required
 def delete_cluster_similarity():
     """
     Controller to delete all existing cluster cluster similarities

@@ -2,7 +2,7 @@ import os
 from tempfile import mkstemp
 
 from flask import request, flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from markupsafe import Markup
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
@@ -18,7 +18,7 @@ from planet.models.interpro import Interpro
 
 
 @admin_controls.route('/add/functional_data', methods=['POST'])
-@login_required
+@admin_required
 def add_functional_data():
     """
     Controller to populate the GO structure and descriptions and InterPro domains with descriptions to the corresponding
@@ -74,7 +74,7 @@ def add_functional_data():
 
 
 @admin_controls.route('/add/go', methods=['POST'])
-@login_required
+@admin_required
 def add_go():
     """
     Adds GO labels to sequences using a tab-delimited text-file
@@ -118,7 +118,7 @@ def add_go():
 
 
 @admin_controls.route('/add/interpro', methods=['POST'])
-@login_required
+@admin_required
 def add_interpro():
     """
     Adds InterPro domain information to sequences based on InterProScan output
@@ -155,7 +155,7 @@ def add_interpro():
 
 
 @admin_controls.route('/calculate_enrichment')
-@login_required
+@admin_required
 def calculate_enrichment():
     """
     Controller to start GO enrichment calculations
@@ -174,7 +174,7 @@ def calculate_enrichment():
 
 
 @admin_controls.route('/delete_enrichment')
-@login_required
+@admin_required
 def delete_enrichment():
     """
     Controller to delete all existing GO enrichments
@@ -188,7 +188,7 @@ def delete_enrichment():
 
 
 @admin_controls.route('/network_predict', methods=['POST'])
-@login_required
+@admin_required
 def predict_from_network():
     form = PredictGOForm(request.form)
     form.populate_networks()

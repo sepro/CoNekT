@@ -2,7 +2,7 @@ import os
 from tempfile import mkstemp
 
 from flask import request, flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -13,7 +13,7 @@ from planet.models.species import Species
 
 
 @admin_controls.route('/add/species', methods=['POST'])
-@login_required
+@admin_required
 def add_species():
     """
     Adds a species to the species table and adds sequences for that species to the sequence table based on the fasta

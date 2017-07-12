@@ -2,7 +2,7 @@ import os
 from tempfile import mkstemp
 
 from flask import request, flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -12,7 +12,7 @@ from planet.models.expression.profiles import ExpressionProfile
 
 
 @admin_controls.route('/add/expression_profile', methods=['POST'])
-@login_required
+@admin_required
 def add_expression_profiles():
     """
     Add expression profiles to sequences based on data from LSTrAP

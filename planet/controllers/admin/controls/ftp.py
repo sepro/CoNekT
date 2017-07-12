@@ -1,7 +1,7 @@
 import os
 
 from flask import current_app, flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.utils import redirect
 
 from planet.controllers.admin.controls import admin_controls
@@ -10,7 +10,7 @@ from planet.ftp import export_coding_sequences, export_protein_sequences, export
 
 
 @admin_controls.route('/export_ftp')
-@login_required
+@admin_required
 def export_ftp():
     PLANET_FTP_DATA = current_app.config['PLANET_FTP_DATA']
 

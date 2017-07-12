@@ -75,8 +75,15 @@ class AdminTest(TestCase):
     def test_admin_views_as_anonymous(self):
         # make sure these endpoints cannot be reached without logging in
         for required_endpoint in required_endpoints:
+            # print(required_endpoint)
             response = self.client.get(required_endpoint, follow_redirects=True)
-            self.assert403(response)
+            if "/admin/" in required_endpoint:
+                self.assert200(response)
+                # should redirect to login page
+                self.assertTrue("Log in" in response.data.decode('utf-8'))
+            elif "/admin_controls/" in required_endpoint:
+                # these should not be accessed directly
+                self.assert403(response)
 
     @unittest.skipIf(not LOGIN_ENABLED, "Skipping test_admin_views because LOGIN is not enabled")
     def test_admin_views_as_user(self):
@@ -86,7 +93,9 @@ class AdminTest(TestCase):
         self.assertTrue('You have successfully logged in.' in response.data.decode('utf-8'))
 
         for required_endpoint in required_endpoints:
+            # print(required_endpoint)
             response = self.client.get(required_endpoint, follow_redirects=True)
+            # User is logged in but has insufficient rights
             self.assert403(response)
 
     @unittest.skipIf(not LOGIN_ENABLED, "Skipping test_admin_controls because LOGIN is not enabled")

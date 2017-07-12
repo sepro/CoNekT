@@ -2,7 +2,7 @@ import os
 from tempfile import mkstemp
 
 from flask import request, flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -12,7 +12,7 @@ from planet.models.gene_families import GeneFamily
 
 
 @admin_controls.route('/add/family', methods=['POST'])
-@login_required
+@admin_required
 def add_family():
     """
     Add gene families to PlaNet from various sources.

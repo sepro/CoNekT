@@ -92,7 +92,7 @@ def login():
         login_user(existing_user, remember=keep_logged)
         flash('You have successfully logged in.', 'success')
 
-        if next_page is not None:
+        if next_page is not None and next_page != 'None':
             if is_safe_url(next_page):
                 return redirect(next_page)
             else:

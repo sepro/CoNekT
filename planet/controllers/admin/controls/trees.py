@@ -2,7 +2,7 @@ import os
 from tempfile import mkstemp
 
 from flask import request, flash, url_for
-from flask_login import login_required
+from planet.extensions import admin_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -56,7 +56,7 @@ def __replace_ids(tree_string, conversion_table):
 
 
 @admin_controls.route('/reconcile/trees/', methods=['POST'])
-@login_required
+@admin_required
 def reconcile_trees():
     if request.method == 'POST':
         method_id = int(request.form.get('tree_method_id'))
@@ -70,7 +70,7 @@ def reconcile_trees():
 
 
 @admin_controls.route('/add/trees', methods=['POST'])
-@login_required
+@admin_required
 def add_trees():
     form = AddTreesForm(request.form)
 

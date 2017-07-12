@@ -16,6 +16,7 @@ Everything that needs to be set up to get flask running is initialized in this f
 from flask import Flask, render_template, g, request, url_for, flash, redirect
 from flask_admin import Admin
 from flask_admin.menu import MenuLink
+from flask_login import current_user
 
 from planet.extensions import toolbar, db, login_manager, cache, htmlmin, blast_thread, compress, whooshee
 
@@ -326,9 +327,12 @@ def configure_error_handlers(app):
     @app.errorhandler(403)
     def access_denied(e):
         next_page = request.url_rule
-        flash("Log in first...", "info")
-
-        return redirect(url_for('auth.login', next=next_page))
+        if not current_user.is_authenticated:
+            flash("Log in first...", "info")
+            return redirect(url_for('auth.login', next=next_page))
+        else:
+            flash("Not permitted! Admin rights required.", "warning")
+            return render_template('error/403.html'), 403
 
 
 def configure_hooks(app):
