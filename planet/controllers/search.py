@@ -295,7 +295,8 @@ def search_typeahead_go(term):
     else:
         go = GO.query.filter(GO.obsolete == 0).filter(GO.name.ilike("%"+term+"%")).order_by(func.length(GO.name)).all()
 
-    return Response(json.dumps([{'value': g.name, 'tokens': g.name.split() + [g.label], 'label': g.label} for g in go]), mimetype='application/json')
+    return Response(json.dumps([{'value': g.name, 'tokens': g.name.split() + [g.label], 'label': g.label} for g in go]),
+                    mimetype='application/json')
 
 
 @search.route('/typeahead/go/prefetch')
@@ -308,11 +309,12 @@ def search_typeahead_prefetch_go():
     """
     go = GO.query.filter(GO.obsolete == 0).filter(func.length(GO.name) < 7).order_by(func.length(GO.name)).all()
 
-    return Response(json.dumps([{'value': g.name, 'tokens': g.name.split() + [g.label], 'label': g.label} for g in go]), mimetype='application/json')
+    return Response(json.dumps([{'value': g.name, 'tokens': g.name.split() + [g.label], 'label': g.label} for g in go]),
+                    mimetype='application/json')
 
 
 @search.route('/whooshee/<keyword>')
-@benchmark
+@cache.cached()
 def search_whooshee(keyword):
     results = Sequence.query.whooshee_search(keyword).all()
 
@@ -320,7 +322,7 @@ def search_whooshee(keyword):
 
 
 @search.route('/no_whooshee/<keyword>')
-@benchmark
+@cache.cached()
 def search_no_whooshee(keyword):
     results = Sequence.query.filter(Sequence.description.ilike("%" + keyword + "%")).all()
 
