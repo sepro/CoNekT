@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    PlaNet 2.0 - Privacy policy
+{% endblock %}
+
+{% block container %}
+<div class="top-pad">
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li class="active"><strong>Disclaimer</strong></li>
+    </ol>
+    <h1>PlaNet 2.0 Privacy policy</h1>
+
+    <p>No personal data needs to be entered to use PlaNet 2.0. Data submitted through the PlaNet 2.0 BLAST interface is
+    stored anonymously for the duration of the analysis. Results can be accessed using the personalized URL provided
+    upon submitting the sequence for up to one week.</p>
+
+    {% if g.privacy %}
+    <p>If in any case personal date should be (unintentionally) collected, stored or used, these <a href="{{ g.privacy }}">privacy policies</a> apply.</p>
+    {% endif %}
+
+</p>
+</div>
+
+</div>
+{% endblock %}
