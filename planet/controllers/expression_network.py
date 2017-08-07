@@ -49,7 +49,10 @@ def expression_network_graph(node_id, depth=1, family_method_id=None):
     """
     if family_method_id is None:
         family_method = GeneFamilyMethod.query.first()
-        family_method_id = family_method.id
+        if family_method_id is not None:
+            family_method_id = family_method.id
+        else:
+            family_method_id = None
 
     if depth > 1:
         flash("Depth cannot be larger than 1. Showing the network with depth 1", "warning")
@@ -75,7 +78,10 @@ def expression_network_json(node_id, family_method_id=None):
 
     if family_method_id is None:
         family_method = GeneFamilyMethod.query.first()
-        family_method_id = family_method.id
+        if family_method_id is not None:
+            family_method_id = family_method.id
+        else:
+            family_method_id = None
 
     network_cytoscape = CytoscapeHelper.parse_network(network)
     network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, family_method_id)
