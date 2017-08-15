@@ -7,6 +7,7 @@ from planet.models.go import GO
 from planet.models.interpro import Interpro
 from planet.models.relationships.cluster_go import ClusterGOEnrichment
 from planet.models.sequences import Sequence
+from planet.models.xrefs import XRef
 from planet.models.species import Species
 
 import re
@@ -65,7 +66,7 @@ class Search:
 
         sequences_by_name = Sequence.query.filter(Sequence.name.in_(terms)).limit(50).all()
 
-        sequences_by_xref = Sequence.query.filter(or_(*[Sequence.xrefs.any(name=term) for term in terms])).limit(50).all()
+        sequences_by_xref = Sequence.query.filter(Sequence.xrefs.any(XRef.name.in_(terms))).limit(50).all()
 
         sequences = sequences_by_name + sequences_by_xref
 
