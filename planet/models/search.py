@@ -61,7 +61,7 @@ class Search:
         :param term_string: space-separated strings to search for
         :return: dict with results per type
         """
-        terms = term_string.upper().split()
+        terms = [t for t in term_string.upper().split() if len(t) > 3]
 
         sequences_by_name = Sequence.query.filter(Sequence.name.in_(terms)).limit(50).all()
 
