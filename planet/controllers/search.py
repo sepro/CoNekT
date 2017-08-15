@@ -28,7 +28,7 @@ def search_single_keyword(keyword):
 
     :param keyword: Keyword to look for
     """
-    results = Search.keyword(keyword)
+    results = Search.whooshee_simple(keyword)
 
     # If the result is unique redirect to the corresponding page
     if len(results["sequences"]) + len(results["go"]) + len(results["interpro"]) + len(results["families"]) + len(results["profiles"]) == 1:
