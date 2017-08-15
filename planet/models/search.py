@@ -63,7 +63,7 @@ class Search:
         """
         terms = term_string.upper().split()
 
-        sequences = Sequence.query.filter(or_(or_(*[Sequence.name.ilike(term+"%") for term in terms
+        sequences = Sequence.query.filter(or_(or_(*[Sequence.name == term for term in terms
                                                     if len(term) > 5]),
                                               *[Sequence.xrefs.any(name=term) for term in terms]
                                               )
