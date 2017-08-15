@@ -63,13 +63,11 @@ class Search:
         """
         terms = term_string.upper().split()
 
-        sequences = Sequence.query.filter(Sequence.name.in_(terms)).limit(50).all()
+        sequences_by_name = Sequence.query.filter(Sequence.name.in_(terms)).limit(50).all()
 
-        # sequences = Sequence.query.filter(or_(or_(*[Sequence.name == term for term in terms
-        #                                             if len(term) > 5]),
-        #                                       *[Sequence.xrefs.any(name=term) for term in terms]
-        #                                       )
-        #                                   ).limit(50).all()
+        sequences_by_xref = Sequence.query.filter(or_(*[Sequence.xrefs.any(name=term) for term in terms])).limit(50).all()
+
+        sequences = sequences_by_name + sequences_by_xref
 
         go = GO.query.filter(GO.label.in_(terms)).all()
         interpro = Interpro.query.filter(Interpro.label.in_(terms)).all()
