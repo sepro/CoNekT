@@ -49,7 +49,7 @@ def expression_network_graph(node_id, depth=1, family_method_id=None):
     """
     if family_method_id is None:
         family_method = GeneFamilyMethod.query.first()
-        if family_method_id is not None:
+        if family_method is not None:
             family_method_id = family_method.id
         else:
             family_method_id = None
@@ -78,7 +78,7 @@ def expression_network_json(node_id, family_method_id=None):
 
     if family_method_id is None:
         family_method = GeneFamilyMethod.query.first()
-        if family_method_id is not None:
+        if family_method is not None:
             family_method_id = family_method.id
         else:
             family_method_id = None
