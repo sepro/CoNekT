@@ -22,9 +22,9 @@
                 </label>
             </div>
             <div class="form-group">
-                <label class="btn btn-default" for="tree_directory" id="my-file-button">
-                    {{ form.tree_directory(style="display:none;", onchange="", **{'webkitdirectory':'', 'mozdirectory':''})}}
-                    <span id="file-selector-text">Select Directory</span>
+                <label class="btn btn-default" for="tree_archive" id="my-file-button">
+                    {{ form.tree_archive(style="display:none;", onchange="")}}
+                    <span id="file-selector-text">Select Tree Archive</span>
                 </label>
             </div>
 
@@ -37,7 +37,7 @@
             <div class="panel-body">
                 Adds trees generated using OrthoFinder.
 
-                Select the <strong>directory</strong> that contains the trees from orthofinder.
+                Select the a <strong>gzip archive</strong>  that contains the trees from orthofinder.
             </div>
         </div>
     </div>
@@ -49,20 +49,15 @@
 {% block tail %}
 <script>
     $(function() {
-        $("#tree_directory").change(function() {
-            $('#file-selector-text').html('Directory selected');$('#my-file-button').toggleClass('btn-default btn-success');
+        $("#tree_archive").change(function() {
+            $('#file-selector-text').html('Archive selected');$('#my-file-button').toggleClass('btn-default btn-success');
         });
 
         $("#sequence_ids").change(function() {
             $('#sequence-selector-text').html('SequenceIDs.txt selected');$('#my-sequence-button').toggleClass('btn-default btn-success');
         });
 
-        /*var inps = document.querySelectorAll('input');
-        [].forEach.call(inps, function(inp) {
-            inp.onchange = function(e) {
-                console.log(this.files);
-            };
-        });*/
+
     });
 </script>
 {{ super() }}

@@ -9,7 +9,7 @@ class AddTreesForm(FlaskForm):
     gene_family_method_id = SelectField('Gene Family Method', coerce=int)
     description = TextAreaField('Description', [InputRequired()])
 
-    tree_directory = FileField()
+    tree_archive = FileField()
     sequence_ids = FileField()
 
     def populate_methods(self):

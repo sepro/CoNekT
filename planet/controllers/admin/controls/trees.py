@@ -1,4 +1,5 @@
 import os
+import tarfile
 from tempfile import mkstemp
 
 from flask import request, flash, url_for
@@ -95,51 +96,49 @@ def add_trees():
         sequence_ids_data = request.files[form.sequence_ids.name].read().decode('utf-8')
         id_conversion = __read_sequence_ids(sequence_ids_data.split('\n'))
 
-        # Get original gene family names (used to link trees to families
+        # Get original gene family names (used to link trees to families)
         gfs = GeneFamily.query.filter(GeneFamily.method_id == new_method.gene_family_method_id).all()
         ori_name_to_id = {gf.original_name: gf.id for gf in gfs}
-        uploaded_files = request.files.getlist("tree_directory")
+        tree_data = request.files[form.tree_archive.name].read()
+
+        fd, temp_path = mkstemp()
+
+        with open(temp_path, 'wb') as tree_data_writer:
+            tree_data_writer.write(tree_data)
 
         new_trees = []
-        for f in uploaded_files:
-            # remove path from f.filename
-            _, filename = os.path.split(f.filename)
+        with tarfile.open(temp_path, mode='r:gz') as tf:
+            for name, entry in zip(tf.getnames(), tf):
+                tree_string = str(tf.extractfile(entry).read().decode('utf-8')).replace('\r', '').replace('\n','')
 
-            if "_tree_id.txt" not in filename:
-                # not a file we need, skip
-                print("Skipping %s" % filename)
-                continue
+                # get the gene families original name from the filename
+                original_name = str(name.split('_')[0])
+                gf_id = None
 
-            # get the gene families original name from the filename
-            original_name = str(filename.split('_')[0])
-            gf_id = None
+                if original_name in ori_name_to_id.keys():
+                    gf_id = ori_name_to_id[original_name]
+                else:
+                    print('%s: Family %s not found in gene families generated using method %d !' %
+                          (name, original_name, new_method.gene_family_method_id))
 
-            if original_name in ori_name_to_id.keys():
-                gf_id = ori_name_to_id[original_name]
-            else:
-                print('%s: Family %s not found in gene families generated using method %d !' %
-                      (f.filename, original_name, new_method.gene_family_method_id))
+                new_trees.append({
+                    "gf_id": gf_id,
+                    "label": original_name + "_tree",
+                    "method_id": new_method.id,
+                    "data_newick": __replace_ids(tree_string, id_conversion),
+                    "data_phyloxml": None
+                })
 
-            tree_string = f.read().decode('utf-8').strip()
+                # add 400 trees at the time, more can cause problems with some database engines
+                if len(new_trees) > 400:
+                    db.engine.execute(Tree.__table__.insert(), new_trees)
+                    new_trees = []
 
-            new_trees.append({
-                "gf_id": gf_id,
-                "label": original_name + "_tree",
-                "method_id": new_method.id,
-                "data_newick": __replace_ids(tree_string, id_conversion),
-                "data_phyloxml": None
-            })
+            # add the last set of trees
+            db.engine.execute(Tree.__table__.insert(), new_trees)
 
-            # add 400 trees at the time, more can cause problems with some database engines
-            if len(new_trees) > 400:
-                db.engine.execute(Tree.__table__.insert(), new_trees)
-                new_trees = []
-
-        # add the last set of trees
-        db.engine.execute(Tree.__table__.insert(), new_trees)
-
-        flash('Added trees to DB.', 'success')
-        return redirect(url_for('admin.index'))
+            flash('Added trees to DB.', 'success')
+            return redirect(url_for('admin.index'))
     else:
         if not form.validate():
             flash('Unable to validate data, potentially missing fields', 'danger')

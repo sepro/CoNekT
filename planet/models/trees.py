@@ -53,8 +53,8 @@ class TreeMethod(db.Model):
                     # Otherwise it is a leaf node and can be skipped
                     continue
 
-                branch_one_seq = [l.name for l in node.descendants[0].get_leaves()]
-                branch_two_seq = [l.name for l in node.descendants[1].get_leaves()]
+                branch_one_seq = [l.name.strip() for l in node.descendants[0].get_leaves()]
+                branch_two_seq = [l.name.strip() for l in node.descendants[1].get_leaves()]
 
                 branch_one_species = set([seq_to_species[s] for s in branch_one_seq if s in seq_to_species.keys()])
                 branch_two_species = set([seq_to_species[s] for s in branch_two_seq if s in seq_to_species.keys()])
