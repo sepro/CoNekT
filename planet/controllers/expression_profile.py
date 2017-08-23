@@ -168,6 +168,20 @@ def expression_profile_download_plot(profile_id):
     return Response(current_profile.table)
 
 
+@expression_profile.route('/download/plot/<profile_id>/<condition_tissue_id>')
+@cache.cached()
+def expression_profile_download_tissue_plot(profile_id, condition_tissue_id):
+    """
+    Generates a tab-delimited table for off-line use
+
+    :param profile_id: ID of the profile to render
+    :param condition_tissue_id: ID of conversion table
+    """
+    current_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(profile_id)
+
+    return Response(current_profile.tissue_table(condition_tissue_id))
+
+
 @expression_profile.route('/json/plot/<profile_id>')
 @cache.cached()
 def expression_profile_plot_json(profile_id):

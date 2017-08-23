@@ -57,6 +57,12 @@ class ExpressionProfile(db.Model):
 
         return table
 
+    def tissue_table(self, condition_tissue_id, use_means=True):
+        table = ExpressionProfile.__profile_to_table(self.tissue_profile(condition_tissue_id,
+                                                                         use_means=use_means)
+                                                     )
+        return table
+
     def tissue_profile(self, condition_tissue_id, use_means=True):
         """
         Applies a conversion to the profile, grouping several condition into one more general feature (e.g. tissue).

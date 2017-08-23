@@ -46,6 +46,9 @@
                     <div id="canvas-holder" class="center-block">
                         <canvas id="chart-area" class="center-block" width="800" height="600"/>
                     </div>
+                    <div>
+                        <a href="{{ url_for('expression_profile.expression_profile_download_plot', profile_id=profile.id) }}" class="btn btn-primary pull-right" download="plot_{{profile.id}}.txt">Download</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -61,6 +64,9 @@
                     the <strong>maximum</strong> value.</span></p>
                     <div id="canvas-holder-{{ t.id }}" class="center-block">
                         <canvas id="chart-area-{{ t.id }}" class="center-block" width="800" height="600"/>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('expression_profile.expression_profile_download_tissue_plot', profile_id=profile.id, condition_tissue_id=t.id) }}" class="btn btn-primary pull-right" download="plot_{{profile.id}}.txt">Download</a>
                     </div>
                 </div>
             </div>
