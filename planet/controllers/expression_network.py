@@ -64,6 +64,20 @@ def expression_network_graph(node_id, depth=1, family_method_id=None):
     return render_template("expression_graph.html", node=node, depth=depth, family_method_id=family_method_id)
 
 
+@expression_network.route('/download/neighbors/<node_id>')
+@cache.cached()
+def expression_network_download_neighbors(node_id):
+    """
+    Returns tab delimited table with neighbors of the current node
+
+    :param node_id:
+    :return: Response with table in tab delimited format
+    """
+
+    network = ExpressionNetwork.query.get(node_id)
+
+    return Response(network.neighbors_table)
+
 @expression_network.route('/json/<node_id>')
 @expression_network.route('/json/<node_id>/<int:family_method_id>')
 @cache.cached()

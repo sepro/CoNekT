@@ -263,6 +263,19 @@ class ExpressionNetwork(db.Model):
         self.network = network
         self.method_id = method_id
 
+    @property
+    def neighbors_table(self):
+        data = json.loads(self.network)
+        output = [["Sequence", "PCC", "hrr"]]
+
+        for d in data:
+            try:
+                output.append([d["gene_name"], str(d["link_pcc"]), str(d["hrr"])])
+            except Exception as e:
+                print(e)
+
+        return '\n'.join(['\t'.join(l) for l in output])
+
     @staticmethod
     def get_neighborhood(probe, depth=0):
         """
