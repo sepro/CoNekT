@@ -508,3 +508,7 @@ div#phyd3 .table-responsive > table {
   border: 0px;
   margin-bottom: 0px;
 }
+
+.global-message {
+        color: #31708f;
+}

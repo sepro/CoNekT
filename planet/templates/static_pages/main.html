@@ -10,18 +10,18 @@
         <li class="active">Home</li>
     </ol>
 
-    {% if g.msg %}
-    <div class="alert alert-info">
-        <strong>{{ g.msg_title|safe }}: </strong>{{ g.msg|safe }}
-    </div>
-    {% endif %}
-
     <div class="row">
         <div class="col-lg-12">
+
             <div style="overflow:hidden">
                 <img src="{{ url_for('static', filename='img/icon-192x192.png') }}" style="float:left;margin-right:25px;margin-top:-20px;margin-bottom:20px" />
-                <h1>Welcome to PlaNet 2.0<br /> <small>a platform dedicated to the visualization and analysis of plant co-expression and co-function networks.</small></h1>
+                <div><h1>Welcome to PlaNet 2.0<br /> <small>a platform dedicated to the visualization and analysis of plant co-expression and co-function networks.</small></h1>
+                    {% if g.msg %}
+                    <div><span class="global-message"><strong>{{ g.msg_title|safe }}: </strong>{{ g.msg|safe }}</span></div>
+                    {% endif %}
+                </div>
             </div>
+
         </div>
         <div class="col-lg-12">
             <div class="panel panel-default" style="background-color: #C1D0DE">
