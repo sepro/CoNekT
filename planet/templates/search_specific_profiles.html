@@ -138,6 +138,9 @@ $(function () {
         } else {
             $('#methods').prop('disabled', 'disabled');
             $('#methods').append($("<option />").val(0).text("Not available"));
+            $('#conditions').find('option').remove();
+            $('#conditions').prop('disabled', 'disabled');
+            $('#conditions').append($("<option />").val(0).text("Not available"));
         }
         $('#methods').trigger('change');
     }
