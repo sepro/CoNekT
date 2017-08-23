@@ -66,6 +66,9 @@
                     <canvas id="expression-profile" class="center-block" height="350"/>
                 </div>
                 <br />
+                <div>
+                    <a href="{{ url_for('expression_profile.expression_profile_download_plot', profile_id=profile.id) }}" class="btn btn-primary pull-right" download="plot_{{profile.id}}.txt">Download</a>
+                </div>
                 <p><strong>Note:</strong>Only the main profile, including all conditions, is shown. Additional statistics and tissue specific profiles are available <a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">here</a>.</p>
             {% endif %}
         {% endfor %}

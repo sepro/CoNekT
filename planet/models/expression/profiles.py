@@ -32,6 +32,31 @@ class ExpressionProfile(db.Model):
         self.sequence_id = sequence_id
         self.profile = profile
 
+    @staticmethod
+    def __profile_to_table(data):
+        output = [["condition", "mean", "min", "max"]]
+        order = data["order"]
+
+        for o in order:
+            try:
+                values = data["data"][o]
+                output.append([o,
+                               str(mean(values)),
+                               str(min(values)),
+                               str(max(values))
+                               ])
+            except Exception as e:
+                print(e)
+
+        return '\n'.join(['\t'.join(l) for l in output])
+
+    @property
+    def table(self):
+
+        table = ExpressionProfile.__profile_to_table(json.loads(self.profile))
+
+        return table
+
     def tissue_profile(self, condition_tissue_id, use_means=True):
         """
         Applies a conversion to the profile, grouping several condition into one more general feature (e.g. tissue).
