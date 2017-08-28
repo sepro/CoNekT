@@ -18,7 +18,7 @@ from flask_admin import Admin
 from flask_admin.menu import MenuLink
 from flask_login import current_user
 
-from planet.extensions import toolbar, db, login_manager, cache, htmlmin, blast_thread, compress, whooshee
+from planet.extensions import toolbar, db, login_manager, cache, htmlmin, blast_thread, compress, whooshee, admin
 
 
 def create_app(config):
@@ -185,8 +185,7 @@ def configure_admin_panel(app):
         from planet.models.news import News
         from planet.models.trees import TreeMethod
 
-        admin = Admin(app, index_view=MyAdminIndexView(template='admin/home.html'), template_mode='bootstrap3',
-                      base_template='admin/my_base.html')
+        admin.init_app(app, index_view=MyAdminIndexView(template='admin/home.html'))
 
         # Add views used to build the database
 
