@@ -153,10 +153,10 @@ class Search:
                 if len(whooshee_search_string) > 5:
                     if term_rules == 'all':
                         # AND logic
-                        query = query.whooshee_search(whooshee_search_string, group=whoosh.qparser.AndGroup)
+                        query = query.whooshee_search(whooshee_search_string, group=whoosh.qparser.AndGroup, limit=200)
                     else:
                         # OR logic
-                        query = query.whooshee_search(whooshee_search_string, group=whoosh.qparser.OrGroup)
+                        query = query.whooshee_search(whooshee_search_string, group=whoosh.qparser.OrGroup, limit=200)
 
         # Filter for GO terms
         if go_terms is not None and len(go_terms) > 0:
@@ -174,8 +174,6 @@ class Search:
                 else:
                     query = query.filter(or_(*[Sequence.go_associations.any(go_id=go_id, predicted=0)
                                                for go_id in selected_go_id]))
-
-        # exclude predicted GO !
 
         # Filter for InterPro domains
         if interpro_domains is not None and len(interpro_domains) > 0:

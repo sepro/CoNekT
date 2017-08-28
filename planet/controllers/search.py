@@ -1,6 +1,6 @@
 import json
 
-from flask import g, Blueprint, flash, request, redirect, url_for, render_template, Response
+from flask import g, Blueprint, flash, request, redirect, url_for, render_template, Response, current_app
 from sqlalchemy import func
 from sqlalchemy.sql import or_
 
@@ -16,6 +16,7 @@ from planet.models.species import Species
 from planet.models.sequences import Sequence
 
 from utils.benchmark import benchmark
+import logging
 
 search = Blueprint('search', __name__)
 
