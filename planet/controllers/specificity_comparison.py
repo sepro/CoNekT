@@ -67,32 +67,28 @@ def specificity_comparison_main():
             sequence_id_left = [r.profile.sequence_id for r in results_a if r.profile.sequence_id is not None]
             sequence_id_right = [r.profile.sequence_id for r in results_b if r.profile.sequence_id is not None]
 
-            interpro_id_left = [ia.interpro_id for ia in interpro_associations if ia.sequence_id in sequence_id_left]
-            interpro_id_right = [ia.interpro_id for ia in interpro_associations if ia.sequence_id in sequence_id_right]
-
-            interpro_ids = list(set(interpro_id_left + interpro_id_right))
-
             interpro_id_to_name = {i.interpro_id: i.domain.label for i in interpro_associations}
 
-            for ii in interpro_ids:
-                table_data[ii] = {'id': ii, 'name': interpro_id_to_name[ii], 'left_genes': [], 'right_genes': []}
+            for i in interpro_associations:
+                if i.interpro_id not in table_data.keys():
+                    table_data[i.interpro_id] = {'id': i.interpro_id,
+                                                 'name': interpro_id_to_name[i.interpro_id],
+                                                 'left_genes': [],
+                                                 'right_genes': []}
+                if i.sequence_id in sequence_id_left:
+                    table_data[i.interpro_id]['left_genes'].append({'id': i.sequence_id, 'name': i.sequence.name})
 
-                left_genes = list(set([(i.sequence_id, i.sequence.name)
-                                       for i in interpro_associations if i.sequence_id in sequence_id_left and i.interpro_id == ii]))
-                right_genes = list(set([(i.sequence_id, i.sequence.name)
-                                        for i in interpro_associations if i.sequence_id in sequence_id_right and i.interpro_id == ii]))
+                if i.sequence_id in sequence_id_right:
+                    table_data[i.interpro_id]['right_genes'].append({'id': i.sequence_id, 'name': i.sequence.name})
 
-                table_data[ii]['left_genes'] = [{'id': d[0], 'name': d[1]} for d in left_genes]
-                table_data[ii]['right_genes'] = [{'id': d[0], 'name': d[1]} for d in right_genes]
-
-                if len(table_data[ii]['left_genes']) > 0 and len(table_data[ii]['right_genes']) == 0:
-                    table_data[ii]['type'] = 'left'
+                if len(table_data[i.interpro_id]['left_genes']) > 0 and len(table_data[i.interpro_id]['right_genes']) == 0:
+                    table_data[i.interpro_id]['type'] = 'left'
                     counts['left'] += 1
-                elif len(table_data[ii]['right_genes']) > 0 and len(table_data[ii]['left_genes']) == 0:
-                    table_data[ii]['type'] = 'right'
+                elif len(table_data[i.interpro_id]['right_genes']) > 0 and len(table_data[i.interpro_id]['left_genes']) == 0:
+                    table_data[i.interpro_id]['type'] = 'right'
                     counts['right'] += 1
                 else:
-                    table_data[ii]['type'] = 'intersection'
+                    table_data[i.interpro_id]['type'] = 'intersection'
                     counts['intersection'] += 1
 
         else:
@@ -108,21 +104,29 @@ def specificity_comparison_main():
                 fam_to_data[f.gene_family_id].append({'id': f.sequence_id, 'name': f.sequence.name})
                 famID_to_name[f.gene_family_id] = f.family.name
 
-            families_a = set([seq_to_fam[r.profile.sequence_id] for r in results_a if r.profile.sequence_id in seq_to_fam.keys()])
-            families_b = set([seq_to_fam[r.profile.sequence_id] for r in results_b if r.profile.sequence_id in seq_to_fam.keys()])
+            for r in results_a:
+                f = seq_to_fam[r.profile.sequence_id] if r.profile.sequence_id in seq_to_fam.keys() else None
 
-            all_families = families_a.union(families_b)
+                if f is None:
+                    continue
 
-            for f in all_families:
-                table_data[f] = {'id': f, 'name': famID_to_name[f], 'left_genes': [], 'right_genes': []}
+                if f not in table_data.keys():
+                    table_data[f] = {'id': f, 'name': famID_to_name[f], 'left_genes': [], 'right_genes': []}
 
-                # TODO: fix one-by-one fetching of names
-                table_data[f]['left_genes'] = [{'id': r.profile.sequence_id, 'name': r.profile.sequence.name} for r in results_a
-                                               if r.profile.sequence_id in seq_to_fam.keys() and seq_to_fam[r.profile.sequence_id] == f]
-                table_data[f]['right_genes'] = [{'id': r.profile.sequence_id, 'name': r.profile.sequence.name} for r in results_b
-                                                if r.profile.sequence_id in seq_to_fam.keys() and seq_to_fam[
-                                                r.profile.sequence_id] == f]
+                table_data[f]['left_genes'].append({'id': r.profile.sequence_id, 'name': r.profile.sequence.name})
 
+            for r in results_b:
+                f = seq_to_fam[r.profile.sequence_id] if r.profile.sequence_id in seq_to_fam.keys() else None
+
+                if f is None:
+                    continue
+
+                if f not in table_data.keys():
+                    table_data[f] = {'id': f, 'name': famID_to_name[f], 'left_genes': [], 'right_genes': []}
+
+                table_data[f]['right_genes'].append({'id': r.profile.sequence_id, 'name': r.profile.sequence.name})
+
+            for f in table_data.keys():
                 if len(table_data[f]['left_genes']) > 0 and len(table_data[f]['right_genes']) == 0:
                     table_data[f]['type'] = 'left'
                     counts['left'] += 1
