@@ -45,10 +45,14 @@ def specificity_comparison_main():
         method_b = ExpressionSpecificityMethod.query.get_or_404(method_b_id)
 
         # Fetch results
-        results_a = ExpressionSpecificity.query.filter_by(method_id=method_a_id, condition=condition_a).\
-            filter(ExpressionSpecificity.score >= cutoff_a).all()
-        results_b = ExpressionSpecificity.query.filter_by(method_id=method_b_id, condition=condition_b).\
-            filter(ExpressionSpecificity.score >= cutoff_b).all()
+        results_a = ExpressionSpecificity.query.filter(ExpressionSpecificity.method_id == method_a_id). \
+            filter(ExpressionSpecificity.score >= cutoff_a).\
+            filter(ExpressionSpecificity.condition == condition_a).\
+            all()
+        results_b = ExpressionSpecificity.query.filter(ExpressionSpecificity.method_id == method_b_id). \
+            filter(ExpressionSpecificity.score >= cutoff_b).\
+            filter(ExpressionSpecificity.condition == condition_b).\
+            all()
 
         sequence_ids = [r.profile.sequence_id for r in results_a] + [r.profile.sequence_id for r in results_b]
 
