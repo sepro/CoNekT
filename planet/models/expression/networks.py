@@ -12,6 +12,7 @@ from utils.benchmark import benchmark
 import random
 import json
 import re
+import sys
 from sqlalchemy import and_
 
 from collections import defaultdict
@@ -503,18 +504,21 @@ class ExpressionNetwork(db.Model):
                 }
 
                 for i, h in enumerate(hits.split('\t')):
-                    name, value = h.split('(')
-                    value = float(value.replace(')', ''))
-                    if value > pcc_cutoff:
-                        network[query]["total_count"] += 1
-                        if i < limit:
-                            link = {"probe_name": name,
-                                    "gene_name": name,
-                                    "gene_id": sequence_dict[name.upper()] if name.upper() in sequence_dict.keys() else None,
-                                    "link_score": i,
-                                    "link_pcc": value}
-                            network[query]["linked_probes"].append(link)
-                            scores[query][name] = i
+                    try:
+                        name, value = h.split('(')
+                        value = float(value.replace(')', ''))
+                        if value > pcc_cutoff:
+                            network[query]["total_count"] += 1
+                            if i < limit:
+                                link = {"probe_name": name,
+                                        "gene_name": name,
+                                        "gene_id": sequence_dict[name.upper()] if name.upper() in sequence_dict.keys() else None,
+                                        "link_score": i,
+                                        "link_pcc": value}
+                                network[query]["linked_probes"].append(link)
+                                scores[query][name] = i
+                    except ValueError as e:
+                        print("Error on line %d, skipping ... (%s)" % (i, str(h)), file=sys.stderr)
 
         # HRR
         hr_ranks = defaultdict(lambda: defaultdict(int))

@@ -205,7 +205,7 @@ def search_specific_profiles():
 
         species = Species.query.get_or_404(species_id)
         method = ExpressionSpecificityMethod.query.get_or_404(method_id)
-        results = ExpressionSpecificity.query.filter_by(method_id=method_id, condition=condition).filter(ExpressionSpecificity.score>=cutoff)
+        results = ExpressionSpecificity.query.filter(ExpressionSpecificity.method_id == method_id).filter(ExpressionSpecificity.score>=cutoff).filter(ExpressionSpecificity.condition == condition)
 
         return render_template("search_specific_profiles.html", results=results, species=species, method=method, condition=condition)
 
