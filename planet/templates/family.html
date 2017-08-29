@@ -88,12 +88,18 @@
         <div class="alert alert-info"><strong>Info: </strong>GO-associations disabled for items with more than 300 associated sequences !</div>
     {% endif %}
 
+    {% if (count >= 5000) %}
+    <div class="alert alert-info"><strong>Info: </strong>InterPro and Family associations disabled for items with more than 5000 associated sequences !</div>
+    {% endif %}
+
+    {% if (count < 5000) %}
     {{ ajax.ajax_table(
         'InterPro Domains',
         url_for('family.family_interpro_ajax', family_id=family.id),
         none,
         'interpro_ajax'
     ) }}
+    {% endif %}
 
     {% if (count < 300) %}
         {{ ajax.ajax_table(
@@ -104,12 +110,14 @@
         ) }}
     {% endif %}
 
+    {% if (count < 5000) %}
     {{ ajax.ajax_table(
         'Other families',
         url_for('family.family_family_ajax', family_id=family.id),
         none,
         'family_ajax'
     ) }}
+    {% endif %}
 
     <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
