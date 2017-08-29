@@ -87,7 +87,7 @@
 
     <h3 class="banner-blue" id="associated_things">Associations</h3>
     {% if (count >= 300) %}
-        <p>GO-associations disabled for items with more than 300 associated sequences !</p>
+    <div class="alert alert-info"><strong>Info: </strong>GO-associations disabled for items with more than 300 associated sequences !</div>
     {% endif %}
 
     {{ ajax.ajax_table(
