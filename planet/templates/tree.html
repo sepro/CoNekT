@@ -50,6 +50,7 @@
             <li><strong>{{ tree.label }}</strong></li>
         </ol>
      <h1>{{ tree.label }}: <strong>{{ tree.method.description }}</strong></h1>
+     <p>Tree for gene family <a href="{{ url_for('family.family_view', family_id=tree.family.id) }}">{{ tree.family.name }}</a></p>
     <div class="row">
         <div class="col-lg-12">
             <div id="phyd3" style="height:600px"></div>
