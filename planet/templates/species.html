@@ -74,7 +74,11 @@
                         <td><em><a href="{{ url_for('species.species_view', species_id=s.id) }}">{{ s.name }}</a></em> <span class="'text-muted">({{ s.code }})</span></td>
                         <td>{{ s.sequence_count }}</td>
                         <td>{{ s.profile_count }}</td>
+                        {% if s.network_count > 0 %}
                         <td><a href="{{url_for('expression_network.expression_network_species', species_id=s.id)}}">{{ s.network_count }}</a></td>
+                        {% else %}
+                        <td><span class="text-muted">0</span></td>
+                        {% endif %}
                         <td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download  <span class="caret"></span></button>
