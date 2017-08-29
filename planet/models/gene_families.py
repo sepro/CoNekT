@@ -154,12 +154,22 @@ class GeneFamily(db.Model):
         :param sequence_ids: list of sequence ids
         :return: dict with for each InterPro domain linked with any of the input sequences stats
         """
-
-        output = {}
-
         data = SequenceFamilyAssociation.query.filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids)).all()
 
-        for d in data:
+        return GeneFamily.__sequence_stats_associations(data)
+
+    @staticmethod
+    def sequence_stats_subquery(sequences):
+        subquery = sequences.subquery()
+
+        data = SequenceFamilyAssociation.query.join(subquery, SequenceFamilyAssociation.sequence_id == subquery.c.id).all()
+
+        return GeneFamily.__sequence_stats_associations(data)
+
+    @staticmethod
+    def __sequence_stats_associations(associations):
+        output = {}
+        for d in associations:
             if d.gene_family_id not in output.keys():
                 output[d.gene_family_id] = {
                     'family': d.family,
@@ -179,21 +189,15 @@ class GeneFamily(db.Model):
 
     @property
     def interpro_stats(self):
-        sequence_ids = [s.id for s in self.sequences.all()]
-
-        return Interpro.sequence_stats(sequence_ids)
+        return Interpro.sequence_stats_subquery(self.sequences)
 
     @property
     def go_stats(self):
-        sequence_ids = [s.id for s in self.sequences.all()]
-
-        return GO.sequence_stats(sequence_ids)
+        return GO.sequence_stats_subquery(self.sequences)
 
     @property
     def family_stats(self):
-        sequence_ids = [s.id for s in self.sequences.all()]
-
-        return GeneFamily.sequence_stats(sequence_ids)
+        return GeneFamily.sequence_stats_subquery(self.sequences)
 
     @staticmethod
     def __add_families(families, family_members):

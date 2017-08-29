@@ -74,12 +74,22 @@ class Interpro(db.Model):
         :param sequence_ids: list of sequence ids
         :return: dict with for each InterPro domain linked with any of the input sequences stats
         """
-
-        output = {}
-
         data = SequenceInterproAssociation.query.filter(SequenceInterproAssociation.sequence_id.in_(sequence_ids)).all()
 
-        for d in data:
+        return Interpro.__sequence_stats_associations(data)
+
+    @staticmethod
+    def sequence_stats_subquery(sequences):
+        subquery = sequences.subquery()
+        data = SequenceInterproAssociation.query.join(subquery, SequenceInterproAssociation.sequence_id == subquery.c.id).all()
+
+        return Interpro.__sequence_stats_associations(data)
+
+    @staticmethod
+    def __sequence_stats_associations(associations):
+        output = {}
+
+        for d in associations:
             if d.interpro_id not in output.keys():
                 output[d.interpro_id] = {
                     'domain': d.domain,
@@ -104,21 +114,19 @@ class Interpro(db.Model):
     def interpro_stats(self):
         sequence_ids = [s.id for s in self.sequences.all()]
 
-        return Interpro.sequence_stats(sequence_ids)
+        return Interpro.sequence_stats_subquery(self.sequences)
 
     @property
     def go_stats(self):
         from planet.models.go import GO
-        sequence_ids = [s.id for s in self.sequences.all()]
 
-        return GO.sequence_stats(sequence_ids)
+        return GO.sequence_stats_subquery(self.sequences)
 
     @property
     def family_stats(self):
         from planet.models.gene_families import GeneFamily
-        sequence_ids = [s.id for s in self.sequences.all()]
 
-        return GeneFamily.sequence_stats(sequence_ids)
+        return GeneFamily.sequence_stats_subquery(self.sequences)
 
     @staticmethod
     def add_from_xml(filename, empty=True):
