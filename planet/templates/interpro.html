@@ -47,6 +47,9 @@
         'interpro'
     ) }}
     <h3 class="banner-blue" id="associated_things">Associations</h3>
+    {% if (count >= 300) %}
+        <p>GO-associations disabled for items with more than 300 associated sequences !</p>
+    {% endif %}
 
     {{ ajax.ajax_table(
         'Other Domains',
@@ -55,12 +58,14 @@
         'interpro_ajax'
     ) }}
 
-    {{ ajax.ajax_table(
-        'GO terms',
-        url_for('interpro.interpro_go_ajax', interpro_id=interpro.id),
-        none,
-        'go_ajax'
-    ) }}
+    {% if (count < 300) %}
+        {{ ajax.ajax_table(
+            'GO terms',
+            url_for('interpro.interpro_go_ajax', interpro_id=interpro.id),
+            none,
+            'go_ajax'
+        ) }}
+    {% endif %}
 
     {{ ajax.ajax_table(
         'Families',
