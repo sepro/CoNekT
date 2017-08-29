@@ -48,11 +48,11 @@
     ) }}
     <h3 class="banner-blue" id="associated_things">Associations</h3>
     {% if (count >= 300) %}
-        <div class="alert alert-info"><strong>Info: </strong>GO-associations disabled for items with more than 300 associated sequences !</div>
-    {% endif %}
-
-    {% if (count >= 5000) %}
-    <div class="alert alert-info"><strong>Info: </strong>InterPro and Family associations disabled for items with more than 5000 associated sequences !</div>
+        <div class="alert alert-info"><strong>Info: </strong>GO-associations disabled for items with more than 300 associated sequences !
+            {% if (count >= 5000) %}
+                <br />InterPro and Family associations disabled for items with more than 5000 associated sequences !
+            {% endif %}
+        </div>
     {% endif %}
 
     {% if (count < 5000) %}
