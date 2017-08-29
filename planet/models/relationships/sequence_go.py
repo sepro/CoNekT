@@ -8,8 +8,8 @@ class SequenceGOAssociation(db.Model):
     __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
-    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id', ondelete='CASCADE'))
-    go_id = db.Column(db.Integer, db.ForeignKey('go.id', ondelete='CASCADE'))
+    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id', ondelete='CASCADE'), index=True)
+    go_id = db.Column(db.Integer, db.ForeignKey('go.id', ondelete='CASCADE'), index=True)
 
     evidence = db.Column(db.Enum('EXP', 'IDA', 'IPI', 'IMP', 'IGI', 'IEP',
                                  'ISS', 'ISO', 'ISA', 'ISM', 'IGC', 'IBA', 'IBD', 'IKR', 'IRD', 'RCA',

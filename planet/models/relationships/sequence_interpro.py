@@ -6,8 +6,8 @@ class SequenceInterproAssociation(db.Model):
     __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
-    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id', ondelete='CASCADE'))
-    interpro_id = db.Column(db.Integer, db.ForeignKey('interpro.id', ondelete='CASCADE'))
+    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id', ondelete='CASCADE'), index=True)
+    interpro_id = db.Column(db.Integer, db.ForeignKey('interpro.id', ondelete='CASCADE'), index=True)
     start = db.Column(db.Integer, default=None)
     stop = db.Column(db.Integer, default=None)
 
