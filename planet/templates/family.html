@@ -34,6 +34,13 @@
 
     <h1><strong>{{ family.name }}</strong> <small>({{ family.method.method }})</small></h1>
 
+    <p>Trees:
+    {% for t in family.trees %}
+        <a href="{{ url_for('tree.tree_view', tree_id=t.id) }}">{{t.label}}</a> ({{t.method.description}})
+    {% else%}
+    <span class="text-muted">No tree available</span>
+    {% endfor %}
+    </p>
     {% if family.clade_id %}
     <p>Specific for <strong><a href="{{ url_for('clade.clade_view', clade_id=family.clade_id) }}">{{ family.clade.name}}</a></strong></p>
     {% endif %}

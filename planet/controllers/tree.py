@@ -20,7 +20,7 @@ def trees_overview():
 
 @tree.route('/view/<int:tree_id>')
 @cache.cached()
-def trees_view(tree_id):
+def tree_view(tree_id):
     tree = Tree.query.get_or_404(tree_id)
     association_count = SequenceSequenceCladeAssociation.query.filter(SequenceSequenceCladeAssociation.tree_id ==tree_id).count()
 

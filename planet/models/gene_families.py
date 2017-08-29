@@ -80,6 +80,7 @@ class GeneFamily(db.Model):
     original_name = db.Column(db.String(50, collation=SQL_COLLATION), index=True, default=None)
 
     sequences = db.relationship('Sequence', secondary=sequence_family, lazy='dynamic')
+    trees = db.relationship('Tree', backref='family', lazy='dynamic')
 
     xrefs = db.relationship('XRef', secondary=family_xref, lazy='dynamic')
 

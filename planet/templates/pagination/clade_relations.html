@@ -8,7 +8,7 @@
                     <td><a href="{{ url_for('clade.clade_view', clade_id=r.clade_id) }}">{{ r.clade.name }}</a></td>
                     <td>{{ r.readable_type }}</td>
                     <td>{{ r.readable_score }}</td>
-                    <td><a href="{{ url_for('tree.trees_view', tree_id=r.tree_id) }}">{{ r.tree.label }}</a></td>
+                    <td><a href="{{ url_for('tree.tree_view', tree_id=r.tree_id) }}">{{ r.tree.label }}</a></td>
                 </tr>
             {% else %}
                 <tr>
