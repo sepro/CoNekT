@@ -53,7 +53,14 @@
     <br />
     <div>
     <p><strong><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='gene_family') }}" data-target="#helpModal">Gene families</abbr> : </strong>{%- if families|count > 0 -%}{%- for family in families -%}
-        <a href="{{ url_for('family.family_view', family_id=family.id) }}">{{ family.name }}</a> ({{ family.method.method }}) {%- if not loop.last -%}, {% endif %}
+        <a href="{{ url_for('family.family_view', family_id=family.id) }}">{{ family.name }}</a> ({{ family.method.method }}) Phylogenetic Tree(s):
+        {% for tree in family.trees %}
+            <a href="{{ url_for('tree.tree_view', tree_id=tree.id) }}">{{tree.label}}</a>
+            {%- if not loop.last -%}, {% endif %}
+        {% else %}
+        <span class="text-muted">No tree available for this family</span>
+        {% endfor %}
+        {%- if not loop.last -%},<br/> {% endif %}
                             {% endfor %} {% else %}<em>No families found for this sequence</em>{% endif %}</p>
     <p><strong>Sequence :</strong> <a href="{{ url_for('sequence.sequence_modal_coding', sequence_id=sequence.id) }}" data-target="#profileModal">coding</a> (<a href="{{ url_for('sequence.sequence_fasta_coding', sequence_id=sequence.id) }}">download</a>) {%- if sequence.type == 'protein_coding' -%}, <a href="{{ url_for('sequence.sequence_modal_protein', sequence_id=sequence.id) }}" data-target="#profileModal">protein</a> (<a href="{{ url_for('sequence.sequence_fasta_protein', sequence_id=sequence.id) }}">download</a>) {% endif %}</p>
     </div>
