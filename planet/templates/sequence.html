@@ -108,7 +108,7 @@
     <h3 class="banner-blue" id="coexpression_networks">Co-expression Networks</h3>
     {% if network_nodes|count > 0 or coexpression_clusters|count > 0 %}
     <div class="table-responsive">
-        <table class="table  table-striped" id="coexpression_table">
+        <table class="table table-striped table-separated" id="coexpression_table">
             <thead>
                 <tr>
                     <th data-sort="string-ins"><span class="sort-icon"></span>Type</th>
@@ -306,7 +306,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading" id="links">External Links</div>
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped table-separated">
                         <tbody>
                             {% for xref in sequence.xrefs if xref.platform != 'token' %}
                             <tr>

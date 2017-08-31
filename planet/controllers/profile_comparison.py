@@ -74,6 +74,14 @@ def profile_comparison_main():
         # get max 51 profiles, only show the first 50 (the extra one is fetched to throw the warning)
         profiles = ExpressionProfile.get_profiles(species_id, probes, limit=51)
 
+        # TODO alert user if certain terms are not found !
+        missing = []
+        for p in probes:
+            pass
+
+        if len(missing) > 0:
+            flash("Warning! %s were not found in the database" % ', '.join(missing))
+
         if len(profiles) > 50:
             flash("To many profiles in this cluster only showing the first 50", 'warning')
 

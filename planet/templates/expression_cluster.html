@@ -17,7 +17,7 @@
     <h1>Clustering Methods Overview</h1>
     {% if cluster_methods|count > 1 %}
      <div class="table-responsive">
-        <table class="table">
+        <table class="table table-separated">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -54,7 +54,7 @@
                     <div class="panel-heading">Enriched GO Terms (<a id="DownloadEnrichedGO" href="#">download table</a>)</div>
                     <div class="panel-scroll">
                         <div class="table-responsive">
-                            <table class="table  table-striped" id="EnrichedGO">
+                            <table class="table table-striped table-separated" id="EnrichedGO">
                                 <thead>
                                     <tr>
                                         <th data-sort="string-ins"><span class="sort-icon"></span>ID</th>
@@ -93,7 +93,7 @@
                     <div class="panel-heading">Similar Clusters  (<a id="DownloadSimilarClusters" href="#">download table</a>)</div>
                     <div class="panel-scroll">
                         <div class="table-responsive">
-                            <table class="table  table-striped" id="SimilarClusters">
+                            <table class="table table-striped table-separated" id="SimilarClusters">
                                 <thead>
                                     <tr>
                                         <th data-sort="string-ins"><span class="sort-icon"></span>Clustering Method</th>

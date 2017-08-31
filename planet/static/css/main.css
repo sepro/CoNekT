@@ -288,6 +288,14 @@ body {
 }
 
 /*
+ * Vertical separator in table
+ */
+
+.table-separated th:not(:last-child), .table-separated td:not(:last-child) {
+    border-right: 1px solid #eee;
+}
+
+/*
  * Rotated table header
  */
 
