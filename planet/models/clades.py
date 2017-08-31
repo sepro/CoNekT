@@ -1,10 +1,12 @@
 from planet import db
+from planet.models.species import Species
 from planet.models.gene_families import GeneFamily
 from planet.models.interpro import Interpro
 
 from utils.phylo import get_clade
 
 import json
+import newick
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
@@ -114,3 +116,16 @@ class Clade(db.Model):
         except Exception as e:
             db.session.rollback()
             print(e)
+
+    @property
+    def newick_tree_species(self):
+        species = {s.code: s.name for s in Species.query.all()}
+
+        tree = newick.loads(self.newick_tree)[0]
+
+        for code, name in species.items():
+            node = tree.get_node(code)
+            if node is not None:
+                node.name = name
+
+        return newick.dumps([tree])

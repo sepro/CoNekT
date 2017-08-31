@@ -24,7 +24,7 @@ def species_overview():
 
     largest_clade = Clade.query.order_by(desc(Clade.species_count)).limit(1).first()
 
-    tree = largest_clade.newick_tree if largest_clade is not None else None
+    tree = largest_clade.newick_tree_species if largest_clade is not None else None
 
     return render_template('species.html', all_species=all_species, species_tree=tree)
 

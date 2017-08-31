@@ -292,6 +292,7 @@ if (!d3) { throw "d3 wasn't included!"};
         .attr("text-anchor", "start")
         .attr('font-family', 'Helvetica Neue, Helvetica, sans-serif')
         .attr('font-size', '10px')
+        .attr('font-style', 'italic')
         .attr('fill', 'black')
         .text(function(d) { return d.name; });
     }
