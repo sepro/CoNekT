@@ -283,6 +283,7 @@ class ExpressionNetwork(db.Model):
                 if d["gene_id"] in sequences.keys():
                     description = sequences[d["gene_id"]].description
                     alias = sequences[d["gene_id"]].aliases
+                    description = description if description is not None else ""
                     alias = alias if alias is not None else ""
 
                 output.append([d["gene_name"], description, alias, str(d["link_pcc"]), str(d["hrr"])])
