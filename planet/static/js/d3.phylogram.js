@@ -275,14 +275,16 @@ if (!d3) { throw "d3 wasn't included!"};
     d3.phylogram.styleTreeNodes(vis)
 
     if (!options.skipLabels) {
-      vis.selectAll('g.inner.node')
-        .append("svg:text")
-          .attr("dx", -6)
-          .attr("dy", -6)
-          .attr("text-anchor", 'end')
-          .attr('font-size', '8px')
-          .attr('fill', '#ccc')
-          .text(function(d) { return d.length; });
+      if (!options.skipInnerLabels) {
+        vis.selectAll('g.inner.node')
+          .append("svg:text")
+            .attr("dx", -6)
+            .attr("dy", -6)
+            .attr("text-anchor", 'end')
+            .attr('font-size', '8px')
+            .attr('fill', '#ccc')
+            .text(function(d) { return d.length; });
+      }
 
       vis.selectAll('g.leaf.node').append("svg:text")
         .attr("dx", 8)
@@ -291,7 +293,7 @@ if (!d3) { throw "d3 wasn't included!"};
         .attr('font-family', 'Helvetica Neue, Helvetica, sans-serif')
         .attr('font-size', '10px')
         .attr('fill', 'black')
-        .text(function(d) { return d.name + ' ('+d.length+')'; });
+        .text(function(d) { return d.name; });
     }
 
     return {tree: tree, vis: vis}

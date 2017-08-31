@@ -127,7 +127,8 @@
             d3.phylogram.build('#phylogram', newick, {
               width: $('#tree_panel').width()-160,
               height: {{ all_species|count*30+30 }},
-              skipTicks: true
+              skipTicks: true,
+              skipInnerLabels: true
             });
           }
 
