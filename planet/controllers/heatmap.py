@@ -82,7 +82,7 @@ def heatmap_inchlib_json(cluster_id):
             "nodes": {a["name"]: {
                 "count": 1,
                 "distance": 0,
-                "features": [a["values"][o] for o in current_heatmap["order"]],
+                "features": [round(a["values"][o], 3) for o in current_heatmap["order"]],
                 "objects": [a["name"]]
             } for a in current_heatmap['heatmap_data']},
             "feature_names": [o for o in current_heatmap["order"]]
