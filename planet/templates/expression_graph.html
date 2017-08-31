@@ -197,9 +197,9 @@
         </div>
         <div class="col-lg-10 col-lg-offset-2 col-sm-8 col-sm-offset-4 col-md-8 col-md-offset-4 main" id="main">
             {% if node %}
-            <h1>Expression Graph: <strong>{{ node.probe }}</strong><br /><small>({{ node.method.description }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            <h1>Co-expression neighborhood: <strong>{{ node.probe }}</strong><br /><small>({{ node.method.description }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
             {% elif cluster %}
-            <h1>Coexpression cluster: <strong>{{ cluster.name }}</strong> <small>({{ cluster.method.method }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            <h1>Co-expression cluster: <strong>{{ cluster.name }}</strong> <small>({{ cluster.method.method }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
             {% import "macros/cluster_actions.html" as ca %}
             <p><strong>View as: </strong>{{ ca.cluster_actions(cluster.id, exclude=["graph"]) }}</p>
             {% elif cluster_one %}

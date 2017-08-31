@@ -1,14 +1,14 @@
 node {
         content: data(gene_name);
         text-valign: center;
-        color: #FFF;
+        color: black;
         background-color: data(color);
-        text-outline-width: 1;
-        text-outline-color: #888;
+        text-outline-width: 2;
+        text-outline-color: #EEE;
 }
 
 node[node_type = "query"] {
-        color: black;
+        color: blue;
         text-outline-width: 2;
         text-outline-color: #EEE;
 }

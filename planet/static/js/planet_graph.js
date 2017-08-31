@@ -86,56 +86,56 @@ $(function () { // on dom ready
                 // code to add tooltips to the selected node
                 var content = [
                     {
-                        value: n.data('gene_id') !== null ? 'Planet : <a href="' + n.data('gene_link') + '">' + n.data('gene_name') + '</a>' : '<span class="text-muted">No sequence linked to probe</span>'
+                        value: n.data('gene_id') !== null ? '<strong>Gene ID:</strong> <a href="' + n.data('gene_link') + '">' + n.data('gene_name') + '</a>' : '<span class="text-muted">No sequence linked to probe</span>'
                     },
                     {
-                        value: n.data('description') !== null ? '<strong>' + (n.data('description').length > 90 ? n.data('description').substring(0, 87) + "..." :  n.data('description')) + '</strong><br />' : '<span class="text-muted">No description available</span>'
+                        value: n.data('description') !== null ? '<em>' + (n.data('description').length > 90 ? n.data('description').substring(0, 87) + "..." :  n.data('description')) + '</em><br />' : '<span class="text-muted">No description available</span>'
                     },
                     {
-                        value: n.data('tokens') !== null ? 'Other names: <strong>' + n.data('tokens') + '</strong><br />' : '<span class="text-muted">No alias available</span>'
+                        value: n.data('tokens') !== null ? '<strong>Other names:</strong> ' + n.data('tokens') + '<br />' : '<span class="text-muted">No alias available</span>'
                     }];
 
                 if (n.data('profile_link') !== undefined) {
-                    content.push({value: 'Profile : <a href="' + n.data('profile_link') + '">' + n.data('id') + '</a>'});
+                    content.push({value: '<strong>Profile:</strong> <a href="' + n.data('profile_link') + '">' + n.data('id') + '</a>'});
                 }
 
                 if (n.data('cluster_id') !== undefined) {
-                    content.push({value: 'Cluster : <a href="' + n.data('cluster_url') + '">' + n.data('cluster_name') + '</a>'});
+                    content.push({value: '<strong>Cluster:</strong> <a href="' + n.data('cluster_url') + '">' + n.data('cluster_name') + '</a>'});
                 }
 
                 if (n.data('spm_condition') !== undefined) {
-                    content.push({value: 'Expression specificity : ' + n.data('spm_condition') + '(' + n.data('spm_score').toFixed(2) + ')'});
+                    content.push({value: '<strong>Expression specificity:</strong> ' + n.data('spm_condition') + '(' + n.data('spm_score').toFixed(2) + ')'});
                 }
 
                 content.push(
                     {
-                        value: n.data('family_name') !== null ? 'Family : <a href="' + n.data('family_url') + '">' + n.data('family_name') + '</a>' : '<span class="text-muted">No family found</span>'
+                        value: n.data('family_name') !== null ? '<strong>Family:</strong> <a href="' + n.data('family_url') + '">' + n.data('family_name') + '</a>' : '<span class="text-muted">No family found</span>'
                     },
                     {
-                        value: n.data('family_clade') !== 'None' ? 'Clade : <strong>' + n.data('family_clade') + '</strong>' : '<span class="text-muted">No clade assigned</span>'
+                        value: n.data('family_clade') !== 'None' ? '<strong>Clade:</strong> ' + n.data('family_clade') : '<span class="text-muted">No clade assigned</span>'
                     },
                     {
                         value: ''
                     },
                     {
-                        value: '<span class="text-muted">select:</span>'
+                        value: '<span class="text-muted">Select:</span>'
                     },
                     {
-                        value: '<a href="#" onclick="select_neighborhood(event, \'' + n.data('gene_name') + '\')">neighborhood</a>'
+                        value: '<a href="#" onclick="select_neighborhood(event, \'' + n.data('gene_name') + '\')">Direct neighbors</a>'
                     }
                 );
 
                 if (n.data('family_name') !== null) {
                     content.push(
                     {
-                        value: '<a href="#" onclick="select_homologs(event, \'' + n.data('family_name') + '\')">homologs</a>'
+                        value: '<a href="#" onclick="select_homologs(event, \'' + n.data('family_name') + '\')">Homologs</a>'
                     }
                     )
                 }
                 if (n.data('lc_label') !== null) {
                     content.push(
                     {
-                        value: '<a href="#" onclick="select_lc(event, \'' + n.data('lc_label') + '\')">same label</a>'
+                        value: '<a href="#" onclick="select_lc(event, \'' + n.data('lc_label') + '\')">Same label</a>'
                     }
                     )
                 }
@@ -165,7 +165,7 @@ $(function () { // on dom ready
                     }];
 
                 if (e.data('profile_comparison') !== undefined) {
-                    content.push({value: '<a href="' + e.data('profile_comparison') + '">Compare profiles</a>'});
+                    content.push({value: '<a href="' + e.data('profile_comparison') + '">Compare expression profiles</a>'});
                 }
 
                 if (e.data('hrr') !== undefined) {
