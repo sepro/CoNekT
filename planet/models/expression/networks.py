@@ -273,9 +273,6 @@ class ExpressionNetwork(db.Model):
         sequence_ids = [d["gene_id"] for d in data if "gene_id" in d.keys() and d["gene_id"] is not None]
         sequences = {s.id: s for s in Sequence.query.filter(Sequence.id.in_(sequence_ids))}
 
-        print(sequence_ids)
-        print(sequences)
-
         for d in data:
             try:
                 description, alias = "", ""
