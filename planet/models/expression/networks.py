@@ -267,11 +267,25 @@ class ExpressionNetwork(db.Model):
     @property
     def neighbors_table(self):
         data = json.loads(self.network)
-        output = [["Sequence", "PCC", "hrr"]]
+        output = [["Sequence", "Description", "Alias", "PCC", "hrr"]]
+
+        # Pull in descriptions and aliases
+        sequence_ids = [d["gene_id"] for d in data if "gene_id" in d.keys() and d["gene_id"] is not None]
+        sequences = {s.id: s for s in Sequence.query.filter(Sequence.id.in_(sequence_ids))}
+
+        print(sequence_ids)
+        print(sequences)
 
         for d in data:
             try:
-                output.append([d["gene_name"], str(d["link_pcc"]), str(d["hrr"])])
+                description, alias = "", ""
+
+                if d["gene_id"] in sequences.keys():
+                    description = sequences[d["gene_id"]].description
+                    alias = sequences[d["gene_id"]].aliases
+                    alias = alias if alias is not None else ""
+
+                output.append([d["gene_name"], description, alias, str(d["link_pcc"]), str(d["hrr"])])
             except Exception as e:
                 print(e)
 
