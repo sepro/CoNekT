@@ -92,7 +92,7 @@ def specificity_comparison_main():
             sequence_id_left = [r.profile.sequence_id for r in results_a if r.profile.sequence_id is not None]
             sequence_id_right = [r.profile.sequence_id for r in results_b if r.profile.sequence_id is not None]
 
-            interpro_id_to_name = {i.interpro_id: i.domain.label for i in interpro_associations}
+            interpro_id_to_name = {i.interpro_id: "%s (%s)" % (i.domain.label, i.domain.description if i.domain.description else "no description") for i in interpro_associations}
 
             for i in interpro_associations:
                 if i.interpro_id not in table_data.keys():
