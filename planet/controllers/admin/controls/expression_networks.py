@@ -26,6 +26,7 @@ def add_coexpression_network():
         description = request.form.get('description')
         limit = int(request.form.get('limit'))
         pcc_cutoff = float(request.form.get('pcc_cutoff'))
+        enable_second_level = True if request.form.get('enable_second_level') == 'y' else False
 
         file = request.files[form.file.name].read()
 
@@ -36,7 +37,7 @@ def add_coexpression_network():
 
             ExpressionNetwork.read_expression_network_lstrap(temp_path, species_id, description,
                                                              pcc_cutoff=pcc_cutoff,
-                                                             limit=limit)
+                                                             limit=limit, enable_second_level=enable_second_level)
 
             os.close(fd)
             os.remove(temp_path)

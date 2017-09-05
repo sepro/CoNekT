@@ -23,7 +23,7 @@
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#"><strong>Options</strong></a></li>
             <li><br/></li>
-            {% if node %}
+            {% if node and depth > 0 %}
             <li><p>Depth</p>
                 <div class="text-center">
                     <div class="btn-group" role="group">

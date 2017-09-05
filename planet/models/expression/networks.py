@@ -28,6 +28,8 @@ class ExpressionNetworkMethod(db.Model):
     edge_type = db.Column(db.Enum("rank", "weight", name='edge_type'))
     probe_count = db.Column(db.Integer)
 
+    enable_second_level = db.Column(db.Boolean)
+
     probes = db.relationship('ExpressionNetwork',
                              backref=db.backref('method', lazy='joined'),
                              lazy='dynamic',
@@ -44,6 +46,7 @@ class ExpressionNetworkMethod(db.Model):
         self.species_id = species_id
         self.description = description
         self.edge_type = edge_type
+        self.enable_second_level = False
 
     def __repr__(self):
         return str(self.id) + ". " + self.description + ' [' + str(self.species) + ']'
@@ -475,7 +478,8 @@ class ExpressionNetwork(db.Model):
                     "depth": depth}
 
     @staticmethod
-    def read_expression_network_lstrap(network_file, species_id, description, score_type="rank", pcc_cutoff=0.7, limit=30):
+    def read_expression_network_lstrap(network_file, species_id, description, score_type="rank",
+                                       pcc_cutoff=0.7, limit=30, enable_second_level=False):
         # build conversion table for sequences
         sequences = Sequence.query.filter_by(species_id=species_id).all()
 
@@ -485,6 +489,7 @@ class ExpressionNetwork(db.Model):
 
         # Add network method first
         network_method = ExpressionNetworkMethod(species_id, description, score_type)
+        network_method.enable_second_level = enable_second_level
 
         db.session.add(network_method)
 

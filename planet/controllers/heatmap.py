@@ -58,13 +58,14 @@ def heatmap_main():
 
         # make probe list unique
         probes = list(set(probes))
-
+        # TODO check if certain probes were not found and warn the user
         current_heatmap = ExpressionProfile.get_heatmap(species_id, probes)
 
         return render_template("expression_heatmap.html", order=current_heatmap['order'],
                                profiles=current_heatmap['heatmap_data'],
                                form=form)
     else:
+        # TODO select random profiles and provide example output
         return render_template("expression_heatmap.html", form=form)
 
 

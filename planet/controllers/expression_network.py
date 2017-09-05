@@ -37,7 +37,7 @@ def expression_network_species(species_id):
 @expression_network.route('/graph/<node_id>')
 @expression_network.route('/graph/<node_id>/<int:family_method_id>')
 @cache.cached()
-def expression_network_graph(node_id, depth=1, family_method_id=None):
+def expression_network_graph(node_id, family_method_id=None):
     """
     Page that displays the network graph for a specific network's probe, the depth indicates how many steps away from
     the query gene the network is retrieved. For performance reasons depths > 1 are not allowed
@@ -54,12 +54,10 @@ def expression_network_graph(node_id, depth=1, family_method_id=None):
         else:
             family_method_id = None
 
-    if depth > 1:
-        flash("Depth cannot be larger than 1. Showing the network with depth 1", "warning")
-        return redirect(url_for('expression_network.expression_network_graph', node_id=node_id, depth=1,
-                                family_method_id=family_method_id))
-
     node = ExpressionNetwork.query.get(node_id)
+    enable_second_level = node.method.enable_second_level
+
+    depth = 1 if enable_second_level else 0
 
     return render_template("expression_graph.html", node=node, depth=depth, family_method_id=family_method_id)
 
@@ -78,6 +76,7 @@ def expression_network_download_neighbors(node_id):
 
     return Response(network.neighbors_table)
 
+
 @expression_network.route('/json/<node_id>')
 @expression_network.route('/json/<node_id>/<int:family_method_id>')
 @cache.cached()
@@ -88,7 +87,12 @@ def expression_network_json(node_id, family_method_id=None):
     :param node_id: id of the network's probe (the query) to visualize
     :param family_method_id: Which gene families to use
     """
-    network = ExpressionNetwork.get_neighborhood(node_id, 1)
+
+    node = ExpressionNetwork.query.get(node_id)
+    enable_second_level = node.method.enable_second_level
+    depth = 1 if enable_second_level else 0
+
+    network = ExpressionNetwork.get_neighborhood(node_id, depth=depth)
 
     if family_method_id is None:
         family_method = GeneFamilyMethod.query.first()

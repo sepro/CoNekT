@@ -28,6 +28,10 @@
     </div>
 
     <div class="form-group">
+        <div class="input-group">{{ form.enable_second_level.label }}?&nbsp;{{form.enable_second_level() }}</div>
+    </div>
+
+    <div class="form-group">
         <label class="btn btn-default" for="file" id="file-button">
             {{ form.file(style="display:none;", onchange="")}}
             <span id="file-selector-text">Select File</span>
