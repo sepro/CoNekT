@@ -7,7 +7,6 @@ from flask_htmlmin import HTMLMIN
 from flask_login import LoginManager, current_user,login_url,user_unauthorized
 from flask_sqlalchemy import SQLAlchemy
 from flask_whooshee import Whooshee
-from flask_admin import Admin
 
 from sqlalchemy.engine import Engine
 from sqlalchemy import event
@@ -15,7 +14,7 @@ from sqlite3 import Connection as SQLite3Connection
 
 from planet.flask_blast import BlastThread
 
-__all__ = ['db', 'login_manager', 'cache', 'htmlmin', 'blast_thread', 'compress', 'whooshee', 'Admin']
+__all__ = ['db', 'login_manager', 'cache', 'htmlmin', 'blast_thread', 'compress', 'whooshee']
 
 db = SQLAlchemy()
 
@@ -56,4 +55,3 @@ htmlmin = HTMLMIN()
 blast_thread = BlastThread()
 compress = Compress()
 whooshee = Whooshee()
-admin = Admin(template_mode='bootstrap3', base_template='admin/my_base.html')

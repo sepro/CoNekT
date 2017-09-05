@@ -14,11 +14,11 @@ Everything that needs to be set up to get flask running is initialized in this f
   * set up global things like the search form and custom 403/404 error messages
 """
 from flask import Flask, render_template, g, request, url_for, flash, redirect
-from flask_admin import Admin
 from flask_admin.menu import MenuLink
 from flask_login import current_user
+from flask_admin import Admin
 
-from planet.extensions import toolbar, db, login_manager, cache, htmlmin, blast_thread, compress, whooshee, admin
+from planet.extensions import toolbar, db, login_manager, cache, htmlmin, blast_thread, compress, whooshee
 
 
 def create_app(config):
@@ -184,6 +184,8 @@ def configure_admin_panel(app):
         from planet.models.clades import Clade
         from planet.models.news import News
         from planet.models.trees import TreeMethod
+
+        admin = Admin(template_mode='bootstrap3', base_template='admin/my_base.html')
 
         admin.init_app(app, index_view=MyAdminIndexView(template='admin/home.html'))
 
