@@ -153,6 +153,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    <a href="#" class="btn btn-primary pull-right" id="DownloadTable">Download</a><br />
                 </div>
             </div>
         </div>
@@ -310,12 +311,7 @@ $(function () {
       populate_species(formdata);
     });
 
-    var csv_data = $("#results_table").table2CSV({delivery:'value'});
-    csv_data = csv_data.replace(/,"Action"\n/,'\n');
-    csv_data = csv_data.replace(/,"view profile"\n/gi,'\n');
-    csv_data = csv_data.replace(/,"view profile"$/gi,'\n');
-    $("#DownloadTable").attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv_data));
-    $("#DownloadTable").attr('download', "table.csv");
+
 
 });
 </script>
@@ -332,6 +328,13 @@ $(function() {
         svg_venn.find('#right_value').firstChild().content("{{ counts.right }}");
     });
     $("#results").stupidtable();
+    var csv_data = $("#results").table2CSV({delivery:'value'});
+    csv_data = csv_data.replace(/\s+/g,' ');
+    csv_data = csv_data.replace(/" "/g,'"\n"');
+    csv_data = csv_data.replace(/" /g,'"');
+    csv_data = csv_data.replace(/ "/g,'"');
+    $("#DownloadTable").attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv_data));
+    $("#DownloadTable").attr('download', "table.csv");
 });
 </script>
 {% endif %}
