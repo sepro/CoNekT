@@ -312,7 +312,7 @@ class ExpressionNetwork(db.Model):
                   "name": node.probe,
                   "probe_id": node.id,
                   "gene_id": int(node.sequence_id) if node.sequence_id is not None else None,
-                  "gene_name": node.sequence.name if node.sequence_id is not None else node.probe,
+                  "gene_name": node.sequence.display_name if node.sequence_id is not None else node.probe,
                   "node_type": "query",
                   "depth": 0}]
         edges = []
@@ -421,7 +421,7 @@ class ExpressionNetwork(db.Model):
                     "name": p.probe,
                     "probe_id": p.id,
                     "gene_id": int(p.sequence_id) if p.sequence_id is not None else None,
-                    "gene_name": p.sequence.name if p.sequence_id is not None else p.probe,
+                    "gene_name": p.sequence.display_name if p.sequence_id is not None else p.probe,
                     "node_type": "query",
                     "depth": 0}
 
