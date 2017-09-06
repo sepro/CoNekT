@@ -31,10 +31,18 @@
     {% endif %}
     <div class="row">
     {% if sequences %}
-    <div class="col-md-6 col-sm-12">
+    {% if advanced %}
+        <div class="col-lg-12">
+    {% else %}
+        <div class="col-md-6 col-sm-12">
+    {% endif %}
         <div class="panel panel-default">
             <div class="panel-heading">Found <strong>{{ sequences|length }}</strong> sequences</div>
+            {% if advanced %}
+            <div>
+            {% else %}
             <div class="panel-scroll">
+            {% endif %}
             <div class="table-responsive">
                 <table class="table">
                     <tbody>
