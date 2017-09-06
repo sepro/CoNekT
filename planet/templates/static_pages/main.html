@@ -24,6 +24,9 @@
 
         </div>
         <div class="col-lg-12">
+            <div id="new-alert" class="alert alert-info alert-dismissible" role="alert" style="display: none">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>New ?</strong> Check out our PlaNet 2.0 features <a href="{{ url_for('main.features') }}">here</a> ! </div>
             <div class="panel panel-default" style="background-color: #C1D0DE">
                 <div class="panel-body">
                     <form  role="search" method="post" id="search-form-main" name="search-form-main" action="{{ url_for('search.simple') }}">
@@ -77,4 +80,21 @@
 </div>
 
 </div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{{ url_for('static', filename='js/js.cookie.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        // check cookie
+        var visited = Cookies.get('visited');
+
+        if (visited == null) {
+            $('#new-alert').show();
+        }
+
+        // set cookie
+        Cookies.set('visited', 'yes', { expires: 1000 });
+    });
+</script>
 {% endblock %}

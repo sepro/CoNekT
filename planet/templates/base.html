@@ -15,7 +15,6 @@
         <link href="{{ url_for('static', filename='css/phyd3.min.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
 
-        {% if g.login_enabled %}
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/cookieconsent.min.css') }}" />
         <script src="{{ url_for('static', filename='js/cookieconsent.min.js') }}"></script>
         <script>
@@ -32,7 +31,6 @@
           "position": "bottom-right"
         })});
         </script>
-        {% endif %}
     </head>
     <body data-spy="scroll" data-target="#navbar-side" data-offset="55">
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
