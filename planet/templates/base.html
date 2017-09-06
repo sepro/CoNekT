@@ -186,8 +186,8 @@
         <script src="{{ url_for('static', filename='js/jquery.qtip.min.js') }}"></script>
         <!-- code to reload modal on each click -->
         <script>
-          $(function () {
-                 $('.qtip_tooltip').each(function() {
+        function init_qtip() {
+                   $('.qtip_tooltip').each(function() {
                      $(this).qtip({
                         content: {
                             text: function(event, api) {
@@ -221,9 +221,10 @@
                         style: 'qtip-bootstrap'
                      });
                  });
-             });
+        }
 
-            $(function () {
+          $(function () {
+              init_qtip();
 
               $("#leafy_loader").html(get_loader_svg('loader_leafy'));
               init_planet_loader('loader_leafy');

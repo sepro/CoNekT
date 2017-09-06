@@ -183,7 +183,9 @@ function tableTransform(objTable) {
 }
 
     $("#transpose").click(function(){
+        $('.qtip_tooltip').qtip('destroy', true);
         tableTransform($("#heatmap-table"));
+        init_qtip(); //defined in base.html
         prepare_download();
         return false;
     });
