@@ -103,6 +103,17 @@ class Sequence(db.Model):
         return ", ".join(t) if len(t) > 0 else None
 
     @property
+    def display_name(self):
+        """
+        Returns a name to display (from xrefs with display) if available otherwise return name
+
+        :return: display name
+        """
+        t = [x.name for x in self.xrefs if x.platform == 'display']
+
+        return t[0] if len(t) > 0 else self.name
+
+    @property
     def readable_type(self):
         """
         Converts the type table to a readable string
