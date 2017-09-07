@@ -195,6 +195,9 @@ $(function () {
         $.each(data, function () {
             $('#speciesb').append($("<option />").val(this.id).text(this.name));
         });
+        if ($('#speciesb').find('option').length > 1) {
+            $('#speciesb').prop('selectedIndex', 1);
+        }
         $('#speciesb').trigger('change');
     };
 
@@ -251,9 +254,6 @@ $(function () {
         });
 
         if ($('#conditionsb').find('option').length > 0) {
-            if ($('#conditionsb').find('option').length > 1) {
-                $('#conditionsb').prop('selectedIndex', 1);
-            }
             $('#conditionsb').prop('disabled', false);
         } else {
             $('#conditionsb').prop('disabled', 'disabled');
