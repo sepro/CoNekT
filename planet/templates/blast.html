@@ -76,10 +76,12 @@
                             {{form.blast_type(class_="form-control") }}<br />
                             <label>Query sequence</label>
                             {{form.fasta(class_="form-control") }}<br />
+                            <div class="pull-right">
                             {% if example.fasta %}
-                            <a href="#" id="load_example">Load example</a>
+                            <button class="btn btn-default" id="load_example">Load example</button>
                             {% endif %}
-                            <button type="submit" class="btn btn-primary pull-right">BLAST sequence</button>
+                            <button type="submit" class="btn btn-primary">BLAST sequence</button>
+                            </div>
                         </form>
                     </div>
                 </div>
