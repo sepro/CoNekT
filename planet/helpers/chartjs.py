@@ -1,6 +1,8 @@
 import json
 from statistics import mean
 
+from utils.color import __COLORS_RGBA as COLORS
+
 
 def prepare_profiles(profiles, normalize=False):
     """
@@ -27,12 +29,12 @@ def prepare_profiles(profiles, normalize=False):
             expression_values = [value/max_expression for value in expression_values]
 
         datasets.append({
-            'label': p.probe if p.sequence_id is None else p.sequence.name + " (" + p.probe + ")",
+            'label': p.probe if p.sequence_id is None else p.sequence.name,
             'fill': True,
             'showLine': True,
-            'backgroundColor': "rgba(220,220,220,0.1)",
-            'borderColor': "rgba(175,175,175,0.2)",
-            'pointRadius': 0,
+            'backgroundColor': "rgba(220,220,220,0.1)" if len(profiles) >= 10 else COLORS[count],
+            'borderColor': "rgba(175,175,175,0.2)" if len(profiles) >= 10 else COLORS[count],
+            'pointRadius': 5 if len(profiles) < 10 else 0,
             'data': expression_values
         })
 
@@ -44,7 +46,12 @@ def prepare_profiles(profiles, normalize=False):
         },
         "options": {
           "legend": {
-            "display": False
+            "display": len(profiles) < 10
+          },
+          "tooltips": {
+            "enabled": len(profiles) < 10,
+            "mode": 'label',
+            "intersect": True
           },
           "scales": {
               "xAxes": [{
