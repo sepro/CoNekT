@@ -76,6 +76,9 @@
                             {{form.blast_type(class_="form-control") }}<br />
                             <label>Query sequence</label>
                             {{form.fasta(class_="form-control") }}<br />
+                            {% if example %}
+                            <a href="#" id="load_example">Load example</a>
+                            {% endif %}
                             <button type="submit" class="btn btn-primary pull-right">BLAST sequence</button>
                         </form>
                     </div>
@@ -155,6 +158,18 @@
         check_results();
     });
 </script>
-
+{% else %}
+    {% if example %}
+        <script>
+        $(function() {
+            $('#load_example').click(function (ev) {
+                ev.preventDefault();
+                console.log("{{ example }}");
+                $('#blast_type').val("blastp");
+                $('#fasta').val("{{ example }}");
+            });
+        });
+        </script>
+    {% endif %}
 {% endif %}
 {% endblock %}

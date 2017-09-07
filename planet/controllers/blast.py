@@ -1,6 +1,8 @@
 from flask import Blueprint, current_app, Response, redirect, url_for, request, render_template, flash
+from sqlalchemy.sql.expression import func
 
 from planet import blast_thread
+from planet.models.sequences import Sequence
 from planet.forms.blast import BlastForm
 
 import os
@@ -42,7 +44,15 @@ def blast_main():
     if form.errors:
         flash(form.errors, 'danger')
 
-    return render_template('blast.html', form=form)
+    # select example from the database
+    sequence = Sequence.query.filter(Sequence.type == 'protein_coding')\
+        .filter(func.length(Sequence.coding_sequence) > 300).first()
+
+    example = sequence.protein_sequence if sequence is not None else None
+
+    print(example)
+
+    return render_template('blast.html', form=form, example=example)
 
 
 @blast.route('/results/<token>')
