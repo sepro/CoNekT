@@ -49,7 +49,32 @@ def custom_network_main():
 
         return render_template("expression_graph.html", graph_data=Markup(json.dumps(network_cytoscape)))
     else:
-        return render_template("custom_network.html", form=form)
+
+        example = {
+            'method_id': None,
+            'probes': None
+        }
+
+        data = ExpressionNetwork.query.order_by(ExpressionNetwork.method_id).limit(20).all()
+
+        probes = []
+
+        for d in data:
+            example['method_id'] = d.method_id
+
+            if d.probe not in probes:
+                probes.append(d.probe)
+
+            network = json.loads(d.network)
+            for n in network:
+                if "gene_name" in n and "gene_name" not in probes and len(probes) < 35:
+                    probes.append(n["gene_name"])
+
+            if len(probes) >= 35:
+                break
+        example['probes'] = ' '.join(probes)
+
+        return render_template("custom_network.html", form=form, example=example)
 
 
 @custom_network.route('/form_data')

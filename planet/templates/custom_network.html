@@ -29,7 +29,12 @@
                     {{form.family_method(class_="form-control") }}<br />
                     {{form.cluster_method(class_="form-control", disabled=True) }}<br />
                     {{form.specificity_method(class_="form-control", disabled=True) }}<br />
-                    <button type="submit" class="btn btn-primary pull-right"  data-toggle="modal" data-target="#loaderModal">Draw network</button>
+                    <div class="pull-right">
+                    {% if example and example.probes %}
+                        <button class="btn btn-default" id="load_example">Load example</button>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary"  data-toggle="modal" data-target="#loaderModal">Draw network</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -117,6 +122,18 @@
               console.log(formdata);
               populate_networks(formdata);
             });
+
+            {% if example and example.probes %}
+            $(function() {
+                $('#load_example').click(function (ev) {
+                    ev.preventDefault();
+                    {% for key, value in example.items() %}
+                        $('#{{key}}').val("{{value}}");
+                    {% endfor %}
+                    $('#method_id').trigger('change');
+                });
+            });
+            {% endif %}
         });
 </script>
 {% endblock %}
