@@ -48,9 +48,10 @@ def blast_main():
     sequence = Sequence.query.filter(Sequence.type == 'protein_coding')\
         .filter(func.length(Sequence.coding_sequence) > 300).first()
 
-    example = sequence.protein_sequence if sequence is not None else None
-
-    print(example)
+    example = {
+        'blast_type': 'blastp',
+        'fasta': sequence.protein_sequence if sequence is not None else None
+    }
 
     return render_template('blast.html', form=form, example=example)
 
