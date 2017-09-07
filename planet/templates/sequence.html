@@ -308,7 +308,7 @@
                 <div class="table-responsive">
                     <table class="table table-striped table-separated">
                         <tbody>
-                            {% for xref in sequence.xrefs if xref.platform != 'token' %}
+                            {% for xref in sequence.xrefs if xref.platform != 'token' and  xref.platform != 'display' %}
                             <tr>
                                 <td><strong>{{ xref.platform }}</strong></td>
                                 <td>
