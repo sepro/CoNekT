@@ -60,7 +60,12 @@
                             {{form.species_id(class_="form-control") }}<br />
                             {{form.probes(class_="form-control") }}<br />
                             <div class="input-group">{{ form.normalize.label }}&nbsp;&nbsp;{{form.normalize(checked=True) }}</div>
-                            <button type="submit" class="btn btn-primary pull-right" data-toggle="modal" data-target="#loaderModal">Show profiles</button>
+                            <div class="pull-right">
+                            {% if example and example.probes %}
+                                <button class="btn btn-default" id="load_example">Load example</button>
+                            {% endif %}
+                                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Show profiles</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -96,4 +101,16 @@
         var myChart = new Chart(ctx, data);
     });
 	</script>
+    {% if example and example.probes %}
+    <script>
+    $(function() {
+        $('#load_example').click(function (ev) {
+            ev.preventDefault();
+            {% for key, value in example.items() %}
+                $('#{{key}}').val("{{value}}");
+            {% endfor %}
+        });
+    });
+    </script>
+    {% endif %}
 {% endblock %}

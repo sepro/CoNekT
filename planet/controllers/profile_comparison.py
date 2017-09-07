@@ -74,7 +74,6 @@ def profile_comparison_main():
         # get max 51 profiles, only show the first 50 (the extra one is fetched to throw the warning)
         profiles = ExpressionProfile.get_profiles(species_id, probes, limit=51)
 
-        # TODO alert user if certain terms are not found !
         missing = []
         for p in probes:
             pass
@@ -90,4 +89,15 @@ def profile_comparison_main():
         return render_template("expression_profile_comparison.html",
                                profiles=json.dumps(profile_chart), form=form)
     else:
-        return render_template("expression_profile_comparison.html", form=form)
+        profiles = ExpressionProfile.query.filter(ExpressionProfile.sequence_id is not None).order_by(ExpressionProfile.species_id).limit(5).all()
+
+        example = {
+            'species_id': None,
+            'probes': None
+        }
+
+        if len(profiles) > 0:
+            example['species_id'] = profiles[0].species_id
+            example['probes'] = ' '.join([p.sequence.name for p in profiles])
+
+        return render_template("expression_profile_comparison.html", form=form, example=example)
