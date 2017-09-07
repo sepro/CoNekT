@@ -90,7 +90,12 @@
                             <label>{{form.check_corrected_p(checked=True) }} <span class="title"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='fdr') }}" data-target="#helpModal">corrected p-value</abbr></span></label><br />
                             {{form.max_corrected_p(class_="form-control") }}<br />
                             </div>
-                            <button type="submit" class="btn btn-primary pull-right" data-toggle="modal" data-target="#loaderModal">Find clusters</button>
+                            <div class="pull-right">
+                            {% if example and example.go_term %}
+                                <button class="btn btn-default" id="load_example">Load example</button>
+                            {% endif %}
+                                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Find clusters</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -175,6 +180,22 @@ $(function () {
 
     $("#DownloadTable").attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv_data));
     $("#DownloadTable").attr('download', "table.csv");
+
+    {% if form and example and example.go_term %}
+        $('#load_example').click(function (ev) {
+            ev.preventDefault();
+            {% for key, value in example.items() %}
+                $('#{{key}}').val("{{value}}");
+            {% endfor %}
+            $('#check_enrichment').prop('checked', false);
+            $('#check_p').prop('checked', false);
+            $('#check_corrected_p').prop('checked', true);
+
+            update_checks($('#check_enrichment'));
+            update_checks($('#check_p'));
+            update_checks($('#check_corrected_p'));
+        });
+    {% endif %}
 });
 </script>
 {% endblock %}

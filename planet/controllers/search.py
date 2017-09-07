@@ -9,6 +9,7 @@ from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
 from planet.forms.search_specific_profiles import SearchSpecificProfilesForm
 from planet.forms.advanced_search import AdvancedSequenceSearchForm
 from planet.models.expression.specificity import ExpressionSpecificityMethod, ExpressionSpecificity
+from planet.models.relationships.cluster_go import ClusterGOEnrichment
 from planet.models.interpro import Interpro
 from planet.models.go import GO
 from planet.models.search import Search
@@ -183,7 +184,20 @@ def search_enriched_clusters():
 
         return render_template("search_enriched_clusters.html", results=results)
     else:
-        return render_template("search_enriched_clusters.html", form=form)
+
+        example = {
+            'go_term': None,
+            'method': None,
+            'max_corrected_p': '0.05'
+        }
+
+        enrichment = ClusterGOEnrichment.query.filter(ClusterGOEnrichment.corrected_p_value < 0.05).first()
+
+        if enrichment is not None:
+            example['go_term'] = enrichment.go.name
+            example['method'] = enrichment.cluster.method_id
+
+        return render_template("search_enriched_clusters.html", form=form, example=example)
 
 
 @search.route('/specific/profiles', methods=['GET', 'POST'])
