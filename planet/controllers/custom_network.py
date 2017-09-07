@@ -67,7 +67,7 @@ def custom_network_form_data():
     for nm in network_methods:
         output.append({
             'id': nm.id,
-            'name': nm.description,
+            'name': nm.species.name + ' (' + nm.description + ')',
             'clustering_methods': [{'id': c.id, 'method': c.method} for c in nm.clustering_methods],
             'species': nm.species.name,
             'specificity_methods': [{'id': es.id, 'method': es.description} for es in nm.species.expression_specificities]

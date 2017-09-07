@@ -21,7 +21,9 @@
             <div class="panel-body">
                 <form method="POST"  action="{{ url_for('custom_network.custom_network_main') }}"  role="form">
                     {{ form.csrf_token }}
+                    <label>Select species and network:</label><br />
                     {{form.method_id(class_="form-control") }}<br />
+                    <label>Enter Gene IDs:</label><br />
                     {{form.probes(class_="form-control") }}<br />
                     <h3>Advanced</h3>
                     {{form.family_method(class_="form-control") }}<br />
