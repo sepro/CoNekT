@@ -65,8 +65,18 @@ def heatmap_main():
                                profiles=current_heatmap['heatmap_data'],
                                form=form)
     else:
-        # TODO select random profiles and provide example output
-        return render_template("expression_heatmap.html", form=form)
+        profiles = ExpressionProfile.query.filter(ExpressionProfile.sequence_id is not None).order_by(ExpressionProfile.species_id).limit(5).all()
+
+        example = {
+            'species_id': None,
+            'probes': None
+        }
+
+        if len(profiles) > 0:
+            example['species_id'] = profiles[0].species_id
+            example['probes'] = ' '.join([p.sequence.name for p in profiles])
+
+        return render_template("expression_heatmap.html", form=form, example=example)
 
 
 @heatmap.route('/inchlib/j/<cluster_id>.json')

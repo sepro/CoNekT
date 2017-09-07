@@ -77,7 +77,7 @@
                             <label>Query sequence</label>
                             {{form.fasta(class_="form-control") }}<br />
                             <div class="pull-right">
-                            {% if example.fasta %}
+                            {% if example and example.fasta %}
                             <button class="btn btn-default" id="load_example">Load example</button>
                             {% endif %}
                             <button type="submit" class="btn btn-primary">BLAST sequence</button>
@@ -161,7 +161,7 @@
     });
 </script>
 {% else %}
-    {% if example.fasta %}
+    {% if example and example.fasta %}
         <script>
         $(function() {
             $('#load_example').click(function (ev) {

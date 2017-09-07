@@ -93,7 +93,12 @@
                                     {{ form.csrf_token }}
                                     {{form.species_id(class_="form-control") }}<br />
                                     {{form.probes(class_="form-control") }}<br />
-                                    <button type="submit" class="btn btn-primary pull-right" data-toggle="modal" data-target="#loaderModal">Generate heatmap</button>
+                                    <div class="pull-right">
+                                    {% if example and example.probes %}
+                                        <button class="btn btn-default" id="load_example">Load example</button>
+                                    {% endif %}
+                                        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Generate heatmap</button>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -192,7 +197,19 @@ function tableTransform(objTable) {
 
 });
 </script>
-
+{% else %}
+{% if example and example.probes %}
+<script>
+$(function() {
+    $('#load_example').click(function (ev) {
+        ev.preventDefault();
+        {% for key, value in example.items() %}
+            $('#{{key}}').val("{{value}}");
+        {% endfor %}
+    });
+});
+</script>
+{% endif %}
 {% endif %}
 
 {% endblock %}
