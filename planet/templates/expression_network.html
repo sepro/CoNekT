@@ -39,6 +39,7 @@
                     <th>Description</th>
                     <th>Score</th>
                     <th>Probe count</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +50,7 @@
                     <td>{{ n.description }}</td>
                     <td>{{ n.edge_type }}</td>
                     <td>{{ n.probe_count }}</td>
+                    <td><a href="{{ url_for('expression_network.expression_network_export', method_id=n.id) }}" download="network_{{n.id}}.tab">Download</a></td>
                 </tr>
             {% endfor %}
             </tbody>
