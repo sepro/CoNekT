@@ -8,6 +8,7 @@ from planet.models.expression.networks import ExpressionNetworkMethod, Expressio
 from planet.models.species import Species
 from planet.models.gene_families import GeneFamilyMethod
 
+from utils.benchmark import benchmark
 
 expression_network = Blueprint('expression_network', __name__)
 
@@ -108,4 +109,28 @@ def expression_network_json(node_id, family_method_id=None):
 
     return Response(json.dumps(network_cytoscape), mimetype='application/json')
 
+
+@expression_network.route('/export/<method_id>')
+def expression_network_export(method_id):
+
+    def generate(method_id):
+        header = "gene_a\tgene_b\thrr\tpcc\n"
+        yield header
+
+        nodes = ExpressionNetwork.query.filter(ExpressionNetwork.method_id == method_id).all()
+
+        for n in nodes:
+            neighbors = json.loads(n.network)
+            for neighbor in neighbors:
+                gene_a = n.sequence.name if n.sequence_id is not None else n.probe
+
+                probe_b = neighbor["probe_name"] if "probe_name" in neighbor.keys() else "Unknown"
+                gene_b = neighbor["gene_name"] if "gene_name" in neighbor.keys() else probe_b
+
+                hrr = neighbor["hrr"] if "hrr" in neighbor.keys() else None
+                pcc = neighbor["link_pcc"] if "link_pcc" in neighbor.keys() else None
+
+                yield '\t'.join([gene_a, gene_b, str(hrr), str(pcc)]) + '\n'
+
+    return Response(generate(method_id), mimetype='text/plain')
 

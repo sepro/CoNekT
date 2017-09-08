@@ -34,6 +34,12 @@
                     <ul class="dropdown-menu">
                         <li><a href="{{url_for('species.species_stream_coding', species_id=species.id)}}"  download="{{species.code}}.cds.fasta">Coding Sequences</a></li>
                         <li><a href="{{url_for('species.species_stream_protein', species_id=species.id)}}"  download="{{species.code}}.aa.fasta">Protein Sequences</a></li>
+                        <li class="dropdown-header">Networks</li>
+                        {% for n in species.networks %}
+                        <li><a href="{{ url_for('expression_network.expression_network_export', method_id=n.id) }}" download="network_{{n.id}}.tab">{{ n.description }}</a></li>
+                        {% else %}
+                        <li class="text-muted">No network found</li>
+                        {% endfor %}
                     </ul>
                 </div>
                 <br /><br />
@@ -85,6 +91,12 @@
                                 <ul class="dropdown-menu">
                                     <li><a href="{{url_for('species.species_stream_coding', species_id=s.id)}}" download="{{s.code}}.cds.fasta">Coding Sequences</a></li>
                                     <li><a href="{{url_for('species.species_stream_protein', species_id=s.id)}}" download="{{s.code}}.aa.fasta">Protein Sequences</a></li>
+                                    <li class="dropdown-header">Networks</li>
+                                    {% for n in s.networks %}
+                                    <li><a href="{{ url_for('expression_network.expression_network_export', method_id=n.id) }}" download="network_{{n.id}}.tab">{{ n.description }}</a></li>
+                                    {% else %}
+                                    <li class="text-muted">No network found</li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                         </td>
