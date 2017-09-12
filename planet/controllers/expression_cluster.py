@@ -116,7 +116,9 @@ def expression_cluster_graph(cluster_id, family_method_id=None):
         else:
             family_method_id = None
 
-    return render_template("expression_graph.html", cluster=cluster, family_method_id=family_method_id)
+    return render_template("expression_graph.html", cluster=cluster,
+                           family_method_id=family_method_id,
+                           cutoff=cluster.method.network_method.hrr_cutoff)
 
 
 @expression_cluster.route('/json/<cluster_id>')

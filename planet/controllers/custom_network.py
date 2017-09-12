@@ -38,6 +38,7 @@ def custom_network_main():
         # make probe list unique
         probes = list(set(probes))
 
+        network_method = ExpressionNetworkMethod.query.get_or_404(method_id)
         network = ExpressionNetwork.get_custom_network(method_id, probes)
 
         network_cytoscape = CytoscapeHelper.parse_network(network)
@@ -47,7 +48,8 @@ def custom_network_main():
         network_cytoscape = CytoscapeHelper.add_cluster_data_nodes(network_cytoscape, cluster_method_id)
         network_cytoscape = CytoscapeHelper.add_specificity_data_nodes(network_cytoscape, specificity_method_id)
 
-        return render_template("expression_graph.html", graph_data=Markup(json.dumps(network_cytoscape)))
+        return render_template("expression_graph.html", graph_data=Markup(json.dumps(network_cytoscape)),
+                               cutoff=network_method.hrr_cutoff)
     else:
 
         example = {

@@ -60,7 +60,8 @@ def expression_network_graph(node_id, family_method_id=None):
 
     depth = 1 if enable_second_level else 0
 
-    return render_template("expression_graph.html", node=node, depth=depth, family_method_id=family_method_id)
+    return render_template("expression_graph.html", node=node, depth=depth, family_method_id=family_method_id,
+                           cutoff=node.method.hrr_cutoff)
 
 
 @expression_network.route('/download/neighbors/<node_id>')

@@ -149,8 +149,8 @@
             {% if not sequence %}
             <li>
                 <div>
-                <br /><p><strong><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='hrr') }}" data-target="#helpModal">HRR</abbr> Score</strong> <span id="cy-edge-score-value" class="text-muted">30</span></p>
-                <input id="cy-edge-score" data-slider-id='cy-edge-score-slider' type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="100" data-slider-tooltip="hide"/>
+                <br /><p><strong><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='hrr') }}" data-target="#helpModal">HRR</abbr> Score</strong> <span id="cy-edge-score-value" class="text-muted">{{cutoff}}</span></p>
+                <input id="cy-edge-score" data-slider-id='cy-edge-score-slider' type="text" data-slider-min="0" data-slider-max="{{cutoff}}" data-slider-step="1" data-slider-value="{{cutoff}}" data-slider-tooltip="hide"/>
                 </div>
             </li>
             {% endif %}

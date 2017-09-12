@@ -91,6 +91,9 @@ class WebsiteTest(TestCase):
         db.session.commit()
 
         test_expression_network_method = ExpressionNetworkMethod(test_species.id, "Test network method")
+        test_expression_network_method.pcc_cutoff = 0.0
+        test_expression_network_method.hrr_cutoff = 100
+        test_expression_network_method.enable_second_level = 0
         db.session.add(test_expression_network_method)
         db.session.commit()
 

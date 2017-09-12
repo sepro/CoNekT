@@ -33,8 +33,10 @@ def graph_comparison_cluster(one, two, family_method_id=1):
     cluster_one = CoexpressionCluster.query.get_or_404(one)
     cluster_two = CoexpressionCluster.query.get_or_404(two)
 
+    cutoff = max([cluster_one.method.network_method.hrr_cutoff, cluster_two.method.network_method.hrr_cutoff])
+
     return render_template('expression_graph.html', cluster_one=cluster_one, cluster_two=cluster_two,
-                           family_method_id=family_method_id)
+                           family_method_id=family_method_id, cutoff=cutoff)
 
 
 @graph_comparison.route('/cluster/json/<int:one>/<int:two>')
