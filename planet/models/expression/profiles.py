@@ -128,7 +128,7 @@ class ExpressionProfile(db.Model):
 
             for o in order:
                 if row_mean == 0 or values[o] == 0:
-                    values[o] = 0
+                    values[o] = '-'
                 else:
                     values[o] = log(values[o]/row_mean, 2)
 
