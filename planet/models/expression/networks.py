@@ -28,6 +28,8 @@ class ExpressionNetworkMethod(db.Model):
     edge_type = db.Column(db.Enum("rank", "weight", name='edge_type'))
     probe_count = db.Column(db.Integer)
 
+    hrr_cutoff = db.Column(db.Integer)
+    pcc_cutoff = db.Column(db.Float)
     enable_second_level = db.Column(db.Boolean)
 
     probes = db.relationship('ExpressionNetwork',
@@ -489,6 +491,8 @@ class ExpressionNetwork(db.Model):
 
         # Add network method first
         network_method = ExpressionNetworkMethod(species_id, description, score_type)
+        network_method.hrr_cutoff = limit
+        network_method.pcc_cutoff = pcc_cutoff
         network_method.enable_second_level = enable_second_level
 
         db.session.add(network_method)
