@@ -37,6 +37,30 @@ class Species(db.Model):
     def __repr__(self):
         return str(self.id) + ". " + self.name
 
+    @property
+    def has_interpro(self):
+        from planet.models.sequences import Sequence
+        from planet.models.relationships.sequence_interpro import SequenceInterproAssociation
+
+        domain = SequenceInterproAssociation.query.join(Sequence, Sequence.id == SequenceInterproAssociation.sequence_id).filter(Sequence.species_id == self.id).first()
+
+        if domain is not None:
+            return True
+        else:
+            return False
+
+    @property
+    def has_go(self):
+        from planet.models.sequences import Sequence
+        from planet.models.relationships.sequence_go import SequenceGOAssociation
+
+        go = SequenceGOAssociation.query.join(Sequence, Sequence.id == SequenceGOAssociation.sequence_id).filter(Sequence.species_id == self.id).first()
+
+        if go is not None:
+            return True
+        else:
+            return False
+
     @staticmethod
     def add(code, name, data_type='genome',
             color="#C7C7C7", highlight="#DEDEDE", description=None):

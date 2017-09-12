@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, g, make_response, Response, Markup
+from flask import Blueprint, render_template, g, make_response, Response, Markup, flash
 from markdown import markdown
 
 from planet import db, cache
@@ -39,6 +39,12 @@ def species_view(species_id):
     :param species_id: ID of the species to show
     """
     current_species = Species.query.get_or_404(species_id)
+
+    if not current_species.has_interpro:
+        flash(Markup('No <strong>InterPro domains</strong> present in the database for this species'), 'warning')
+
+    if not current_species.has_go:
+        flash(Markup('No <strong>GO annotation</strong> present in the database for this species'), 'warning')
 
     description = None if current_species.description is None \
         else Markup(markdown(current_species.description, extensions=['markdown.extensions.tables', 'markdown.extensions.attr_list']))
