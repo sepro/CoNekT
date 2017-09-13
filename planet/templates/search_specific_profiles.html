@@ -84,7 +84,8 @@
             {% for r in results %}
                 {% if r.profile.sequence %}
                     <tr>
-                        <td><a href="{{url_for('sequence.sequence_view', sequence_id=r.profile.sequence.id)}}">{{ r.profile.sequence.name }}</a></td>
+                        <td><a href="{{url_for('sequence.sequence_view', sequence_id=r.profile.sequence.id)}}" class="qtip_tooltip"
+                               qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=r.profile.sequence_id) }}">{{ r.profile.sequence.name }}</a></td>
                         <td>{{ r.condition }}</td>
                         <td>{{ r.score|round(2) }}</td>
                         <td>{{ r.entropy|round(2) }}</td>
