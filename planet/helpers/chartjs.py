@@ -4,6 +4,38 @@ from statistics import mean
 from utils.color import __COLORS_RGBA as COLORS
 
 
+def prepare_profiles_download(profiles, normalize=False):
+    """
+    Function to convert a list of NetworkProfiles to a dict compatible with chart.js
+
+    :param profiles: list of profiles to include in the plot
+    :param normalize: normalize the profiles (the max value of each profile is scaled to 1)
+
+    :return dict with plot compatible with Chart.js
+    """
+    labels = []
+
+    if len(profiles) > 0:
+        data = json.loads(profiles[0].profile)
+        labels = data['order']
+
+    # initiate output array with header
+    output = ['genes\t' + '\t'.join(labels)]
+
+    for count, p in enumerate(profiles):
+        data = json.loads(p.profile)
+        expression_values = [mean(data['data'][label]) for label in labels]
+        label = p.probe if p.sequence_id is None else p.sequence.name
+
+        if normalize:
+            max_expression = max(expression_values)
+            expression_values = [value/max_expression for value in expression_values]
+
+        output.append(label + '\t' + '\t'.join(str(e) for e in expression_values))
+
+    return '\n'.join(output)
+
+
 def prepare_profiles(profiles, normalize=False):
     """
     Function to convert a list of NetworkProfiles to a dict compatible with chart.js

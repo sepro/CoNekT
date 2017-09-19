@@ -1,11 +1,12 @@
 import json
+import base64
 
 from flask import Blueprint, request, render_template,flash
 from sqlalchemy.orm import noload
 
 from planet import cache
 from planet.forms.profile_comparison import ProfileComparisonForm
-from planet.helpers.chartjs import prepare_profiles
+from planet.helpers.chartjs import prepare_profiles, prepare_profiles_download
 from planet.models.expression.coexpression_clusters import CoexpressionCluster
 from planet.models.expression.profiles import ExpressionProfile
 from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
@@ -84,10 +85,14 @@ def profile_comparison_main():
         if len(profiles) > 50:
             flash("To many profiles in this cluster only showing the first 50", 'warning')
 
+        # Get json object for chart
         profile_chart = prepare_profiles(profiles[:50], normalize)
 
+        # Get table in base64 format for download
+        data = base64.encodebytes(prepare_profiles_download(profiles[:50], normalize).encode('utf-8'))
+
         return render_template("expression_profile_comparison.html",
-                               profiles=json.dumps(profile_chart), form=form)
+                               profiles=json.dumps(profile_chart), form=form, data=data.decode('utf-8'))
     else:
         profiles = ExpressionProfile.query.filter(ExpressionProfile.sequence_id is not None).order_by(ExpressionProfile.species_id).limit(5).all()
 

@@ -41,6 +41,12 @@
     <div id="canvas-holder" class="center-block">
         <canvas id="chart-line" class="center-block" width="800" height="600"/>
     </div>
+        {% if data %}
+        <div>
+            <a class="btn btn-primary pull-right" href="data:text/plain;base64,{{data}}" download="profile_data.txt">Download</a>
+            <br />
+        </div>
+        {% endif %}
     {% else %}
     <ol class="breadcrumb">
         <li><a href="{{ url_for('main.screen') }}">Home</a></li>
