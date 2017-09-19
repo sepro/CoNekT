@@ -100,13 +100,15 @@
 
 {% block extrajs %}
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
-	<script>
-	$(function () {
-        var data = {{ profiles|safe }};
-        var ctx = document.getElementById("chart-line").getContext("2d");
-        var myChart = new Chart(ctx, data);
-    });
-	</script>
+    {% if profiles %}
+        <script>
+        $(function () {
+            var data = {{ profiles|safe }};
+            var ctx = document.getElementById("chart-line").getContext("2d");
+            var myChart = new Chart(ctx, data);
+        });
+        </script>
+    {% endif %}
     {% if example and example.probes %}
     <script>
     $(function() {
