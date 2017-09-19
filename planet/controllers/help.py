@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, abort
 
+from planet import cache
+
 # Dict containing all keywords and the template with the information
 __TOPICS = {"gene_family": "modals/help/gene_family.html",
             "interpro_domain": "modals/help/interpro_domain.html",
@@ -23,6 +25,7 @@ help = Blueprint('help', __name__)
 
 
 @help.route('/<topic>')
+@cache.cached()
 def help_topic(topic):
     """
     Generic function to get help modals.
@@ -37,6 +40,7 @@ def help_topic(topic):
 
 
 @help.route('/popup/<topic>')
+@cache.cached()
 def help_popup(topic):
     """
     Generic function to get help popups
