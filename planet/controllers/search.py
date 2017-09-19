@@ -3,6 +3,7 @@ import json
 from flask import g, Blueprint, flash, request, redirect, url_for, render_template, Response, current_app
 from sqlalchemy import func
 from sqlalchemy.sql import or_
+from sqlalchemy.orm import joinedload
 
 from planet import cache
 from planet.forms.search_enriched_clusters import SearchEnrichedClustersForm
@@ -220,7 +221,13 @@ def search_specific_profiles():
 
         species = Species.query.get_or_404(species_id)
         method = ExpressionSpecificityMethod.query.get_or_404(method_id)
-        results = ExpressionSpecificity.query.filter(ExpressionSpecificity.method_id == method_id).filter(ExpressionSpecificity.score>=cutoff).filter(ExpressionSpecificity.condition == condition)
+        results = ExpressionSpecificity.query.\
+            filter(ExpressionSpecificity.method_id == method_id).\
+            filter(ExpressionSpecificity.score>=cutoff).\
+            filter(ExpressionSpecificity.condition == condition).\
+            options(
+                joinedload(ExpressionSpecificity.profile).undefer("profile")
+            )
 
         return render_template("search_specific_profiles.html", results=results, species=species, method=method, condition=condition)
 

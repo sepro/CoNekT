@@ -78,6 +78,7 @@
                 <th data-sort="float"><span class="sort-icon"></span><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='entropy') }}" data-target="#helpModal">Entropy</abbr> score</th>
                 <th data-sort="float"><span class="sort-icon"></span><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='tau') }}" data-target="#helpModal">Tau</abbr> score</th>
                 <th data-sort="float">Action</th>
+                <th>Info</th>
             </tr>
             </thead>
             <tbody>
@@ -91,6 +92,7 @@
                         <td>{{ r.entropy|round(2) }}</td>
                         <td>{% if r.tau %}{{ r.tau|round(2) }}{% else %}<span class="text-muted">None</span>{% endif %}</td>
                         <td><a href="{{url_for('expression_profile.expression_profile_view', profile_id=r.profile_id)}}">view profile</a></td>
+                        <td>{% if r.profile.low_abundance %}<span class="warning-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>{% endif %}</td>
                     </tr>
                 {% endif %}
             {% endfor %}
