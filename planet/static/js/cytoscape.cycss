@@ -133,6 +133,14 @@ edge.link_score {
         line-color: mapData(link_score, 0, 30, green, red);
 }
 
+edge.link_pcc {
+        line-color: mapData(link_pcc, 0.7, 1, blue, red);
+}
+
+edge.hrr {
+        line-color: mapData(hrr, 1, 100, green, red);
+}
+
 edge.ecc_score {
         line-color: mapData(ecc_score, 0, 1, red, green);
 }
