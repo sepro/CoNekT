@@ -270,6 +270,12 @@ class ExpressionNetwork(db.Model):
         self.method_id = method_id
 
     @property
+    def neighbors_count(self):
+        data = json.loads(self.network)
+
+        return len(data)
+
+    @property
     def neighbors_table(self):
         data = json.loads(self.network)
         output = [["Sequence", "Description", "Alias", "PCC", "hrr"]]

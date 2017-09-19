@@ -121,7 +121,11 @@
                 <tr>
                     <td><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='neighborhood') }}" data-target="#helpModal">Neighborhood</abbr></td>
                     <td>{{ network.method.description }}: <strong>{{ network.probe }}</strong></td>
-                    <td>{{ na.neighborhood_actions(network.id) }}</td>
+                    {% if network.neighbors_count > 0 %}
+                        <td>{{ na.neighborhood_actions(network.id) }}</td>
+                    {% else %}
+                    <td><span class="text-muted"><em>No neighbors in network</em></span></td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
                 {% for cluster in coexpression_clusters %}
