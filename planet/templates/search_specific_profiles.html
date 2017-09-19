@@ -92,7 +92,8 @@
                         <td>{{ r.entropy|round(2) }}</td>
                         <td>{% if r.tau %}{{ r.tau|round(2) }}{% else %}<span class="text-muted">None</span>{% endif %}</td>
                         <td><a href="{{url_for('expression_profile.expression_profile_view', profile_id=r.profile_id)}}">view profile</a></td>
-                        <td>{% if r.profile.low_abundance %}<span class="warning-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>{% endif %}</td>
+                        <td>{% if r.profile.low_abundance %}<span class="warning-message qtip_tooltip"
+                               qtip_href="{{ url_for('help.help_popup', topic='lowabundance') }}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>{% endif %}</td>
                     </tr>
                 {% endif %}
             {% endfor %}

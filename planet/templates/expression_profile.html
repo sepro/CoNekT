@@ -34,7 +34,7 @@
 
     {% if profile.low_abundance %}
     <br />
-    <span class="warning-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <strong>Attention:</strong> This gene has <strong>low abundance</strong>.</span>
+    <span class="warning-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <strong>Attention:</strong> This gene has <strong><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='lowabundance') }}" data-target="#helpModal">low abundance</abbr></strong>.</span>
     <br /><br />
     {% endif %}
 
