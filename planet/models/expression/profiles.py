@@ -63,6 +63,20 @@ class ExpressionProfile(db.Model):
                                                      )
         return table
 
+    @property
+    def low_abundance(self, cutoff=10):
+        """
+        Checks if the mean expression value in any conditions in the plot is higher than the desired cutoff
+
+        :param cutoff: cutoff for expression, default = 10
+        :return: True in case of low abundance otherwise False
+        """
+        data = json.loads(self.profile)
+
+        checks = [mean(v) > cutoff for _, v in data["data"].items()]
+
+        return not any(checks)
+
     def tissue_profile(self, condition_tissue_id, use_means=True):
         """
         Applies a conversion to the profile, grouping several condition into one more general feature (e.g. tissue).

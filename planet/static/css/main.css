@@ -520,3 +520,7 @@ div#phyd3 .table-responsive > table {
 .global-message {
         color: #31708f;
 }
+
+.warning-message {
+        color: #a94442;
+}

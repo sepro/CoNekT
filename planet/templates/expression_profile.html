@@ -32,10 +32,17 @@
     <h1>Expression profile for: <strong>{{ profile.probe }}</strong></h1>
     {% endif %}
 
+    {% if profile.low_abundance %}
+    <br />
+    <span class="warning-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <strong>Attention:</strong> This gene has <strong>low abundance</strong>.</span>
+    <br /><br />
+    {% endif %}
+
     {% for s in profile.specificities %}
     <span>{{ s.method.description }}: <strong>{{ s.condition }}</strong> (<abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr>: {{ s.score|round(2) }},
         <abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='entropy') }}" data-target="#helpModal">entropy</abbr>: {{ s.entropy|round(2) }}{%- if s.tau -%}, <abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='tau') }}" data-target="#helpModal">tau</abbr>: {{ s.tau|round(2) }}{% endif %})</span><br />
     {% endfor %}
+
 
     <br/>
     <div class="row">
