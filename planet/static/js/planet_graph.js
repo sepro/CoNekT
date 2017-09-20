@@ -240,7 +240,8 @@ $(function () { // on dom ready
                 svg_labels = [],
                 svg_species = [],
                 svg_spm = [],
-                svg_clusters = [];
+                svg_clusters = [],
+                svg_clades = [];
             cy.nodes('[^compound]').forEach(function (n) {
                 var family_color = n.data('family_color'),
                     family_shape = n.data('family_shape'),
@@ -258,6 +259,10 @@ $(function () { // on dom ready
                     cluster_shape = n.data('cluster_shape'),
                     cluster = n.data('cluster_name'),
 
+                    clade = n.data('family_clade'),
+                    clade_color = n.data('family_clade_color'),
+                    clade_shape = n.data('family_clade_shape'),
+
                     species = n.data('species_name'),
                     species_color = n.data('species_color'),
                     species_shape = 'ellipse';
@@ -274,6 +279,13 @@ $(function () { // on dom ready
                         svg_families[family_color] = [];
                     }
                     svg_families[family_color][family_shape] = family;
+                }
+
+                if (clade !== undefined) {
+                    if (!svg_clades.hasOwnProperty(clade_color)) {
+                        svg_clades[clade_color] = [];
+                    }
+                    svg_clades[clade_color][clade_shape] = clade;
                 }
 
                 if (lc_color !== undefined) {
@@ -296,6 +308,7 @@ $(function () { // on dom ready
                 }
             }); //end cy.nodes.forEach
 
+            if (Object.keys(svg_clades).length > 0) { generate_legend(svg_clades, 'family_clade_color'); }
             if (Object.keys(svg_labels).length > 0) { generate_legend(svg_labels, 'lc_color'); }
             if (Object.keys(svg_families).length > 0) { generate_legend(svg_families, 'family_color'); }
             if (Object.keys(svg_clusters).length > 0) { generate_legend(svg_clusters, 'cluster_color'); }
