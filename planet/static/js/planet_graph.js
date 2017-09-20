@@ -319,6 +319,8 @@ $(function () { // on dom ready
             $('.cy-node-shape[attr="spm_shape"]').click();
         } else if ($(this).attr('attr') === 'cluster_color') {
             $('.cy-node-shape[attr="cluster_shape"]').click();
+        }else if ($(this).attr('attr') === 'family_clade_color') {
+            $('.cy-node-shape[attr="family_clade_shape"]').click();
         } else {
             $('.cy-node-shape[attr="shape"]').click();
         }

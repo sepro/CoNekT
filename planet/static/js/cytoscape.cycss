@@ -75,6 +75,10 @@ node.family_clade_count {
         background-color: mapData(family_clade_count, 1, 15, green, red);
 }
 
+node.family_clade_color {
+        background-color: data(family_clade_color);
+}
+
 node.cluster_color {
         background-color: data(cluster_color);
 }
@@ -85,6 +89,10 @@ node.spm_color {
 
 node.lc_shape {
         shape: data(lc_shape);
+}
+
+node.family_clade_shape {
+        shape: data(family_clade_shape);
 }
 
 node.family_shape {
