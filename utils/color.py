@@ -86,6 +86,22 @@ def label_coocurrence(ListOfListOfLabels):
     return lc
 
 
+def index_to_shape_and_color(index):
+    """
+    Returns a tuple (color, shape) from an index
+
+
+    :param index: integer number
+    :return: tuple (color, shape)
+    """
+
+    color_index = index % len(__COLORS)
+    shape_index = index // len(__COLORS)
+    shape_index = shape_index if shape_index < len(__SHAPES) else 0
+
+    return __COLORS[color_index], __SHAPES[shape_index]
+
+
 def family_to_shape_and_color(input_dictionary):
     """
     Takes a dictionary, where key:gene ID, value: ["fam1", "fam2",...]
