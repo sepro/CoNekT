@@ -127,11 +127,16 @@ class Search:
                 "profiles": profiles}
 
     @staticmethod
-    def advanced_sequence_search(species_id, gene_list, terms, term_rules, go_terms, go_rules, interpro_domains,
+    def advanced_sequence_search(species_id, gene_list, terms, term_rules, gene_family_method_id, gene_families,
+                                 go_terms, go_rules, interpro_domains,
                                  interpro_rules, include_predictions=False):
         valid_species_ids = [s.id for s in Species.query.all()]
 
         query = Sequence.query
+
+        if gene_family_method_id > 0:
+            query = query.filter(Sequence.families.any(or_(*[
+                and_(GeneFamily.method_id == gene_family_method_id, GeneFamily.name == name) for name in gene_families])))
 
         # Add species filter if necessary
         if species_id is not None and species_id in valid_species_ids:

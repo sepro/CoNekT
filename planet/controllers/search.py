@@ -97,6 +97,7 @@ def advanced():
 
     adv_sequence_form = AdvancedSequenceSearchForm(request.form)
     adv_sequence_form.populate_species()
+    adv_sequence_form.populate_gf_methods()
 
     if request.method == 'GET':
         return render_template("search_advanced.html", adv_sequence_form=adv_sequence_form)
@@ -107,6 +108,9 @@ def advanced():
 
         terms = request.form.get('adv_terms')
         terms_rules = request.form.get('terms_rules')
+
+        gene_family_method_id = int(request.form.get('gene_family_method'))
+        gene_families = request.form.get('gene_families').split()
 
         go_rules = request.form.get('go_rules')
         go_terms = [gt.data['go_term'] for gt in adv_sequence_form.go_terms.entries if gt.data['go_term'] != ""]
@@ -119,6 +123,7 @@ def advanced():
         results = Search.advanced_sequence_search(species_id,
                                                   gene_ids.strip().split(),
                                                   terms, terms_rules,
+                                                  gene_family_method_id, gene_families,
                                                   go_terms, go_rules,
                                                   interpro_terms, interpro_rules, include_predictions=include_predictions)
 
