@@ -70,7 +70,7 @@ $(function () { // on dom ready
         wheelSensitivity: 0.333,
         elements: url !== undefined ? $.getJSON(url) : graph_data,
         layout: {
-            name: 'concentric',
+            name: 'cose',
             padding: 30,
             minNodeSpacing: 10,
             avoidOverlap: false
@@ -396,10 +396,14 @@ $(function () { // on dom ready
                    minNodeSpacing: 10,
                    animate: true,
                    avoidOverlap: false,
+                   animationThreshold: 250,
                    //cose settings
                    nodeOverlap: 1,
-                   idealEdgeLength: function () { return 5; },
-                   edgeElasticity: function () { return 10; }
+                   idealEdgeLength: 5,
+                   edgeElasticity: 10,
+                   numIter: 1000,
+                   maxSimulationTime: 2000,
+                   lengthFactor: 100
                    });
     });
 
