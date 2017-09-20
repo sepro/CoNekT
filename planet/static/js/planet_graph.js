@@ -76,8 +76,6 @@ $(function () { // on dom ready
             avoidOverlap: false
         },
         ready: function () {
-            $('#loading').addClass('loaded');
-            $('#legend').show();
             window.cy = this;
 
             initial_json = JSON.stringify(cy.json(), null, '\t');
@@ -314,6 +312,10 @@ $(function () { // on dom ready
             if (Object.keys(svg_clusters).length > 0) { generate_legend(svg_clusters, 'cluster_color'); }
             if (Object.keys(svg_spm).length > 0) { generate_legend(svg_spm, 'spm_color'); }
             if (Object.keys(svg_species).length > 0) { generate_legend(svg_species, 'species_color'); }
+
+            $('.cy-node-color[attr="family_color"]').click();
+            $('#loading').addClass('loaded');
+            $('#legend').show();
         }
     });
 
