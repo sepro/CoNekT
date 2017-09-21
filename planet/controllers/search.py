@@ -133,9 +133,9 @@ def advanced():
 
 
 @search.route('/json/genes/<label>')
+@search.route('/json/genes/')
 @cache.cached()
-@benchmark
-def search_json_genes(label):
+def search_json_genes(label=''):
     """
     This search function is used by the cytoscape.js GUI we implemented. It will look for genes with a specific GO
     label associated with them. It will return a JSON object

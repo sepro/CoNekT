@@ -430,16 +430,18 @@ $(function () { // on dom ready
             $('#search_logo').show();
             $('#search_spinner').hide();
         }).done(function () {
-            cy.nodes('[^compound]').each(function (i, node) {
-                if (node.data('gene_name').toLowerCase() === term ||
-                        node.data('name').toLowerCase() === term ||
-                        (node.data('family_name') !== null && node.data('family_name').toLowerCase() === term) ||
-                        (node.data('interpro') !== undefined && node.data('interpro').indexOf(term.toUpperCase()) > -1) ||
-                        valid_genes.indexOf(node.data('gene_id')) > -1 ||
-                        (node.data('tokens') !== undefined && node.data('tokens') !== null && node.data('tokens').toLowerCase().includes(term))) {
-                    node.toggleClass('found');
-                }
-            });
+            if (term !== '') {
+                cy.nodes('[^compound]').each(function (i, node) {
+                    if (node.data('gene_name').toLowerCase() === term ||
+                            node.data('name').toLowerCase() === term ||
+                            (node.data('family_name') !== null && node.data('family_name').toLowerCase() === term) ||
+                            (node.data('interpro') !== undefined && node.data('interpro').indexOf(term.toUpperCase()) > -1) ||
+                            valid_genes.indexOf(node.data('gene_id')) > -1 ||
+                            (node.data('tokens') !== undefined && node.data('tokens') !== null && node.data('tokens').toLowerCase().includes(term))) {
+                        node.toggleClass('found');
+                    }
+                });
+            }
         }).done(function() {
             $('#search_logo').show();
             $('#search_spinner').hide();
