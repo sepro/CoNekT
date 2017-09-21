@@ -48,6 +48,7 @@
                                                                     'data-slider-max':"1",
                                                                     'data-slider-step': "0.01",
                                                                     'data-slider-value': "0.85"})}}<br/>
+                            <span class="text-muted">Genes found: <em id="left_count">0</em></span><br />
                             </div>
                             <div class="col-md-6 col-sm-12 col-xs-12">
                             <label>Species B</label>
@@ -63,6 +64,7 @@
                                                                     'data-slider-max':"1",
                                                                     'data-slider-step': "0.01",
                                                                     'data-slider-value': "0.85"})}}<br/>
+                            <span class="text-muted">Genes found: <em id="right_count">0</em></span><br />
                             </div>
                             <br />
                             </div>
@@ -82,7 +84,7 @@
                         <li>Select the <strong>species and conditions</strong> to compare. <span class="text-muted">(Note that different methods might have different
                     conditions associated with them)</span></li>
                         <li>Set the desired <strong>SPM cutoff</strong> <span class="text-muted">(recommended: 0.85)</span></li>
-                        <li>Finally, click <strong>Submit</strong></li>
+                        <li>Finally, click <strong>Compare specificity</strong></li>
                     </ul>
                 </div>
             </div>
@@ -167,18 +169,69 @@
 {% if form %}
 <script>
 $(function () {
-    $('#cutoffa').slider({
+
+
+    function update_count_left(method, cutoff, condition) {
+        post_data = {
+                    'method': method,
+                    'cutoff': cutoff,
+                    'condition': condition
+                }
+
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('search.count_specific_profiles') }}",
+            contentType: 'application/json;charset=UTF-8',
+            data : JSON.stringify(post_data, null, '\t'),
+            success: function(data) {
+                $('#left_count').text(data.count);
+            }
+        });
+    }
+
+    function update_count_right(method, cutoff, condition) {
+        post_data = {
+                    'method': method,
+                    'cutoff': cutoff,
+                    'condition': condition
+                }
+
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('search.count_specific_profiles') }}",
+            contentType: 'application/json;charset=UTF-8',
+            data : JSON.stringify(post_data, null, '\t'),
+            success: function(data) {
+                $('#right_count').text(data.count);
+            }
+        });
+    }
+
+
+
+    left_slider = $('#cutoffa').slider({
         formatter: function(value) {
             return 'Cutoff: ' + value;
         }
-    });
-    $('#cutoffb').slider({
-        formatter: function(value) {
-            return 'Cutoff: ' + value;
-        }
+    }).on("slideStop", function(ev) {
+        update_count_left(
+          $('#methodsa').val(),
+          ev.value,
+          $('#conditionsa').val()
+        )
     });
 
-    $("#results_table").stupidtable();
+    right_slider = $('#cutoffb').slider({
+        formatter: function(value) {
+            return 'Cutoff: ' + value;
+        }
+    }).on("slideStop", function(ev) {
+        update_count_right(
+          $('#methodsb').val(),
+          ev.value,
+          $('#conditionsb').val()
+        )
+    });
 
     var formdata;
     var selectedSpeciesa = [];
@@ -309,6 +362,22 @@ $(function () {
          });
     });
 
+    $('#conditionsa').change(function(ev) {
+        update_count_left(
+          $('#methodsa').val(),
+          left_slider.slider('getValue'),
+          $('#conditionsa').val()
+        )
+    });
+
+    $('#conditionsb').change(function(ev) {
+        update_count_right(
+          $('#methodsb').val(),
+          right_slider.slider('getValue'),
+          $('#conditionsb').val()
+        )
+    });
+
     $.getJSON("{{ url_for('search.search_specific_profiles_json') }}", function(json) {
       formdata = json;
       populate_species(formdata);
@@ -330,7 +399,9 @@ $(function() {
         svg_venn.find('#intersect_value').firstChild().content("{{ counts.intersection }}");
         svg_venn.find('#right_value').firstChild().content("{{ counts.right }}");
     });
+
     $("#results").stupidtable();
+
     var csv_data = $("#results").table2CSV({delivery:'value'});
     csv_data = csv_data.replace(/\s+/g,' ');
     csv_data = csv_data.replace(/" "/g,'"\n"');
