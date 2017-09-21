@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from flask import Blueprint, request, render_template, Response
+from flask import Blueprint, request, render_template
 
 from planet.forms.compare_specificity import CompareSpecificityForm
 from planet.models.expression.specificity import ExpressionSpecificityMethod, ExpressionSpecificity
@@ -8,28 +8,8 @@ from planet.models.relationships.sequence_family import SequenceFamilyAssociatio
 from planet.models.relationships.sequence_interpro import SequenceInterproAssociation
 from planet.models.species import Species
 
-import json
 
 specificity_comparison = Blueprint('specificity_comparison', __name__)
-
-
-@specificity_comparison.route('/count')
-def gene_count():
-    """
-    Counts the number of genes above a certain SPM threshold.
-
-    :return: json response with the count
-    """
-    method = 1
-    cutoff = 0.8
-    condition = "Nitrogen starvation 48h (4A+, CC-4051)"
-
-    count = ExpressionSpecificity.query.filter(ExpressionSpecificity.method_id == method). \
-        filter(ExpressionSpecificity.score >= cutoff).\
-        filter(ExpressionSpecificity.condition == condition).\
-        count()
-
-    return Response(json.dumps({'count': count}), mimetype='application/json')
 
 
 @specificity_comparison.route('/', methods=['GET', 'POST'])

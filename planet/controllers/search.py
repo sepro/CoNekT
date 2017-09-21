@@ -206,6 +206,32 @@ def search_enriched_clusters():
         return render_template("search_enriched_clusters.html", form=form, example=example)
 
 
+@search.route('/specific/count', methods=['POST'])
+def count_specific_profiles():
+    """
+    Counts the number of genes above a certain SPM threshold.
+
+    :return: json response with the count
+    """
+
+    content = request.get_json(silent=True)
+
+    try:
+        method = content["method"]
+        cutoff = content["cutoff"]
+        condition = content["condition"]
+
+        count = ExpressionSpecificity.query.filter(ExpressionSpecificity.method_id == method). \
+            filter(ExpressionSpecificity.score >= cutoff). \
+            filter(ExpressionSpecificity.condition == condition). \
+            count()
+
+        return Response(json.dumps({'count': count, 'error': 0}), mimetype='application/json')
+    except Exception as e:
+        # Bad data return zero
+        return Response(json.dumps({'count': 0, 'error': 1}), mimetype='application/json')
+
+
 @search.route('/specific/profiles', methods=['GET', 'POST'])
 def search_specific_profiles():
     """
