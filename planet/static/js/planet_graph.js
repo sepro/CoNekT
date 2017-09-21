@@ -431,7 +431,8 @@ $(function () { // on dom ready
                         node.data('name').toLowerCase() === term ||
                         (node.data('family_name') !== null && node.data('family_name').toLowerCase() === term) ||
                         (node.data('interpro') !== undefined && node.data('interpro').indexOf(term.toUpperCase()) > -1) ||
-                        valid_genes.indexOf(node.data('gene_id')) > -1) {
+                        valid_genes.indexOf(node.data('gene_id')) > -1 ||
+                        (node.data('tokens') !== undefined && node.data('tokens') !== null && node.data('tokens').toLowerCase().includes(term))) {
                     node.toggleClass('found');
                 }
             });
