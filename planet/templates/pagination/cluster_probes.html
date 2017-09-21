@@ -4,7 +4,7 @@
             {% for sequence_association in sequence_associations %}
                 <tr>
                     {% if sequence_association.sequence %}
-                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=sequence_association.sequence.id) }}">{{ sequence_association.sequence.name }}</a></td>
+                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=sequence_association.sequence.id) }}" class="qtip_tooltip qtip_dynamic_tooltip" qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=sequence_association.sequence.id) }}">{{ sequence_association.sequence.name }}</a></td>
                     <td>{% if sequence_association.sequence.aliases %}{{ sequence_association.sequence.aliases }}{% else %}<span class="text-muted">No alias</span>{% endif %}</td>
                     {% else %}
                     <td><em class="text-muted">No sequence associated with this probe</em></td>

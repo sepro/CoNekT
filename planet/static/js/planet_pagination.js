@@ -10,7 +10,10 @@ $(document).ready(function () {
 
         panel.html(get_loader_svg(key)).promise().done(function(){
         init_planet_loader(key);
-        panel.load(base_url + page);
+        panel.load(base_url + page, function() {
+            console.log("Finished loading panel");
+            init_qtip();
+        });
     });
 
 

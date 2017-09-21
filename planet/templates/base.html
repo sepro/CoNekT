@@ -180,10 +180,8 @@
         <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/stupidtable.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/TweenMax.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/planet_loader.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/planet_pagination.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/planet_ajax_table.js') }}"></script>
         <script src="{{ url_for('static', filename='js/jquery.qtip.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/planet_loader.js') }}"></script>
         <!-- code to reload modal on each click -->
         <script>
         function init_qtip() {
@@ -242,6 +240,8 @@
               });
             });
         </script>
+        <script src="{{ url_for('static', filename='js/planet_pagination.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/planet_ajax_table.js') }}"></script>
 {% block extrajs %}{% endblock %}
 </body>
 </html>

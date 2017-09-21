@@ -3,8 +3,8 @@
         <tbody>
             {% for r in relations %}
                 <tr>
-                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=r.sequence_one_id) }}">{{ r.sequence_one.name }}</a></td>
-                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=r.sequence_two_id) }}">{{ r.sequence_two.name }}</a></td>
+                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=r.sequence_one_id) }}" class="qtip_tooltip qtip_dynamic_tooltip" qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=r.sequence_one_id) }}">{{ r.sequence_one.name }}</a></td>
+                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=r.sequence_two_id) }}" class="qtip_tooltip qtip_dynamic_tooltip" qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=r.sequence_two_id) }}">{{ r.sequence_two.name }}</a></td>
                     <td><a href="{{ url_for('clade.clade_view', clade_id=r.clade_id) }}">{{ r.clade.name }}</a></td>
                     <td>{{ r.readable_type }}</td>
                     <td>{{ r.readable_score }}</td>

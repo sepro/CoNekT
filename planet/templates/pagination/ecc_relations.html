@@ -13,8 +13,8 @@
         <tbody>
             {% for relation in relations %}
                 <tr>
-                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=relation.query_id) }}">{{ relation.query_sequence.name }}</a></td>
-                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=relation.target_id) }}">{{ relation.target_sequence.name }}</a></td>
+                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=relation.query_id) }}" class="qtip_tooltip qtip_dynamic_tooltip" qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=relation.query_id) }}">{{ relation.query_sequence.name }}</a></td>
+                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=relation.target_id) }}" class="qtip_tooltip qtip_dynamic_tooltip" qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=relation.target_id) }}">{{ relation.target_sequence.name }}</a></td>
                     <td>{{ relation.ecc|round(2) }}</td>
                     <td>{% if relation.p_value %}{{ relation.p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
                     <td>{% if relation.corrected_p_value %}{{ relation.corrected_p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
