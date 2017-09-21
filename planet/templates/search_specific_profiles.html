@@ -39,7 +39,8 @@
                                                                     'data-slider-max':"1",
                                                                     'data-slider-step': "0.01",
                                                                     'data-slider-value': "0.85"})}}<br/>
-                            <button type="submit" class="btn btn-primary pull-right" data-toggle="modal" data-target="#loaderModal">Find genes</button>
+
+                            <button type="submit" id="show_button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#loaderModal">Show genes</button>
                         </form>
                     </div>
                 </div>
@@ -53,7 +54,7 @@
                             <li>Next select a <strong>method</strong>. Note that different methods can include different options or different level of details in conditions</li>
                             <li>Select the desired condition/tissue</li>
                             <li>Set the <abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr> cutoff (recommended setting: 0.85). Higher values are more specific, lower ones will include genes that are expressed more broadly</li>
-                            <li>Click <strong>Find genes</strong></li>
+                            <li>Click <strong>Show genes</strong> <span class="text-muted"> When updating the slider a number will appear in the button indicating how many genes there will be in the results</span></li>
                         </ul>
                     </div>
                 </div>
@@ -109,16 +110,35 @@
 {% block extrajs %}
 <script src="{{ url_for('static', filename='js/bootstrap-slider.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/table2CSV.js') }}" > </script>
+{% if form %}
 <script>
 $(function () {
 
-    $('#cutoff').slider({
+    function update_count(value) {
+        post_data = {
+                    'method': $('#methods').val(),
+                    'cutoff': value,
+                    'condition': $('#conditions').val()
+                }
+
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('search.count_specific_profiles') }}",
+            contentType: 'application/json;charset=UTF-8',
+            data : JSON.stringify(post_data, null, '\t'),
+            success: function(data) {
+                $('#show_button').text('Show genes (' + data.count + ')');
+            }
+        });
+    }
+
+    cutoff_slider = $('#cutoff').slider({
         formatter: function(value) {
             return 'Cutoff: ' + value;
         }
+    }).on("slideStop", function(ev) {
+            update_count(ev.value);
     });
-
-    $("#results_table").stupidtable();
 
     var formdata;
     var selectedSpecies = [];
@@ -188,10 +208,20 @@ $(function () {
          });
     });
 
+    $('#conditions').change(function(ev) {
+        update_count(cutoff_slider.slider('getValue'));
+    });
+
     $.getJSON("{{ url_for('search.search_specific_profiles_json') }}", function(json) {
       formdata = json;
       populate_species(formdata);
     });
+});
+</script>
+{% elif results %}
+<script>
+$(function () {
+    $("#results_table").stupidtable();
 
     var csv_data = $("#results_table").table2CSV({delivery:'value'});
     csv_data = csv_data.replace(/,"Action"\n/,'\n');
@@ -202,4 +232,5 @@ $(function () {
 
 });
 </script>
+{% endif %}
 {% endblock %}

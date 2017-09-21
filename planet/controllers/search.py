@@ -217,8 +217,8 @@ def count_specific_profiles():
     content = request.get_json(silent=True)
 
     try:
-        method = content["method"]
-        cutoff = content["cutoff"]
+        method = int(content["method"])
+        cutoff = float(content["cutoff"])
         condition = content["condition"]
 
         count = ExpressionSpecificity.query.filter(ExpressionSpecificity.method_id == method). \
