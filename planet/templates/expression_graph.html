@@ -97,7 +97,7 @@
                     <div class="input-group">
                       <input type="text" class="form-control" placeholder="Search for..." id="cy-search-term">
                       <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" id="cy-search" search-url="{{ url_for('search.search_json_genes', label='')}}"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-default" type="button" id="cy-search" search-url="{{ url_for('search.search_json_genes', label='')}}"><i class="fa fa-search" id="search_logo"></i><i class="fa fa-spinner fa-pulse" style="display:none" id="search_spinner"aria-hidden="true"></i></button>
                       </span>
                     </div>
                   </div>

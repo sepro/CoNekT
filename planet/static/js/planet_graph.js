@@ -419,12 +419,16 @@ $(function () { // on dom ready
             valid_genes = [];
 
         cy.nodes('[^compound]').toggleClass('found', false);
-
+        $('#search_logo').hide();
+        $('#search_spinner').show();
         $.getJSON(search_url + term, function (data) {
             var i = 0;
             for (i = 0; i < data.length; i += 1) {
                 valid_genes.push(data[i]);
             }
+        }).error(function() {
+            $('#search_logo').show();
+            $('#search_spinner').hide();
         }).done(function () {
             cy.nodes('[^compound]').each(function (i, node) {
                 if (node.data('gene_name').toLowerCase() === term ||
@@ -436,6 +440,9 @@ $(function () { // on dom ready
                     node.toggleClass('found');
                 }
             });
+        }).done(function() {
+            $('#search_logo').show();
+            $('#search_spinner').hide();
         });
     });
 
