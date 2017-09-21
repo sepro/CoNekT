@@ -2,7 +2,7 @@ import json
 
 from flask import g, Blueprint, flash, request, redirect, url_for, render_template, Response, current_app
 from sqlalchemy import func
-from sqlalchemy.sql import or_
+from sqlalchemy.sql import or_, and_
 from sqlalchemy.orm import joinedload
 
 from planet import cache
@@ -16,6 +16,7 @@ from planet.models.go import GO
 from planet.models.search import Search
 from planet.models.species import Species
 from planet.models.sequences import Sequence
+from planet.models.xrefs import XRef
 
 from utils.benchmark import benchmark
 import logging
@@ -133,6 +134,7 @@ def advanced():
 
 @search.route('/json/genes/<label>')
 @cache.cached()
+@benchmark
 def search_json_genes(label):
     """
     This search function is used by the cytoscape.js GUI we implemented. It will look for genes with a specific GO
@@ -144,15 +146,25 @@ def search_json_genes(label):
     :return: JSON object with gene IDs that can be used by our GUI
     """
     output = []
-    current_go = GO.query.filter_by(label=label).first()
 
-    if current_go is not None:
-        for association in current_go.sequence_associations:
+    if len(label) > 3:
+        current_go = GO.query.filter(or_(GO.label == label, GO.name == label)).all()
+        current_interpro = Interpro.query.filter(Interpro.description == label).all()
+    else:
+        current_go = []
+        current_interpro = []
+
+    for go in current_go:
+        for association in go.sequence_associations:
             # Exclude predictions
             if association.predicted == 0:
                 output.append(association.sequence_id)
 
-    return Response(json.dumps(output), mimetype='application/json')
+    for ipr in current_interpro:
+        for association in ipr.sequence_associations:
+            output.append(association.sequence_id)
+
+    return Response(json.dumps(list(set(output))), mimetype='application/json')
 
 
 @search.route('/enriched/clusters', methods=['GET', 'POST'])
