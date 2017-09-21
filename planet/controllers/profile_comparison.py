@@ -41,10 +41,15 @@ def profile_comparison_cluster(cluster_id, normalize=0):
 
     profile_chart = prepare_profiles(profiles[:50], True if normalize == 1 else False)
 
+    # Get table in base64 format for download
+    data = base64.encodebytes(prepare_profiles_download(profiles[:50],
+                                                        True if normalize == 1 else False).encode('utf-8'))
+
     return render_template("expression_profile_comparison.html",
                            profiles=json.dumps(profile_chart),
                            normalize=normalize,
-                           cluster=cluster)
+                           cluster=cluster,
+                           data=data.decode('utf-8'))
 
 
 @profile_comparison.route('/', methods=['GET', 'POST'])
