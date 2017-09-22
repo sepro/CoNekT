@@ -49,6 +49,8 @@ def heatmap_main():
         terms = request.form.get('probes').split()
         species_id = request.form.get('species_id')
 
+        zlog = request.form.get('zlog') == 'y'
+
         probes = terms
 
         # also do search by gene ID
@@ -61,11 +63,12 @@ def heatmap_main():
         # make probe list unique
         probes = list(set(probes))
         # TODO check if certain probes were not found and warn the user
-        current_heatmap = ExpressionProfile.get_heatmap(species_id, probes)
+        current_heatmap = ExpressionProfile.get_heatmap(species_id, probes, zlog=zlog)
 
         return render_template("expression_heatmap.html", order=current_heatmap['order'],
                                profiles=current_heatmap['heatmap_data'],
-                               form=form)
+                               form=form,
+                               zlog=1 if zlog else 0)
     else:
         profiles = ExpressionProfile.query.filter(ExpressionProfile.sequence_id is not None).order_by(ExpressionProfile.species_id).limit(5).all()
 

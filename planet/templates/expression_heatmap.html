@@ -97,6 +97,7 @@
                                     {{ form.csrf_token }}
                                     {{form.species_id(class_="form-control") }}<br />
                                     {{form.probes(class_="form-control") }}<br />
+                                    {{form.zlog(checked="checked")}} <label>{{form.zlog.label }}</label><br />
                                     <div class="pull-right">
                                     {% if example and example.probes %}
                                         <button class="btn btn-default" id="load_example">Load example</button>
@@ -217,6 +218,7 @@ function tableTransform(objTable) {
 $(function() {
     $('#load_example').click(function (ev) {
         ev.preventDefault();
+        $('#zlog').prop('checked', true);
         {% for key, value in example.items() %}
             $('#{{key}}').val("{{value}}");
         {% endfor %}
