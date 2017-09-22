@@ -112,13 +112,14 @@ class ExpressionProfile(db.Model):
                 'data': output}
 
     @staticmethod
-    def get_heatmap(species_id, probes):
+    def get_heatmap(species_id, probes, zlog=True):
         """
         Returns a heatmap for a given species (species_id) and a list of probes. It returns a dict with 'order'
         the order of the experiments and 'heatmap' another dict with the actual data. Data is zlog transformed
 
         :param species_id: species id (internal database id)
         :param probes: a list of probes to include in the heatmap
+        :param zlog: enable zlog transformation (otherwise normalization against highest expressed condition)
         """
         profiles = ExpressionProfile.query.options(undefer('profile')).filter_by(species_id=species_id).\
             filter(ExpressionProfile.probe.in_(probes)).all()
@@ -126,6 +127,8 @@ class ExpressionProfile(db.Model):
         order = []
 
         output = []
+
+        print("ZLOG", zlog)
 
         for profile in profiles:
             name = profile.probe
@@ -139,12 +142,17 @@ class ExpressionProfile(db.Model):
                 values[o] = mean(experiments[o])
 
             row_mean = mean(values.values())
+            row_max = max(values.values())
 
             for o in order:
-                if row_mean == 0 or values[o] == 0:
-                    values[o] = '-'
+                if zlog:
+                    if row_mean == 0 or values[o] == 0:
+                        values[o] = '-'
+                    else:
+                        values[o] = log(values[o]/row_mean, 2)
                 else:
-                    values[o] = log(values[o]/row_mean, 2)
+                    if row_max != 0:
+                        values[o] = values[o]/row_max
 
             output.append({"name": name, "values": values, "sequence_id": profile.sequence_id})
 

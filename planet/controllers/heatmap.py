@@ -13,8 +13,9 @@ heatmap = Blueprint('heatmap', __name__)
 
 
 @heatmap.route('/cluster/<cluster_id>')
+@heatmap.route('/cluster/<cluster_id>/<int:zlog>')
 @cache.cached()
-def heatmap_cluster(cluster_id):
+def heatmap_cluster(cluster_id, zlog=1):
     """
     Controller that gets expression profiles for all members of a co-expression cluster and renders it as a
     tabular heatmap
@@ -27,12 +28,13 @@ def heatmap_cluster(cluster_id):
 
     probes = [a.probe for a in associations]
 
-    current_heatmap = ExpressionProfile.get_heatmap(cluster.method.network_method.species_id, probes)
+    current_heatmap = ExpressionProfile.get_heatmap(cluster.method.network_method.species_id, probes, zlog=True if zlog == 1 else False)
 
     return render_template("expression_heatmap.html",
                            order=current_heatmap['order'],
                            profiles=current_heatmap['heatmap_data'],
-                           cluster=cluster)
+                           cluster=cluster,
+                           zlog=zlog)
 
 
 @heatmap.route('/', methods=['GET', 'POST'])

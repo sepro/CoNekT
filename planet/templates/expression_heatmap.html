@@ -36,7 +36,11 @@
         </div>
     {% else %}
         <h1>Heatmap</h1>
-        <p class="text-muted" >(Values are log<sub>2</sub> transformed ratios of a genes expression in a sample divided by the mean expression level)</p>
+    {% endif %}
+    {% if zlog == 1 %}
+    <p class="text-muted" >(Values are log<sub>2</sub> transformed ratios of a genes expression in a sample divided by the mean expression level)</p>
+    {% else %}
+    <p class="text-muted" >(Values are normalized against highest expression of the row)</p>
     {% endif %}
     <div class="row">
         <div class="col-lg-12">
@@ -73,8 +77,7 @@
             {% endfor %}
             </tbody>
         </table>
-        <p class="text-muted" >(Values are log<sub>2</sub>-transformed ratios of a gene's expression level in a sample divided by the mean expression level of that gene)</p>
-        </div>
+     </div>
         {% else %}
         <ol class="breadcrumb">
             <li><a href="{{ url_for('main.screen') }}">Home</a></li>
@@ -132,6 +135,7 @@
 <script src="{{ url_for('static', filename='js/table2CSV.js') }}" > </script>
 <script>
 $( document ).ready(function() {
+    {% if zlog==1 %}
     $('td.value').hottie({
         colorArray : [
             "#0000FF",
@@ -139,6 +143,15 @@ $( document ).ready(function() {
             "#FF0000"
         ], symmetrical : true
     });
+    {% else %}
+    $('td.value').hottie({
+        colorArray : [
+            "#53db3b",
+            "#efec40",
+            "#d11010"
+        ], symmetrical : false
+    });
+    {% endif %}
 
     function prepare_download() {
         var csv_data = $("#heatmap-table").table2CSV({delivery:'value'});
