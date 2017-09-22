@@ -19,6 +19,7 @@
 {% block container %}
 </div> <!--close the container in base.html-->
 <div id="full_width">
+             <div style="padding-left:15px;padding-right:15">
             {% if node %}
             <h1>Co-expression neighborhood: <strong>{{ node.probe }}</strong><br /><small>({{ node.method.description }})</small></h1>
             {% elif cluster %}
@@ -34,15 +35,22 @@
             {% elif ecc_pair %}
             <h1>ECC pair</h1>
             {% endif %}
+             </div>
             <div class="clearfix">
                     <div class="pull-right">
-                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                            <button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h fa-rotate-45" data-toggle="tooltip" title="Reset View"></i></button>
+                        <button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h fa-rotate-45" data-toggle="tooltip" title="Reset View"></i></button>
+                            <div class="input-group" style="width:200px;display: inline-table;vertical-align: middle;">
+                            <input type="text" class="form-control" placeholder="Search Nodes" id="cy-search-term">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="button" id="cy-search" search-url="{{ url_for('search.search_json_genes', label='')}}"><i class="fa fa-search" id="search_logo"></i><i class="fa fa-spinner fa-pulse" style="display:none" id="search_spinner"aria-hidden="true"></i></button>
+                            </span>
+                            </div>
+                        <div class="btn-group" role="group" aria-label="Layout buttons">
                             <div class="dropdown btn-group" role="group">
                                 <button class="btn btn-default dropdown-toggle" type="button"  data-toggle="dropdown"><i class="fa fa-circle" aria-hidden="true" data-toggle="tooltip" title="Node Options"></i> <span class="caret"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right cy-option-menu">
                                     <li class="dropdown-header">Nodes show</li>
-                                    <li><a href="#" class="cy-node-color" attr="color">Default <span class="text-muted">(no feature)</span></a></li>
+                                    <li><a href="#" class="cy-node-color" attr="color">No Feature</a></li>
                                     <li><a href="#" class="cy-node-color" attr="family_clade_color">Clade</a></li>
                                     {% if graph_data %}
                                     <li><a href="#" class="cy-node-color" attr="cluster_color">Cluster</a></li>
@@ -50,7 +58,7 @@
                                     {% if node %}
                                     <li><a href="#" class="cy-node-color" attr="depth_color">Depth</a></li>
                                     {% endif %}
-                                    <li><a href="#" class="cy-node-color" attr="family_color">Family</a></li>
+                                    <li><a href="#" class="cy-node-color" attr="family_color">Family <span class="text-muted">(default)</span></a></li>
                                     <li><a href="#" class="cy-node-color" attr="lc_color">Label Co-occ.</a></li>
                                     {% if cluster or cluster_one %}
                                     <li><a href="#" class="cy-node-color" attr="neighbors">Neighbors</a></li>
@@ -77,9 +85,9 @@
                             </div>
                             <div class="dropdown btn-group" role="group">
                                 <button class="btn btn-default dropdown-toggle" type="button"  data-toggle="dropdown"><i class="fa fa-link" aria-hidden="true" data-toggle="tooltip" title="Edge Options"></i> <span class="caret"></span></button>
-                                <ul class="dropdown-menu dropdown-menu-right cy-option-menu">
+                                <ul class="dropdown-menu dropdown-menu-right cy-option-menu" style="width:250px">
                                     <li class="dropdown-header">Edge Color</li>
-                                    <li><a href="#" class="cy-edge-color" attr="color">Default</a></li>
+                                    <li><a href="#" class="cy-edge-color" attr="color">No Feature <span class="text-muted">(default)</span></a></li>
                                     {% if node %}
                                     <li><a href="#" class="cy-edge-color" attr="depth_color">Depth</a></li>
                                     <li><a href="#" class="cy-edge-color" attr="link_pcc">PCC</a></li>
@@ -94,6 +102,7 @@
                                     <li><a href="#" class="cy-edge-color" attr="ecc_score">ECC</a></li>
                                     <li><a href="#" class="cy-edge-color" attr="ecc_type">ECC type</a></li>
                                     {% endif %}
+
                                     <li class="dropdown-header">Edge Width</li>
                                     <li><a href="#" class="cy-edge-width" attr="default_width">Default</a></li>
                                     {% if node %}
@@ -102,13 +111,27 @@
                                     {% if sequence %}
                                     <li><a href="#" class="cy-edge-width" attr="ecc_width">ECC</a></li>
                                     {% endif %}
+                                    {% if not sequence %}
+                                    <li><hr /></li>
+                                    <li class="dropdown-header"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='hrr') }}" data-target="#helpModal">HRR</abbr> Filter</li>
+                                    <li><p><strong>Cutoff:</strong> <span id="cy-edge-score-value" class="text-muted">{{cutoff}}</span></p></li>
+                                    <li class="text-center"><input id="cy-edge-score" data-slider-id='cy-edge-score-slider' type="text" data-slider-min="0" data-slider-max="{{cutoff}}" data-slider-step="1" data-slider-value="{{cutoff}}" data-slider-tooltip="hide"/></li>
+                                    {% endif %}
                                 </ul>
                             </div>
                             <div class="dropdown btn-group" role="group">
                                 <button class="btn btn-default dropdown-toggle" type="button"  data-toggle="dropdown"><i class="fa fa-cog" aria-hidden="true" data-toggle="tooltip" title="Config"></i> <span class="caret"></span></button>
-                                <ul class="dropdown-menu dropdown-menu-right" style="width:500px">
+                                <ul class="dropdown-menu dropdown-menu-right" style="width:200px">
+                                    <li class="dropdown-header">Layout</li>
+                                    <li><a href="#" class="cy-layout" layout="breadthfirst">Breadthfirst</a></li>
+                                    <li><a href="#" class="cy-layout" layout="circle">Circle</a></li>
+                                    <li><a href="#" class="cy-layout" layout="concentric">Concentric</a></li>
+                                    <li><a href="#" class="cy-layout" layout="cose">Cose</a></li>
+                                    <li><a href="#" class="cy-layout" layout="grid">Grid</a></li>
+                                    <li><a href="#" class="cy-layout" layout="random">Random</a></li>
                                     {% if node and depth > 0 %}
-                                    <li>Depth</li>
+                                    <li><hr /></li>
+                                    <li class="dropdown-header">Depth</li>
                                     <li>
                                         <div class="text-center">
                                             <div class="btn-group" role="group">
@@ -117,28 +140,7 @@
                                             </div>
                                         </div>
                                     </li>
-                                    <li><hr /></li>
                                     {% endif %}
-                                    {% if not sequence %}
-                                    <li>
-                                        <div>
-                                        <br /><p><strong><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='hrr') }}" data-target="#helpModal">HRR</abbr> Score</strong> <span id="cy-edge-score-value" class="text-muted">{{cutoff}}</span></p>
-                                        <input id="cy-edge-score" data-slider-id='cy-edge-score-slider' type="text" data-slider-min="0" data-slider-max="{{cutoff}}" data-slider-step="1" data-slider-value="{{cutoff}}" data-slider-tooltip="hide"/>
-                                        </div>
-                                    </li>
-                                    <li><hr /></li>
-                                    {% endif %}
-                                    <li><strong>Layout</strong></li>
-                                    <li>
-                                        <div class="row">
-                                            <div class="col-xs-4"><label class="radio-inline"><input type="radio" name="layout" class="cy-layout" layout="breadthfirst">Breadthfirst</label></div>
-                                            <div class="col-xs-4"><label class="radio-inline"><input type="radio" name="layout" class="cy-layout" layout="circle">Circle</label></div>
-                                            <div class="col-xs-4"><label class="radio-inline"><input type="radio" name="layout" class="cy-layout" layout="concentric">Concentric</label></div>
-                                            <div class="col-xs-4"><label class="radio-inline"><input type="radio" name="layout" class="cy-layout" layout="cose" checked=>Cose</label></div>
-                                            <div class="col-xs-4"><label class="radio-inline"><input type="radio" name="layout" class="cy-layout" layout="grid">Grid</label></div>
-                                            <div class="col-xs-4"><label class="radio-inline"><input type="radio" name="layout" class="cy-layout" layout="random">Random</label></div>
-                                        </div>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -214,7 +216,9 @@
 
 
     <hr />
-    <div id="legend" url="{{ url_for('static', filename='svg/legend.svg') }}"></div>
+    <div class="text-center">
+        <div id="legend" url="{{ url_for('static', filename='svg/legend.svg') }}"></div>
+    </div>
 
 </div>
 <div class="modal" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel">

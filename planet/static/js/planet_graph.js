@@ -388,7 +388,7 @@ $(function () { // on dom ready
     });
 
     $('.cy-layout').click(function (ev) {
-        //ev.preventDefault();
+        ev.preventDefault();
         var layout = $(this).attr('layout');
 
         cy.layout({name: layout,
