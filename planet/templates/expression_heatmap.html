@@ -27,7 +27,12 @@
         {% import "macros/cluster_actions.html" as ca %}
         <div class="row">
             <div class="col-lg-6 col-sm-6 col-xs-12">
-                <p><strong>View as: </strong>{{ ca.cluster_actions(cluster.id, exclude=["heatmap"]) }}</p>
+                <p><strong>View as: </strong>{{ ca.cluster_actions(cluster.id, exclude=["heatmap"]) }} <span class="text-muted">{% if zlog == 1 %}
+                        (view without zlog transformation <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster.id, zlog=0) }}">here</a>)
+                    {% else %}
+                        (view with zlog transformation <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster.id, zlog=1) }}">here</a>)
+                    {% endif %}</span>
+                </p>
             </div>
             <div class="col-lg-6 col-sm-6 col-xs-12">
                 <p>View using InCHLib : <a href="{{ url_for('heatmap.heatmap_inchlib', cluster_id=cluster.id) }}">here</a>
