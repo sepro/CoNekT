@@ -17,206 +17,141 @@
 {% endblock %}
 
 {% block container %}
-<div class=container-fluid">
-    <div class="row">
-        <div class="col-lg-2 col-sm-4 col-md-4 sidebar" id="sidebar">
-          <ul class="nav nav-sidebar">
-            <li class="active"><a href="#"><strong>Options</strong></a></li>
-            <li><br/></li>
-            {% if node and depth > 0 %}
-            <li><p><Strong>Depth</Strong></p>
-                <div class="text-center">
-                    <div class="btn-group" role="group">
-                        <a href="#" role="button" class="btn btn-primary cy-depth-filter" cutoff=1>Direct</a>
-                        <a href="#" role="button" class="btn btn-primary cy-depth-filter active" cutoff=2>2<sup>nd</sup> Degree</a>
-                    </div>
-                </div>
-            </li>
-            <li><hr /></li>
-            {% endif %}
-            <li><p><strong>Nodes</strong></p></li>
-            <li>
-                <div class="row">
-                <div class="col-md-6 col-sm-12">
-                    <span>Color</span><br />
-                    <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Default <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu  cy-option-menu">
-                        <li><a href="#" class="cy-node-color" attr="color">Default</a></li>
-                        <!--<li><a href="#" class="cy-node-color" attr="family_clade_count">Clade</a></li>-->
-                        <li><a href="#" class="cy-node-color" attr="family_clade_color">Clade</a></li>
-                        {% if graph_data %}
-                        <li><a href="#" class="cy-node-color" attr="cluster_color">Cluster</a></li>
-                        {% endif %}
-                        {% if node %}
-                        <li><a href="#" class="cy-node-color" attr="depth_color">Depth</a></li>
-                        {% endif %}
-                        <li><a href="#" class="cy-node-color" attr="family_color">Family</a></li>
-                        <li><a href="#" class="cy-node-color" attr="lc_color">Label Co-occ.</a></li>
-                        {% if cluster or cluster_one %}
-                        <li><a href="#" class="cy-node-color" attr="neighbors">Neighbors</a></li>
-                        {% endif %}
-                        {% if sequence or ecc_pair %}
-                        <li><a href="#" class="cy-node-color" attr="species_color">Species</a></li>
-                        {% endif %}
-                        {% if graph_data %}
-                        <li><a href="#" class="cy-node-color" attr="spm_color">Specificity</a></li>
-                        {% endif %}
-                    </ul>
-                    </div>
-                </div>
-                <div class="col-md-6 col-sm-12">
-                    <span>Shape</span><br />
-                    <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
-                    Default <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu  cy-option-menu">
-                        <li><a href="#" class="cy-node-shape" attr="shape">Default</a></li>
-                        <li><a href="#" class="cy-node-shape" attr="family_clade_shape">Clade</a></li>
-                        {% if graph_data %}
-                        <li><a href="#" class="cy-node-shape" attr="cluster_shape">Cluster</a></li>
-                        {% endif %}
-                        <li><a href="#" class="cy-node-shape" attr="family_shape">Family</a></li>
-                        <li><a href="#" class="cy-node-shape" attr="lc_shape">Label Co-occ.</a></li>
-                        {% if graph_data %}
-                        <li><a href="#" class="cy-node-shape" attr="spm_shape">Specificity</a></li>
-                        {% endif %}
-                    </ul>
-                    </div>
-                </div>
-                </div>
-            </li>
-            <li><br/></li>
-            <li>
-                <div class="row">
-                <div class="col-lg-12">
-                    <span>Find node</span><br />
-                    <div class="input-group">
-                      <input type="text" class="form-control" placeholder="Search for..." id="cy-search-term">
-                      <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" id="cy-search" search-url="{{ url_for('search.search_json_genes', label='')}}"><i class="fa fa-search" id="search_logo"></i><i class="fa fa-spinner fa-pulse" style="display:none" id="search_spinner"aria-hidden="true"></i></button>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-            </li>
-            <li><hr /></li>
-            <li><p><strong>Edges</strong></p></li>
-            <li>
-                <div class="row">
-                <div class="col-md-6 col-sm-12">
-                    <span>Color</span><br />
-                    <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Default <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu  cy-option-menu">
-                        <li><a href="#" class="cy-edge-color" attr="color">Default</a></li>
-                        {% if node %}
-                        <li><a href="#" class="cy-edge-color" attr="depth_color">Depth</a></li>
-                        <li><a href="#" class="cy-edge-color" attr="link_pcc">PCC</a></li>
-                        <li><a href="#" class="cy-edge-color" attr="hrr">HRR</a></li>
-                        {% elif ecc_pair %}
-                        <li><a href="#" class="cy-edge-color" attr="ecc_pair_color">Type</a></li>
-                        {% elif not sequence %}
-                        <li><a href="#" class="cy-edge-color" attr="link_score">Score</a></li>
-                        <li><a href="#" class="cy-edge-color" attr="link_pcc">PCC</a></li>
-                        <li><a href="#" class="cy-edge-color" attr="hrr">HRR</a></li>
-                        {% else %}
-                        <li><a href="#" class="cy-edge-color" attr="ecc_score">ECC</a></li>
-                        <li><a href="#" class="cy-edge-color" attr="ecc_type">ECC type</a></li>
-                        {% endif %}
-
-                    </ul>
-                    </div>
-                </div>
-                <div class="col-md-6 col-sm-12">
-                    <span>Width</span><br />
-                    <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Default <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu  cy-option-menu">
-                        <li><a href="#" class="cy-edge-width" attr="default_width">Default</a></li>
-                        {% if node %}
-                        <li><a href="#" class="cy-edge-width" attr="depth">Depth</a></li>
-                        {% endif %}
-                        {% if sequence %}
-                        <li><a href="#" class="cy-edge-width" attr="ecc_width">ECC</a></li>
-                        {% endif %}
-                    </ul>
-                    </div>
-                </div>
-                </div>
-            </li>
-            {% if not sequence %}
-            <li>
-                <div>
-                <br /><p><strong><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='hrr') }}" data-target="#helpModal">HRR</abbr> Score</strong> <span id="cy-edge-score-value" class="text-muted">{{cutoff}}</span></p>
-                <input id="cy-edge-score" data-slider-id='cy-edge-score-slider' type="text" data-slider-min="0" data-slider-max="{{cutoff}}" data-slider-step="1" data-slider-value="{{cutoff}}" data-slider-tooltip="hide"/>
-                </div>
-            </li>
-            {% endif %}
-            <li><hr /></li>
-            <li><p><strong>Layout</strong></p></li>
-            <li>
-                <div class="row">
-                <div class="col-md-6 col-sm-12">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Concentric <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu cy-option-menu">
-                        <li><a href="#" class="cy-layout" layout="breadthfirst">Breadthfirst</a></li>
-                        <li><a href="#" class="cy-layout" layout="circle">Circle</a></li>
-                        <li><a href="#" class="cy-layout" layout="concentric">Concentric</a></li>
-                        <li><a href="#" class="cy-layout" layout="cose">Cose</a></li>
-                        <li><a href="#" class="cy-layout" layout="grid">Grid</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#" class="cy-layout" layout="random">Random</a></li>
-                    </ul>
-                </div>
-                </div></div>
-
-            </li>
-            <li><hr /></li>
-            <li><p><strong>Export</strong></p></li>
-            <li>
-            <div class="row">
-                <div class="col-md-6 col-sm-12">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="modal"  data-target="#data_modal">Data</button>
-                </div>
-                <div class="col-md-6 col-sm-12">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="modal"  data-target="#image_modal">
-                    Image
-                    </button>
-                </div>
-                </div>
-            </div>
-            </li>
-
-          </ul>
-        </div>
-        <div class="col-lg-10 col-lg-offset-2 col-sm-8 col-sm-offset-4 col-md-8 col-md-offset-4 main" id="main">
+</div> <!--close the container in base.html-->
+<div id="full_width">
             {% if node %}
-            <h1>Co-expression neighborhood: <strong>{{ node.probe }}</strong><br /><small>({{ node.method.description }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            <h1>Co-expression neighborhood: <strong>{{ node.probe }}</strong><br /><small>({{ node.method.description }})</small></h1>
             {% elif cluster %}
-            <h1>Co-expression cluster: <strong>{{ cluster.name }}</strong> <small>({{ cluster.method.method }})</small><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            <h1>Co-expression cluster: <strong>{{ cluster.name }}</strong> <small>({{ cluster.method.method }})</small></h1>
             {% import "macros/cluster_actions.html" as ca %}
             <p><strong>View as: </strong>{{ ca.cluster_actions(cluster.id, exclude=["graph"]) }}</p>
             {% elif cluster_one %}
-            <h1>Comparing clusters: <strong>{{ cluster_one.name }}</strong> vs <strong>{{ cluster_two.name }}</strong><br /><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            <h1>Comparing clusters: <strong>{{ cluster_one.name }}</strong> vs <strong>{{ cluster_two.name }}</strong></h1>
             {% elif sequence %}
-            <h1><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr> network: <strong>{{ sequence.name }}</strong><br /><button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            <h1><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr> network: <strong>{{ sequence.name }}</strong></h1>
             {% elif graph_data %}
-            <h1>Custom network <button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            <h1>Custom network</h1>
             {% elif ecc_pair %}
-            <h1>ECC pair <button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h"></i></button></h1>
+            <h1>ECC pair</h1>
             {% endif %}
+            <div class="clearfix">
+                    <div class="pull-right">
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            <button id="cy-reset" class="btn btn-default"><i class="fa fa-arrows-h fa-rotate-45" data-toggle="tooltip" title="Reset View"></i></button>
+                            <div class="dropdown btn-group" role="group">
+                                <button class="btn btn-default dropdown-toggle" type="button"  data-toggle="dropdown"><i class="fa fa-circle" aria-hidden="true" data-toggle="tooltip" title="Node Options"></i> <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right cy-option-menu">
+                                    <li class="dropdown-header">Nodes show</li>
+                                    <li><a href="#" class="cy-node-color" attr="color">Default <span class="text-muted">(no feature)</span></a></li>
+                                    <li><a href="#" class="cy-node-color" attr="family_clade_color">Clade</a></li>
+                                    {% if graph_data %}
+                                    <li><a href="#" class="cy-node-color" attr="cluster_color">Cluster</a></li>
+                                    {% endif %}
+                                    {% if node %}
+                                    <li><a href="#" class="cy-node-color" attr="depth_color">Depth</a></li>
+                                    {% endif %}
+                                    <li><a href="#" class="cy-node-color" attr="family_color">Family</a></li>
+                                    <li><a href="#" class="cy-node-color" attr="lc_color">Label Co-occ.</a></li>
+                                    {% if cluster or cluster_one %}
+                                    <li><a href="#" class="cy-node-color" attr="neighbors">Neighbors</a></li>
+                                    {% endif %}
+                                    {% if sequence or ecc_pair %}
+                                    <li><a href="#" class="cy-node-color" attr="species_color">Species</a></li>
+                                    {% endif %}
+                                    {% if graph_data %}
+                                    <li><a href="#" class="cy-node-color" attr="spm_color">Specificity</a></li>
+                                    {% endif %}
+                                    <div style="display:none">
+                                        <li><a href="#" class="cy-node-shape" attr="shape">Default</a></li>
+                                        <li><a href="#" class="cy-node-shape" attr="family_clade_shape">Clade</a></li>
+                                        {% if graph_data %}
+                                        <li><a href="#" class="cy-node-shape" attr="cluster_shape">Cluster</a></li>
+                                        {% endif %}
+                                        <li><a href="#" class="cy-node-shape" attr="family_shape">Family</a></li>
+                                        <li><a href="#" class="cy-node-shape" attr="lc_shape">Label Co-occ.</a></li>
+                                        {% if graph_data %}
+                                        <li><a href="#" class="cy-node-shape" attr="spm_shape">Specificity</a></li>
+                                        {% endif %}
+                                    </div>
+                                </ul>
+                            </div>
+                            <div class="dropdown btn-group" role="group">
+                                <button class="btn btn-default dropdown-toggle" type="button"  data-toggle="dropdown"><i class="fa fa-link" aria-hidden="true" data-toggle="tooltip" title="Edge Options"></i> <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right cy-option-menu">
+                                    <li class="dropdown-header">Edge Color</li>
+                                    <li><a href="#" class="cy-edge-color" attr="color">Default</a></li>
+                                    {% if node %}
+                                    <li><a href="#" class="cy-edge-color" attr="depth_color">Depth</a></li>
+                                    <li><a href="#" class="cy-edge-color" attr="link_pcc">PCC</a></li>
+                                    <li><a href="#" class="cy-edge-color" attr="hrr">HRR</a></li>
+                                    {% elif ecc_pair %}
+                                    <li><a href="#" class="cy-edge-color" attr="ecc_pair_color">Type</a></li>
+                                    {% elif not sequence %}
+                                    <li><a href="#" class="cy-edge-color" attr="link_score">Score</a></li>
+                                    <li><a href="#" class="cy-edge-color" attr="link_pcc">PCC</a></li>
+                                    <li><a href="#" class="cy-edge-color" attr="hrr">HRR</a></li>
+                                    {% else %}
+                                    <li><a href="#" class="cy-edge-color" attr="ecc_score">ECC</a></li>
+                                    <li><a href="#" class="cy-edge-color" attr="ecc_type">ECC type</a></li>
+                                    {% endif %}
+                                    <li class="dropdown-header">Edge Width</li>
+                                    <li><a href="#" class="cy-edge-width" attr="default_width">Default</a></li>
+                                    {% if node %}
+                                    <li><a href="#" class="cy-edge-width" attr="depth">Depth</a></li>
+                                    {% endif %}
+                                    {% if sequence %}
+                                    <li><a href="#" class="cy-edge-width" attr="ecc_width">ECC</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="dropdown btn-group" role="group">
+                                <button class="btn btn-default dropdown-toggle" type="button"  data-toggle="dropdown"><i class="fa fa-cog" aria-hidden="true" data-toggle="tooltip" title="Config"></i> <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right" style="width:500px">
+                                    {% if node and depth > 0 %}
+                                    <li>Depth</li>
+                                    <li>
+                                        <div class="text-center">
+                                            <div class="btn-group" role="group">
+                                                <a href="#" role="button" class="btn btn-primary cy-depth-filter" cutoff=1>Direct</a>
+                                                <a href="#" role="button" class="btn btn-primary cy-depth-filter active" cutoff=2>2<sup>nd</sup> Degree</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li><hr /></li>
+                                    {% endif %}
+                                    {% if not sequence %}
+                                    <li>
+                                        <div>
+                                        <br /><p><strong><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='hrr') }}" data-target="#helpModal">HRR</abbr> Score</strong> <span id="cy-edge-score-value" class="text-muted">{{cutoff}}</span></p>
+                                        <input id="cy-edge-score" data-slider-id='cy-edge-score-slider' type="text" data-slider-min="0" data-slider-max="{{cutoff}}" data-slider-step="1" data-slider-value="{{cutoff}}" data-slider-tooltip="hide"/>
+                                        </div>
+                                    </li>
+                                    <li><hr /></li>
+                                    {% endif %}
+                                    <li><strong>Layout</strong></li>
+                                    <li>
+                                        <div class="row">
+                                            <div class="col-xs-4"><label class="radio-inline"><input type="radio" name="layout" class="cy-layout" layout="breadthfirst">Breadthfirst</label></div>
+                                            <div class="col-xs-4"><label class="radio-inline"><input type="radio" name="layout" class="cy-layout" layout="circle">Circle</label></div>
+                                            <div class="col-xs-4"><label class="radio-inline"><input type="radio" name="layout" class="cy-layout" layout="concentric">Concentric</label></div>
+                                            <div class="col-xs-4"><label class="radio-inline"><input type="radio" name="layout" class="cy-layout" layout="cose" checked=>Cose</label></div>
+                                            <div class="col-xs-4"><label class="radio-inline"><input type="radio" name="layout" class="cy-layout" layout="grid">Grid</label></div>
+                                            <div class="col-xs-4"><label class="radio-inline"><input type="radio" name="layout" class="cy-layout" layout="random">Random</label></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="dropdown btn-group" role="group">
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" title="Export"></i> <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li class="dropdown-header">Export</li>
+                                    <li><a data-toggle="modal"  data-target="#data_modal">Data</a></li>
+                                    <li><a data-toggle="modal"  data-target="#image_modal">Image</a></li>
+                                </ul>
+                        </div>
+                    </div>
+                </div>
             <div id="loading">
                 <svg id="svg2" xmlns="http://www.w3.org/2000/svg" height="150" width="150" version="1.1">
                  <defs id="defs4">
@@ -263,10 +198,6 @@
 
                 </svg>
             </div>
-        </div>
-    </div>
-</div>
-</div>
             {% if node %}
             <div id="cy" json="{{ url_for('expression_network.expression_network_json', node_id=node.id, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% elif cluster %}
@@ -281,15 +212,11 @@
             <div id="cy" json="{{ url_for('ecc.ecc_graph_pair_json', ecc_id = ecc_pair.id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% endif %}
 
-<div class=container">
-    <div class=container-fluid">
-        <div class="col-lg-10 col-lg-offset-2 col-sm-8 col-sm-offset-4 col-md-8 col-md-offset-4 main">
-            <div class="row">
-                <div id="legend" url="{{ url_for('static', filename='svg/legend.svg') }}"></div>
-            </div>
-        </div>
-    </div>
 
+    <hr />
+    <div id="legend" url="{{ url_for('static', filename='svg/legend.svg') }}"></div>
+
+</div>
 <div class="modal" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel">
     <div class="modal-dialog" role="document" style="width:1000px;height:800px;">
         <div class="modal-content">

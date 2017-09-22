@@ -388,7 +388,7 @@ $(function () { // on dom ready
     });
 
     $('.cy-layout').click(function (ev) {
-        ev.preventDefault();
+        //ev.preventDefault();
         var layout = $(this).attr('layout');
 
         cy.layout({name: layout,
@@ -405,11 +405,6 @@ $(function () { // on dom ready
                    maxSimulationTime: 2000,
                    lengthFactor: 100
                    });
-    });
-
-    $(".cy-option-menu li a").click(function () {
-        $(this).parents(".btn-group").find('.btn').html($(this).text() + ' <span class="caret"></span>');
-        $(this).parents(".btn-group").find('.btn').val($(this).data('value'));
     });
 
     $("#cy-search").click(function (ev) {

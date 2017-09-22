@@ -76,18 +76,9 @@ textarea.form-control {
   Cytoscape
 */
 
-@media (min-width: 992px) {
-    #cy {
-      min-height: 800px;
-      margin-left: 280px;
-      width: calc(100vw - 280px);
-    }
-}
-
 #cy {
   min-height: 800px;
-  margin-left: 0px;
-  width: 100vw;
+  margin: 0px;
 }
 
 #info {
@@ -523,4 +514,12 @@ div#phyd3 .table-responsive > table {
 
 .warning-message {
         color: #a94442;
+}
+
+.fa-rotate-45 {
+    -webkit-transform: rotate(135deg);
+    -moz-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    -o-transform: rotate(135deg);
+    transform: rotate(135deg);
 }
