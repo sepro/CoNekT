@@ -21,7 +21,7 @@
 <div id="full_width">
              <div style="padding-left:15px;padding-right:15">
             {% if node %}
-            <h1>Co-expression neighborhood: <strong>{{ node.probe }}</strong><br /><small>({{ node.method.description }})</small></h1>
+            <h1>Co-expression neighborhood: <strong>{{ node.probe }}</strong> <small>({{ node.method.description }})</small></h1>
             {% elif cluster %}
             <h1>Co-expression cluster: <strong>{{ cluster.name }}</strong> <small>({{ cluster.method.method }})</small></h1>
             {% import "macros/cluster_actions.html" as ca %}
