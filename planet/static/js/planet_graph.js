@@ -306,12 +306,12 @@ $(function () { // on dom ready
                 }
             }); //end cy.nodes.forEach
 
-            if (Object.keys(svg_clades).length > 0) { generate_legend(svg_clades, 'family_clade_color'); }
-            if (Object.keys(svg_labels).length > 0) { generate_legend(svg_labels, 'lc_color'); }
-            if (Object.keys(svg_families).length > 0) { generate_legend(svg_families, 'family_color'); }
-            if (Object.keys(svg_clusters).length > 0) { generate_legend(svg_clusters, 'cluster_color'); }
-            if (Object.keys(svg_spm).length > 0) { generate_legend(svg_spm, 'spm_color'); }
-            if (Object.keys(svg_species).length > 0) { generate_legend(svg_species, 'species_color'); }
+            if (Object.keys(svg_clades).length > 0) { generate_legend(svg_clades, 'family_clade_color', 'family_clade'); }
+            if (Object.keys(svg_labels).length > 0) { generate_legend(svg_labels, 'lc_color', 'lc_label'); }
+            if (Object.keys(svg_families).length > 0) { generate_legend(svg_families, 'family_color', 'family_name'); }
+            if (Object.keys(svg_clusters).length > 0) { generate_legend(svg_clusters, 'cluster_color', 'cluster'); }
+            if (Object.keys(svg_spm).length > 0) { generate_legend(svg_spm, 'spm_color', 'spm'); }
+            if (Object.keys(svg_species).length > 0) { generate_legend(svg_species, 'species_color', 'species'); }
 
             $('.cy-node-color[attr="family_color"]').click();
             $('#loading').addClass('loaded');
