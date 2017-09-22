@@ -120,7 +120,7 @@
                                 </ul>
                             </div>
                             <div class="dropdown btn-group" role="group">
-                                <button class="btn btn-default dropdown-toggle" type="button"  data-toggle="dropdown"><i class="fa fa-cog" aria-hidden="true" data-toggle="tooltip" title="Config"></i> <span class="caret"></span></button>
+                                <button class="btn btn-default dropdown-toggle" type="button"  data-toggle="dropdown"><i class="fa fa-cog" aria-hidden="true" data-toggle="tooltip" title="Other Options"></i> <span class="caret"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right" style="width:200px">
                                     <li class="dropdown-header">Layout</li>
                                     <li><a href="#" class="cy-layout" layout="breadthfirst">Breadthfirst</a></li>
@@ -282,6 +282,7 @@
 <script src="{{ url_for('static', filename='js/bootstrap-slider.min.js') }}"></script>
 <script>
 $( document ).ready(function() {
+                $('#footer').hide(2000);
                 $('[data-toggle="tooltip"]').tooltip();
                 $('#cy-edge-score').slider({
                     formatter: function(value) {
