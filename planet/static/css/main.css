@@ -523,3 +523,7 @@ div#phyd3 .table-responsive > table {
     -o-transform: rotate(135deg);
     transform: rotate(135deg);
 }
+
+g.legend_node {
+    cursor:pointer;
+}
