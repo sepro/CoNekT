@@ -56,6 +56,18 @@ family_xref = db.Table('family_xref',
                        db.Column('xref_id', db.Integer, db.ForeignKey('xrefs.id'), index=True)
                        )
 
+family_go = db.Table('family_go',
+                     db.Column('id', db.Integer, primary_key=True),
+                     db.Column('gene_family_id', db.Integer, db.ForeignKey('gene_families.id'), index=True),
+                     db.Column('go_id', db.Integer, db.ForeignKey('go.id'), index=True)
+                     )
+
+family_interpro = db.Table('family_interpro',
+                           db.Column('id', db.Integer, primary_key=True),
+                           db.Column('gene_family_id', db.Integer, db.ForeignKey('gene_families.id'), index=True),
+                           db.Column('interpro_id', db.Integer, db.ForeignKey('interpro.id'), index=True)
+                           )
+
 cluster_go_enrichment = db.Table('cluster_go_enrichment',
                                  db.Column('id', db.Integer, primary_key=True),
                                  db.Column('cluster_id', db.Integer, db.ForeignKey('coexpression_clusters.id'), index=True),
