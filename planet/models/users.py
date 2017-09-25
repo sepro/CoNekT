@@ -12,9 +12,9 @@ class User(db.Model):
     password_hash = db.Column(db.Text)
     email = db.Column(db.Text)
     reset_key = db.Column(db.Text)
-    is_admin = db.Column(db.Boolean)
-    is_banned = db.Column(db.Boolean)
-    wants_newsletter = db.Column(db.Boolean)
+    is_admin = db.Column(db.SmallInteger)
+    is_banned = db.Column(db.SmallInteger)
+    wants_newsletter = db.Column(db.SmallInteger)
     registered = db.Column(db.DateTime)
 
     def __init__(self, username, password, email, reset_key='', is_admin=False, is_banned=False,

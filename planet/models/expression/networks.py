@@ -30,7 +30,7 @@ class ExpressionNetworkMethod(db.Model):
 
     hrr_cutoff = db.Column(db.Integer)
     pcc_cutoff = db.Column(db.Float)
-    enable_second_level = db.Column(db.Boolean)
+    enable_second_level = db.Column(db.SmallInteger)
 
     probes = db.relationship('ExpressionNetwork',
                              backref=db.backref('method', lazy='joined'),

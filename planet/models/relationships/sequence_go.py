@@ -16,7 +16,7 @@ class SequenceGOAssociation(db.Model):
                                  'TAS', 'NAS', 'IC', 'ND', 'IEA', name='evidence'))
     source = db.Column(db.Text)
 
-    predicted = db.Column(db.Boolean, default=False)
+    predicted = db.Column(db.SmallInteger, default=False)
     prediction_data = db.Column(db.Text)
 
     sequence = db.relationship('Sequence', backref=db.backref('go_associations',

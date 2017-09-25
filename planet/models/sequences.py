@@ -21,8 +21,8 @@ class Sequence(db.Model):
     description = db.Column(db.Text)
     coding_sequence = db.deferred(db.Column(db.Text))
     type = db.Column(db.Enum('protein_coding', 'TE', 'RNA', name='sequence_type'), default='protein_coding')
-    is_mitochondrial = db.Column(db.Boolean, default=False)
-    is_chloroplast = db.Column(db.Boolean, default=False)
+    is_mitochondrial = db.Column(db.SmallInteger, default=False)
+    is_chloroplast = db.Column(db.SmallInteger, default=False)
 
     expression_profiles = db.relationship('ExpressionProfile', backref=db.backref('sequence', lazy='joined'),
                                           lazy='dynamic',

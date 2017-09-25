@@ -22,7 +22,7 @@ class GO(db.Model):
     name = db.Column(db.Text)
     type = db.Column(db.Enum('biological_process', 'molecular_function', 'cellular_component', name='go_type'))
     description = db.Column(db.Text)
-    obsolete = db.Column(db.Boolean)
+    obsolete = db.Column(db.SmallInteger)
     is_a = db.Column(db.Text)
     extended_go = db.Column(db.Text)
     species_counts = db.Column(db.Text)

@@ -66,5 +66,5 @@ cluster_go_enrichment = db.Table('cluster_go_enrichment',
 cluster_clade_enrichment = db.Table('cluster_clade_enrichment',
                                     db.Column('id', db.Integer, primary_key=True),
                                     db.Column('cluster_id', db.Integer, db.ForeignKey('coexpression_clusters.id'), index=True),
-                                    db.Column('go_id', db.Integer, db.ForeignKey('cluster.id'), index=True)
+                                    db.Column('clade_id', db.Integer, db.ForeignKey('clades.id'), index=True)
                                     )

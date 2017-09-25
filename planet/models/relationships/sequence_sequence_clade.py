@@ -13,7 +13,7 @@ class SequenceSequenceCladeAssociation(db.Model):
     clade_id = db.Column(db.Integer, db.ForeignKey('clades.id', ondelete='CASCADE'), index=True)
     tree_id = db.Column(db.Integer, db.ForeignKey('trees.id', ondelete='CASCADE'), index=True)
 
-    duplication = db.Column(db.Boolean)
+    duplication = db.Column(db.SmallInteger)
     duplication_consistency_score = db.Column(db.Float)
 
     tree = db.relationship('Tree', lazy='joined',
