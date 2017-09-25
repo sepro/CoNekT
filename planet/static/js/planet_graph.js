@@ -316,6 +316,30 @@ $(function () { // on dom ready
             $('.cy-node-color[attr="family_color"]').click();
             $('#loading').addClass('loaded');
             $('#legend').show();
+
+            $('g[family_name]').click( function(ev) {
+                var family_name = $(this).attr('family_name');
+                svg_legend.find(".legend_node").transform('scale', null);
+                svg_legend.find(".legend_node_" + family_name).transform('scale', 1.5);
+                cy.nodes().unselect();
+                cy.nodes('[family_name="' + family_name + '"]').select();
+            } );
+
+            $('g[family_clade]').click( function(ev) {
+                var family_clade = $(this).attr('family_clade');
+                svg_legend.find(".legend_node").transform('scale', null);
+                svg_legend.find(".legend_node_" + family_clade).transform('scale', 1.5);
+                cy.nodes().unselect();
+                cy.nodes('[family_clade="' + family_clade + '"]').select();
+            } );
+
+            $('g[lc_label]').click( function(ev) {
+                var lc_label = $(this).attr('lc_label');
+                svg_legend.find(".legend_node").transform('scale', null);
+                svg_legend.find(".legend_node_" + lc_label.split(';').join('_')).transform('scale', 1.5);
+                cy.nodes().unselect();
+                cy.nodes('[lc_label="' + lc_label + '"]').select();
+            } );
         }
     });
 

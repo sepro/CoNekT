@@ -94,7 +94,7 @@ function generate_legend(label_set, attribute, extra_attribute) {
 
             new_label.attr('class', 'legend_node legend_node_' + label.split(';').join('_'));
             new_label.transform('translate', col * HSPACE, row * VSPACE + 15);
-            new_label.attr(extra_attribute, label.split(';').join('_'))
+            new_label.attr(extra_attribute, label)
 
             if (shape === 'ellipse') {
                 new_label.circle({r: 15, fill: color});
