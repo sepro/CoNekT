@@ -36,12 +36,14 @@ def prepare_profiles_download(profiles, normalize=False):
     return '\n'.join(output)
 
 
-def prepare_profiles(profiles, normalize=False):
+def prepare_profiles(profiles, normalize=False, xlabel='', ylabel=''):
     """
     Function to convert a list of NetworkProfiles to a dict compatible with chart.js
 
     :param profiles: list of profiles to include in the plot
     :param normalize: normalize the profiles (the max value of each profile is scaled to 1)
+    :param xlabel: label for x-axis
+    :param ylabel: label for y-axis
 
     :return dict with plot compatible with Chart.js
     """
@@ -87,7 +89,11 @@ def prepare_profiles(profiles, normalize=False):
           },
           "scales": {
               "xAxes": [{
-                "gridLines": {
+                  "scaleLabel": {
+                      "display": xlabel != '',
+                      "labelString": xlabel
+                  },
+                  "gridLines": {
                     "display": False
                 },
                 "ticks": {
@@ -97,6 +103,10 @@ def prepare_profiles(profiles, normalize=False):
               }
               ],
               "yAxes": [{
+                "scaleLabel": {
+                    "display": ylabel != '',
+                    "labelString": ylabel
+                },
                 "ticks": {
                     "beginAtZero": True
                 }
@@ -109,12 +119,14 @@ def prepare_profiles(profiles, normalize=False):
     return output
 
 
-def prepare_expression_profile(data, show_sample_count=False):
+def prepare_expression_profile(data, show_sample_count=False, xlabel='', ylabel=''):
     """
     Converts data from Expression Profile to a format compatible with Chart.js
 
     :param data: dat from Expression Profile model
     :param show_sample_count: includes the number of samples in the plot
+    :param xlabel: label for x-axis
+    :param ylabel: label for y-axis
     :return: dict compatible with Chart.js
     """
     processed_means = {}
@@ -163,6 +175,10 @@ def prepare_expression_profile(data, show_sample_count=False):
                   },
                   "scales": {
                       "xAxes": [{
+                        "scaleLabel": {
+                              "display": xlabel != '',
+                              "labelString": xlabel
+                          },
                         "gridLines": {
                             "display": False
                         },
@@ -173,7 +189,11 @@ def prepare_expression_profile(data, show_sample_count=False):
                       }
                       ],
                       "yAxes": [{
-                        "ticks": {
+                          "scaleLabel": {
+                              "display": ylabel != '',
+                              "labelString": ylabel
+                          },
+                          "ticks": {
                             "beginAtZero": True
                         }
                       }
@@ -185,7 +205,7 @@ def prepare_expression_profile(data, show_sample_count=False):
     return output
 
 
-def prepare_profile_comparison(data_first, data_second, labels, normalize=1):
+def prepare_profile_comparison(data_first, data_second, labels, normalize=1, xlabel='', ylabel=''):
     processed_first_means = {}
     processed_second_means = {}
 
@@ -222,6 +242,10 @@ def prepare_profile_comparison(data_first, data_second, labels, normalize=1):
                   },
                   "scales": {
                       "xAxes": [{
+                        "scaleLabel": {
+                              "display": xlabel != '',
+                              "labelString": xlabel
+                        },
                         "gridLines": {
                             "display": False
                         },
@@ -232,6 +256,10 @@ def prepare_profile_comparison(data_first, data_second, labels, normalize=1):
                       }
                       ],
                       "yAxes": [{
+                        "scaleLabel": {
+                            "display": ylabel != '',
+                            "labelString": ylabel
+                        },
                         "ticks": {
                             "beginAtZero": True
                         }

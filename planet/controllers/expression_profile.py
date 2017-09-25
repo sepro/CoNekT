@@ -193,7 +193,7 @@ def expression_profile_plot_json(profile_id):
     current_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(profile_id)
     data = json.loads(current_profile.profile)
 
-    plot = prepare_expression_profile(data, show_sample_count=True)
+    plot = prepare_expression_profile(data, show_sample_count=True, ylabel='TPM')
 
     return Response(json.dumps(plot), mimetype='application/json')
 
@@ -210,7 +210,7 @@ def expression_profile_plot_tissue_json(profile_id, condition_tissue_id):
     current_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(profile_id)
     data = current_profile.tissue_profile(condition_tissue_id)
 
-    plot = prepare_expression_profile(data)
+    plot = prepare_expression_profile(data, ylabel='TPM')
 
     return Response(json.dumps(plot), mimetype='application/json')
 
@@ -234,6 +234,7 @@ def expression_profile_compare_plot_json(first_profile_id, second_profile_id, no
 
     plot = prepare_profile_comparison(data_first, data_second,
                                       (first_profile.probe, second_profile.probe),
-                                      normalize=normalize)
+                                      normalize=normalize,
+                                      ylabel='TPM' + (' (normalized)' if normalize else ''))
 
     return Response(json.dumps(plot), mimetype='application/json')

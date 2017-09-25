@@ -39,7 +39,8 @@ def profile_comparison_cluster(cluster_id, normalize=0):
     if len(profiles) > 50:
         flash("To many profiles in this cluster only showing the first 50", 'warning')
 
-    profile_chart = prepare_profiles(profiles[:50], True if normalize == 1 else False)
+    profile_chart = prepare_profiles(profiles[:50], True if normalize == 1 else False,
+                                     ylabel='TPM' + (' (normalized)' if normalize == 1 else ''))
 
     # Get table in base64 format for download
     data = base64.encodebytes(prepare_profiles_download(profiles[:50],
@@ -91,7 +92,8 @@ def profile_comparison_main():
             flash("To many profiles in this cluster only showing the first 50", 'warning')
 
         # Get json object for chart
-        profile_chart = prepare_profiles(profiles[:50], normalize)
+        profile_chart = prepare_profiles(profiles[:50], normalize,
+                                         ylabel='TPM' + (' (normalized)' if normalize == 1 else ''))
 
         # Get table in base64 format for download
         data = base64.encodebytes(prepare_profiles_download(profiles[:50], normalize).encode('utf-8'))
