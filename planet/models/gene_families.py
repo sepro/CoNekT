@@ -1,7 +1,8 @@
 from planet import db
-from planet.models.relationships import sequence_family, family_xref
+from planet.models.relationships import sequence_family, family_xref, family_interpro
 from planet.models.relationships.sequence_family import SequenceFamilyAssociation
 from planet.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
+from planet.models.relationships.family_interpro import FamilyInterproAssociation
 from planet.models.sequences import Sequence
 from planet.models.interpro import Interpro
 from planet.models.go import GO
@@ -111,6 +112,7 @@ class GeneFamily(db.Model):
     sequences = db.relationship('Sequence', secondary=sequence_family, lazy='dynamic')
     trees = db.relationship('Tree', backref='family', lazy='dynamic')
 
+    interpro_domains = db.relationship('Interpro', secondary=family_interpro, lazy='dynamic')
     xrefs = db.relationship('XRef', secondary=family_xref, lazy='dynamic')
 
     def __init__(self, name):

@@ -45,6 +45,16 @@
     <p>Specific for <strong><a href="{{ url_for('clade.clade_view', clade_id=family.clade_id) }}">{{ family.clade.name}}</a></strong></p>
     {% endif %}
 
+    <p> InterPro domains:
+    {% for domain in family.interpro_annotations %}
+        <span><a href="{{ url_for('interpro.interpro_view', interpro_id=domain.interpro_id) }}">{{ domain.domain.description }}</a></span>
+        {% if not loop.last %}
+        ,
+        {%endif %}
+    {% else %}
+    <span>No domains associated with family</span>
+    {% endfor %}
+    </p>
     <br />
     <div class="row" id="phylo_profile">
         <div class="col-lg-12 col-md-12 col-sm-12">
