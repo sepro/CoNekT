@@ -53,17 +53,24 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="#">Expression</a>
+                                    <a tabindex="-1" href="#">Expression Profiles</a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="{{ url_for('heatmap.heatmap_main') }}">Heatmap</a></li>
                                         <li><a href="{{ url_for('profile_comparison.profile_comparison_main') }}">Compare profiles</a></li>
-                                        <li><a href="{{ url_for('specificity_comparison.specificity_comparison_main') }}">Compare specificity</a></li>
+                                        <li><a href="{{ url_for('heatmap.heatmap_main') }}">Create heatmap</a></li>
                                     </ul>
                                 </li>
                                 <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="#">Network</a>
+                                    <a tabindex="-1" href="#">Expression Specificity</a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="{{ url_for('custom_network.custom_network_main') }}">Custom network</a></li>
+                                        <li><a href="{{ url_for('specificity_comparison.specificity_comparison_main') }}">Compare specificities</a></li>
+                                        <li><a href="{{ url_for('search.search_specific_profiles') }}">Find specific profiles</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Co-expression Networks</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{{ url_for('custom_network.custom_network_main') }}">Create custom network</a></li>
+                                        <li><a href="{{ url_for('search.search_enriched_clusters') }}">Find enriched clusters</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -71,17 +78,14 @@
                         <li>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Search <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                {% if g.blast_enabled %}
-                                    <li><a href="{{ url_for('blast.blast_main') }}">BLAST</a></li>
-                                    <li class="divider"></li>
-                                {% endif %}
                                 <li><a href="{{ url_for('search.advanced') }}">Search <span class="text-muted">(advanced)</span></a></li>
-                                <li class="divider"></li>
-                                <li><a href="{{ url_for('search.search_enriched_clusters') }}">Enriched clusters</a></li>
-                                <li><a href="{{ url_for('search.search_specific_profiles') }}">Specific profiles</a></li>
+                                {% if g.blast_enabled %}
+                                    <li class="divider"></li>
+                                    <li><a href="{{ url_for('blast.blast_main') }}">BLAST</a></li>
+                                {% endif %}
+
                             </ul>
                         </li>
-
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
@@ -115,6 +119,15 @@
                                 {% endif %}
                             {% endif %}
 
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Help <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                    <li><a href="#">Tutorial <span class="text-muted">(Coming soon)</span></a></li>
+                                    <li><a href="#">FAQ <span class="text-muted">(Coming soon)</span></a></li>
+                                    <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
+                                </li>
+                            </ul>
                         </li>
                         {% if g.msg %}
                         <li class="dropdown">
