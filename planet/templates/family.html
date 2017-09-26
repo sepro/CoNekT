@@ -45,14 +45,11 @@
     <p>Specific for <strong><a href="{{ url_for('clade.clade_view', clade_id=family.clade_id) }}">{{ family.clade.name}}</a></strong></p>
     {% endif %}
 
-    <p> InterPro domains:
+    <p>InterPro domains <span class="text-muted">(top 3)</span>:
     {% for domain in family.interpro_annotations %}
-        <span><a href="{{ url_for('interpro.interpro_view', interpro_id=domain.interpro_id) }}">{{ domain.domain.description }}</a></span>
-        {% if not loop.last %}
-        ,
-        {%endif %}
+        <span><a href="{{ url_for('interpro.interpro_view', interpro_id=domain.interpro_id) }}">{{ domain.domain.description }}</a></span>{%- if not loop.last -%}, {%- endif -%}
     {% else %}
-    <span>No domains associated with family</span>
+    <span class="text-muted"><em>No domains associated with family</em></span>
     {% endfor %}
     </p>
     <br />
@@ -148,7 +145,7 @@
                             {% else %}
                             <tr>
                                 <td>
-                                    <p>No external references for this sequences in the database.</p>
+                                    <p><em>No external references for this sequences in the database.</em></p>
                                 </td>
                                 <td></td>
                             </tr>
