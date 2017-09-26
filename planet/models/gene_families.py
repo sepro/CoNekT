@@ -8,9 +8,9 @@ from planet.models.go import GO
 
 import re
 import json
-from collections import defaultdict
+from collections import defaultdict, Counter
 
-from sqlalchemy.orm import joinedload, Load
+from sqlalchemy.orm import joinedload, load_only
 from sqlalchemy.sql import or_, and_
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
@@ -37,6 +37,35 @@ class GeneFamilyMethod(db.Model):
 
     def __str__(self):
         return "%d. %s" % (self.id, self.method)
+
+    def get_interpro_annotation(self):
+        from planet.models.relationships.family_interpro import FamilyInterproAssociation
+        families = self.families.all()
+
+        relations = []
+
+        for f in families:
+            sequences = f.sequences.all()
+            domains = []
+
+            # Only consider families with 5 or more members
+            if len(sequences) > 4:
+                for s in sequences:
+                    interpro_ids = list(set([i.interpro_id for i in s.interpro_associations]))
+
+                    domains += interpro_ids
+
+                cnt = Counter(domains)
+
+                for interpro_id, _ in cnt.most_common(3):
+                    relations.append({'gene_family_id': f.id, 'interpro_id': interpro_id})
+
+            # add 400 sequences at the time, more can cause problems with some database engines
+            if len(relations) > 400:
+                db.engine.execute(FamilyInterproAssociation.__table__.insert(), relations)
+                relations = []
+
+        db.engine.execute(FamilyInterproAssociation.__table__.insert(), relations)
 
     @staticmethod
     def update_count():

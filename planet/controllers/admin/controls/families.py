@@ -8,7 +8,7 @@ from werkzeug.utils import redirect
 
 from planet.controllers.admin.controls import admin_controls
 from planet.forms.admin.add_family import AddFamiliesForm
-from planet.models.gene_families import GeneFamily
+from planet.models.gene_families import GeneFamily, GeneFamilyMethod
 
 
 @admin_controls.route('/add/family', methods=['POST'])
@@ -53,3 +53,13 @@ def add_family():
             return redirect(url_for('admin.index'))
         else:
             abort(405)
+
+
+@admin_controls.route('/add/annotation/<int:method_id>')
+@admin_required
+def annotate_families(method_id):
+    method = GeneFamilyMethod.query.get_or_404(method_id)
+
+    method.get_interpro_annotation()
+    flash('Got InterPro annotations for gene families (method : %d)' % method_id, 'success')
+    return redirect(url_for('admin.index'))
