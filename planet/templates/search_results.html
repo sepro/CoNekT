@@ -108,7 +108,7 @@
                 <table class="table">
                     <tbody>
                         {% for f in families %}
-                            <p><a href="{{ url_for('family.family_view', family_id=f.id)}}">{{ f.name }}</a>: {{ f.method.method }}</p>
+                        <tr><td><a href="{{ url_for('family.family_view', family_id=f.id)}}" class="qtip_tooltip qtip_dynamic_tooltip" qtip_href="{{ url_for('family.family_tooltip', family_id=f.id) }}">{{ f.name }}</a>: {{ f.method.method }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>

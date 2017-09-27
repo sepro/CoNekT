@@ -121,6 +121,19 @@ def family_json_species(family_id):
     return Response(json.dumps(plot), mimetype='application/json')
 
 
+@family.route('/tooltip/<family_id>')
+@cache.cached()
+def family_tooltip(family_id):
+    """
+    Get a family based on the ID and show the details for this sequence
+
+    :param family_id: ID of the sequence
+    """
+    current_family = GeneFamily.query.get_or_404(family_id)
+
+    return render_template('tooltips/family.html', family=current_family)
+
+
 @family.route('/ajax/interpro/<family_id>')
 @cache.cached()
 def family_interpro_ajax(family_id):

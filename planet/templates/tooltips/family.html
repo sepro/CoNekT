@@ -1,0 +1,26 @@
+<div>
+    <div><strong>Method: </strong>{{ family.method.method }}</div>
+    {% if family.clade %}
+        <div><hr /><strong>Clade: </strong>{{ family.clade.name }}</div>
+    {% endif %}
+    {% if family.go_annotations.count() > 0 %}
+        <div><hr />
+        <p><strong>GO Terms</strong> <span class="text-muted">(top 5)</span>:<br/>
+        {% for term in family.go_annotations %}
+            <span><a href="{{ url_for('go.go_view', go_id=term.go_id) }}">{{ term.go_term.name }}</a></span>{%- if not loop.last -%}, {%- endif -%}
+        {% endfor %}
+        </p>
+
+        </div>
+    {% endif %}
+    {% if family.interpro_annotations.count() > 0 %}
+    <div>
+    <hr />
+    <p><strong>InterPro domains</strong> <span class="text-muted">(top 3)</span>:
+        {% for domain in family.interpro_annotations %}
+            <span><a href="{{ url_for('interpro.interpro_view', interpro_id=domain.interpro_id) }}">{{ domain.domain.description }}</a></span>{%- if not loop.last -%}, {%- endif -%}
+        {% endfor %}
+        </p>
+    </div>
+    {% endif %}
+</div>
