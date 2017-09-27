@@ -45,13 +45,21 @@
     <p>Specific for <strong><a href="{{ url_for('clade.clade_view', clade_id=family.clade_id) }}">{{ family.clade.name}}</a></strong></p>
     {% endif %}
 
-    <p>InterPro domains <span class="text-muted">(top 3)</span>:
-    {% for domain in family.interpro_annotations %}
-        <span><a href="{{ url_for('interpro.interpro_view', interpro_id=domain.interpro_id) }}">{{ domain.domain.description }}</a></span>{%- if not loop.last -%}, {%- endif -%}
-    {% else %}
-    <span class="text-muted"><em>No domains associated with family</em></span>
-    {% endfor %}
-    </p>
+    {% if family.go_annotations.count() > 0 %}
+        <p>GO Terms <span class="text-muted">(top 5)</span>:
+        {% for term in family.go_annotations %}
+            <span><a href="{{ url_for('go.go_view', go_id=term.go_id) }}">{{ term.go_term.name }}</a></span>{%- if not loop.last -%}, {%- endif -%}
+        {% endfor %}
+        </p>
+    {% endif %}
+
+    {% if family.interpro_annotations.count() > 0 %}
+        <p>InterPro domains <span class="text-muted">(top 3)</span>:
+        {% for domain in family.interpro_annotations %}
+            <span><a href="{{ url_for('interpro.interpro_view', interpro_id=domain.interpro_id) }}">{{ domain.domain.description }}</a></span>{%- if not loop.last -%}, {%- endif -%}
+        {% endfor %}
+        </p>
+    {% endif %}
     <br />
     <div class="row" id="phylo_profile">
         <div class="col-lg-12 col-md-12 col-sm-12">

@@ -3,6 +3,7 @@ from planet.models.relationships import sequence_family, family_xref, family_int
 from planet.models.relationships.sequence_family import SequenceFamilyAssociation
 from planet.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
 from planet.models.relationships.family_interpro import FamilyInterproAssociation
+from planet.models.relationships.family_go import FamilyGOAssociation
 from planet.models.sequences import Sequence
 from planet.models.interpro import Interpro
 from planet.models.go import GO
@@ -40,7 +41,6 @@ class GeneFamilyMethod(db.Model):
         return "%d. %s" % (self.id, self.method)
 
     def get_interpro_annotation(self):
-        from planet.models.relationships.family_interpro import FamilyInterproAssociation
         families = self.families.all()
 
         relations = []
@@ -67,6 +67,41 @@ class GeneFamilyMethod(db.Model):
                 relations = []
 
         db.engine.execute(FamilyInterproAssociation.__table__.insert(), relations)
+
+    def get_go_annotation(self):
+        from planet.models.relationships.sequence_go import SequenceGOAssociation
+        families = self.families.all()
+
+        relations = []
+
+        for f in families:
+            # Ignore small families
+            sequence_count = len(f.sequences.all())
+            if sequence_count < 5:
+                break
+
+            subquery = f.sequences.subquery()
+            data = SequenceGOAssociation.query.filter(SequenceGOAssociation.predicted == 0).\
+                filter(SequenceGOAssociation.evidence is not None).\
+                join(subquery, SequenceGOAssociation.sequence_id == subquery.c.id).all()
+
+            go_terms = []
+
+            for d in data:
+                go_terms.append(d.go_id)
+
+            cnt = Counter(go_terms)
+            print(f.id, cnt.most_common(5))
+            for go_id, _ in cnt.most_common(5):
+                print({'gene_family_id': f.id, 'go_id': go_id})
+                relations.append({'gene_family_id': f.id, 'go_id': go_id})
+
+            # add 400 sequences at the time, more can cause problems with some database engines
+            if len(relations) > 400:
+                db.engine.execute(FamilyGOAssociation.__table__.insert(), relations)
+                relations = []
+
+        db.engine.execute(FamilyGOAssociation.__table__.insert(), relations)
 
     @staticmethod
     def update_count():
