@@ -1,7 +1,7 @@
 import json
 import base64
 
-from flask import Blueprint, request, render_template,flash
+from flask import Blueprint, request, render_template, flash, Markup, url_for
 from sqlalchemy.orm import noload
 
 from planet import cache
@@ -37,7 +37,11 @@ def profile_comparison_cluster(cluster_id, normalize=0):
     profiles = ExpressionProfile.get_profiles(cluster.method.network_method.species_id, probes, limit=51)
 
     if len(profiles) > 50:
-        flash("To many profiles in this cluster only showing the first 50", 'warning')
+        flash(Markup(("To many profiles in this cluster only showing the <strong>first 50</strong>. <br />" +
+                      "<strong>Note:</strong> The <a href='%s'>heatmap</a> can be used to with more genes and " +
+                      "allow downloading the data for local analysis.") % url_for('heatmap.heatmap_cluster',
+                                                                                  cluster_id=cluster_id))
+              , 'warning')
 
     profile_chart = prepare_profiles(profiles[:50], True if normalize == 1 else False,
                                      ylabel='TPM' + (' (normalized)' if normalize == 1 else ''))
@@ -89,7 +93,10 @@ def profile_comparison_main():
             flash("Warning! %s were not found in the database" % ', '.join(missing))
 
         if len(profiles) > 50:
-            flash("To many profiles in this cluster only showing the first 50", 'warning')
+            flash(Markup(("To many profiles in this cluster only showing the <strong>first 50</strong>. <br />" +
+                          "<strong>Note:</strong> The <a href='%s'>heatmap</a> can be used to with more genes and " +
+                          "allow downloading the data for local analysis.") % url_for('heatmap.heatmap_main')),
+                  'warning')
 
         # Get json object for chart
         profile_chart = prepare_profiles(profiles[:50], normalize,
