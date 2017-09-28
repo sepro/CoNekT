@@ -75,6 +75,14 @@ class GO(db.Model):
             return 'Unknown type'
 
     @property
+    def parent_count(self):
+        """
+        Returns total number of genes 'above' this gene in the DAG
+        :return:
+        """
+        return len(self.extended_go.split(';')) if self.extended_go != '' else 0
+
+    @property
     def interpro_stats(self):
         from planet.models.interpro import Interpro
 

@@ -88,7 +88,8 @@ class GeneFamilyMethod(db.Model):
             go_terms = []
 
             for d in data:
-                go_terms.append(d.go_id)
+                if d.go.parent_count > 3:
+                    go_terms.append(d.go_id)
 
             cnt = Counter(go_terms)
             print(f.id, cnt.most_common(5))
