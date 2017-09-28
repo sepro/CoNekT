@@ -29,8 +29,8 @@ def heatmap_cluster(cluster_id, option='zlog'):
     probes = [a.probe for a in associations]
 
     current_heatmap = ExpressionProfile.get_heatmap(cluster.method.network_method.species_id, probes,
-                                                    zlog=True if option == 'zlog' else False,
-                                                    raw=True if option == 'raw' else False
+                                                    zlog=(option == 'zlog'),
+                                                    raw=(option == 'raw')
                                                     )
 
     return render_template("expression_heatmap.html",
@@ -48,12 +48,14 @@ def heatmap_main():
     """
     form = HeatmapForm(request.form)
     form.populate_species()
+    form.populate_options()
 
     if request.method == 'POST':
         terms = request.form.get('probes').split()
         species_id = request.form.get('species_id')
 
-        zlog = request.form.get('zlog') == 'y'
+        option = request.form.get('options')
+        print(option)
 
         probes = terms
 
@@ -67,18 +69,22 @@ def heatmap_main():
         # make probe list unique
         probes = list(set(probes))
         # TODO check if certain probes were not found and warn the user
-        current_heatmap = ExpressionProfile.get_heatmap(species_id, probes, zlog=zlog)
+        current_heatmap = ExpressionProfile.get_heatmap(species_id, probes,
+                                                        zlog=(option == 'zlog'),
+                                                        raw=(option == 'raw'))
 
         return render_template("expression_heatmap.html", order=current_heatmap['order'],
                                profiles=current_heatmap['heatmap_data'],
                                form=form,
-                               zlog=1 if zlog else 0)
+                               zlog=1 if option == 'zlog' else 0,
+                               raw=1 if option == 'raw' else 0)
     else:
         profiles = ExpressionProfile.query.filter(ExpressionProfile.sequence_id is not None).order_by(ExpressionProfile.species_id).limit(5).all()
 
         example = {
             'species_id': None,
-            'probes': None
+            'probes': None,
+            'options': 'zlog'
         }
 
         if len(profiles) > 0:

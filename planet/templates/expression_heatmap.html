@@ -46,6 +46,8 @@
     {% endif %}
     {% if zlog == 1 %}
     <p class="text-muted" >(Values are log<sub>2</sub> transformed ratios of a genes expression in a sample divided by the mean expression level)</p>
+    {% elif raw == 1 %}
+    <p class="text-muted" >(Showing raw values)</p>
     {% else %}
     <p class="text-muted" >(Values are normalized against highest expression of the row)</p>
     {% endif %}
@@ -104,7 +106,7 @@
                                     {{ form.csrf_token }}
                                     {{form.species_id(class_="form-control") }}<br />
                                     {{form.probes(class_="form-control") }}<br />
-                                    {{form.zlog(checked="checked")}} <label>{{form.zlog.label }}</label><br />
+                                    {{form.options(class_="form-control") }}<br />
                                     <div class="pull-right">
                                     {% if example and example.probes %}
                                         <button class="btn btn-default" id="load_example">Load example</button>
@@ -125,6 +127,7 @@
                             <li>First select the desired <strong>species</strong></li>
                             <li>Next add the genes to include in the heatmap
                                 (space, tab or line separated) in the corresponding box</li>
+                            <li>Select if the heatmap should display raw values, zlog-transformed or row-normalized</li>
                             <li>Click <strong>Generate heatmap</strong></li>
                         </ul>
                     </div>
