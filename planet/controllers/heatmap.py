@@ -55,7 +55,6 @@ def heatmap_main():
         species_id = request.form.get('species_id')
 
         option = request.form.get('options')
-        print(option)
 
         probes = terms
 
