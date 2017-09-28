@@ -39,7 +39,7 @@ def profile_comparison_cluster(cluster_id, normalize=0):
     if len(profiles) > 50:
         flash(Markup(("To many profiles in this cluster only showing the <strong>first 50</strong>. <br />" +
                       "<strong>Note:</strong> The <a href='%s'>heatmap</a> can be used to with more genes and " +
-                      "allow downloading the data for local analysis.") % url_for('heatmap.heatmap_cluster',
+                      "allows downloading the data for local analysis.") % url_for('heatmap.heatmap_cluster',
                                                                                   cluster_id=cluster_id))
               , 'warning')
 
@@ -95,7 +95,7 @@ def profile_comparison_main():
         if len(profiles) > 50:
             flash(Markup(("To many profiles in this cluster only showing the <strong>first 50</strong>. <br />" +
                           "<strong>Note:</strong> The <a href='%s'>heatmap</a> can be used to with more genes and " +
-                          "allow downloading the data for local analysis.") % url_for('heatmap.heatmap_main')),
+                          "allows downloading the data for local analysis.") % url_for('heatmap.heatmap_main')),
                   'warning')
 
         # Get json object for chart
