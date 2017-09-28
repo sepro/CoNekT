@@ -28,9 +28,11 @@
         <div class="row">
             <div class="col-lg-6 col-sm-6 col-xs-12">
                 <p><strong>View as: </strong>{{ ca.cluster_actions(cluster.id, exclude=["heatmap"]) }} <span class="text-muted">{% if zlog == 1 %}
-                        (view without zlog transformation <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster.id, zlog=0) }}">here</a>)
+                        (view <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster.id, option='raw') }}">raw</a> or <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster.id, option='rnorm') }}">row-normalized</a>)
+                    {% elif raw == 1 %}
+                        (view <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster.id, option='zlog') }}">zlog-transformed</a> or <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster.id, option='rnorm') }}">row-normalized</a>)
                     {% else %}
-                        (view with zlog transformation <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster.id, zlog=1) }}">here</a>)
+                        (view <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster.id, option='raw') }}">raw</a> or <a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster.id, option='zlog') }}">zlog-transformed</a>)
                     {% endif %}</span>
                 </p>
             </div>
