@@ -40,6 +40,8 @@ class ExpressionSpecificityMethod(db.Model):
 
         :param species_id: internal species ID
         :param description: description for the method to determine the specificity
+        :param remove_background: when true the lowest value of each profile is substracted from all values (can be
+        off use with noisy data derived from microarrays.
         """
 
         conditions = []

@@ -16,6 +16,8 @@ class ConditionTissue(db.Model):
                                                  db.ForeignKey('expression_specificity_method.id', ondelete='CASCADE'),
                                                  index=True)
 
+    in_tree = db.Column(db.SmallInteger, default=0)
+
     @staticmethod
     def add(species_id, data, order, colors, expression_specificity_method_id, description=''):
         """
