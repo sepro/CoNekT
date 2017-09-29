@@ -34,7 +34,7 @@ def tree_sequences(tree_id, page=1):
     """
     Returns a table with sequences with the selected interpro domain
 
-    :param interpro_id: Internal ID of the interpro domain
+    :param tree_id: Internal ID of the interpro domain
     :param page: Page number
     """
     sequences = Tree.query.get(tree_id).sequences.group_by(Sequence.id)\

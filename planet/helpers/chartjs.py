@@ -1,5 +1,5 @@
 import json
-from statistics import mean
+from statistics import mean, stdev
 
 from utils.color import __COLORS_RGBA as COLORS
 
@@ -115,6 +115,109 @@ def prepare_profiles(profiles, normalize=False, xlabel='', ylabel=''):
           }
         }
     }
+
+    return output
+
+
+def prepare_avg_profiles(profiles, xlabel='', ylabel=''):
+    """
+    Takes a set of profiles and generates the average profile
+
+    :param profiles: list of profiles to include in the plot
+    :param xlabel: label for x-axis
+    :param ylabel: label for y-axis
+
+    :return dict with plot compatible with Chart.js
+    """
+    labels = []
+    datasets = []
+
+    background_color=[]
+    point_color=[]
+
+    means = []
+    stdevs = []
+
+    if len(profiles) > 0:
+        data = json.loads(profiles[0].profile)
+        labels = data['order']
+
+        background_color = data["colors"] if "colors" in data.keys() else "rgba(175,175,175,0.2)"
+        point_color = "rgba(55,55,55,0.8)" if "colors" in data.keys() else "rgba(220,22,22,1)"
+
+    for p in profiles:
+        data = json.loads(p.profile)
+        expression_values = [mean(data['data'][label]) for label in labels]
+
+        max_expression = max(expression_values)
+        expression_values = [value/max_expression for value in expression_values]
+
+        datasets.append(expression_values)
+
+    for i, l in enumerate(labels):
+        values = [d[i] for d in datasets]
+        means.append(mean(values))
+        stdevs.append(stdev(values))
+
+    output = {"type": "bar",
+              "data": {
+                      "labels": list(data["order"]),
+                      "counts": [None]*len(data["order"]),
+                      "datasets": [
+                          {
+                            "type": "line",
+                            "label": "Minimum",
+                            "fill": False,
+                            "showLine": False,
+                            "pointBorderColor": point_color,
+                            "pointBackgroundColor": point_color,
+                            "data": [m + sd for m, sd in zip(means, stdevs)]
+                          }, {
+                            "type": "line",
+                            "label": "Maximum",
+                            "fill": False,
+                            "showLine": False,
+                            "pointBorderColor": point_color,
+                            "pointBackgroundColor": point_color,
+                            "data": [m + sd for m, sd in zip(means, stdevs)]
+                          }, {
+                            "label": "Mean",
+                            "backgroundColor": background_color,
+                            "data": means
+                          }]
+                      },
+              "options": {
+                  "legend": {
+                    "display": False
+                  },
+                  "scales": {
+                      "xAxes": [{
+                        "scaleLabel": {
+                              "display": xlabel != '',
+                              "labelString": xlabel
+                          },
+                        "gridLines": {
+                            "display": False
+                        },
+                        "ticks": {
+                            "maxRotation": 90,
+                            "minRotation": 90
+                        }
+                      }
+                      ],
+                      "yAxes": [{
+                          "scaleLabel": {
+                              "display": ylabel != '',
+                              "labelString": ylabel
+                          },
+                          "ticks": {
+                            "beginAtZero": True
+                        }
+                      }
+                      ]
+                  }
+              }
+              }
 
     return output
 
