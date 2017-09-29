@@ -1,0 +1,45 @@
+{% extends 'admin/my_base.html' %}
+
+{% block body %}
+<h1>Build Family-wise annotation</h1>
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for m in methods %}
+            <tr>
+                <td>{{ m.method }}</td>
+                <td class="text-right"><a href="{{ url_for('admin_controls.annotate_families_interpro', method_id=m.id) }}" class="btn btn-default">Assign InterPro</a>
+                    <a href="{{ url_for('admin_controls.annotate_families_go', method_id=m.id) }}" class="btn btn-default">Assign GO</a></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td>
+                    <em>No families defined in the database. Add these first</em>
+                </td>
+                <td></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Help</strong></div>
+            <div class="panel-body">
+                Click <strong>Assign InterPro</strong> or <strong>Assing GO</strong> to start the family-wise annotation
+                for the selected set of gene families. (Both can be combined, run one and the other)
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

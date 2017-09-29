@@ -1,10 +1,10 @@
 from functools import wraps
-from flask import current_app,abort,flash,request,redirect
+from flask import current_app, abort
 from flask_caching import Cache
 from flask_compress import Compress
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_htmlmin import HTMLMIN
-from flask_login import LoginManager, current_user,login_url,user_unauthorized
+from flask_login import LoginManager, current_user, user_unauthorized
 from flask_sqlalchemy import SQLAlchemy
 from flask_whooshee import Whooshee
 from flask_migrate import Migrate

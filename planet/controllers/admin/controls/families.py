@@ -62,7 +62,7 @@ def annotate_families_interpro(method_id):
 
     method.get_interpro_annotation()
     flash('Got InterPro annotations for gene families (method : %d)' % method_id, 'success')
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('admin.add.family_annotation'))
 
 
 @admin_controls.route('/add/annotation/go/<int:method_id>')
@@ -72,4 +72,4 @@ def annotate_families_go(method_id):
 
     method.get_go_annotation()
     flash('Got GO annotations for gene families (method : %d)' % method_id, 'success')
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('admin.add.family_annotation'))

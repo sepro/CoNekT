@@ -1,6 +1,7 @@
 from flask_admin import expose
 
 from planet.controllers.admin.views import MyModelView, AdminBaseView
+from planet.models.gene_families import GeneFamilyMethod
 from planet.forms.admin.add_family import AddFamiliesForm
 
 
@@ -25,3 +26,15 @@ class AddFamiliesView(AdminBaseView):
         form = AddFamiliesForm()
 
         return self.render('admin/add/families.html', form=form)
+
+
+class AddFamilyAnnotationView(AdminBaseView):
+    """
+    Admin page to add gene families to the database
+    """
+
+    @expose('/')
+    def index(self):
+        methods = GeneFamilyMethod.query.all()
+
+        return self.render('admin/add/family_annotation.html', methods=methods)

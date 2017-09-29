@@ -157,7 +157,7 @@ def configure_admin_panel(app):
         from planet.controllers.admin.views.go_interpro import AddFunctionalDataView
         from planet.controllers.admin.views.go_interpro import GOEnrichmentView
         from planet.controllers.admin.views.go_interpro import PredictGOView
-        from planet.controllers.admin.views.families import AddFamiliesView
+        from planet.controllers.admin.views.families import AddFamiliesView, AddFamilyAnnotationView
         from planet.controllers.admin.views.families import GeneFamilyMethodAdminView
         from planet.controllers.admin.views.species import AddSpeciesView
         from planet.controllers.admin.views.species import SpeciesAdminView
@@ -264,6 +264,10 @@ def configure_admin_panel(app):
         admin.add_menu_item(MenuLink("------------", class_name="divider", url='#'), target_category='Build')
         admin.add_menu_item(MenuLink("Assign Clades", url="/admin_controls/update/clades", class_name="confirmation"),
                             target_category='Build')
+
+        admin.add_view(AddFamilyAnnotationView(name='Family-wise annotation',
+                                               endpoint='admin.add.family_annotation',
+                                               url='build/family_annotation/', category='Build'))
 
         admin.add_view(ReconcileTreesView(name='Reconcile Trees', endpoint='admin.reconcile_trees',
                                           url='build/reconciled_trees', category='Build'))
