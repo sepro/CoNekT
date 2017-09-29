@@ -166,7 +166,7 @@ def prepare_avg_profiles(profiles, xlabel='', ylabel=''):
                       "datasets": [
                           {
                             "type": "line",
-                            "label": "Minimum",
+                            "label": "Mean - Stdev",
                             "fill": False,
                             "showLine": False,
                             "pointBorderColor": point_color,
@@ -174,7 +174,7 @@ def prepare_avg_profiles(profiles, xlabel='', ylabel=''):
                             "data": [m + sd for m, sd in zip(means, stdevs)]
                           }, {
                             "type": "line",
-                            "label": "Maximum",
+                            "label": "Mean + Stdev",
                             "fill": False,
                             "showLine": False,
                             "pointBorderColor": point_color,
