@@ -37,6 +37,17 @@ Change settings in config.py. **Apart from configuring paths, also change the se
 
 Build initial database
 
-    python db_action.py create
+    # Point flask to the right script
+    export FLASK_APP=run.py
+    
+    # Create the DB (with the initial admin account)
+    flask initdb
+    
+    # Set up the migration
+    flask db init
+    
+    # Optional, create additional admin accounts
+    flask add_admin <new_username> <new_password> 
+    
 
 You now have a fresh installation of PlaNet. How to fill it with your data is included in the section [Building PlaNet 2.0](./building_planet.md)
