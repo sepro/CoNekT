@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    PlaNet 2.0
+    CoNekT : Co-expression Network Toolkit
 {% endblock %}
 
 {% block container %}
@@ -15,7 +15,7 @@
 
             <div style="overflow:hidden">
                 <img src="{{ url_for('static', filename='img/icon-192x192.png') }}" style="float:left;margin-right:25px;margin-top:-20px;margin-bottom:20px" />
-                <div><h1>Welcome to PlaNet 2.0<br /> <small>a platform dedicated to the visualization and analysis of plant co-expression and co-function networks.</small></h1>
+                <div><h1>Welcome to CoNekT<br /> <small>a platform dedicated to the visualization and analysis of plant co-expression and co-function networks.</small></h1>
                     {% if g.msg %}
                     <div><span class="global-message"><strong>{{ g.msg_title|safe }}: </strong>{{ g.msg|safe }}</span></div>
                     {% endif %}
