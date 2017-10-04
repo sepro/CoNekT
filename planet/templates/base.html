@@ -52,27 +52,18 @@
                         <li>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="#">Expression Profiles</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="{{ url_for('profile_comparison.profile_comparison_main') }}">Compare profiles</a></li>
-                                        <li><a href="{{ url_for('heatmap.heatmap_main') }}">Create heatmap</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="#">Expression Specificity</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="{{ url_for('specificity_comparison.specificity_comparison_main') }}">Compare specificities</a></li>
-                                        <li><a href="{{ url_for('search.search_specific_profiles') }}">Find specific profiles</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="#">Co-expression Networks</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="{{ url_for('custom_network.custom_network_main') }}">Create custom network</a></li>
-                                        <li><a href="{{ url_for('search.search_enriched_clusters') }}">Find enriched clusters</a></li>
-                                    </ul>
-                                </li>
+                                <li class="dropdown-header">Expression Profiles</li>
+                                <li><a href="{{ url_for('profile_comparison.profile_comparison_main') }}">Compare profiles</a></li>
+                                <li><a href="{{ url_for('heatmap.heatmap_main') }}">Create heatmap</a></li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Expression Specificity</li>
+                                <li><a href="{{ url_for('specificity_comparison.specificity_comparison_main') }}">Compare specificities</a></li>
+                                <li><a href="{{ url_for('search.search_specific_profiles') }}">Find specific profiles</a></li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Co-expression Networks</li>
+                                <li><a href="{{ url_for('custom_network.custom_network_main') }}">Create custom network</a></li>
+                                <li><a href="{{ url_for('search.search_enriched_clusters') }}">Find enriched clusters</a></li>
+
                             </ul>
                         </li>
                         <li>
