@@ -888,7 +888,7 @@ class WebsiteTest(TestCase):
 
         response = self.client.get('/search/specific/profiles')
         self.assert200(response)
-        self.assert_template_used('search_specific_profiles.html')
+        self.assert_template_used('find_specific_profiles.html')
 
         # first gene should be in the results
         sequence = Sequence.query.first()
@@ -898,5 +898,5 @@ class WebsiteTest(TestCase):
                                                                            conditions="root 21d",
                                                                            cutoff=0.85))
         self.assert200(response)
-        self.assert_template_used('search_specific_profiles.html')
+        self.assert_template_used('find_specific_profiles.html')
         self.assertTrue(sequence.name in response.data.decode('utf-8'))

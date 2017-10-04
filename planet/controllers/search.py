@@ -200,7 +200,7 @@ def search_enriched_clusters():
                                                 max_corrected_p=max_corrected_p)
             results.append({'go': g, 'clusters': clusters})
 
-        return render_template("search_enriched_clusters.html", results=results)
+        return render_template("find_enriched_clusters.html", results=results)
     else:
 
         example = {
@@ -215,7 +215,7 @@ def search_enriched_clusters():
             example['go_term'] = enrichment.go.name
             example['method'] = enrichment.cluster.method_id
 
-        return render_template("search_enriched_clusters.html", form=form, example=example)
+        return render_template("find_enriched_clusters.html", form=form, example=example)
 
 
 @search.route('/specific/count', methods=['POST'])
@@ -255,7 +255,7 @@ def search_specific_profiles():
     form.populate_form()
 
     if request.method == 'GET':
-        return render_template("search_specific_profiles.html", form=form)
+        return render_template("find_specific_profiles.html", form=form)
     else:
         species_id = request.form.get('species')
         method_id = request.form.get('methods')
@@ -272,7 +272,7 @@ def search_specific_profiles():
                 joinedload(ExpressionSpecificity.profile).undefer("profile")
             )
 
-        return render_template("search_specific_profiles.html", results=results, species=species, method=method, condition=condition)
+        return render_template("find_specific_profiles.html", results=results, species=species, method=method, condition=condition)
 
 
 @search.route('/specific/profiles/json')
