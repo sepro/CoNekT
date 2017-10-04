@@ -143,7 +143,7 @@ def prepare_avg_profiles(profiles, xlabel='', ylabel=''):
         labels = data['order']
 
         background_color = data["colors"] if "colors" in data.keys() else "rgba(175,175,175,0.2)"
-        point_color = "rgba(55,55,55,0.8)" if "colors" in data.keys() else "rgba(220,22,22,1)"
+        point_color = "rgba(55,55,55,0.4)" if "colors" in data.keys() else "rgba(220,22,22,1)"
 
     for p in profiles:
         data = json.loads(p.profile)
@@ -248,7 +248,7 @@ def prepare_expression_profile(data, show_sample_count=False, xlabel='', ylabel=
         counts[key] = len(expression_values)
 
     background_color = data["colors"] if "colors" in data.keys() else "rgba(175,175,175,0.2)"
-    point_color = "rgba(55,55,55,0.8)" if "colors" in data.keys() else "rgba(220,22,22,1)"
+    point_color = "rgba(55,55,55,0.4)" if "colors" in data.keys() else "rgba(220,22,22,1)"
 
     output = {"type": "bar",
               "data": {
