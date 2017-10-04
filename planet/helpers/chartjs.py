@@ -29,7 +29,7 @@ def prepare_profiles_download(profiles, normalize=False):
 
         if normalize:
             max_expression = max(expression_values)
-            expression_values = [value/max_expression for value in expression_values]
+            expression_values = [value/max_expression if max_expression > 0 else 0 for value in expression_values]
 
         output.append(label + '\t' + '\t'.join(str(e) for e in expression_values))
 
@@ -60,7 +60,7 @@ def prepare_profiles(profiles, normalize=False, xlabel='', ylabel=''):
 
         if normalize:
             max_expression = max(expression_values)
-            expression_values = [value/max_expression for value in expression_values]
+            expression_values = [value/max_expression if max_expression > 0 else None for value in expression_values]
 
         datasets.append({
             'label': p.probe if p.sequence_id is None else p.sequence.name,
@@ -150,7 +150,7 @@ def prepare_avg_profiles(profiles, xlabel='', ylabel=''):
         expression_values = [mean(data['data'][label]) for label in labels]
 
         max_expression = max(expression_values)
-        expression_values = [value/max_expression for value in expression_values]
+        expression_values = [value/max_expression if max_expression != 0 else 0 for value in expression_values]
 
         datasets.append(expression_values)
 
