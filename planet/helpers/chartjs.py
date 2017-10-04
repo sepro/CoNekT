@@ -157,7 +157,11 @@ def prepare_avg_profiles(profiles, xlabel='', ylabel=''):
     for i, l in enumerate(labels):
         values = [d[i] for d in datasets]
         means.append(mean(values))
-        stdevs.append(stdev(values))
+        if len(values) > 1:
+            # Can't get stdev for 1 value
+            stdevs.append(stdev(values))
+        else:
+            stdevs.append(None)
 
     output = {"type": "bar",
               "data": {

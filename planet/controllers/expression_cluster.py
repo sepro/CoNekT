@@ -11,6 +11,8 @@ from planet.models.relationships.sequence_cluster import SequenceCoexpressionClu
 from planet.models.sequences import Sequence
 from planet.models.gene_families import GeneFamilyMethod
 
+from planet.helpers.chartjs import prepare_avg_profiles
+
 expression_cluster = Blueprint('expression_cluster', __name__)
 
 
@@ -147,6 +149,16 @@ def expression_cluster_json(cluster_id, family_method_id=None):
     network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
 
     return Response(json.dumps(network_cytoscape), mimetype='application/json')
+
+
+@expression_cluster.route('/json/avg_profile/<cluster_id>')
+@cache.cached()
+def avg_profile(cluster_id):
+    current_cluster = CoexpressionCluster.query.get(cluster_id)
+
+    profiles = current_cluster.profiles
+
+    return Response(json.dumps(profiles), mimetype='application/json')
 
 
 @expression_cluster.route('/ajax/interpro/<cluster_id>')

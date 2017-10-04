@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from flask import url_for
 from sqlalchemy import join
-from sqlalchemy.orm import joinedload, load_only
+from sqlalchemy.orm import joinedload, load_only, undefer
 
 from planet import db
 from planet.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
@@ -17,6 +17,7 @@ from planet.models.relationships.sequence_family import SequenceFamilyAssociatio
 from planet.models.relationships.sequence_go import SequenceGOAssociation
 from planet.models.relationships.cluster_go import ClusterGOEnrichment
 from planet.models.sequences import Sequence
+from planet.models.expression.profiles import ExpressionProfile
 
 from utils.benchmark import benchmark
 from utils.enrichment import hypergeo_sf, fdr_correction
@@ -551,6 +552,23 @@ class CoexpressionCluster(db.Model):
             db.engine.execute(CoexpressionClusterSimilarity.__table__.insert(), database)
         else:
             print("No similar clusters found!")
+
+    @property
+    def profiles(self):
+        """
+        Returns a list with all expression profiles of cluster members
+        :return: list of all profiles
+        """
+
+        sequence_subquery = self.sequences.subquery()
+
+        profiles = ExpressionProfile.query.\
+            options(undefer('profile')).\
+            join(sequence_subquery, ExpressionProfile.sequence_id == sequence_subquery.c.id).all()
+
+        return [json.loads(p.profile) for p in profiles]
+
+
 
     @property
     def interpro_stats(self):
