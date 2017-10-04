@@ -158,7 +158,9 @@ def avg_profile(cluster_id):
 
     profiles = current_cluster.profiles
 
-    return Response(json.dumps(profiles), mimetype='application/json')
+    avg_profile = prepare_avg_profiles(profiles, ylabel='TPM (normalized)')
+
+    return Response(json.dumps(avg_profile), mimetype='application/json')
 
 
 @expression_cluster.route('/ajax/interpro/<cluster_id>')

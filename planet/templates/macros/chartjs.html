@@ -8,7 +8,7 @@ $( document ).ready(function() {
             enabled: true,
             mode: 'label',
             itemSort: function(a, b, data) {
-                conversion = {'Minimum': 0, 'Mean': 1, 'Maximum': 2}
+                conversion = {'Minimum': 0, 'Mean - Stdev':0, 'Mean': 1, 'Maximum': 2, 'Mean + Stdev': 2}
 
                 if (conversion[data.datasets[a.datasetIndex].label] > conversion[data.datasets[b.datasetIndex].label]) {
                     return -1

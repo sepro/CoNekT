@@ -566,7 +566,7 @@ class CoexpressionCluster(db.Model):
             options(undefer('profile')).\
             join(sequence_subquery, ExpressionProfile.sequence_id == sequence_subquery.c.id).all()
 
-        return [json.loads(p.profile) for p in profiles]
+        return profiles
 
 
 

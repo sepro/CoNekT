@@ -175,7 +175,7 @@ def prepare_avg_profiles(profiles, xlabel='', ylabel=''):
                             "showLine": False,
                             "pointBorderColor": point_color,
                             "pointBackgroundColor": point_color,
-                            "data": [m + sd for m, sd in zip(means, stdevs)]
+                            "data": [m - sd for m, sd in zip(means, stdevs)]
                           }, {
                             "type": "line",
                             "label": "Mean + Stdev",
