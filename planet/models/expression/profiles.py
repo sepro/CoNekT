@@ -34,6 +34,12 @@ class ExpressionProfile(db.Model):
 
     @staticmethod
     def __profile_to_table(data):
+        """
+        Internal function to convert an expression profile (dict) to a tabular text
+
+        :param data: Dict with expression profile
+        :return: table (string)
+        """
         output = [["condition", "mean", "min", "max"]]
         order = data["order"]
 
@@ -52,12 +58,23 @@ class ExpressionProfile(db.Model):
 
     @property
     def table(self):
+        """
+        Returns the condition expression as a tabular text file
 
+        :return: table with data (string)
+        """
         table = ExpressionProfile.__profile_to_table(json.loads(self.profile))
 
         return table
 
     def tissue_table(self, condition_tissue_id, use_means=True):
+        """
+        Returns the tissue expression as a tabular text file
+
+        :param condition_tissue_id: condition_tissue_id for the conversion
+        :param use_means: Use the mean of the condition (recommended)
+        :return: table with data (string)
+        """
         table = ExpressionProfile.__profile_to_table(self.tissue_profile(condition_tissue_id,
                                                                          use_means=use_means)
                                                      )
