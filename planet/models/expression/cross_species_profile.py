@@ -1,5 +1,3 @@
-from planet import db
-
 from planet.models.condition_tissue import ConditionTissue
 from planet.models.expression.profiles import ExpressionProfile
 
@@ -11,35 +9,35 @@ from sqlalchemy.orm import undefer
 
 class CrossSpeciesExpressionProfile:
 
-    @staticmethod
-    def get_data(*sequence_ids):
-        condition_tissue = ConditionTissue.query.filter(ConditionTissue.in_tree == 1).all()
+    def __init__(self):
+        self.condition_tissue = ConditionTissue.query.filter(ConditionTissue.in_tree == 1).all()
 
-        conditions, colors = [], []
+        self.conditions, self.colors = [], []
 
-        for ct in condition_tissue:
+        for ct in self.condition_tissue:
             data = json.loads(ct.data)
             for label, color in zip(data["order"], data["colors"]):
-                if label not in conditions:
-                    conditions.append(label)
-                    colors.append(color)
+                if label not in self.conditions:
+                    self.conditions.append(label)
+                    self.colors.append(color)
 
-        species_to_condition = {ct.species_id: ct for ct in condition_tissue}
+                self.species_to_condition = {ct.species_id: ct for ct in self.condition_tissue}
 
+    def get_data(self, *sequence_ids):
         profiles = ExpressionProfile.query.filter(ExpressionProfile.sequence_id.in_(list(sequence_ids))).\
             options(undefer('profile')).all()
 
         converted_profiles = []
 
         for p in profiles:
-            if p.species_id in species_to_condition.keys():
-                current_profile = p.tissue_profile(species_to_condition[p.species_id].id)
+            if p.species_id in self.species_to_condition.keys():
+                current_profile = p.tissue_profile(self.species_to_condition[p.species_id].id)
 
                 parsed_profile = {
-                    "order": conditions,
-                    "colors": colors,
+                    "order": self.conditions,
+                    "colors": self.colors,
                     "data": {c: mean(current_profile["data"][c]) if c in current_profile["data"].keys() else None
-                             for c in conditions}
+                             for c in self.conditions}
                     }
 
                 converted_profiles.append(
