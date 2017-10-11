@@ -214,8 +214,8 @@ class Tree(db.Model):
                 # line('description', "PlaNet 2.0 PhyloXML tree")
                 Tree.__yattag_node(tree, tag, text, line, id_to_clade, seq_to_species, seq_to_id)
 
-            if has_heatmap:
-                with tag('graphs'):
+            with tag('graphs'):
+                if has_heatmap:
                     with tag('graph', type="heatmap"):
                         line('name', 'heatmap')
                         with tag('legend', show=1):
@@ -234,6 +234,19 @@ class Tree(db.Model):
                                                 line('value', cd["profile"]["data"][label])
                                             else:
                                                 line('value', '')
+                with tag('graph', type="binary"):
+                    line('name', 'binary')
+                    with tag('legend', show=1):
+                        with tag('field'):
+                            line('name', 'Low expression')
+                            line('color', '0xf03b20')
+                            line('shape', 'circle')
+
+                    with tag('data'):
+                        for cd in csep_data:
+                            if "low_expressed" in cd.keys():
+                                with tag('values', **{'for': str(cd["sequence_id"])}):
+                                    line('value', cd["low_expressed"])
 
             with tag('taxonomies'):
                 for s in species:

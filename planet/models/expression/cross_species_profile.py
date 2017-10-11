@@ -42,10 +42,13 @@ class CrossSpeciesExpressionProfile:
                              for c in self.conditions}
                     }
 
+                low_expressed = all([value < 10 if value is not None else False for value in parsed_profile["data"].values()])
+
                 converted_profiles.append(
                     {
                         "sequence_id": p.sequence_id,
                         "species_id": p.species_id,
+                        "low_expressed": 1 if low_expressed else 0,
                         "profile": parsed_profile
                     }
                 )
