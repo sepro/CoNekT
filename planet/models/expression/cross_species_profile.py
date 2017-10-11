@@ -3,6 +3,8 @@ from planet.models.expression.profiles import ExpressionProfile
 
 import json
 from statistics import mean
+from heapq import merge
+from collections import OrderedDict
 
 from sqlalchemy.orm import undefer
 
@@ -12,16 +14,17 @@ class CrossSpeciesExpressionProfile:
     def __init__(self):
         self.condition_tissue = ConditionTissue.query.filter(ConditionTissue.in_tree == 1).all()
 
-        self.conditions, self.colors = [], []
+        # Way to merge various (potentially incomplete) lists and preserve the order (as good as possible)
+        merged_conditions = list(merge(*[json.loads(ct.data)["order"] for ct in self.condition_tissue]))
 
-        for ct in self.condition_tissue:
-            data = json.loads(ct.data)
-            for label, color in zip(data["order"], data["colors"]):
-                if label not in self.conditions:
-                    self.conditions.append(label)
-                    self.colors.append(color)
+        # Make list unique keeping the element with the highest index (reason for double reverse)
+        self.conditions = list(reversed(        # reverse again and convert to list
+            list(OrderedDict.fromkeys(          # make list unique
+                reversed(merged_conditions))    # reverse input
+            )
+        ))
 
-                self.species_to_condition = {ct.species_id: ct for ct in self.condition_tissue}
+        self.species_to_condition = {ct.species_id: ct for ct in self.condition_tissue}
 
     def get_data(self, *sequence_ids):
         profiles = ExpressionProfile.query.filter(ExpressionProfile.sequence_id.in_(list(sequence_ids))).\
@@ -35,7 +38,6 @@ class CrossSpeciesExpressionProfile:
 
                 parsed_profile = {
                     "order": self.conditions,
-                    "colors": self.colors,
                     "data": {c: mean(current_profile["data"][c]) if c in current_profile["data"].keys() else None
                              for c in self.conditions}
                     }
