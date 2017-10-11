@@ -32,9 +32,9 @@ def tree_view(tree_id):
 @cache.cached()
 def tree_sequences(tree_id, page=1):
     """
-    Returns a table with sequences with the selected interpro domain
+    Returns a paginated table with sequences from the selected tree
 
-    :param tree_id: Internal ID of the interpro domain
+    :param tree_id: Internal ID of the desired tree
     :param page: Page number
     """
     sequences = Tree.query.get(tree_id).sequences.group_by(Sequence.id)\
@@ -48,13 +48,13 @@ def tree_sequences(tree_id, page=1):
 @cache.cached()
 def tree_sequences_table(tree_id):
     """
-    Returns a csv table with all sequences with the selected interpro domain
+    Returns a csv table with all sequences from the selected tree
 
-    :param interpro_id: Internal ID of the interpro domain
+    :param tree_id: Internal ID of the desired tree
     """
     sequences = Tree.query.get(tree_id).sequences.group_by(Sequence.id)\
         .options(joinedload('species'))\
-        .order_by(Sequence.name)
+        .order_by(Sequence.name).all()
 
     return Response(render_template('tables/sequences.csv', sequences=sequences), mimetype='text/plain')
 
