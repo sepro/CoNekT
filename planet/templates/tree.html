@@ -53,7 +53,9 @@
      <p>Tree for gene family <a href="{{ url_for('family.family_view', family_id=tree.family.id) }}">{{ tree.family.name }}</a></p>
     <div class="row">
         <div class="col-lg-12">
-            <div id="phyd3" style="height:600px"></div>
+            <div id="phyd3" style="height:600px">
+                <div id="chart-loader" style="widht:800px;height:600px"></div>
+            </div>
             <hr />
         </div>
 
@@ -122,6 +124,8 @@
         <script src="{{ url_for('static', filename='js/phyd3.min.js') }}"></script>
         <script>
             $(function () {
+                $("#chart-loader").html(get_loader_svg('chart-loader_leafy'));
+                init_planet_loader('chart-loader_leafy');
                         var opts = {
                             dynamicHide: true,
                             height: 600,
@@ -149,6 +153,7 @@
                             popupWidth: 300,
                         };
                 d3.xml("{{ url_for('tree.phyloxml', tree_id=tree.id) }}", "application/xml", function(xml) {
+                    d3.select("#phyd3").text(null);
                     var tree = phyd3.phyloxml.parse(xml);
                     phyd3.phylogram.build("#phyd3", tree, opts);
                 });
