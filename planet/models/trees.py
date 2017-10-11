@@ -3,6 +3,8 @@ from planet.models.sequences import Sequence
 from planet.models.clades import Clade
 from planet.models.relationships.sequence_sequence_clade import SequenceSequenceCladeAssociation
 
+from planet.models.expression.cross_species_profile import CrossSpeciesExpressionProfile
+
 import utils.phylo as phylo
 
 from flask import url_for
@@ -134,11 +136,13 @@ class Tree(db.Model):
         return tree.ascii_art()
 
     @staticmethod
-    def __yattag_node(node, tag, text, line, id_to_clade, seq_to_species):
+    def __yattag_node(node, tag, text, line, id_to_clade, seq_to_species, seq_to_id):
         with tag('clade'):
             line('branch_length', node.length)
             if node.is_leaf:
                     line('name', node.name)
+                    if node.name in seq_to_id.keys():
+                        line('id', seq_to_id[node.name])
                     if node.name in seq_to_species.keys():
                         with tag('taxonomy'):
                             line('code', seq_to_species[node.name])
@@ -163,13 +167,12 @@ class Tree(db.Model):
                         line('speciations', 1)
 
                 for d in node.descendants:
-                    Tree.__yattag_node(d, tag, text, line, id_to_clade, seq_to_species)
+                    Tree.__yattag_node(d, tag, text, line, id_to_clade, seq_to_species, seq_to_id)
 
     @property
     def phyloxml(self):
         """
-        Function to test newick to phyxml conversion. (needs to be integrated with tree reconciliation so node
-        annotation can be preserved)
+        data_phyloXML to phyloXML conversion
 
         :return:
         """
@@ -180,12 +183,25 @@ class Tree(db.Model):
         clades = Clade.query.all()
         id_to_clade = {c.id: c.name for c in clades}
         seq_to_species = {}
+        seq_to_id = {}
         species = []
 
         for s in self.sequences.all():
+            seq_to_id[s.name] = s.id
             seq_to_species[s.name] = s.species.code
             if s.species not in species:
                 species.append(s.species)
+
+        csep = CrossSpeciesExpressionProfile()
+        csep_data = csep.get_data(*seq_to_id.values())
+
+        has_heatmap = False
+        heatmap_order = []
+        for cd in csep_data:
+            if "profile" in cd.keys() and "order" in cd["profile"].keys():
+                has_heatmap = True
+                heatmap_order = cd["profile"]["order"]
+                break
 
         # Start constructing PhyloXML
         doc, tag, text, line = Doc().ttl()
@@ -193,7 +209,7 @@ class Tree(db.Model):
             with tag('phylogeny', rooted="True"):
                 # line('name', self.label)
                 # line('description', "PlaNet 2.0 PhyloXML tree")
-                Tree.__yattag_node(tree, tag, text, line, id_to_clade, seq_to_species)
+                Tree.__yattag_node(tree, tag, text, line, id_to_clade, seq_to_species, seq_to_id)
 
             with tag('taxonomies'):
                 for s in species:
@@ -207,6 +223,27 @@ class Tree(db.Model):
                         line('color', '0x000000')
                         line('name', c.name)
                         line('url', url_for('clade.clade_view', clade_id=c.id, _external=True))
+
+            if has_heatmap:
+                with tag('graphs'):
+                    with tag('graph', type="heatmap"):
+                        line('name', 'heatmap')
+                        with tag('legend', show=1):
+                            for label in heatmap_order:
+                                with tag('field'):
+                                    line('name', label)
+                            with tag('gradient'):
+                                line('name', 'YlOrRd')
+                                line('classes', len(heatmap_order))
+                        with tag('data'):
+                            for cd in csep_data:
+                                if "profile" in cd.keys() and "data" in cd["profile"].keys():
+                                    with tag('values', **{'for': str(cd["sequence_id"])}):
+                                        for label in heatmap_order:
+                                            if cd["profile"]["data"][label] is not None:
+                                                line('value', cd["profile"]["data"][label])
+                                            else:
+                                                line('value', '')
 
         return indent(doc.getvalue())
 
