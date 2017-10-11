@@ -5,6 +5,7 @@ from sqlalchemy.orm import undefer
 
 from planet import cache
 from planet.helpers.chartjs import prepare_expression_profile, prepare_profile_comparison
+from planet.models.expression.cross_species_profile import CrossSpeciesExpressionProfile
 from planet.models.condition_tissue import ConditionTissue
 from planet.models.expression.profiles import ExpressionProfile
 from planet.models.expression.networks import ExpressionNetwork
@@ -153,6 +154,15 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id, normalize=0)
                            normalize=normalize,
                            pcc=pcc,
                            hrr=hrr)
+
+
+@expression_profile.route('/cross_species/')
+def expression_profile_cross_species():
+    csep = CrossSpeciesExpressionProfile()
+
+    output = csep.get_data(78, 256593, 161407)
+
+    return Response(json.dumps(output))
 
 
 @expression_profile.route('/download/plot/<profile_id>')
