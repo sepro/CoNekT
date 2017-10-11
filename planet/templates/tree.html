@@ -127,9 +127,9 @@
                             height: 600,
                             invertColors: false,
                             lineupNodes: true,
-                            showDomains: true,
+                            showDomains: false,
                             showDomainNames: false,
-                            showDomainColors: true,
+                            showDomainColors: false,
                             showGraphs: true,
                             showGraphLegend: true,
                             showSupportValues: false,
@@ -149,7 +149,6 @@
                             popupWidth: 300,
                         };
                 d3.xml("{{ url_for('tree.phyloxml', tree_id=tree.id) }}", "application/xml", function(xml) {
-                    console.log(xml);
                     var tree = phyd3.phyloxml.parse(xml);
                     phyd3.phylogram.build("#phyd3", tree, opts);
                 });
