@@ -51,7 +51,8 @@
 
         <h2>Average Expression Profile</h2>
         <div id="canvas-holder" class="center-block">
-                        <canvas id="chart-area" class="center-block" width="800" height="600"/>
+                        <div id="chart-loader" style="widht:800px;height:600px"></div>
+                        <canvas id="chart-area" class="center-block" width="800" height="600" style="display:none"/>
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -177,7 +178,7 @@
         <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
         <script>
             	{% import "macros/chartjs.html" as chartjs %}
-    {{ chartjs.expression_profile("chart-area", url_for('expression_cluster.avg_profile', cluster_id=cluster.id)) }}
+        {{ chartjs.expression_profile_loader("chart-area", url_for('expression_cluster.avg_profile', cluster_id=cluster.id), "chart-loader") }}
         </script>
         <script src="{{ url_for('static', filename='js/table2CSV.js') }}" > </script>
         <script>

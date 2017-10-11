@@ -40,6 +40,53 @@ $( document ).ready(function() {
 });
 {%- endmacro %}
 
+{% macro expression_profile_loader(target, url, loader_id) -%}
+$( document ).ready(function() {
+    $("#{{ loader_id }}").html(get_loader_svg('{{loader_id}}_leafy'));
+    init_planet_loader('{{loader_id}}_leafy');
+    $.getJSON( "{{ url}}", function( data ) {
+        var ctx = document.getElementById("{{ target }}").getContext("2d");
+        data['options']['responsive'] = true;
+        data['options']['maintainAspectRatio'] = false;
+        data['options']['tooltips'] = {
+            enabled: true,
+            mode: 'label',
+            itemSort: function(a, b, data) {
+                conversion = {'Minimum': 0, 'Mean - Stdev':0, 'Mean': 1, 'Maximum': 2, 'Mean + Stdev': 2}
+
+                if (conversion[data.datasets[a.datasetIndex].label] > conversion[data.datasets[b.datasetIndex].label]) {
+                    return -1
+                } else if (conversion[data.datasets[a.datasetIndex].label] < conversion[data.datasets[b.datasetIndex].label]) {
+                    return 1
+                } else {
+                    return 0
+                }
+            },
+            callbacks: {
+                afterTitle: function(tooltipItems, data) {
+                    if (data.counts[tooltipItems[0].index] == null) {
+                        return null;
+                    } else {
+                        if (data.counts[tooltipItems[0].index] == 1) {
+                            return '(1 sample)';
+                        } else {
+                            return '(' + data.counts[tooltipItems[0].index] + ' samples)';
+                        }
+                    }
+                },
+                label: function(tooltipItems, data) {
+                    return data.datasets[tooltipItems.datasetIndex].label + ': ' + tooltipItems.yLabel.toFixed(2);
+                }
+            }
+        }
+        var myChart = new Chart(ctx, data);
+        $("#{{ target }}").toggle();
+        $("#{{ loader_id }}").toggle();
+
+    });
+});
+{%- endmacro %}
+
 {% macro pie_chart(target, url) -%}
 $( document ).ready(function() {
     $.getJSON( "{{ url}}", function( data ) {
@@ -52,6 +99,7 @@ $( document ).ready(function() {
             }
         }
         var myChart = new Chart(ctx, data);
+
     });
 });
 {%- endmacro %}
