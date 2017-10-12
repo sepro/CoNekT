@@ -38,7 +38,7 @@ class CrossSpeciesExpressionProfile:
 
                 parsed_profile = {
                     "order": self.conditions,
-                    "data": {c: mean(current_profile["data"][c]) if c in current_profile["data"].keys() else None
+                    "data": {c: max(current_profile["data"][c]) if c in current_profile["data"].keys() else None
                              for c in self.conditions}
                     }
 
