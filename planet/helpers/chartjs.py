@@ -68,7 +68,7 @@ def prepare_profiles(profiles, normalize=False, xlabel='', ylabel=''):
             'showLine': True,
             'backgroundColor': "rgba(220,220,220,0.1)" if len(profiles) > 12 else COLORS[count],
             'borderColor': "rgba(175,175,175,0.2)" if len(profiles) > 12 else COLORS[count],
-            'pointRadius': 5 if len(profiles) < 13 else 0,
+            'pointRadius': 3 if len(profiles) < 13 else 0,
             'data': expression_values
         })
 
