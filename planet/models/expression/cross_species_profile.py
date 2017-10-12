@@ -42,6 +42,15 @@ class CrossSpeciesExpressionProfile:
                              for c in self.conditions}
                     }
 
+                # normalize profile
+
+                max_value = max([i if i is not None else 0 for i in parsed_profile["data"].values()])
+
+                if max_value > 0:
+                    for c in self.conditions:
+                        if parsed_profile["data"][c] is not None:
+                            parsed_profile["data"][c] = parsed_profile["data"][c]/max_value
+
                 low_expressed = all([value < 10 if value is not None else False for value in parsed_profile["data"].values()])
 
                 converted_profiles.append(
