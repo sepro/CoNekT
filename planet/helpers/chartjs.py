@@ -66,9 +66,9 @@ def prepare_profiles(profiles, normalize=False, xlabel='', ylabel=''):
             'label': p.probe if p.sequence_id is None else p.sequence.name,
             'fill': True,
             'showLine': True,
-            'backgroundColor': "rgba(220,220,220,0.1)" if len(profiles) >= 10 else COLORS[count],
-            'borderColor': "rgba(175,175,175,0.2)" if len(profiles) >= 10 else COLORS[count],
-            'pointRadius': 5 if len(profiles) < 10 else 0,
+            'backgroundColor': "rgba(220,220,220,0.1)" if len(profiles) > 12 else COLORS[count],
+            'borderColor': "rgba(175,175,175,0.2)" if len(profiles) > 12 else COLORS[count],
+            'pointRadius': 5 if len(profiles) < 13 else 0,
             'data': expression_values
         })
 
@@ -80,10 +80,10 @@ def prepare_profiles(profiles, normalize=False, xlabel='', ylabel=''):
         },
         "options": {
           "legend": {
-            "display": len(profiles) < 10
+            "display": len(profiles) < 13
           },
           "tooltips": {
-            "enabled": len(profiles) < 10,
+            "enabled": len(profiles) < 13,
             "mode": 'label',
             "intersect": True
           },
