@@ -1,7 +1,10 @@
 import json
 
-from flask import Blueprint, redirect, url_for, render_template, Response
+from flask import Blueprint, redirect, url_for, render_template, Response, request
 from sqlalchemy.orm import undefer
+
+from statistics import mean
+import sys
 
 from planet import cache
 from planet.helpers.chartjs import prepare_expression_profile, prepare_profile_comparison
@@ -10,6 +13,7 @@ from planet.models.condition_tissue import ConditionTissue
 from planet.models.expression.profiles import ExpressionProfile
 from planet.models.expression.networks import ExpressionNetwork
 from planet.models.expression.specificity import ExpressionSpecificityMethod
+from planet.forms.export_condition import ExportConditionForm
 
 expression_profile = Blueprint('expression_profile', __name__)
 
@@ -251,3 +255,40 @@ def expression_profile_compare_plot_json(first_profile_id, second_profile_id, no
                                       ylabel='TPM' + (' (normalized)' if normalize else ''))
 
     return Response(json.dumps(plot), mimetype='application/json')
+
+
+@expression_profile.route('/export/species', methods=['GET', 'POST'])
+def export_expression_levels():
+    """
+    Will return a table with all (!) genes and their expression levels
+
+    :param species_id: internal ID of species to export
+    :return:
+    """
+    form = ExportConditionForm(request.form)
+    form.populate_form()
+
+    if request.method == 'POST':
+        condition = request.form.get('condition')
+        species_id = int(request.form.get('species_id'))
+
+        profiles = ExpressionProfile.query.filter(ExpressionProfile.species_id == species_id).\
+            filter(ExpressionProfile.sequence_id is not None). \
+            options(undefer('profile')).all()
+
+        for p in profiles:
+            data = json.loads(p.profile)
+
+            try:
+                print(p.sequence.name,
+                      mean(data["data"][condition]),
+                      min(data["data"][condition]),
+                      max(data["data"][condition]), sep='\t')
+            except Exception as _:
+                # Key doesn't exist
+                print("Cannot find a profile with conditions %s for species %d." % (condition, species_id),
+                      file=sys.stderr)
+
+        return "POST OK"
+    else:
+        return "GET OK"
