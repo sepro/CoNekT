@@ -94,20 +94,8 @@ class ExpressionProfile(db.Model):
 
         return not any(checks)
 
-    def tissue_profile(self, condition_tissue_id, use_means=True):
-        """
-        Applies a conversion to the profile, grouping several condition into one more general feature (e.g. tissue).
-
-        :param condition_tissue_id: identifier of the conversion table
-        :param use_means: store the mean of the condition rather than individual values. The matches the spm
-        calculations better.
-        :return: parsed profile
-        """
-        ct = ConditionTissue.query.get(condition_tissue_id)
-
-        condition_to_tissue = json.loads(ct.data)
-        profile_data = json.loads(self.profile)
-
+    @staticmethod
+    def convert_profile(condition_to_tissue, profile_data, use_means=True):
         tissues = list(set(condition_to_tissue['conversion'].values()))
 
         output = {}
@@ -127,6 +115,24 @@ class ExpressionProfile(db.Model):
         return {'order': condition_to_tissue['order'],
                 'colors': condition_to_tissue['colors'],
                 'data': output}
+
+    def tissue_profile(self, condition_tissue_id, use_means=True):
+        """
+        Applies a conversion to the profile, grouping several condition into one more general feature (e.g. tissue).
+
+        :param condition_tissue_id: identifier of the conversion table
+        :param use_means: store the mean of the condition rather than individual values. The matches the spm
+        calculations better.
+        :return: parsed profile
+        """
+        ct = ConditionTissue.query.get(condition_tissue_id)
+
+        condition_to_tissue = json.loads(ct.data)
+        profile_data = json.loads(self.profile)
+
+        output = ExpressionProfile.convert_profile(condition_to_tissue, profile_data, use_means=use_means)
+
+        return output
 
     @staticmethod
     def get_heatmap(species_id, probes, zlog=True, raw=False):

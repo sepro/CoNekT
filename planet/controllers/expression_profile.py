@@ -257,6 +257,48 @@ def expression_profile_compare_plot_json(first_profile_id, second_profile_id, no
     return Response(json.dumps(plot), mimetype='application/json')
 
 
+def __generate(species_id, method_id, condition):
+    """
+    Generator function go get data and yield results (for streaming the output).
+
+    :param species_id: internal ID of species
+    :param method_id: internal ID of the method
+    :param condition: Condition to be exported
+    :return: yields results of query
+    """
+    header = "Sequence\tAvg.Expression\tMin.Expression\tMax.Expression\n"
+    yield header
+
+    profiles = ExpressionProfile.query.filter(ExpressionProfile.species_id == species_id). \
+        filter(ExpressionProfile.sequence_id is not None). \
+        options(undefer('profile')).order_by(ExpressionProfile.probe.asc()).all()
+
+    condition_tissue = ConditionTissue.query. \
+        filter(ConditionTissue.expression_specificity_method_id == method_id).first()
+
+    condition_tissue_data = json.loads(condition_tissue.data) if condition_tissue is not None else None
+
+    for p in profiles:
+        try:
+            data = json.loads(p.profile)
+            if condition_tissue is None:
+                # main profile is used, directly export values
+                values = data["data"][condition]
+            else:
+                # summarized profile is selected, convert and export
+                converted_profile = ExpressionProfile.convert_profile(condition_tissue_data,
+                                                                      data, use_means=True)
+                values = converted_profile["data"][condition]
+
+            output = "%s\t%f\t%f\t%f\n" % (p.sequence.name, mean(values), min(values), max(values))
+            yield output
+
+        except Exception as e:
+            print("An error occured exporting a profile with conditions %s for species %d." % (condition, species_id),
+                  file=sys.stderr)
+            print(e, file=sys.stderr)
+
+
 @expression_profile.route('/export/species', methods=['GET', 'POST'])
 def export_expression_levels():
     """
@@ -269,30 +311,11 @@ def export_expression_levels():
     form.populate_form()
 
     if request.method == 'POST':
-        condition = request.form.get('condition')
-        species_id = int(request.form.get('species_id'))
+        species_id = int(request.form.get('species'))
+        method_id = int(request.form.get('methods'))
+        condition = request.form.get('conditions')
 
-        def generate(species_id, condition):
-            profiles = ExpressionProfile.query.filter(ExpressionProfile.species_id == species_id). \
-                filter(ExpressionProfile.sequence_id is not None). \
-                options(undefer('profile')).order_by(ExpressionProfile.probe.asc()).all()
-
-            header = "Sequence\tAvg.Expression\tMin.Expression\tMax.Expression\n"
-            yield header
-
-            for p in profiles:
-                data = json.loads(p.profile)
-
-                try:
-                    values = data["data"][condition]
-                    output = "%s\t%f\t%f\t%f\n" % (p.sequence.name, mean(values), min(values), max(values))
-                    yield output
-                except Exception as _:
-                    # Key doesn't exist
-                    print("Cannot find a profile with conditions %s for species %d." % (condition, species_id),
-                          file=sys.stderr)
-                    yield ""
-
-        return Response(generate(species_id, condition), mimetype='text/plain')
+        return Response(__generate(species_id, method_id, condition), mimetype='text/plain',
+                        headers={"Content-disposition": "attachment; filename=condition_expression.tab"})
     else:
         return render_template("export_condition.html", form=form)

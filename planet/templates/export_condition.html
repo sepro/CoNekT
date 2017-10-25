@@ -22,8 +22,9 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 {{form.csrf_token}}
-                                <label for="{{ form.species_id.id }}" class="control-label">{{ form.species_id.label }}</label> {{form.species_id(class_="form-control") }}<br />
-                                <label for="{{ form.condition.id }}" class="control-label">{{ form.condition.label }}</label> {{form.condition(class_="form-control") }}<br />
+                                <label for="{{ form.species.id }}" class="control-label">{{ form.species.label }}</label> {{form.species(class_="form-control") }}<br />
+                                <label for="{{ form.methods.id }}" class="control-label">{{ form.methods.label }}</label> {{form.methods(class_="form-control", disabled=True) }}<br />
+                                <label for="{{ form.conditions.id }}" class="control-label">{{ form.conditions.label }}</label> {{form.conditions(class_="form-control", disabled=True) }}<br />
                                 <div class="pull-right">
                                     <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Export genes</button>
                                 </div>
@@ -49,5 +50,81 @@
 {% endblock %}
 
 {% block extrajs %}
+<script>
+$(function () {
 
+    var formdata;
+    var selectedSpecies = [];
+
+    var populate_species = function(data) {
+        $('#species').find('option').remove();
+        $.each(data, function () {
+            $('#species').append($("<option />").val(this.id).text(this.name));
+        });
+        $('#species').trigger('change');
+    };
+
+    var populate_methods = function(data) {
+        $('#methods').find('option').remove();
+        $.each(data, function () {
+            $('#methods').append($("<option />").val(this.id).text(this.description));
+        });
+
+        if ($('#methods').find('option').length > 0) {
+            $('#methods').prop('disabled', false);
+        } else {
+            $('#methods').prop('disabled', 'disabled');
+            $('#methods').append($("<option />").val(0).text("Not available"));
+            $('#conditions').find('option').remove();
+            $('#conditions').prop('disabled', 'disabled');
+            $('#conditions').append($("<option />").val(0).text("Not available"));
+        }
+        $('#methods').trigger('change');
+    }
+
+    var populate_conditions = function(data) {
+        $('#conditions').find('option').remove();
+        $.each(data, function () {
+            $('#conditions').append($("<option />").val(this).text(this));
+        });
+
+        if ($('#conditions').find('option').length > 0) {
+            $('#conditions').prop('disabled', false);
+        } else {
+            $('#conditions').prop('disabled', 'disabled');
+            $('#conditions').append($("<option />").val(0).text("Not available"));
+        }
+
+        $('#conditions').trigger('change');
+    }
+
+    $('#species').change(function(ev) {
+        var valueSelected = this.value;
+         $.each(formdata, function () {
+
+          if (this.id == valueSelected) {
+            selectedSpecies = this;
+            populate_methods(this.methods);
+          }
+
+         });
+    });
+
+    $('#methods').change(function(ev) {
+        var valueSelected = this.value;
+         $.each(selectedSpecies.methods, function () {
+
+          if (this.id == valueSelected) {
+            populate_conditions(this.conditions);
+          }
+
+         });
+    });
+
+    $.getJSON("{{ url_for('search.search_specific_profiles_json') }}", function(json) {
+      formdata = json;
+      populate_species(formdata);
+    });
+});
+</script>
 {% endblock %}
