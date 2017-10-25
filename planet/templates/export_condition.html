@@ -18,7 +18,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading"><strong>Options</strong></div>
                 <div class="panel-body">
-                    <form method="POST"  action="{{ url_for('expression_profile.export_expression_levels') }}"  role="form">
+                    <form method="POST"  action="{{ url_for('expression_profile.export_expression_levels') }}"  role="form" id="fileDownloadForm">
                         <div class="row">
                             <div class="col-xs-12">
                                 {{form.csrf_token}}
@@ -26,7 +26,7 @@
                                 <label for="{{ form.methods.id }}" class="control-label">{{ form.methods.label }}</label> {{form.methods(class_="form-control", disabled=True) }}<br />
                                 <label for="{{ form.conditions.id }}" class="control-label">{{ form.conditions.label }}</label> {{form.conditions(class_="form-control", disabled=True) }}<br />
                                 <div class="pull-right">
-                                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Export genes</button>
+                                    <button type="submit" class="btn btn-primary">Export genes</button>
                                 </div>
                             </div>
                         </div>
@@ -51,6 +51,27 @@
 
 {% block extrajs %}
 <script>
+$(function() {
+    $("#fileDownloadForm").submit( function( event ) {
+        event.preventDefault();
+
+        $.ajax({
+            url: $(this).prop('action'),
+            type: "POST",
+            //dataType: 'json',
+            data: $(this).serialize(),
+            beforeSend: function( xhr ) {
+                console.log("submitted form ... ");
+            },
+            success: function(data) {
+                       console.log("success");
+                     }
+        }).done(function( data ) {
+            console.log(data);
+        });
+    })
+});
+
 $(function () {
 
     var formdata;

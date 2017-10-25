@@ -259,15 +259,14 @@ def expression_profile_compare_plot_json(first_profile_id, second_profile_id, no
 
 def __generate(species_id, method_id, condition):
     """
-    Generator function go get data and yield results (for streaming the output).
+
 
     :param species_id: internal ID of species
     :param method_id: internal ID of the method
     :param condition: Condition to be exported
-    :return: yields results of query
+    :return: output
     """
-    header = "Sequence\tAvg.Expression\tMin.Expression\tMax.Expression\n"
-    yield header
+    output = ["Sequence\tAvg.Expression\tMin.Expression\tMax.Expression"]
 
     profiles = ExpressionProfile.query.filter(ExpressionProfile.species_id == species_id). \
         filter(ExpressionProfile.sequence_id is not None). \
@@ -290,13 +289,14 @@ def __generate(species_id, method_id, condition):
                                                                       data, use_means=True)
                 values = converted_profile["data"][condition]
 
-            output = "%s\t%f\t%f\t%f\n" % (p.sequence.name, mean(values), min(values), max(values))
-            yield output
+            output.append("%s\t%f\t%f\t%f" % (p.sequence.name, mean(values), min(values), max(values)))
 
         except Exception as e:
             print("An error occured exporting a profile with conditions %s for species %d." % (condition, species_id),
                   file=sys.stderr)
             print(e, file=sys.stderr)
+
+    return '\n'.join(output)
 
 
 @expression_profile.route('/export/species', methods=['GET', 'POST'])
@@ -315,7 +315,12 @@ def export_expression_levels():
         method_id = int(request.form.get('methods'))
         condition = request.form.get('conditions')
 
-        return Response(__generate(species_id, method_id, condition), mimetype='text/plain',
-                        headers={"Content-disposition": "attachment; filename=condition_expression.tab"})
+        return Response(__generate(species_id, method_id, condition))
     else:
         return render_template("export_condition.html", form=form)
+
+
+@expression_profile.route('/export/test')
+def export_expression_levels_test():
+    return Response(__generate(1, 13, "Roots (apex), 7 DAG"), mimetype='text/plain',
+                    headers={"Content-disposition": "attachment; filename=condition_expression.tab"})
