@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Export Condition
+{% endblock %}
+
+{% block container %}
+<div class="top-pad">
+    <ol class="breadcrumb">
+        <li><a href="{{ url_for('main.screen') }}">Home</a></li>
+        <li><a href="{{ url_for('main.features') }}">Tools</a></li>
+        <li class="active"><strong>Export condition</strong></li>
+    </ol>
+    <h1>Export condition</h1>
+    <p>Export <strong>all</strong> expressed genes in a certain condition/tissue.</p>
+    <div class="row">
+         <div class="col-md-8 col-sm-6 col-xs-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><strong>Options</strong></div>
+                <div class="panel-body">
+                    <form method="POST"  action="{{ url_for('expression_profile.export_expression_levels') }}"  role="form">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                {{form.csrf_token}}
+                                <label for="{{ form.species_id.id }}" class="control-label">{{ form.species_id.label }}</label> {{form.species_id(class_="form-control") }}<br />
+                                <label for="{{ form.condition.id }}" class="control-label">{{ form.condition.label }}</label> {{form.condition(class_="form-control") }}<br />
+                                <div class="pull-right">
+                                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Export genes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Help</strong></div>
+                <div class="panel-body">
+                    <ul>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}
+
+{% block extrajs %}
+
+{% endblock %}

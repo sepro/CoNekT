@@ -272,23 +272,27 @@ def export_expression_levels():
         condition = request.form.get('condition')
         species_id = int(request.form.get('species_id'))
 
-        profiles = ExpressionProfile.query.filter(ExpressionProfile.species_id == species_id).\
-            filter(ExpressionProfile.sequence_id is not None). \
-            options(undefer('profile')).all()
+        def generate(species_id, condition):
+            profiles = ExpressionProfile.query.filter(ExpressionProfile.species_id == species_id). \
+                filter(ExpressionProfile.sequence_id is not None). \
+                options(undefer('profile')).order_by(ExpressionProfile.probe.asc()).all()
 
-        for p in profiles:
-            data = json.loads(p.profile)
+            header = "Sequence\tAvg.Expression\tMin.Expression\tMax.Expression\n"
+            yield header
 
-            try:
-                print(p.sequence.name,
-                      mean(data["data"][condition]),
-                      min(data["data"][condition]),
-                      max(data["data"][condition]), sep='\t')
-            except Exception as _:
-                # Key doesn't exist
-                print("Cannot find a profile with conditions %s for species %d." % (condition, species_id),
-                      file=sys.stderr)
+            for p in profiles:
+                data = json.loads(p.profile)
 
-        return "POST OK"
+                try:
+                    values = data["data"][condition]
+                    output = "%s\t%f\t%f\t%f\n" % (p.sequence.name, mean(values), min(values), max(values))
+                    yield output
+                except Exception as _:
+                    # Key doesn't exist
+                    print("Cannot find a profile with conditions %s for species %d." % (condition, species_id),
+                          file=sys.stderr)
+                    yield ""
+
+        return Response(generate(species_id, condition), mimetype='text/plain')
     else:
-        return "GET OK"
+        return render_template("export_condition.html", form=form)
