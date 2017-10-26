@@ -62,9 +62,23 @@ $(function() {
             data: $(this).serialize(),
             beforeSend: function( xhr ) {
                 console.log("submitted form ... ");
+                $("#leafy_loader_text").html("Preparing your data, this can take a couple minutes. Please wait ...<br /> The download will start automatically...");
+                $("#loaderModal").modal("show");
             },
             success: function(data) {
-                       console.log("success");
+                       $("#leafy_loader_text").html("Your Download is ready ! ");
+
+                        var element = document.createElement('a');
+                        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
+                        element.setAttribute('download', 'expression.tab');
+
+                        document.body.appendChild(element);
+                        element.click();
+                        document.body.removeChild(element);
+
+                       $("#leafy_loader_text").append($("<a/>").attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data)).attr('download', 'expression.tab').attr('id', 'download_ready_link').text("Click here"))
+                       .append($("<span> if the download doesn't start automatically.</span>"));
+                       $("#leafy_loader_close_btn").show();
                      }
         }).done(function( data ) {
             console.log(data);

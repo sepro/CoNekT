@@ -320,9 +320,3 @@ def export_expression_levels():
         return Response(__generate(species_id, method_id, condition))
     else:
         return render_template("export_condition.html", form=form)
-
-
-@expression_profile.route('/export/test')
-def export_expression_levels_test():
-    return Response(__generate(1, 13, "Roots (apex), 7 DAG"), mimetype='text/plain',
-                    headers={"Content-disposition": "attachment; filename=condition_expression.tab"})
