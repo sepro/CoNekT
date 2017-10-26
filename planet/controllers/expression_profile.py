@@ -266,7 +266,8 @@ def __generate(species_id, method_id, condition):
     :param condition: Condition to be exported
     :return: output
     """
-    output = ["Sequence\tAvg.Expression\tMin.Expression\tMax.Expression"]
+    # output = ["Sequence\tAvg.Expression\tMin.Expression\tMax.Expression"]
+    yield "Sequence\tAvg.Expression\tMin.Expression\tMax.Expression\n"
 
     profiles = ExpressionProfile.query.filter(ExpressionProfile.species_id == species_id). \
         filter(ExpressionProfile.sequence_id is not None). \
@@ -289,14 +290,15 @@ def __generate(species_id, method_id, condition):
                                                                       data, use_means=True)
                 values = converted_profile["data"][condition]
 
-            output.append("%s\t%f\t%f\t%f" % (p.sequence.name, mean(values), min(values), max(values)))
+            # output.append("%s\t%f\t%f\t%f" % (p.sequence.name, mean(values), min(values), max(values)))
+            yield "%s\t%f\t%f\t%f\n" % (p.sequence.name, mean(values), min(values), max(values))
 
         except Exception as e:
             print("An error occured exporting a profile with conditions %s for species %d." % (condition, species_id),
                   file=sys.stderr)
             print(e, file=sys.stderr)
 
-    return '\n'.join(output)
+    # return '\n'.join(output)
 
 
 @expression_profile.route('/export/species', methods=['GET', 'POST'])
