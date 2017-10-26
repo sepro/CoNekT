@@ -77,26 +77,27 @@
                         <form method="POST"  action="{{ url_for('search.search_enriched_clusters') }}"  role="form">
                             {{ form.csrf_token }}
                             <label><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='go') }}" data-target="#helpModal">GO</abbr></label>
-                            {{form.go_term(class_="form-control typeahead") }}<br />
+                            {{form.go_term(class_="form-control typeahead update_count") }}<br />
                             <label>Cluster Method</label>
-                            {{form.method(class_="form-control") }}<br />
+                            {{form.method(class_="form-control update_count") }}<br />
                             <div class="checkbox-group">
-                            <label>{{form.check_enrichment(checked=False) }} <span class="title">Enrichment</span> </label><br />
-                            {{form.min_enrichment(class_="form-control") }}<br />
+                            <label>{{form.check_enrichment(checked=False, class_="update_count") }} <span class="title">Enrichment</span> </label><br />
+                            {{form.min_enrichment(class_="form-control update_count") }}<br />
                             </div>
                             <div class="checkbox-group">
-                            <label>{{form.check_p(checked=False) }} <span class="title">p-value</span></label><br />
-                            {{form.max_p(class_="form-control") }}<br />
+                            <label>{{form.check_p(checked=False, class_="update_count") }} <span class="title">p-value</span></label><br />
+                            {{form.max_p(class_="form-control update_count") }}<br />
                             </div>
                             <div class="checkbox-group">
-                            <label>{{form.check_corrected_p(checked=True) }} <span class="title"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='fdr') }}" data-target="#helpModal">corrected p-value</abbr></span></label><br />
-                            {{form.max_corrected_p(class_="form-control") }}<br />
+                            <label>{{form.check_corrected_p(checked=True, class_="update_count") }} <span class="title"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='fdr') }}" data-target="#helpModal">corrected p-value</abbr></span></label><br />
+                            {{form.max_corrected_p(class_="form-control update_count") }}<br />
                             </div>
                             <div class="pull-right">
                             {% if example and example.go_term %}
                                 <button class="btn btn-default" id="load_example">Load example</button>
                             {% endif %}
-                                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Find clusters</button>
+                                <button class="btn btn-default" id="count_button">Count</button>
+                                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal" >Show clusters</button>
                             </div>
                         </form>
                     </div>
@@ -111,6 +112,8 @@
                             <li>Select the <strong>clusters</strong> to search</li>
                             <li>Set the parameters. Checkboxes enable/disable certain filters. (Recommended: enable corrected p-value and keep this below 0.05)</li>
                             <li>Click <strong>Find clusters</strong></li>
+                            <br />
+                            <li>Using the <strong>Count</strong> button you can check how many clusters meet the current criteria.</li>
                         </ul>
                     </div>
                 </div>
@@ -123,6 +126,45 @@
 {% block extrajs %}
 <script src="{{ url_for('static', filename='js/typeahead.bundle.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/table2CSV.js') }}" > </script>
+{% if form %}
+<script>
+    $(function() {
+        function update_count() {
+            post_data = {
+                        'method': $('#method').val(),
+                        'go_term': $('#go_term').val(),
+                        'condition': $('#conditions').val(),
+
+                        'check_enrichment':  $('#check_enrichment').is(":checked"),
+                        'check_p': $('#check_p').is(":checked"),
+                        'check_corrected_p': $('#check_corrected_p').is(":checked"),
+
+                        'min_enrichment':  $('#min_enrichment').val(),
+                        'max_p': $('#max_p').val(),
+                        'max_corrected_p': $('#max_corrected_p').val()
+                    }
+            console.log(post_data);
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('search.count_enriched_clusters') }}",
+                contentType: 'application/json;charset=UTF-8',
+                data : JSON.stringify(post_data, null, '\t'),
+                success: function(data) {
+                    $('#count_button').text('Count (' + data.count + ')');
+                }
+            });
+        }
+
+        $("#count_button").click(function( ev) {
+            ev.preventDefault();
+            update_count();
+        });
+
+    });
+</script>
+
+
+{% endif %}
 <script>
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();

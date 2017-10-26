@@ -167,6 +167,43 @@ def search_json_genes(label=''):
     return Response(json.dumps(list(set(output))), mimetype='application/json')
 
 
+@search.route('/enriched/count', methods=['POST'])
+def count_enriched_clusters():
+    """
+    Counts the number of clusters enriched for a set of criteria
+
+    :return: json response with the count
+    """
+
+    content = request.get_json(silent=True)
+
+    try:
+        term = content["go_term"]
+        method = int(content["method"])
+
+        check_enrichment = bool(content["check_enrichment"])
+        check_p = bool(content["check_p"])
+        check_corrected_p = bool(content["check_corrected_p"])
+
+        min_enrichment = float(content["min_enrichment"]) if check_enrichment else None
+        max_p = float(content["max_p"]) if check_p else None
+        max_corrected_p = float(content["max_corrected_p"]) if check_corrected_p else None
+
+        go = GO.query.filter(or_(GO.name == term,
+                                 GO.label == term)).first()
+
+        cluster_count = Search.count_enriched_clusters(go.id,
+                                                       method=method,
+                                                       min_enrichment=min_enrichment,
+                                                       max_p=max_p,
+                                                       max_corrected_p=max_corrected_p)
+
+        return Response(json.dumps({'count': cluster_count, 'error': 0}), mimetype='application/json')
+    except Exception as e:
+        # Bad data return zero
+        return Response(json.dumps({'count': 0, 'error': 1}), mimetype='application/json')
+
+
 @search.route('/enriched/clusters', methods=['GET', 'POST'])
 def search_enriched_clusters():
     """
