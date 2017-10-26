@@ -14,7 +14,7 @@ Below are the instructions to set up a new PlaNet version.
 
 [Connecting with MySQL/MariaDB](docs/connect_mysql.md)
 
-[Setting up planet with apache and mod_wsgi](docs/apache_wsgi.md)
+[Setting up CoNekt with apache and mod_wsgi](docs/apache_wsgi.md)
 
 
 [Build CoNekT](docs/building_conekt.md)
