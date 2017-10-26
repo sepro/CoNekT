@@ -136,7 +136,9 @@
                 {% for cluster in coexpression_clusters %}
                 <tr>
                     <td><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='cluster') }}" data-target="#helpModal">Cluster</abbr></td>
-                    <td>{{ cluster.method.method }}: <strong>{{ cluster.name }}</strong></td>
+                    <td>{{ cluster.method.method }}: <strong><a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.id) }}"
+                                                                class="qtip_tooltip"
+                                                                qtip_href="{{ url_for('expression_cluster.cluster_tooltip', cluster_id=cluster.id) }}">{{ cluster.name }}</a></strong></td>
                     <td>{{ ca.cluster_actions(cluster.id) }}</td>
                 </tr>
                 {% endfor %}

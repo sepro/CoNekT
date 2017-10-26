@@ -1,0 +1,11 @@
+<div>
+    <div><strong>Species: </strong><em>{{ cluster.method.network_method.species.name }}</em></div>
+    <div><strong>Method: </strong>{{ cluster.method.method }}</div>
+    <hr />
+    <div><strong>Enriched GO terms</strong> <span class="text-muted">(top 5)</span>:</div>
+    {% for go_enrichment in (cluster.go_enrichment|sort(attribute='enrichment', reverse = True))[:5] %}
+        {{ go_enrichment.go.name }} <span class="text-muted">({{ go_enrichment.go.short_type }})</span>{%- if not loop.last -%}, {%- endif -%}
+    {% else %}
+    <span class="text-muted">No enriched GO terms available for this cluster</span>
+    {% endfor %}
+</div>

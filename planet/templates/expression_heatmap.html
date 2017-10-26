@@ -23,7 +23,9 @@
         <li class="active"><strong>Results</strong></li>
     </ol>
     {% if cluster %}
-        <h1>Heatmap: <strong>{{ cluster.name }}</strong> <small>({{ cluster.method.method }})</small></h1>
+        <h1>Heatmap: <strong><a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.id) }}"
+                                           class="qtip_tooltip"
+                                qtip_href="{{ url_for('expression_cluster.cluster_tooltip', cluster_id=cluster.id) }}">{{ cluster.name }}</a></strong> <small>({{ cluster.method.method }})</small></h1>
         {% import "macros/cluster_actions.html" as ca %}
         <div class="row">
             <div class="col-lg-6 col-sm-6 col-xs-12">

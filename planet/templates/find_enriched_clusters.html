@@ -43,7 +43,9 @@
                         {% if g.debug %}<td>{{ c.cluster_id }}</td>{% endif %}
                         <td><em>{{ c.cluster.method.network_method.species.name }}</em></td>
                         <td>{{ c.cluster.method.method }}</td>
-                        <td>{{ c.cluster.name }}</td>
+                        <td><a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=c.cluster_id) }}"
+                               class="qtip_tooltip"
+                               qtip_href="{{ url_for('expression_cluster.cluster_tooltip', cluster_id=c.cluster_id) }}">{{ c.cluster.name }}</a></td>
                         <td>{{ c.enrichment|round(2) }}</td>
                         <td>{{ (c.cluster_count*100/c.cluster_size)|round(2) }}% <span class="text-muted">({{c.cluster_count}}/{{c.cluster_size}})</span> </td>
                         <td>{{ c.p_value|round(5) }}</td>

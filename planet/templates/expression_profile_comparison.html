@@ -17,7 +17,9 @@
     </ol>
 
     {% if cluster %}
-        <h1>Profile comparison: <strong>{{ cluster.name }}</strong> <small>({{ cluster.method.method }})</small></h1>
+        <h1>Profile comparison: <strong><a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.id) }}"
+                                           class="qtip_tooltip"
+                                           qtip_href="{{ url_for('expression_cluster.cluster_tooltip', cluster_id=cluster.id) }}">{{ cluster.name }}</a></strong> <small>({{ cluster.method.method }})</small></h1>
         {% import "macros/cluster_actions.html" as ca %}
         <div class="row">
             <div class="col-xs-6"><p><strong>View as: </strong>{{ ca.cluster_actions(cluster.id, exclude=["profile"]) }}</p></div>

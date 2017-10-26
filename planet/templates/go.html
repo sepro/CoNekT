@@ -58,7 +58,9 @@
                             {% for cluster in clusters %}
                                 {% if cluster.corrected_p_value <= 0.05 %}
                                 <tr>
-                                    <td>{{ cluster.cluster.name }}</td>
+                                    <td><a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.cluster.id) }}"
+                                           class="qtip_tooltip"
+                                           qtip_href="{{ url_for('expression_cluster.cluster_tooltip', cluster_id=cluster.cluster.id) }}">{{ cluster.cluster.name }}</a></td>
                                     <td><em>{{ cluster.cluster.method.network_method.species.name }}</em></td>
                                     <td>{{ cluster.cluster_percentage|round(2) }} %</td>
                                     <td>{{ cluster.p_value|round(6) }}</td>

@@ -302,8 +302,7 @@ def export_expression_levels():
     """
     Will return a table with all (!) genes and their expression levels
 
-    :param species_id: internal ID of species to export
-    :return:
+    :return: either form with settings (on GET) or response with results (on POST)
     """
     form = ExportConditionForm(request.form)
     form.populate_form()

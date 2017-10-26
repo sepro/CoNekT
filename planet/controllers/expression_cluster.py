@@ -163,6 +163,14 @@ def avg_profile(cluster_id):
     return Response(json.dumps(avg_profile), mimetype='application/json')
 
 
+@expression_cluster.route('/tooltip/<cluster_id>')
+@cache.cached()
+def cluster_tooltip(cluster_id):
+    current_cluster = CoexpressionCluster.query.get(cluster_id)
+
+    return render_template('tooltips/cluster.html', cluster=current_cluster)
+
+
 @expression_cluster.route('/ajax/interpro/<cluster_id>')
 @cache.cached()
 def cluster_interpro_ajax(cluster_id):
