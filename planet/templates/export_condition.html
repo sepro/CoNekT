@@ -62,7 +62,7 @@ $(function() {
         $.ajax({
             url: $(this).prop('action'),
             type: "POST",
-            //dataType: 'json',
+            dataType: 'text',
             data: $(this).serialize(),
             beforeSend: function( xhr ) {
                 console.log("submitted form ... ");
