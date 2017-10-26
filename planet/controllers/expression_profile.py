@@ -257,7 +257,6 @@ def expression_profile_compare_plot_json(first_profile_id, second_profile_id, no
     return Response(json.dumps(plot), mimetype='application/json')
 
 
-@cache.memoize(timeout=None)
 def __generate(species_id, method_id, condition):
     """
 
