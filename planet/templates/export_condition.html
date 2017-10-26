@@ -65,7 +65,6 @@ $(function() {
             dataType: 'text',
             data: $(this).serialize(),
             beforeSend: function( xhr ) {
-                console.log("submitted form ... ");
                 $("#leafy_loader_text").html("Preparing your data, this can take a couple minutes. Please wait ...<br /> The download will start automatically...");
                 $("#loaderModal").modal("show");
             },

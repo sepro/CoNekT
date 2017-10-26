@@ -317,6 +317,6 @@ def export_expression_levels():
         method_id = int(request.form.get('methods'))
         condition = request.form.get('conditions')
 
-        return Response(__generate(species_id, method_id, condition))
+        return Response(__generate(species_id, method_id, condition), mimetype="text/plain")
     else:
         return render_template("export_condition.html", form=form)
