@@ -88,7 +88,7 @@
                         <td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download  <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu dropdown-menu-right">
                                     <li><a href="{{url_for('species.species_stream_coding', species_id=s.id)}}" download="{{s.code}}.cds.fasta">Coding Sequences</a></li>
                                     <li><a href="{{url_for('species.species_stream_protein', species_id=s.id)}}" download="{{s.code}}.aa.fasta">Protein Sequences</a></li>
                                     <li class="dropdown-header">Networks</li>
