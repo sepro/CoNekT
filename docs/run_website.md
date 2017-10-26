@@ -1,6 +1,6 @@
-# PlaNet Website
+# CoNekt Website
 
-PlaNet is a flask app, all that is required to start the website is running. Note that the virtualenv needs to be 
+CoNekt is a flask app, all that is required to start the website is running. Note that the virtualenv needs to be 
 set up and activated.
 
     python run.py

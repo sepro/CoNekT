@@ -1,6 +1,6 @@
-# Building PlaNet
+# Building CoNekt
 
-## Using the admin panel to build PlaNet 2.0
+## Using the admin panel to build CoNekt
 
 Make sure *LOGIN_ENABLED=True* in *config.py* and the database was build 
 with and admin account. Next, go to the website, log in and (once logged
@@ -8,7 +8,7 @@ in) click on the username (admin) in the top right corner. Select 'Admin
 Panel' from the drop-down menu.
 
 
-![Admin pane](./images/admin_home.png "admin panel")
+![Admin panel](./images/admin_home.png "admin panel")
 
 The Admin Panel will welcome you with a large warning. Deleting data, 
 overwriting or changing entries here can ruin a carefully set up 
@@ -99,7 +99,7 @@ To do so, in the 'Admin panel', under 'Add' -> 'InterPro genes' select a species
 
 Expression data should be processed using [LSTrAP](https://github.molgen.mpg.de/proost/LSTrAP), 
 this will generate the expression matrix, coexpression networks and 
-clusters that can be directly imported into PlaNet 2.0. Note that in 
+clusters that can be directly imported into CoNekt. Note that in 
 some cases additional files, containing meta information, need to be 
 provided.
  

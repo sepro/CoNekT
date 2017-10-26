@@ -1,4 +1,4 @@
-# PlaNet Linux Installation
+# CoNekt Linux Installation
 
 ## Getting Started
 
@@ -12,13 +12,13 @@ Install virtualenv
     sudo pip3 install virtualenv
 
 
-Clone the repository into a directory PlaNet
+Clone the repository into a directory CoNekt
 
-    git clone https://github.molgen.mpg.de/proost/PlaNet PlaNet
+    git clone https://github.molgen.mpg.de/proost/CoNekt CoNekt
 
 Set up the virtual environment
 
-    virtualenv --python=python3 PlaNet/
+    virtualenv --python=python3 CoNekt/
 
 Activate the virtual environment
 
@@ -50,4 +50,4 @@ Build initial database
     flask add_admin <new_username> <new_password> 
     
 
-You now have a fresh installation of PlaNet. How to fill it with your data is included in the section [Building PlaNet 2.0](./building_planet.md)
+You now have a fresh installation of CoNekt. How to fill it with your data is included in the section [Building CoNekt](building_conekt.md)

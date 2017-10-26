@@ -1,4 +1,4 @@
-# PlaNet Windows Installation
+# CoNekt Windows Installation
 
 ## Getting Started
 
@@ -49,4 +49,4 @@ Build initial database
     # Optional, create additional admin accounts
     flask add_admin <new_username> <new_password> 
 
-You now have a fresh installation of PlaNet. How to fill it with your data is included in the section [Building PlaNet 2.0](./building_planet.md)
+You now have a fresh installation of PlaNet. How to fill it with your data is included in the section [Building CoNekt](building_conekt.md)

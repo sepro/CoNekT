@@ -1,7 +1,9 @@
-# PlaNet
-Code to build PlaNet and set up the website. 
+# *CoNekT:* Coexpression Network Toolkit
 
-Setting up PlaNet
+
+Code to build CoNekT and set up the website. 
+
+Setting up CoNekT
 -----------------
 Below are the instructions to set up a new PlaNet version.
 
@@ -15,7 +17,7 @@ Below are the instructions to set up a new PlaNet version.
 [Setting up planet with apache and mod_wsgi](docs/apache_wsgi.md)
 
 
-[Build PlaNet](docs/building_planet.md)
+[Build CoNekT](docs/building_conekt.md)
 
 
 [Run website](docs/run_website.md)
@@ -24,12 +26,12 @@ Below are the instructions to set up a new PlaNet version.
 Instructions for Developers
 ---------------------------
 
-Basic information on how PlaNet 2.0 is designed can be found [Instructions for developers](docs/developer.md)
+Basic information on how CoNekT is designed can be found [Instructions for developers](docs/developer.md)
 
 Acknowledgements
 ----------------
 
-PlaNet 2.0 is based upon many open-source projects, check the full list [here](docs/acknowledgements.md)
+CoNekT is based upon many open-source projects, check the full list [here](docs/acknowledgements.md)
 
 
 Contact
