@@ -4,8 +4,8 @@ import unittest
 
 from flask_testing import TestCase
 
-from planet import create_app, db
-from planet.controllers.help import __TOPICS as topics
+from conekt import create_app, db
+from conekt.controllers.help import __TOPICS as topics
 from .config import LOGIN_ENABLED, BLAST_ENABLED
 
 
@@ -30,19 +30,19 @@ class WebsiteTest(TestCase):
         """
         Creates a database and fills it with sufficient dummy data to run the tests.
         """
-        from planet.models.users import User
-        from planet.models.expression.profiles import ExpressionProfile
-        from planet.models.sequences import Sequence
-        from planet.models.species import Species
-        from planet.models.interpro import Interpro
-        from planet.models.go import GO
-        from planet.models.gene_families import GeneFamily, GeneFamilyMethod
-        from planet.models.expression.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
-        from planet.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
-        from planet.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
-        from planet.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
-        from planet.models.expression.specificity import ExpressionSpecificityMethod
-        from planet.models.clades import Clade
+        from conekt.models.users import User
+        from conekt.models.expression.profiles import ExpressionProfile
+        from conekt.models.sequences import Sequence
+        from conekt.models.species import Species
+        from conekt.models.interpro import Interpro
+        from conekt.models.go import GO
+        from conekt.models.gene_families import GeneFamily, GeneFamilyMethod
+        from conekt.models.expression.coexpression_clusters import CoexpressionCluster, CoexpressionClusteringMethod
+        from conekt.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
+        from conekt.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
+        from conekt.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
+        from conekt.models.expression.specificity import ExpressionSpecificityMethod
+        from conekt.models.clades import Clade
 
         db.create_all()
 
@@ -249,7 +249,7 @@ class WebsiteTest(TestCase):
         """
         Test for routes associated with a Sequence
         """
-        from planet.models.sequences import Sequence
+        from conekt.models.sequences import Sequence
 
         sequence = Sequence.query.first()
 
@@ -297,7 +297,7 @@ class WebsiteTest(TestCase):
         """
         Test for routes associated with a Species
         """
-        from planet.models.species import Species
+        from conekt.models.species import Species
 
         # Should have a main page
         response = self.client.get("/species/")
@@ -356,7 +356,7 @@ class WebsiteTest(TestCase):
         """
         Test for routes associated with an InterPro domain
         """
-        from planet.models.interpro import Interpro
+        from conekt.models.interpro import Interpro
 
         # Should redirect to main page as there is no overview
         response = self.client.get('/interpro/')
@@ -400,7 +400,7 @@ class WebsiteTest(TestCase):
         """
         Test for routes associated with a GO label
         """
-        from planet.models.go import GO
+        from conekt.models.go import GO
 
         response = self.client.get('/go/')
         self.assertRedirects(response, "/")
@@ -449,7 +449,7 @@ class WebsiteTest(TestCase):
         """
         Test for routes associated with a GeneFamily
         """
-        from planet.models.gene_families import GeneFamily
+        from conekt.models.gene_families import GeneFamily
 
         response = self.client.get('/family/')
         self.assertRedirects(response, "/")
@@ -487,7 +487,7 @@ class WebsiteTest(TestCase):
         """
         Test for routes associated with an ExpressionProfile
         """
-        from planet.models.expression.profiles import ExpressionProfile
+        from conekt.models.expression.profiles import ExpressionProfile
 
         response = self.client.get('/profile/')
         self.assertRedirects(response, "/")
@@ -558,11 +558,11 @@ class WebsiteTest(TestCase):
         """
         Test different components of the search function
         """
-        from planet.models.sequences import Sequence
-        from planet.models.interpro import Interpro
-        from planet.models.go import GO
-        from planet.models.gene_families import GeneFamily
-        from planet.models.expression.profiles import ExpressionProfile
+        from conekt.models.sequences import Sequence
+        from conekt.models.interpro import Interpro
+        from conekt.models.go import GO
+        from conekt.models.gene_families import GeneFamily
+        from conekt.models.expression.profiles import ExpressionProfile
 
         sequence = Sequence.query.first()
         interpro = Interpro.query.first()
@@ -693,8 +693,8 @@ class WebsiteTest(TestCase):
         self.assertTrue('status' in data)
 
     def test_heatmap(self):
-        from planet.models.expression.profiles import ExpressionProfile
-        from planet.models.expression.coexpression_clusters import CoexpressionCluster
+        from conekt.models.expression.profiles import ExpressionProfile
+        from conekt.models.expression.coexpression_clusters import CoexpressionCluster
 
         profile = ExpressionProfile.query.first()
         cluster = CoexpressionCluster.query.first()
@@ -724,8 +724,8 @@ class WebsiteTest(TestCase):
         self.assert200(response)
 
     def test_profile_comparison(self):
-        from planet.models.expression.profiles import ExpressionProfile
-        from planet.models.expression.coexpression_clusters import CoexpressionCluster
+        from conekt.models.expression.profiles import ExpressionProfile
+        from conekt.models.expression.coexpression_clusters import CoexpressionCluster
 
         profile = ExpressionProfile.query.first()
         cluster = CoexpressionCluster.query.first()
@@ -751,8 +751,8 @@ class WebsiteTest(TestCase):
         self.assert200(response)
 
     def test_expression_network(self):
-        from planet.models.species import Species
-        from planet.models.expression.networks import ExpressionNetwork
+        from conekt.models.species import Species
+        from conekt.models.expression.networks import ExpressionNetwork
 
         species = Species.query.first()
         expression_network = ExpressionNetwork.query.first()
@@ -778,8 +778,8 @@ class WebsiteTest(TestCase):
 
     def test_coexpression_cluster(self):
         # from planet.models.species import Species
-        from planet.models.expression.coexpression_clusters import CoexpressionCluster
-        from planet.models.gene_families import GeneFamilyMethod
+        from conekt.models.expression.coexpression_clusters import CoexpressionCluster
+        from conekt.models.gene_families import GeneFamilyMethod
 
         # species = Species.query.first()
         cluster = CoexpressionCluster.query.first()
@@ -815,8 +815,8 @@ class WebsiteTest(TestCase):
         self.assertCytoscapeJson(data)
 
     def test_graph_comparison(self):
-        from planet.models.expression.coexpression_clusters import CoexpressionCluster
-        from planet.models.gene_families import GeneFamilyMethod
+        from conekt.models.expression.coexpression_clusters import CoexpressionCluster
+        from conekt.models.gene_families import GeneFamilyMethod
 
         cluster = CoexpressionCluster.query.first()
         gf_method = GeneFamilyMethod.query.first()
@@ -832,9 +832,9 @@ class WebsiteTest(TestCase):
         self.assertCytoscapeJson(data)
 
     def test_clades(self):
-        from planet.models.clades import Clade
-        from planet.models.gene_families import GeneFamily
-        from planet.models.interpro import Interpro
+        from conekt.models.clades import Clade
+        from conekt.models.gene_families import GeneFamily
+        from conekt.models.interpro import Interpro
 
         clade = Clade.query.first()
         family = GeneFamily.query.first()
@@ -866,7 +866,7 @@ class WebsiteTest(TestCase):
         self.assertTrue(interpro.label in response.data.decode('utf-8'))
 
     def test_ecc(self):
-        from planet.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
+        from conekt.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
 
         ecc = SequenceSequenceECCAssociation.query.first()
 
@@ -884,7 +884,7 @@ class WebsiteTest(TestCase):
         self.assertCytoscapeJson(data, ecc_graph=True)
 
     def test_specificity_search(self):
-        from planet.models.sequences import Sequence
+        from conekt.models.sequences import Sequence
 
         response = self.client.get('/search/specific/profiles')
         self.assert200(response)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import click
-from planet import create_app, db
-from planet.models.users import User
+from conekt import create_app, db
+from conekt.models.users import User
 
 app = create_app('config')
 

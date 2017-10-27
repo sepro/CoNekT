@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from planet import create_app, db
+from conekt import create_app, db
 
 from flask import url_for
 from flask_testing import TestCase
@@ -43,7 +43,7 @@ class AdminTest(TestCase):
         """
         Creates a database and fills it with sufficient dummy data to run the tests.
         """
-        from planet.models.users import User
+        from conekt.models.users import User
         db.create_all()
         test_admin = User('admin', 'admin', '', is_admin=True)
         test_user = User('user', 'user', '', is_admin=False)

@@ -1,4 +1,4 @@
-from planet import create_app
+from conekt import create_app
 
 
 def check_sanity_species_data(data, name=''):
@@ -241,15 +241,15 @@ with app.app_context():
     # from build.db.expression import parse_expression_network
     # from build.db.coexpression_clusters import add_planet_coexpression_clusters
 
-    from planet.models.expression.coexpression_clusters import CoexpressionClusteringMethod
-    from planet.models.expression.networks import ExpressionNetworkMethod
-    from planet.models.gene_families import GeneFamilyMethod
-    from planet.models.species import Species
-    from planet.models.sequences import Sequence
-    from planet.models.clades import Clade
-    from planet.models.go import GO
-    from planet.models.interpro import Interpro
-    from planet.models.expression.specificity import ExpressionSpecificityMethod
+    from conekt.models.expression.coexpression_clusters import CoexpressionClusteringMethod
+    from conekt.models.expression.networks import ExpressionNetworkMethod
+    from conekt.models.gene_families import GeneFamilyMethod
+    from conekt.models.species import Species
+    from conekt.models.sequences import Sequence
+    from conekt.models.clades import Clade
+    from conekt.models.go import GO
+    from conekt.models.interpro import Interpro
+    from conekt.models.expression.specificity import ExpressionSpecificityMethod
 
     print("Checking input")
     print("==============")

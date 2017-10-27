@@ -3,7 +3,7 @@ import json
 
 from flask_testing import TestCase
 
-from planet import create_app, db
+from conekt import create_app, db
 
 
 class BuildTest(TestCase):
@@ -29,18 +29,18 @@ class BuildTest(TestCase):
         """
         db.create_all()
 
-        from planet.models.species import Species
-        from planet.models.sequences import Sequence
+        from conekt.models.species import Species
+        from conekt.models.sequences import Sequence
 
-        from planet.models.xrefs import XRef
-        from planet.models.go import GO
-        from planet.models.interpro import Interpro
-        from planet.models.expression.profiles import ExpressionProfile
-        from planet.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
-        from planet.models.expression.coexpression_clusters import CoexpressionClusteringMethod
-        from planet.models.expression.specificity import ExpressionSpecificityMethod
-        from planet.models.gene_families import GeneFamily, GeneFamilyMethod
-        from planet.models.clades import Clade
+        from conekt.models.xrefs import XRef
+        from conekt.models.go import GO
+        from conekt.models.interpro import Interpro
+        from conekt.models.expression.profiles import ExpressionProfile
+        from conekt.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
+        from conekt.models.expression.coexpression_clusters import CoexpressionClusteringMethod
+        from conekt.models.expression.specificity import ExpressionSpecificityMethod
+        from conekt.models.gene_families import GeneFamily, GeneFamilyMethod
+        from conekt.models.clades import Clade
 
         Species.add('mmu', 'Marek mutwiliana')
         s = Species.query.first()
@@ -89,8 +89,8 @@ class BuildTest(TestCase):
         db.drop_all()
 
     def test_build(self):
-        from planet.models.sequences import Sequence
-        from planet.models.species import Species
+        from conekt.models.sequences import Sequence
+        from conekt.models.species import Species
 
         s = Species.query.first()
 
