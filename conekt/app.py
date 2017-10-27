@@ -18,7 +18,7 @@ from flask_admin.menu import MenuLink
 from flask_login import current_user
 from flask_admin import Admin
 
-from conekt.extensions import toolbar, db, login_manager, cache, htmlmin, blast_thread, compress, whooshee, migrate
+from conekt.extensions import toolbar, db, login_manager, cache, htmlmin, blast_thread, compress, whooshee, migrate,csrf
 
 
 def create_app(config):
@@ -56,6 +56,9 @@ def configure_extensions(app):
 
     # Enable HTMLMIN
     htmlmin.init_app(app)
+
+    # Enable CSRF Protect globally
+    csrf.init_app(app)
 
     # Enable DebugToolBar
     toolbar.init_app(app)
