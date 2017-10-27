@@ -1,4 +1,4 @@
-# PlaNet 2.0 Acknowledgements
+# CoNekT Acknowledgements
 
   * [Flask](http://flask.pocoo.org/) and various packages
   * [Python 3.4.3](https://www.python.org/)
@@ -16,6 +16,7 @@
   * [table2CSV.js](http://www.kunalbabre.com/projects/table2CSV.php)
   * [D3.js](https://d3js.org/) 
   * [d3.phylogram.js](https://gist.github.com/kueda/1036776)
+  * [PhyD3.js](https://phyd3.bits.vib.be/)
   * [typeahead.js](https://twitter.github.io/typeahead.js/)
   * [jscolors](http://jscolor.com/)
   * [jQuery File Uploader](https://github.com/danielm/uploader)
