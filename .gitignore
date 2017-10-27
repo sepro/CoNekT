@@ -16,6 +16,7 @@ config.cfg
 /config.py
 
 ftp
+data/
 data/*
 db/*
 uploads/*
