@@ -38,6 +38,16 @@
     <br /><br />
     {% endif %}
 
+    {% if  profile.sequence %}
+        {% if profile.sequence.aliases %}
+        <p><strong>Aliases : </strong>{{ profile.sequence.aliases }}</p>
+        {%endif%}
+        {% if profile.sequence.description %}
+        <p><strong>Description : </strong> {{ profile.sequence.description }}</p>
+        {% endif %}
+    {% endif %}
+
+
     {% for s in profile.specificities %}
     <span>{{ s.method.description }}: <strong>{{ s.condition }}</strong> (<abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr>: {{ s.score|round(2) }},
         <abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='entropy') }}" data-target="#helpModal">entropy</abbr>: {{ s.entropy|round(2) }}{%- if s.tau -%}, <abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='tau') }}" data-target="#helpModal">tau</abbr>: {{ s.tau|round(2) }}{% endif %})</span><br />
