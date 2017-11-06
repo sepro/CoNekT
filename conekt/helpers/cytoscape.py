@@ -120,10 +120,20 @@ class CytoscapeHelper:
                 node["data"]["family_name"] = data[node["data"]["gene_id"]]["name"]
                 node["data"]["family_id"] = data[node["data"]["gene_id"]]["id"]
                 node["data"]["family_url"] = data[node["data"]["gene_id"]]["url"]
-                node["data"]["family_clade"] = data[node["data"]["gene_id"]]["clade"]
-                node["data"]["family_clade_color"] = data[node["data"]["gene_id"]]["clade_color"]
-                node["data"]["family_clade_shape"] = data[node["data"]["gene_id"]]["clade_shape"]
-                node["data"]["family_clade_count"] = data[node["data"]["gene_id"]]["clade_count"]
+
+                if "clade" in data[node["data"]["gene_id"]] and \
+                   "clade_count" in data[node["data"]["gene_id"]] and \
+                   "clade_shape" in data[node["data"]["gene_id"]] and \
+                   "clade_color" in data[node["data"]["gene_id"]]:
+                    node["data"]["family_clade"] = data[node["data"]["gene_id"]]["clade"]
+                    node["data"]["family_clade_color"] = data[node["data"]["gene_id"]]["clade_color"]
+                    node["data"]["family_clade_shape"] = data[node["data"]["gene_id"]]["clade_shape"]
+                    node["data"]["family_clade_count"] = data[node["data"]["gene_id"]]["clade_count"]
+                else:
+                    node["data"]["family_clade_color"] = "#CCC"
+                    node["data"]["family_clade_shape"] = "rectangle"
+                    node["data"]["family_clade"] = "None"
+                    node["data"]["family_clade_count"] = 1
             else:
                 node["data"]["family_name"] = None
                 node["data"]["family_id"] = None
