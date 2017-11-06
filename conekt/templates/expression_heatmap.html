@@ -62,7 +62,7 @@
         </div>
     </div>
      <div class="table-responsive">
-        <table class="table" id="heatmap-table">
+        <table class="table" style="width:auto" id="heatmap-table">
             <thead>
                 <tr>
                     <th>Gene</th>
@@ -88,6 +88,18 @@
             {% endfor %}
             </tbody>
         </table>
+         <div class="panel">
+             <div class="panel-body">
+                 <h3>Details</h3>
+                     {% if zlog == 1 %}
+                 <p><span style="color:#333333;font-weight:bold">Dark gray</span> cells indicate values where the raw expression is zero (cannot be log-transformed). <span style="color:#0000FF;font-weight:bold">Blue</span> cells indicate samples where the expression of the gene is below average and <span style="color:#FF0000;font-weight:bold">red</span> cells indicate the gene is expressed above average in the sample. White cells are average.</p>
+                    {% elif raw == 1 %}
+                 <p>Raw expression values (TPM normalized), <span style="color:#53db3b;font-weight:bold">Green</span> cells indicate low expression and <span style="color:#d11010;font-weight:bold">red</span> high.</p>
+                    {% else %}
+                    <p>Expression values normalized per gene (using the maximum value, <span style="color:#53db3b;font-weight:bold">Green</span> cells indicate low expression and <span style="color:#d11010;font-weight:bold">red</span> high.</p>
+                    {% endif %}
+             </div>
+         </div>
      </div>
         {% else %}
         <ol class="breadcrumb">
