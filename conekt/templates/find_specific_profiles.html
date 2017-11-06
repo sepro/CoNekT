@@ -74,6 +74,8 @@
             <thead>
             <tr>
                 <th data-sort="string-ins"><span class="sort-icon"></span>Gene</th>
+                <th data-sort="string-ins"><span class="sort-icon"></span>Aliases</th>
+                <th data-sort="string-ins"><span class="sort-icon"></span>Description</th>
                 <th data-sort="string-ins"><span class="sort-icon"></span>Condition</th>
                 <th data-sort="float"><span class="sort-icon"></span><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='spm') }}" data-target="#helpModal">SPM</abbr> score</th>
                 <th data-sort="float"><span class="sort-icon"></span><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='entropy') }}" data-target="#helpModal">Entropy</abbr> score</th>
@@ -88,6 +90,16 @@
                     <tr>
                         <td><a href="{{url_for('sequence.sequence_view', sequence_id=r.profile.sequence.id)}}" class="qtip_tooltip"
                                qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=r.profile.sequence_id) }}">{{ r.profile.sequence.name }}</a></td>
+                        {% if r.profile.sequence.aliases %}
+                        <td class="alias-cell">{{ r.profile.sequence.aliases }}</td>
+                        {% else %}
+                        <td class="alias-cell"><span class="text-muted">None</span></td>
+                        {% endif %}
+                        {% if r.profile.sequence.description %}
+                        <td class="alias-cell">{{ r.profile.sequence.description }}</td>
+                        {% else %}
+                        <td class="alias-cell"><span class="text-muted">None</span></td>
+                        {% endif %}
                         <td>{{ r.condition }}</td>
                         <td>{{ r.score|round(2) }}</td>
                         <td>{{ r.entropy|round(2) }}</td>

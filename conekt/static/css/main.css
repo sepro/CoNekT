@@ -527,3 +527,10 @@ div#phyd3 .table-responsive > table {
 g.legend_node {
     cursor:pointer;
 }
+
+.alias-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
