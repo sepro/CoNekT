@@ -2,7 +2,7 @@
 {% if "table" not in exclude %}<a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster_id) }}" data-toggle="tooltip"
    data-placement="top" title="View cluster as table"><i class="fa fa-list"></i></a>{% endif %}
 {% if "graph" not in exclude %}<a href="{{ url_for('expression_cluster.expression_cluster_graph', cluster_id=cluster_id) }}" data-toggle="tooltip"
-   data-placement="top" title="View cluster as graph"><i class="fa fa-share-alt"></i></a>{% endif %}
+   data-placement="top" title="View cluster as graph"><i class="fa fa-sitemap"></i></a>{% endif %}
 {% if "profile" not in exclude %}<a href="{{ url_for('profile_comparison.profile_comparison_cluster', cluster_id=cluster_id) }}" data-toggle="tooltip"
    data-placement="top" title="Compare profiles in this cluster"><i class="fa fa-area-chart"></i></a>{% endif %}
 {% if "heatmap" not in exclude %}<a href="{{ url_for('heatmap.heatmap_cluster', cluster_id=cluster_id) }}" data-toggle="tooltip"
