@@ -534,3 +534,45 @@ g.legend_node {
   text-overflow: ellipsis;
   max-width: 200px;
 }
+
+#featureCarousel {
+    max-height:150px;
+    overflow: hidden;
+}
+
+ol.carousel-indicators {
+    margin-bottom: 0px !important;
+    bottom: 0px !important;
+}
+
+.carousel-indicators li {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 10px;
+    text-indent: 0;
+    cursor: pointer;
+    border: none;
+    border-radius: 50%;
+    background-color: #C1D0DE;
+    box-shadow: inset 1px 1px 1px 1px rgba(16,25,31,0.1);
+}
+.carousel-indicators .active {
+    width: 12px;
+    height: 12px;
+    margin: 10px;
+    background-color: #a0d8ff;
+}
+
+.carousel-div {
+    height: 150px;
+    width: 100%;
+    padding-left: 15%;
+    padding-right: 15%;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.carousel-control.left, .carousel-control.right {
+    background-image: none
+}

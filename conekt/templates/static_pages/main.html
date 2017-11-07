@@ -51,6 +51,69 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-lg-12">
+          <div class="panel panel-default">
+          <div id="featureCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+              <li data-target="#featureCarousel" data-slide-to="0" class="active"></li>
+              <li data-target="#featureCarousel" data-slide-to="1"></li>
+              <li data-target="#featureCarousel" data-slide-to="2"></li>
+              <li data-target="#featureCarousel" data-slide-to="3"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+              <div class="item active">
+                <div class="carousel-div">
+                    <h3>Quickly retrieve genes</h3>
+                    <p>Use our <a href="#">Search</a> function {% if g.blast_enabled -%}or <a href="{{ url_for('blast.blast_main') }}">BLAST</a>{%- endif %} to quickly find genes of interest.</p>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="carousel-div">
+                    <h3>Expression profiles and expression specificity</h3>
+                    <p>See in which tissues and conditions a gene of interest is expressed or find genes <a href="{{ url_for('search.search_specific_profiles') }}">specifically expressed</a> in a certain tissue/condition.</p>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="carousel-div">
+                    <h3>Co-expression networks</h3>
+                    <p>Browse co-expression networks based on thousands of publicly available RNA-Seq samples! <a href="{{ url_for('search.search_enriched_clusters') }}">Find cluster</a> of co-expressed genes enriched for certain functions.</p>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="carousel-div">
+                    <h3>Co-expression networks</h3>
+                    <p>Browse co-expression networks based on thousands of publicly available RNA-Seq samples! <a href="{{ url_for('search.search_enriched_clusters') }}">Find cluster</a> of co-expressed genes enriched for certain functions.</p>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="carousel-div">
+                    <h3>Analyse custom gene sets</h3>
+                    <p>Create <a href="{{ url_for('heatmap.heatmap_main') }}">heatmap</a> and <a href="{{ url_for('profile_comparison.profile_comparison_main') }}">expression profiles</a> for user defined sets of genes. Build a <a href="{{ url_for('custom_network.custom_network_main') }}">custom co-expression network</a> for a set of selected genes.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#featureCarousel" data-slide="prev">
+              <span class="glyphicon glyphicon-chevron-left"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#featureCarousel" data-slide="next">
+              <span class="glyphicon glyphicon-chevron-right"></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
+        </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-lg-6 col-md-12">
             <div class="panel panel-success"  style="height:300px; overflow-y:scroll">
               <div class="panel-heading">News</div>
