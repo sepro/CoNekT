@@ -67,8 +67,13 @@
             <div class="carousel-inner">
               <div class="item active">
                 <div class="carousel-div">
-                    <h3>Quickly retrieve genes</h3>
-                    <p>Use our <a href="{{ url_for('search.advanced') }}">Search</a> function {% if g.blast_enabled -%}or <a href="{{ url_for('blast.blast_main') }}">BLAST</a>{%- endif %} to quickly find genes of interest.</p>
+                    <div class="row">
+                        <div class="col-xs-2"><div style="margin-top:30px"><span style="color:#fff;font-size:36px;background-color:#337ab7;border-radius:4px;padding:10px"><i class="fa fa-search" ></i></span></div></div>
+                        <div class="col-xs-10">
+                            <h3>Quickly retrieve genes</h3>
+                            <p>Use our <a href="{{ url_for('search.advanced') }}">Search</a> function {% if g.blast_enabled -%}or <a href="{{ url_for('blast.blast_main') }}">BLAST</a>{%- endif %} to quickly find genes of interest.</p>
+                        </div>
+                    </div>
                 </div>
               </div>
 
