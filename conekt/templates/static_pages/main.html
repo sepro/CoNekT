@@ -68,7 +68,7 @@
               <div class="item active">
                 <div class="carousel-div">
                     <h3>Quickly retrieve genes</h3>
-                    <p>Use our <a href="#">Search</a> function {% if g.blast_enabled -%}or <a href="{{ url_for('blast.blast_main') }}">BLAST</a>{%- endif %} to quickly find genes of interest.</p>
+                    <p>Use our <a href="{{ url_for('search.advanced') }}">Search</a> function {% if g.blast_enabled -%}or <a href="{{ url_for('blast.blast_main') }}">BLAST</a>{%- endif %} to quickly find genes of interest.</p>
                 </div>
               </div>
 
