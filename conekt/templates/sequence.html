@@ -61,7 +61,7 @@
         <span class="text-muted">No tree available for this family</span>
         {% endfor %}
         {%- if not loop.last -%},<br/> {% endif %}
-                            {% endfor %} {% else %}<em>No families found for this sequence</em>{% endif %}</p>
+        {% endfor %} {% else %}<em>No families found for this sequence</em>{% endif %}</p>
     <p><strong>Sequence :</strong> <a href="{{ url_for('sequence.sequence_modal_coding', sequence_id=sequence.id) }}" data-target="#profileModal">coding</a> (<a href="{{ url_for('sequence.sequence_fasta_coding', sequence_id=sequence.id) }}">download</a>) {%- if sequence.type == 'protein_coding' -%}, <a href="{{ url_for('sequence.sequence_modal_protein', sequence_id=sequence.id) }}" data-target="#profileModal">protein</a> (<a href="{{ url_for('sequence.sequence_fasta_protein', sequence_id=sequence.id) }}">download</a>) {% endif %}</p>
     </div>
 
@@ -78,8 +78,8 @@
                     <canvas id="expression-profile" class="center-block" height="550"/>
                 </div>
                 <br />
-                <div>
-                    <a href="{{ url_for('expression_profile.expression_profile_download_plot', profile_id=profile.id) }}" class="btn btn-primary pull-right" download="plot_{{profile.id}}.txt">Download</a>
+                <div class="pull-right">
+                    <a href="{{ url_for('expression_profile.expression_profile_download_plot', profile_id=profile.id) }}" class="btn btn-primary" download="plot_{{profile.id}}.txt">Download</a>
                 </div>
                 <p><strong>Note:</strong>Only the main profile, including all conditions, is shown. Additional statistics and tissue specific profiles are available <a href="{{ url_for('expression_profile.expression_profile_view', profile_id=profile.id) }}">here</a>.</p>
             {% endif %}
