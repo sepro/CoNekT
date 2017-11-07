@@ -536,7 +536,6 @@ g.legend_node {
 }
 
 #featureCarousel {
-    max-height:150px;
     overflow: hidden;
 }
 
@@ -565,7 +564,7 @@ ol.carousel-indicators {
 }
 
 .carousel-div {
-    height: 150px;
+    height: 200px;
     width: 100%;
     padding-left: 15%;
     padding-right: 15%;
