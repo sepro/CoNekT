@@ -61,6 +61,7 @@ $(function() {
 
         $.ajax({
             url: $(this).prop('action'),
+            timeout:600000, //10 min timeout
             type: "POST",
             dataType: 'text',
             data: $(this).serialize(),
