@@ -175,7 +175,10 @@ class ExpressionProfile(db.Model):
                     if row_max != 0 and not raw:
                         values[o] = values[o]/row_max
 
-            output.append({"name": name, "values": values, "sequence_id": profile.sequence_id})
+            output.append({"name": name,
+                           "values": values,
+                           "sequence_id": profile.sequence_id,
+                           "shortest_alias":profile.sequence.shortest_alias})
 
         return {'order': order, 'heatmap_data': output}
 
