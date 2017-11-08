@@ -8,6 +8,7 @@ from conekt.models.relationships.sequence_family import SequenceFamilyAssociatio
 from conekt.models.relationships.sequence_interpro import SequenceInterproAssociation
 from conekt.models.species import Species
 
+from sqlalchemy.orm import joinedload
 
 specificity_comparison = Blueprint('specificity_comparison', __name__)
 
@@ -48,11 +49,17 @@ def specificity_comparison_main():
         # Fetch results
         results_a = ExpressionSpecificity.query.filter(ExpressionSpecificity.method_id == method_a_id). \
             filter(ExpressionSpecificity.score >= cutoff_a).\
-            filter(ExpressionSpecificity.condition == condition_a).\
+            filter(ExpressionSpecificity.condition == condition_a). \
+            options(
+                joinedload(ExpressionSpecificity.profile).undefer("profile")
+            ).\
             all()
         results_b = ExpressionSpecificity.query.filter(ExpressionSpecificity.method_id == method_b_id). \
             filter(ExpressionSpecificity.score >= cutoff_b).\
-            filter(ExpressionSpecificity.condition == condition_b).\
+            filter(ExpressionSpecificity.condition == condition_b). \
+            options(
+                joinedload(ExpressionSpecificity.profile).undefer("profile")
+            ). \
             all()
 
         sequence_ids = [r.profile.sequence_id for r in results_a] + [r.profile.sequence_id for r in results_b]
