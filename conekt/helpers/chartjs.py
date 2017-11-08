@@ -112,6 +112,14 @@ def prepare_profiles(profiles, normalize=False, xlabel='', ylabel=''):
                 }
               }
               ]
+          },
+          "pan" : {
+              "enabled": True,
+              "mode": 'y'
+          },
+          "zoom": {
+              "enabled": True,
+              "mode": 'y'
           }
         }
     }
@@ -219,6 +227,14 @@ def prepare_avg_profiles(profiles, xlabel='', ylabel=''):
                         }
                       }
                       ]
+                  },
+                  "pan" : {
+                      "enabled": True,
+                      "mode": 'y'
+                  },
+                  "zoom": {
+                      "enabled": True,
+                      "mode": 'y'
                   }
               }
               }
@@ -305,6 +321,14 @@ def prepare_expression_profile(data, show_sample_count=False, xlabel='', ylabel=
                         }
                       }
                       ]
+                  },
+                  "pan" : {
+                      "enabled": True,
+                      "mode": 'y'
+                  },
+                  "zoom": {
+                      "enabled": True,
+                      "mode": 'y'
                   }
               }
               }
@@ -372,6 +396,14 @@ def prepare_profile_comparison(data_first, data_second, labels, normalize=1, xla
                         }
                       }
                       ]
+                  },
+                  "pan" : {
+                      "enabled": True,
+                      "mode": 'y'
+                  },
+                  "zoom": {
+                      "enabled": True,
+                      "mode": 'y'
                   }
               }
               }

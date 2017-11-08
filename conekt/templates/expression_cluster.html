@@ -176,6 +176,8 @@
 {% block extrajs %}
     {% if cluster %}
         <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/hammer.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/chartjs-plugin-zoom.min.js') }}"></script>
         <script>
             	{% import "macros/chartjs.html" as chartjs %}
         {{ chartjs.expression_profile_loader("chart-area", url_for('expression_cluster.avg_profile', cluster_id=cluster.id), "chart-loader") }}

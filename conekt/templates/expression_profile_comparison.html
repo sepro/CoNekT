@@ -99,6 +99,8 @@
 
 {% block extrajs %}
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/hammer.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chartjs-plugin-zoom.min.js') }}"></script>
     {% if profiles %}
         <script>
         $(function () {
