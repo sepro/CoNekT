@@ -1,10 +1,12 @@
 import json
 
-from flask import Blueprint, redirect, url_for, render_template, Response, request
+from flask import Blueprint, redirect, url_for, render_template, Response, request, current_app, send_from_directory
 from sqlalchemy.orm import undefer
 
 from statistics import mean
 import sys
+import tempfile
+import os
 
 from conekt import cache
 from conekt.helpers.chartjs import prepare_expression_profile, prepare_profile_comparison
@@ -266,7 +268,7 @@ def __generate(species_id, method_id, condition):
     :param condition: Condition to be exported
     :return: output
     """
-    yield "Sequence\tAvg.Expression\tMin.Expression\tMax.Expression\n"
+    yield "Sequence\tAliases\tDescription\tAvg.Expression\tMin.Expression\tMax.Expression\n"
 
     profiles = ExpressionProfile.query.filter(ExpressionProfile.species_id == species_id). \
         filter(ExpressionProfile.sequence_id is not None). \
@@ -289,7 +291,10 @@ def __generate(species_id, method_id, condition):
                                                                       data, use_means=True)
                 values = converted_profile["data"][condition]
 
-            yield "%s\t%f\t%f\t%f\n" % (p.sequence.name, mean(values), min(values), max(values))
+            aliases = p.sequence.aliases if p.sequence.aliases is not None else ""
+            description = p.sequence.description if p.sequence.description is not None else ""
+
+            yield "%s\t%s\t%s\t%f\t%f\t%f\n" % (p.sequence.name, aliases, description, mean(values), min(values), max(values))
 
         except Exception as e:
             print("An error occured exporting a profile with conditions %s for species %d." % (condition, species_id),
@@ -312,6 +317,21 @@ def export_expression_levels():
         method_id = int(request.form.get('methods'))
         condition = request.form.get('conditions')
 
-        return Response(__generate(species_id, method_id, condition), mimetype="text/plain")
+        _, filepath = tempfile.mkstemp(prefix='expr_', dir=current_app.config['TMP_DIR'])
+
+        filename = os.path.basename(filepath)
+        print(filepath, filename)
+
+        with open(filepath, "w") as fout:
+            for l in __generate(species_id, method_id, condition):
+                print(l, end='', file=fout)
+
+        return Response(json.dumps({"url": url_for('expression_profile.export_expression_levels_file', name=filename)}), mimetype='application/json')
     else:
         return render_template("export_condition.html", form=form)
+
+
+@expression_profile.route('/export/get_file/<name>')
+def export_expression_levels_file(name):
+    return send_from_directory(current_app.config['TMP_DIR'], name, as_attachment=True, attachment_filename='expression.tab')
+

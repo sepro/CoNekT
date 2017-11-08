@@ -46,6 +46,9 @@ WHOOSHEE_WRITER_TIMEOUT = 2
 WHOOSHEE_MEMORY_STORAGE = False
 WHOOSHEE_ENABLE_INDEXING = True
 
+# temp dir
+TMP_DIR = tempfile.mkdtemp()
+
 # BLAST settings
 BLAST_ENABLED = False
 BLAST_TMP_DIR = tempfile.mkdtemp()
