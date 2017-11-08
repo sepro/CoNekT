@@ -72,6 +72,12 @@ def specificity_comparison_main():
             sequence_id_left = [r.profile.sequence_id for r in results_a if r.profile.sequence_id is not None]
             sequence_id_right = [r.profile.sequence_id for r in results_b if r.profile.sequence_id is not None]
 
+            abundance = defaultdict(lambda: False)
+
+            for r in results_a + results_b:
+                if r.profile.sequence_id is not None:
+                    abundance[r.profile.sequence_id] = r.profile.low_abundance
+
             interpro_id_to_name = {i.interpro_id: "%s (%s)" % (i.domain.label, i.domain.description if i.domain.description else "no description") for i in interpro_associations}
 
             for i in interpro_associations:
@@ -83,12 +89,14 @@ def specificity_comparison_main():
                 if i.sequence_id in sequence_id_left:
                     table_data[i.interpro_id]['left_genes'].append({'id': i.sequence_id,
                                                                     'name': i.sequence.name,
-                                                                    'shortest_alias': i.sequence.shortest_alias})
+                                                                    'shortest_alias': i.sequence.shortest_alias,
+                                                                    'low_abundance': abundance[i.sequence_id]})
 
                 if i.sequence_id in sequence_id_right:
                     table_data[i.interpro_id]['right_genes'].append({'id': i.sequence_id,
                                                                      'name': i.sequence.name,
-                                                                     'shortest_alias': i.sequence.shortest_alias})
+                                                                     'shortest_alias': i.sequence.shortest_alias,
+                                                                     'low_abundance': abundance[i.sequence_id]})
 
                 if len(table_data[i.interpro_id]['left_genes']) > 0 and len(table_data[i.interpro_id]['right_genes']) == 0:
                     table_data[i.interpro_id]['type'] = 'left'
@@ -124,7 +132,8 @@ def specificity_comparison_main():
 
                 table_data[f]['left_genes'].append({'id': r.profile.sequence_id,
                                                     'name': r.profile.sequence.name,
-                                                    'shortest_alias': r.profile.sequence.shortest_alias})
+                                                    'shortest_alias': r.profile.sequence.shortest_alias,
+                                                    'low_abundance': r.profile.low_abundance})
 
             for r in results_b:
                 f = seq_to_fam[r.profile.sequence_id] if r.profile.sequence_id in seq_to_fam.keys() else None
@@ -137,7 +146,9 @@ def specificity_comparison_main():
 
                 table_data[f]['right_genes'].append({'id': r.profile.sequence_id,
                                                      'name': r.profile.sequence.name,
-                                                     'shortest_alias': r.profile.sequence.shortest_alias})
+                                                     'shortest_alias': r.profile.sequence.shortest_alias,
+                                                     'low_abundance': r.profile.low_abundance
+                                                     })
 
             for f in table_data.keys():
                 if len(table_data[f]['left_genes']) > 0 and len(table_data[f]['right_genes']) == 0:

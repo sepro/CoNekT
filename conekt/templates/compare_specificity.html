@@ -130,7 +130,8 @@
                                             {% for l in td.left_genes %}
                                                 <a href="{{ url_for('sequence.sequence_view', sequence_id=l.id) }}"
                                                 class="qtip_tooltip"
-                                                qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=l.id) }}">{{l.name}}</a>{%- if l.shortest_alias %} <span class="text-muted">({{ l.shortest_alias }})</span>{%- endif -%}{%- if not loop.last -%}, {%- endif -%}
+                                                qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=l.id) }}">{{l.name}}</a>{%- if l.low_abundance %} <span class="warning-message qtip_tooltip"
+                               qtip_href="{{ url_for('help.help_popup', topic='lowabundance') }}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>{%- endif -%}{%- if l.shortest_alias %} <span class="text-muted">({{ l.shortest_alias }})</span>{%- endif -%}{%- if not loop.last -%}, {%- endif -%}
                                             {% else %}
                                                 <span class="text-muted text-center">-</span>
                                             {% endfor %}
@@ -139,7 +140,8 @@
                                             {% for r in td.right_genes %}
                                                 <a href="{{ url_for('sequence.sequence_view', sequence_id=r.id) }}"
                                                 class="qtip_tooltip"
-                                                qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=r.id) }}">{{r.name}}</a>{%- if r.shortest_alias %} <span class="text-muted">({{ r.shortest_alias }})</span>{%- endif -%}{%- if not loop.last -%}, {%- endif -%}
+                                                qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=r.id) }}">{{r.name}}</a>{%- if r.low_abundance %} <span class="warning-message qtip_tooltip"
+                               qtip_href="{{ url_for('help.help_popup', topic='lowabundance') }}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>{%- endif -%}{%- if r.shortest_alias %} <span class="text-muted">({{ r.shortest_alias }})</span>{%- endif -%}{%- if not loop.last -%}, {%- endif -%}
                                             {% else %}
                                                 <span class="text-muted  text-center">-</span>
                                             {% endfor %}
