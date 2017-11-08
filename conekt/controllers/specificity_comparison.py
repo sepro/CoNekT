@@ -81,10 +81,14 @@ def specificity_comparison_main():
                                                  'left_genes': [],
                                                  'right_genes': []}
                 if i.sequence_id in sequence_id_left:
-                    table_data[i.interpro_id]['left_genes'].append({'id': i.sequence_id, 'name': i.sequence.name})
+                    table_data[i.interpro_id]['left_genes'].append({'id': i.sequence_id,
+                                                                    'name': i.sequence.name,
+                                                                    'shortest_alias': i.sequence.shortest_alias})
 
                 if i.sequence_id in sequence_id_right:
-                    table_data[i.interpro_id]['right_genes'].append({'id': i.sequence_id, 'name': i.sequence.name})
+                    table_data[i.interpro_id]['right_genes'].append({'id': i.sequence_id,
+                                                                     'name': i.sequence.name,
+                                                                     'shortest_alias': i.sequence.shortest_alias})
 
                 if len(table_data[i.interpro_id]['left_genes']) > 0 and len(table_data[i.interpro_id]['right_genes']) == 0:
                     table_data[i.interpro_id]['type'] = 'left'
@@ -118,7 +122,9 @@ def specificity_comparison_main():
                 if f not in table_data.keys():
                     table_data[f] = {'id': f, 'name': famID_to_name[f], 'left_genes': [], 'right_genes': []}
 
-                table_data[f]['left_genes'].append({'id': r.profile.sequence_id, 'name': r.profile.sequence.name})
+                table_data[f]['left_genes'].append({'id': r.profile.sequence_id,
+                                                    'name': r.profile.sequence.name,
+                                                    'shortest_alias': r.profile.sequence.shortest_alias})
 
             for r in results_b:
                 f = seq_to_fam[r.profile.sequence_id] if r.profile.sequence_id in seq_to_fam.keys() else None
@@ -129,7 +135,9 @@ def specificity_comparison_main():
                 if f not in table_data.keys():
                     table_data[f] = {'id': f, 'name': famID_to_name[f], 'left_genes': [], 'right_genes': []}
 
-                table_data[f]['right_genes'].append({'id': r.profile.sequence_id, 'name': r.profile.sequence.name})
+                table_data[f]['right_genes'].append({'id': r.profile.sequence_id,
+                                                     'name': r.profile.sequence.name,
+                                                     'shortest_alias': r.profile.sequence.shortest_alias})
 
             for f in table_data.keys():
                 if len(table_data[f]['left_genes']) > 0 and len(table_data[f]['right_genes']) == 0:

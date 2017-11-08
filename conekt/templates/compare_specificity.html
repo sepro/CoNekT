@@ -130,7 +130,7 @@
                                             {% for l in td.left_genes %}
                                                 <a href="{{ url_for('sequence.sequence_view', sequence_id=l.id) }}"
                                                 class="qtip_tooltip"
-                                                qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=l.id) }}">{{l.name}}</a>
+                                                qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=l.id) }}">{{l.name}}</a>{%- if l.shortest_alias %} <span class="text-muted">({{ l.shortest_alias }})</span>{%- endif -%}{%- if not loop.last -%}, {%- endif -%}
                                             {% else %}
                                                 <span class="text-muted text-center">-</span>
                                             {% endfor %}
@@ -139,7 +139,7 @@
                                             {% for r in td.right_genes %}
                                                 <a href="{{ url_for('sequence.sequence_view', sequence_id=r.id) }}"
                                                 class="qtip_tooltip"
-                                                qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=r.id) }}">{{r.name}}</a>
+                                                qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=r.id) }}">{{r.name}}</a>{%- if r.shortest_alias %} <span class="text-muted">({{ r.shortest_alias }})</span>{%- endif -%}{%- if not loop.last -%}, {%- endif -%}
                                             {% else %}
                                                 <span class="text-muted  text-center">-</span>
                                             {% endfor %}

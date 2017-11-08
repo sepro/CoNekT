@@ -103,6 +103,17 @@ class Sequence(db.Model):
         return ", ".join(t) if len(t) > 0 else None
 
     @property
+    def shortest_alias(self):
+        """
+        Returns the shortest alias
+
+        :return: string with shortest alias or None (in case no aliases exist)
+        """
+        t = [x.name for x in self.xrefs if x.platform == 'token']
+
+        return min(t, key=len) if len(t) > 0 else None
+
+    @property
     def display_name(self):
         """
         Returns a name to display (from xrefs with display) if available otherwise return name
