@@ -51,6 +51,7 @@
         </ol>
      <h1>{{ tree.label }}: <strong>{{ tree.method.description }}</strong></h1>
      <p>Tree for gene family <a href="{{ url_for('family.family_view', family_id=tree.family.id) }}">{{ tree.family.name }}</a></p>
+    {% if tree.phyloxml %}
     <div class="row">
         <div class="col-lg-12">
             <div id="phyd3" style="height:600px">
@@ -96,6 +97,14 @@
             </div>
         </div>
     </div>
+    {% else %}
+
+    <div class="alert alert-warning">
+      <strong>PhyloXML data empty. Cannot draw tree!</strong> This indicates trees included in the database haven't been
+        reconciled yet.
+    </div>
+
+    {% endif %}
     <br /><br />
     {{ macro.pagination('Sequences',
         url_for('tree.tree_sequences', tree_id=tree.id),
@@ -119,7 +128,7 @@
                 $("#methods_table").stupidtable();
             });
         </script>
-    {% else %}
+    {% elif tree and tree.phyloxml %}
         <script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/phyd3.min.js') }}"></script>
         <script>

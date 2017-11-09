@@ -62,7 +62,7 @@ class XRef(db.Model):
         seq_dict = {s.name.upper(): s for s in sequences}
 
         with open(filename, "r") as f:
-            for line in f:
+            for i, line in enumerate(f):
                 sequence, name, platform, url = line.split('\t')
 
                 xref = XRef()
@@ -73,10 +73,19 @@ class XRef(db.Model):
                 if sequence.upper() in seq_dict.keys():
                     s = seq_dict[sequence.upper()]
                     s.xrefs.append(xref)
+
+                if i % 400 == 0:
+                    # Update every 400 lines
                     try:
                         db.session.commit()
                     except Exception as e:
                         db.session.rollback()
+
+            # Commit final changes
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
 
     @staticmethod
     def add_xref_families_from_file(gene_family_method_id, filename):

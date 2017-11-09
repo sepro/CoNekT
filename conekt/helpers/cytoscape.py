@@ -188,7 +188,8 @@ class CytoscapeHelper:
     @staticmethod
     def add_descriptions_nodes(network):
         """
-        Adds the description to nodes (if available) and alternative names (aka gene tokens) to a cytoscape.js network
+        Adds the description to nodes (if available), the best name to display and alternative names (aka gene tokens)
+        to a cytoscape.js network
 
         :param network: Cytoscape.js compatible network object
         :return: Network with descriptions and tokens added
@@ -203,6 +204,7 @@ class CytoscapeHelper:
         sequences = Sequence.query.filter(Sequence.id.in_(sequence_ids)).all()
 
         descriptions = {s.id: s.description for s in sequences}
+        best_names = {s.id: s.best_name for s in sequences}
         tokens = {s.id: ", ".join([x.name for x in s.xrefs if x.platform == 'token']) for s in sequences}
 
         # Set empty tokens to None
@@ -216,6 +218,11 @@ class CytoscapeHelper:
                     node["data"]["description"] = descriptions[node["data"]["gene_id"]]
                 else:
                     node["data"]["description"] = None
+
+                if node["data"]["gene_id"] in best_names.keys():
+                    node["data"]["best_name"] = best_names[node["data"]["gene_id"]]
+                else:
+                    node["data"]["best_name"] = node["data"]["gene_name"]
 
                 if node["data"]["gene_id"] in tokens.keys():
                     node["data"]["tokens"] = tokens[node["data"]["gene_id"]]

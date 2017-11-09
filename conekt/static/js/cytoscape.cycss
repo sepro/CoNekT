@@ -1,5 +1,5 @@
 node {
-        content: data(gene_name);
+        content: data(best_name);
         text-valign: center;
         color: black;
         background-color: data(color);
