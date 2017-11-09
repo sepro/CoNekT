@@ -70,22 +70,22 @@ $(function() {
                 $("#loaderModal").modal("show");
             },
             success: function(data) {
-                       $("#leafy_loader_text").html("Your Download is ready ! ");
+               $("#leafy_loader_text").html("Your Download is ready ! ");
 
-                        pdata = JSON.parse(data);
+                pdata = JSON.parse(data);
 
-                        var element = document.createElement('a');
-                        element.setAttribute('href', pdata.url);
-                        element.setAttribute('download', 'expression.tab');
+                var element = document.createElement('a');
+                element.setAttribute('href', pdata.url);
+                element.setAttribute('download', 'expression.tab');
 
-                        document.body.appendChild(element);
-                        element.click();
-                        document.body.removeChild(element);
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
 
-                       $("#leafy_loader_text").append($("<a/>").attr('href', pdata.url).attr('download', 'expression.tab').attr('id', 'download_ready_link').text("Click here"))
-                       .append($("<span> if the download doesn't start automatically.</span>"));
-                       $("#leafy_loader_close_btn").show();
-                     }
+               $("#leafy_loader_text").append($("<a/>").attr('href', pdata.url).attr('download', 'expression.tab').attr('id', 'download_ready_link').text("Click here"))
+               .append($("<span> if the download doesn't start automatically.</span>"));
+               $("#leafy_loader_close_btn").show();
+            }
         });
     })
 });

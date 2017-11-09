@@ -125,6 +125,21 @@ class Sequence(db.Model):
         return t[0] if len(t) > 0 else self.name
 
     @property
+    def best_name(self):
+        """
+        Checks if there is a display name, if not checks the shortest alias, otherwise returns name. To be used in e.g.
+        graphs
+
+        :return: string with best name to show in graphs, ...
+        """
+        if self.display_name is not self.name:
+            return self.display_name
+        elif self.shortest_alias is not None:
+            return self.shortest_alias
+        else:
+            return self.name
+
+    @property
     def readable_type(self):
         """
         Converts the type table to a readable string
