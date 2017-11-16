@@ -349,6 +349,14 @@ $(function () { // on dom ready
                 cy.nodes().unselect();
                 cy.nodes('[lc_label="' + lc_label + '"]').select();
             } );
+
+            $('g[species]').click( function(ev) {
+                var species = $(this).attr('species');
+                svg_legend.find(".legend_node").transform('scale', null);
+                svg_legend.find('g[species="' + species + '"]').transform('scale', 1.5);
+                cy.nodes().unselect();
+                cy.nodes('[species_name="' + species + '"]').select();
+            } );
         }
     });
 
