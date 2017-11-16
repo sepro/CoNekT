@@ -72,7 +72,7 @@ class ExpressionNetworkMethod(db.Model):
 
     @staticmethod
     @benchmark
-    def calculate_ecc(network_method_ids, gene_family_method_id):
+    def calculate_ecc(network_method_ids, gene_family_method_id, max_size=100):
         """
         Function to calculate the ECC scores in and between genes of different networks
 
@@ -94,12 +94,13 @@ class ExpressionNetworkMethod(db.Model):
                                                            ExpressionNetwork.__table__.c.network,
                                                            ExpressionNetwork.__table__.c.method_id]).
                                                 where(ExpressionNetwork.__table__.c.method_id == n).
-                                                where(ExpressionNetwork.__table__.c.sequence_id is not None)
+                                                where(ExpressionNetwork.__table__.c.sequence_id.isnot(None))
                                                 ).fetchall()
 
             for sequence, network, network_method_id in current_network:
-                sequence_network[int(sequence)] = network
-                sequence_network_method[int(sequence)] = int(network_method_id)
+                if sequence is not None:
+                    sequence_network[int(sequence)] = network
+                    sequence_network_method[int(sequence)] = int(network_method_id)
 
         # Get family data and store in dictionary
         current_families = db.engine.execute(db.select([SequenceFamilyAssociation.__table__.c.sequence_id,
@@ -141,7 +142,7 @@ class ExpressionNetworkMethod(db.Model):
             for m in network_method_ids:
                 thresholds[n][m] = ExpressionNetworkMethod.__set_thresholds(network_families[n],
                                                                             network_families[m],
-                                                                            max_size=30)
+                                                                            max_size=max_size)
 
         # Data loaded start calculating ECCs
         new_ecc_scores = []
@@ -157,7 +158,7 @@ class ExpressionNetworkMethod(db.Model):
                                                                          sequence_family,
                                                                          thresholds[sequence_network_method[query]][sequence_network_method[target]],
                                                                          family,
-                                                                         max_size=30)
+                                                                         max_size=max_size)
                         if significant:
                             new_ecc_scores.append({
                                 'query_id': query,
@@ -238,7 +239,7 @@ class ExpressionNetworkMethod(db.Model):
             new_threshholds = []
             for j in range(max_size):
                 scores = []
-                for iterations in range(iterations):
+                for _ in range(iterations):
                     if i+1 < len(families_a) and j+1 < len(families_b):
                         i_fams = random.sample(families_a, i+1)
                         j_fams = random.sample(families_b, j+1)
@@ -247,8 +248,9 @@ class ExpressionNetworkMethod(db.Model):
                         # Cannot calculate threshold with these families, add 1
                         scores.append(1)
 
-                scores = sorted(scores)
                 # TODO (maybe?): cutoff is hard coded here, replace ?
+                print(iterations, len(scores), scores)
+                scores = sorted(scores)
                 new_threshholds.append(scores[int(iterations*0.95)])
             thresholds.append(new_threshholds)
 

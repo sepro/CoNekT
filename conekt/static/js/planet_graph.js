@@ -78,6 +78,7 @@ $(function () { // on dom ready
         ready: function () {
             window.cy = this;
 
+            var has_ecc = false;
             initial_json = JSON.stringify(cy.json(), null, '\t');
 
             cy.nodes('[^compound]').forEach(function (n) {
@@ -186,6 +187,7 @@ $(function () { // on dom ready
 
                 if (e.data('ecc_score') !== undefined) {
                     content.push({ value: 'ECC: ' + e.data('ecc_score').toFixed(2) });
+                    has_ecc = true;
                 }
 
                 e.qtip({
@@ -313,7 +315,14 @@ $(function () { // on dom ready
             if (Object.keys(svg_spm).length > 0) { generate_legend(svg_spm, 'spm_color', 'spm'); }
             if (Object.keys(svg_species).length > 0) { generate_legend(svg_species, 'species_color', 'species'); }
 
-            $('.cy-node-color[attr="family_color"]').click();
+            if (has_ecc) {
+                $('.cy-node-color[attr="species_color"]').click();
+                $('.cy-edge-color[attr="ecc_type"]').click();
+            } else {
+                $('.cy-node-color[attr="family_color"]').click();
+            }
+
+
             $('#loading').addClass('loaded');
             $('#legend').show();
 
