@@ -44,9 +44,12 @@ WHOOSHEE_DIR = tempfile.mkdtemp()
 WHOOSHEE_MIN_STRING_LEN = 3
 WHOOSHEE_WRITER_TIMEOUT = 2
 WHOOSHEE_MEMORY_STORAGE = False
+WHOOSHEE_ENABLE_INDEXING = True
 
 # Minify pages when debug is off
 MINIFY_PAGE = not DEBUG
+
+TMP_DIR = tempfile.mkdtemp()
 
 # BLAST settings
 BLAST_ENABLED = False

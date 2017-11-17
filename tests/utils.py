@@ -13,14 +13,14 @@ class UtilsTest(TestCase):
         self.assertEqual(tau([1, 0, 0, 0, 0, 0]), 1)
         self.assertEqual(tau([1, 1, 1, 1, 1, 1]), 0)
         self.assertEqual(tau([0, 0, 0, 0, 0, 0]), None)
-        self.assertEqual("%.2f" % tau([0, 8, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0]), "0.95")  # example from Yanai et al. 2005
+        self.assertAlmostEqual(tau([0, 8, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0]), 0.95, places=2)  # example from Yanai et al. 2005
 
     def test_enrichment(self):
-        self.assertEqual("%.3f" % hypergeo_cdf(2, 3, 10, 100), "0.999")
-        self.assertEqual("%.3f" % hypergeo_cdf(2, 6, 10, 100), "0.987")
+        self.assertAlmostEqual(hypergeo_cdf(2, 3, 10, 100), 0.999, places=3)
+        self.assertAlmostEqual(hypergeo_cdf(2, 6, 10, 100), 0.987, places=3)
 
-        self.assertEqual("%.3f" % hypergeo_sf(2, 3, 10, 100), "0.026")
-        self.assertEqual("%.3f" % hypergeo_sf(2, 6, 10, 100), "0.109")
+        self.assertAlmostEqual(hypergeo_sf(2, 3, 10, 100), 0.026, places=3)
+        self.assertAlmostEqual(hypergeo_sf(2, 6, 10, 100), 0.109, places=3)
 
         self.assertEqual(fdr_correction([0.05, 0.06, 0.07]), [0.07, 0.07, 0.07])
 
