@@ -71,8 +71,8 @@ $(function () { // on dom ready
         elements: url !== undefined ? $.getJSON(url) : graph_data,
         layout: {
             name: 'cose',
-            padding: 30,
-            minNodeSpacing: 10,
+            padding: 60,
+            minNodeSpacing: 30,
             avoidOverlap: false
         },
         ready: function () {
@@ -433,15 +433,15 @@ $(function () { // on dom ready
         var layout = $(this).attr('layout');
 
         cy.layout({name: layout,
-                   padding: 30,
-                   minNodeSpacing: 10,
+                   padding: 60,
+                   minNodeSpacing: 30,
                    animate: true,
                    avoidOverlap: false,
                    animationThreshold: 250,
                    //cose settings
-                   nodeOverlap: 1,
-                   idealEdgeLength: 5,
-                   edgeElasticity: 10,
+                   nodeOverlap: 8,
+                   idealEdgeLength: 32,
+                   edgeElasticity: 32,
                    numIter: 1000,
                    maxSimulationTime: 2000,
                    lengthFactor: 100
