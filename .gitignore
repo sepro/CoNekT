@@ -1,9 +1,9 @@
 .idea/
-.idea/*
-virtualenv/
-db/
-venv/
-whooshee/
+
+/db/
+/venv/
+/virtualenv/
+/whooshee/
 
 tmp
 bin
@@ -12,14 +12,10 @@ include
 pip-selfcheck.json
 scripts
 
-config.cfg
 /config.py
 
-ftp
-data/
-data/*
-db/*
-uploads/*
+/ftp
+/data/
 
 *.swp
 
