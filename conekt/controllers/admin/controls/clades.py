@@ -57,7 +57,7 @@ def add_clades():
 
 
 @admin_controls.route('/calculate_clade_enrichment/<int:gf_method_id>')
-@admin_required
+#@admin_required
 def calculate_clade_enrichment(gf_method_id):
     """
     Controller to start GO enrichment calculations

@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload, load_only, undefer
 
 from conekt import db
 from conekt.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
-from conekt.models.gene_families import GeneFamily
+from conekt.models.gene_families import GeneFamily, GeneFamilyMethod
 from conekt.models.interpro import Interpro
 from conekt.models.go import GO
 from conekt.models.relationships.cluster_similarity import CoexpressionClusterSimilarity
@@ -478,19 +478,24 @@ class CoexpressionCluster(db.Model):
         """
         Calculates clade enrichment for co-expression clusters
 
-        :param gene_family_method_id:
-        :param empty:
-        :return:
+        :param gene_family_method_id: gene family method to use to determine clades
+        :param empty: when true, removes clade enrichments for the current gf_method
         """
         if empty:
             try:
-                pass
+                print("Removing Existing Enrichment")
+                db.session.query(ClusterCladeEnrichment).\
+                    filter(ClusterCladeEnrichment.gene_family_method_id == gene_family_method_id).delete()
+                db.session.commit()
             except Exception as e:
                 db.session.rollback()
                 print(e)
 
-        # get background distribution
         print("Calculating background")
+        gf_method = GeneFamilyMethod.query.get(gene_family_method_id)
+        counts = gf_method.get_clade_distribution()
+
+        print(counts)
 
         # calculate enrichment
         print("Calculate enrichment")

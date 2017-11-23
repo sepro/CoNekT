@@ -104,6 +104,25 @@ class GeneFamilyMethod(db.Model):
 
         db.engine.execute(FamilyGOAssociation.__table__.insert(), relations)
 
+    def get_clade_distribution(self):
+        """
+        Will calculate the frequency of clade (per gene) for each species and return a dict of dict with counts
+
+        counts[species_id][clade_id] = number of genes from the species associated with the Clade based on the current
+        gene family method.
+
+        :return: dict-of-dict with species_id, clade_id and then the count
+        """
+        counts = defaultdict(lambda: defaultdict(lambda: 0))
+
+        for family in self.families:
+            if family.clade is not None:
+                print(family.name, family.clade.name)
+                for s in family.sequences:
+                    counts[s.species_id][family.clade_id] += 1
+
+        return counts
+
     @staticmethod
     def update_count():
         """
