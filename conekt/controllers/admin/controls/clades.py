@@ -56,7 +56,7 @@ def add_clades():
             abort(405)
 
 
-@admin_controls.route('/calculate_clade_enrichment/<int:gf_method_id')
+@admin_controls.route('/calculate_clade_enrichment/<int:gf_method_id>')
 @admin_required
 def calculate_clade_enrichment(gf_method_id):
     """

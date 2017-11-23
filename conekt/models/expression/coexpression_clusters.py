@@ -490,10 +490,10 @@ class CoexpressionCluster(db.Model):
                 print(e)
 
         # get background distribution
+        print("Calculating background")
 
         # calculate enrichment
-
-
+        print("Calculate enrichment")
 
     @staticmethod
     def delete_enrichment():
