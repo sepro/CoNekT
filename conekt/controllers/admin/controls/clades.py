@@ -1,6 +1,6 @@
 import json
 
-from flask import flash, url_for, request
+from flask import flash, url_for, request, Markup
 from conekt.extensions import admin_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
@@ -8,6 +8,7 @@ from werkzeug.utils import redirect
 from conekt.controllers.admin.controls import admin_controls
 from conekt.forms.admin.add_clades import AddCladesForm
 from conekt.models.clades import Clade
+from conekt.models.expression.coexpression_clusters import CoexpressionCluster
 
 
 @admin_controls.route('/update/clades')
@@ -53,3 +54,22 @@ def add_clades():
             return redirect(url_for('admin.index'))
         else:
             abort(405)
+
+
+@admin_controls.route('/calculate_clade_enrichment/<int:gf_method_id')
+@admin_required
+def calculate_clade_enrichment(gf_method_id):
+    """
+    Controller to start GO enrichment calculations
+
+    :return: Redirect to admin main screen
+    """
+    try:
+        CoexpressionCluster.calculate_clade_enrichment(gf_method_id)
+    except Exception as e:
+        flash(Markup('An error occurred! Please ensure the file is <strong>correctly formatted</strong>' +
+                     ' and <strong>update the counts</strong> if necessary'), 'warning')
+    finally:
+        flash('Successfully calculated clade enrichment for co-expression clusters', 'success')
+
+    return redirect(url_for('admin.controls.index'))

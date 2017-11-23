@@ -22,7 +22,7 @@ class CoexpressionClusteringMethodAdminView(MyModelView):
 
 class ClusterSimilaritiesView(AdminBaseView):
     """
-    Control panel for administrators. Contains links to
+    Control panel for administrators. Contains links to start computing cluster similarities
     """
     @expose('/')
     def index(self):

@@ -16,6 +16,7 @@ from conekt.models.relationships.sequence_cluster import SequenceCoexpressionClu
 from conekt.models.relationships.sequence_family import SequenceFamilyAssociation
 from conekt.models.relationships.sequence_go import SequenceGOAssociation
 from conekt.models.relationships.cluster_go import ClusterGOEnrichment
+from conekt.models.relationships.cluster_clade import ClusterCladeEnrichment
 from conekt.models.sequences import Sequence
 from conekt.models.expression.profiles import ExpressionProfile
 
@@ -471,6 +472,28 @@ class CoexpressionCluster(db.Model):
                 for i, cluster in enumerate(clusters):
                     # print(i, "\t cluster: ", cluster.method_id, cluster.name)
                     cluster.__calculate_enrichment()
+
+    @staticmethod
+    def calculate_clade_enrichment(gene_family_method_id, empty=True):
+        """
+        Calculates clade enrichment for co-expression clusters
+
+        :param gene_family_method_id:
+        :param empty:
+        :return:
+        """
+        if empty:
+            try:
+                pass
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+
+        # get background distribution
+
+        # calculate enrichment
+
+
 
     @staticmethod
     def delete_enrichment():

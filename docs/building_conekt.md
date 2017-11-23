@@ -172,7 +172,3 @@ data and add everything to the database.
 ### Computing enrichments, similarities, and counts ... 
 
 *UNDER CONSTRUCTION*
-
-## Using the build script
-
-*UNDER CONSTRUCTION*
