@@ -7,7 +7,7 @@ class ClusterCladeEnrichment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id', ondelete='CASCADE'))
-    clade_id = db.Column(db.Integer, db.ForeignKey('clade.id', ondelete='CASCADE'))
+    clade_id = db.Column(db.Integer, db.ForeignKey('clades.id', ondelete='CASCADE'))
 
     gene_family_methods_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id', ondelete='CASCADE'))
 
