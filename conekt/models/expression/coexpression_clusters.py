@@ -1,4 +1,5 @@
 import json
+import sys
 from math import log2
 from collections import defaultdict
 
@@ -473,6 +474,82 @@ class CoexpressionCluster(db.Model):
                     # print(i, "\t cluster: ", cluster.method_id, cluster.name)
                     cluster.__calculate_enrichment()
 
+    def __calculate_clade_enrichment(self, background, gf_method_id):
+        species_gene_count = self.method.network_method.species.sequence_count
+        species_id = self.method.network_method.species_id
+
+        cluster_clade_count = defaultdict(lambda: 0)
+
+        cluster_gene_count = self.sequences.count()
+
+        try:
+            sequences = self.sequences.\
+                join(SequenceFamilyAssociation, Sequence.id == SequenceFamilyAssociation.sequence_id).\
+                join(GeneFamily, SequenceFamilyAssociation.gene_family_id == GeneFamily.id).\
+                add_columns(Sequence.name,
+                            Sequence.species_id,
+                            SequenceFamilyAssociation.gene_family_id,
+                            GeneFamily.method_id,
+                            GeneFamily.clade_id).\
+                filter(GeneFamily.method_id == gf_method_id).all()
+        except Exception as e:
+            print(e, file=sys.stderr)
+
+        for s in sequences:
+            cluster_clade_count[s.clade_id] += 1
+
+        enrichment_scores = []
+
+        for clade_id, count in cluster_clade_count.items():
+            try:
+                background_count = background[species_id][clade_id]
+                p_value = hypergeo_sf(count,
+                                      cluster_gene_count,
+                                      background_count,
+                                      species_gene_count)
+                enrichment = log2((count/cluster_gene_count)/(background_count/species_gene_count))
+
+                enrichment_scores.append({
+                    'clade_count': background_count,
+                    'clade_size': species_gene_count,
+                    'cluster_count': count,
+                    'cluster_size': cluster_gene_count,
+                    'p_value': p_value,
+                    'enrichment': enrichment,
+                    'clade_id': clade_id,
+                    'cluster_id': self.id
+                })
+
+            except Exception as e:
+                print(e, file=sys.stderr)
+
+        corrected_p_values = fdr_correction([es['p_value'] for es in enrichment_scores])
+
+        commit_required = False
+        for es, corrected_p_value in zip(enrichment_scores, corrected_p_values):
+            if es['p_value'] < 0.05 and es['enrichment'] > 0:
+                commit_required = True
+                cluster_clade_enrichment = ClusterCladeEnrichment()
+                cluster_clade_enrichment.p_value = es['p_value']
+                cluster_clade_enrichment.corrected_p_value = corrected_p_value
+                cluster_clade_enrichment.enrichment = es['enrichment']
+                cluster_clade_enrichment.clade_id = es['clade_id']
+                cluster_clade_enrichment.cluster_id = es['cluster_id']
+                cluster_clade_enrichment.gene_family_method_id = gf_method_id
+                cluster_clade_enrichment.clade_count = es['clade_count']
+                cluster_clade_enrichment.clade_size = es['clade_size']
+                cluster_clade_enrichment.cluster_count = es['cluster_count']
+                cluster_clade_enrichment.cluster_size = es['cluster_size']
+
+                db.session.add(cluster_clade_enrichment)
+
+        if commit_required:
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+
     @staticmethod
     def calculate_clade_enrichment(gene_family_method_id, empty=True):
         """
@@ -491,14 +568,21 @@ class CoexpressionCluster(db.Model):
                 db.session.rollback()
                 print(e)
 
-        print("Calculating background")
+        print("Calculating background...", sep='')
         gf_method = GeneFamilyMethod.query.get(gene_family_method_id)
         counts = gf_method.get_clade_distribution()
-
-        print(counts)
+        print(' Done!')
 
         # calculate enrichment
-        print("Calculate enrichment")
+        print("Calculate enrichment", sep='')
+
+        clusters = CoexpressionCluster.query.all()
+
+        for i, cluster in enumerate(clusters):
+            print(i, "\t cluster: ", cluster.method_id, cluster.name)
+            cluster.__calculate_clade_enrichment(counts, gene_family_method_id)
+
+        print(" Done!")
 
     @staticmethod
     def delete_enrichment():

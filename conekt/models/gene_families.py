@@ -117,7 +117,6 @@ class GeneFamilyMethod(db.Model):
 
         for family in self.families:
             if family.clade is not None:
-                print(family.name, family.clade.name)
                 for s in family.sequences:
                     counts[s.species_id][family.clade_id] += 1
 

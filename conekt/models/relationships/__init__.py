@@ -79,6 +79,6 @@ cluster_clade_enrichment = db.Table('cluster_clade_enrichment',
                                     db.Column('id', db.Integer, primary_key=True),
                                     db.Column('cluster_id', db.Integer, db.ForeignKey('coexpression_clusters.id'), index=True),
                                     db.Column('clade_id', db.Integer, db.ForeignKey('clades.id'), index=True),
-                                    db.Column('gene_family_methods_id', db.Integer,
+                                    db.Column('gene_family_method_id', db.Integer,
                                               db.ForeignKey('gene_family_methods.id'), index=True)
                                     )
