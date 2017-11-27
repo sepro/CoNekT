@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, url_for, render_template, g, Response
 
 from conekt import cache
 from conekt.models.clades import Clade
+from conekt.models.relationships.cluster_clade import ClusterCladeEnrichment
 from conekt.models.species import Species
 from conekt.models.gene_families import GeneFamily
 from conekt.models.interpro import Interpro
@@ -35,10 +36,11 @@ def clade_view(clade_id):
 
     families_count = current_clade.families.count()
     interpro_count = current_clade.interpro.count()
+    cluster_count = current_clade.enriched_clusters.count()
     association_count = current_clade.sequence_sequence_clade_associations.count()
 
     return render_template('clade.html', clade=current_clade,
-                           families_count=families_count, interpro_count=interpro_count,
+                           families_count=families_count, interpro_count=interpro_count, cluster_count=cluster_count,
                            association_count=association_count, species=species)
 
 
@@ -106,6 +108,24 @@ def clade_interpro_table(clade_id):
     interpro = Clade.query.get(clade_id).interpro.order_by(Interpro.label)
 
     return Response(render_template('tables/interpro.csv', interpro=interpro), mimetype='text/plain')
+
+
+@clade.route('/clusters/<int:clade_id>/')
+@clade.route('/clusters/<int:clade_id>/<int:page>')
+@cache.cached()
+def clade_clusters(clade_id, page=1):
+    """
+    Paginated list of clusters that are enriched for this clade
+
+    :param clade_id: internal clade ID
+    :param page: page number
+    :return: html-response which can be used in combination with the pagination code
+    """
+    current_clade = Clade.query.get_or_404(clade_id)
+    clusters = current_clade.enriched_clusters.\
+        order_by(ClusterCladeEnrichment.corrected_p_value.desc()).paginate(page, g.page_items, False).items
+
+    return render_template('pagination/clusters.html', clusters=clusters)
 
 
 @clade.route('/associations/<int:clade_id>/')

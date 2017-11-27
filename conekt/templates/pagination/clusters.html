@@ -1,0 +1,15 @@
+<div class="table-responsive">
+    <table class="table table-striped table-separated">
+        <tbody>
+            {% for cluster in clusters %}
+                <tr>
+                    <td><em><a href="{{ url_for('species.species_view', species_id=cluster.cluster.method.network_method.species_id) }}">{{ cluster.cluster.method.network_method.species.name }}</a></em></td>
+                    <td><a href="{{ url_for('expression_cluster.expression_cluster_view', cluster_id=cluster.cluster_id) }}">{{ cluster.cluster.name }}</a></td>
+                    <td>{{ cluster.cluster.method.method }}</td>
+                    <td>{{ cluster.cluster.method.network_method.description }}</td>
+                    <td>{{ cluster.gene_family_method.method }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
