@@ -11,6 +11,11 @@ class ClusterCladeEnrichment(db.Model):
 
     gene_family_method_id = db.Column(db.Integer, db.ForeignKey('gene_family_methods.id', ondelete='CASCADE'))
 
+    gene_family_method = db.relationship('GeneFamilyMethod', backref=db.backref('clade_enrichment',
+                                                                                lazy='dynamic',
+                                                                                passive_deletes=True),
+                                         lazy='joined')
+
     cluster = db.relationship('CoexpressionCluster', backref=db.backref('clade_enrichment',
                                                                         lazy='dynamic',
                                                                         passive_deletes=True),
