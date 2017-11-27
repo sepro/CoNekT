@@ -8,6 +8,7 @@
                     <td>{{ cluster.cluster.method.method }}</td>
                     <td>{{ cluster.cluster.method.network_method.description }}</td>
                     <td>{{ cluster.gene_family_method.method }}</td>
+                    <td>p-value (corrected) : {{ cluster.p_value|round(2) }} <span class="text-muted">({{ cluster.corrected_p_value|round(2) }})</span></td>
                 </tr>
             {% endfor %}
         </tbody>

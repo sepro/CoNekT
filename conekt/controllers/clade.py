@@ -123,7 +123,7 @@ def clade_clusters(clade_id, page=1):
     """
     current_clade = Clade.query.get_or_404(clade_id)
     clusters = current_clade.enriched_clusters.\
-        order_by(ClusterCladeEnrichment.corrected_p_value.desc()).paginate(page, g.page_items, False).items
+        order_by(ClusterCladeEnrichment.corrected_p_value.asc()).paginate(page, g.page_items, False).items
 
     return render_template('pagination/clusters.html', clusters=clusters)
 
