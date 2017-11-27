@@ -35,7 +35,7 @@
 
 
     {{ macro.pagination('Families', url_for('clade.clade_families', clade_id=clade.id), families_count, url_for('clade.clade_families_table', clade_id=clade.id), 'family') }}
-    {{ macro.pagination('Enriched Clusters', url_for('clade.clade_clusters', clade_id=clade.id), families_count, None, 'cluster') }}
+    {{ macro.pagination('Enriched Clusters', url_for('clade.clade_clusters', clade_id=clade.id), cluster_count, None, 'cluster') }}
     {{ macro.pagination('Interpro domains', url_for('clade.clade_interpro', clade_id=clade.id), interpro_count, url_for('clade.clade_interpro_table', clade_id=clade.id), 'interpro') }}
     <!--Disabled Association on these pages -->
     {#{{ macro.pagination('Associations', url_for('clade.clade_associations', clade_id=clade.id), association_count, None, 'association') }}#}
