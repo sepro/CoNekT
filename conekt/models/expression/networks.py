@@ -153,36 +153,45 @@ class ExpressionNetworkMethod(db.Model):
                 for j in range(i+1, len(sequences)):
                     target = sequences[j]
                     if query in sequence_network.keys() and target in sequence_network.keys() and query != target:
-                        ecc, significant = ExpressionNetworkMethod.__ecc(sequence_network[query],
-                                                                         sequence_network[target],
-                                                                         sequence_family,
-                                                                         thresholds[sequence_network_method[query]][sequence_network_method[target]],
-                                                                         family,
-                                                                         max_size=max_size)
-                        if significant:
-                            new_ecc_scores.append({
-                                'query_id': query,
-                                'target_id': target,
-                                'ecc': ecc,
-                                'gene_family_method_id': gene_family_method_id,
-                                'query_network_method_id': sequence_network_method[query],
-                                'target_network_method_id': sequence_network_method[target],
-                            })
+                        # Ignore genes with overlapping neighborhoods
+                        if not ExpressionNetworkMethod.__neighborhoods_overlap(sequence_network[query], sequence_network[target]):
+                            ecc, significant = ExpressionNetworkMethod.__ecc(sequence_network[query],
+                                                                             sequence_network[target],
+                                                                             sequence_family,
+                                                                             thresholds[sequence_network_method[query]][sequence_network_method[target]],
+                                                                             family,
+                                                                             max_size=max_size)
+                            if significant:
+                                new_ecc_scores.append({
+                                    'query_id': query,
+                                    'target_id': target,
+                                    'ecc': ecc,
+                                    'gene_family_method_id': gene_family_method_id,
+                                    'query_network_method_id': sequence_network_method[query],
+                                    'target_network_method_id': sequence_network_method[target],
+                                })
 
-                            # add reciprocal relation
-                            new_ecc_scores.append({
-                                'query_id': target,
-                                'target_id': query,
-                                'ecc': ecc,
-                                'gene_family_method_id': gene_family_method_id,
-                                'query_network_method_id': sequence_network_method[target],
-                                'target_network_method_id': sequence_network_method[query],
-                            })
-                            if len(new_ecc_scores) > 400:
-                                db.engine.execute(SequenceSequenceECCAssociation.__table__.insert(), new_ecc_scores)
-                                new_ecc_scores = []
+                                # add reciprocal relation
+                                new_ecc_scores.append({
+                                    'query_id': target,
+                                    'target_id': query,
+                                    'ecc': ecc,
+                                    'gene_family_method_id': gene_family_method_id,
+                                    'query_network_method_id': sequence_network_method[target],
+                                    'target_network_method_id': sequence_network_method[query],
+                                })
+                                if len(new_ecc_scores) > 400:
+                                    db.engine.execute(SequenceSequenceECCAssociation.__table__.insert(), new_ecc_scores)
+                                    new_ecc_scores = []
 
         db.engine.execute(SequenceSequenceECCAssociation.__table__.insert(), new_ecc_scores)
+
+    @staticmethod
+    def __neighborhoods_overlap(neighborhood_a, neighborhood_b):
+        genes_a = set([n['gene_id'] for n in json.loads(neighborhood_a) if n['gene_id'] is not None])
+        genes_b = set([n['gene_id'] for n in json.loads(neighborhood_b) if n['gene_id'] is not None])
+
+        return len(genes_a.intersection(genes_b)) > 0
 
     @staticmethod
     def __ecc(q_network, t_network, families, thresholds, query_family, max_size=30):
@@ -222,7 +231,7 @@ class ExpressionNetworkMethod(db.Model):
 
     @staticmethod
     @benchmark
-    def __set_thresholds(families_a, families_b, max_size=30, iterations=1000):
+    def __set_thresholds(families_a, families_b, max_size=30, iterations=1000, step=5):
         """
         Empirically determine (permutation test) thresholds for ECC
 
@@ -230,14 +239,15 @@ class ExpressionNetworkMethod(db.Model):
         :param families_b: families of species_b (list of internal family ids)
         :param max_size: maximum number of families (default = 30)
         :param iterations: number of permutations done
+        :param step: step size
         :return: matrix (list of lists) with the thresholds at various family sizes
         """
         thresholds = []
 
-        for i in range(max_size):
+        for i in range(0, max_size, step):
             print("%d done" % i)
             new_threshholds = []
-            for j in range(max_size):
+            for j in range(0, max_size, step):
                 scores = []
                 for _ in range(iterations):
                     if i+1 < len(families_a) and j+1 < len(families_b):
@@ -251,8 +261,10 @@ class ExpressionNetworkMethod(db.Model):
                 # TODO (maybe?): cutoff is hard coded here, replace ?
                 print(iterations, len(scores), scores)
                 scores = sorted(scores)
-                new_threshholds.append(scores[int(iterations*0.95)])
-            thresholds.append(new_threshholds)
+                for _ in range(step):
+                    new_threshholds.append(scores[int(iterations*0.95)])
+            for _ in range(step):
+                thresholds.append(new_threshholds)
 
         return thresholds
 
