@@ -217,7 +217,7 @@ class Tree(db.Model):
             with tag('graphs'):
                 if has_heatmap:
                     with tag('graph', type="heatmap"):
-                        line('name', 'heatmap')
+                        line('name', 'Heatmap')
                         with tag('legend', show=1):
                             for label in heatmap_order:
                                 with tag('field'):
@@ -236,7 +236,7 @@ class Tree(db.Model):
                                                 line('value', '')
 
                 with tag('graph', type="binary"):
-                    line('name', 'binary')
+                    line('name', 'Low Expression')
                     with tag('legend', show=1):
                         with tag('field'):
                             line('name', 'Low expression')
@@ -250,7 +250,7 @@ class Tree(db.Model):
                                     line('value', cd["low_expressed"])
 
                 with tag('graph', type="multibar"):
-                    line('name', 'Expression range')
+                    line('name', 'Expression Range')
                     with tag('legend', show=1):
                         with tag('field'):
                             line('name', 'Max. Expression (TPM)')
