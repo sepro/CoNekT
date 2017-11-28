@@ -47,7 +47,7 @@ class CrossSpeciesExpressionProfile:
                     [value < 10 for value in parsed_profile["data"].values() if value is not None])
 
                 # normalize profile
-
+                min_value = min([i if i is not None else 0 for i in parsed_profile["data"].values()])
                 max_value = max([i if i is not None else 0 for i in parsed_profile["data"].values()])
 
                 if max_value > 0:
@@ -60,7 +60,9 @@ class CrossSpeciesExpressionProfile:
                         "sequence_id": p.sequence_id,
                         "species_id": p.species_id,
                         "low_expressed": 1 if low_expressed else 0,
-                        "profile": parsed_profile
+                        "profile": parsed_profile,
+                        "min_expression": min_value,
+                        "max_expression": max_value
                     }
                 )
 
