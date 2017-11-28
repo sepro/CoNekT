@@ -514,6 +514,19 @@ div#phyd3 .table-responsive > table {
   margin-bottom: 0px;
 }
 
+div#phyd3 > .popup {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+    border: 1px solid #ddd;
+    text-align: left;
+    width: 400px;
+    z-index: 1000;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
 .global-message {
         color: #31708f;
 }
