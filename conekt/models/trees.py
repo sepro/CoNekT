@@ -258,7 +258,7 @@ class Tree(db.Model):
 
                     with tag('data'):
                         for cd in csep_data:
-                            if "min_expression" in cd.keys() and "max_expression" in cd.keys():
+                            if "max_expression" in cd.keys():
                                 with tag('values', **{'for': str(cd["sequence_id"])}):
                                     line('value', cd["max_expression"])
 
