@@ -234,6 +234,7 @@ class Tree(db.Model):
                                                 line('value', cd["profile"]["data"][label])
                                             else:
                                                 line('value', '')
+
                 with tag('graph', type="binary"):
                     line('name', 'binary')
                     with tag('legend', show=1):
@@ -247,6 +248,19 @@ class Tree(db.Model):
                             if "low_expressed" in cd.keys():
                                 with tag('values', **{'for': str(cd["sequence_id"])}):
                                     line('value', cd["low_expressed"])
+
+                with tag('graph', type="multibar"):
+                    line('name', 'Expression range')
+                    with tag('legend', show=1):
+                        with tag('field'):
+                            line('name', 'Max. Expression (TPM)')
+                            line('color', '0x664977')
+
+                    with tag('data'):
+                        for cd in csep_data:
+                            if "min_expression" in cd.keys() and "max_expression" in cd.keys():
+                                with tag('values', **{'for': str(cd["sequence_id"])}):
+                                    line('value', cd["max_expression"])
 
             with tag('taxonomies'):
                 for s in species:
