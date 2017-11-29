@@ -34,6 +34,8 @@
 
     <h1><strong>{{ family.name }}</strong> <small>({{ family.method.method }})</small></h1>
 
+    <p>View comparative expression as heatmap: <a href="{{ url_for('heatmap.heatmap_comparative_family', family_id=family.id, option='raw') }}">raw</a> <span class="text-muted">| <a href="{{ url_for('heatmap.heatmap_comparative_family', family_id=family.id, option='row') }}">row-normalized</a></span></p>
+
     <p>Trees:
     {% for t in family.trees %}
         <a href="{{ url_for('tree.tree_view', tree_id=t.id) }}">{{t.label}}</a> ({{t.method.description}})
