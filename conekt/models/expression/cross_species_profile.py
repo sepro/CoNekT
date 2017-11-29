@@ -38,26 +38,31 @@ class CrossSpeciesExpressionProfile:
 
                 parsed_profile = {
                     "order": self.conditions,
-                    "data": {c: max(current_profile["data"][c]) if c in current_profile["data"].keys() else None
+                    "data": {},
+                    "raw_data": {c: max(current_profile["data"][c]) if c in current_profile["data"].keys() else None
                              for c in self.conditions}
                     }
 
                 # detect low expressed genes before normalization
                 low_expressed = all(
-                    [value < 10 for value in parsed_profile["data"].values() if value is not None])
+                    [value < 10 for value in parsed_profile["raw_data"].values() if value is not None])
 
                 # normalize profile
-                min_value = min([i if i is not None else 0 for i in parsed_profile["data"].values()])
-                max_value = max([i if i is not None else 0 for i in parsed_profile["data"].values()])
+                min_value = min([i if i is not None else 0 for i in parsed_profile["raw_data"].values()])
+                max_value = max([i if i is not None else 0 for i in parsed_profile["raw_data"].values()])
 
                 if max_value > 0:
                     for c in self.conditions:
-                        if parsed_profile["data"][c] is not None:
-                            parsed_profile["data"][c] = parsed_profile["data"][c]/max_value
+                        if parsed_profile["raw_data"][c] is not None:
+                            parsed_profile["data"][c] = parsed_profile["raw_data"][c]/max_value
+                        else:
+                            parsed_profile["data"][c] = None
 
                 converted_profiles.append(
                     {
                         "sequence_id": p.sequence_id,
+                        "sequence_name": p.sequence.name if p.sequence is not None else None,
+                        "shortest_alias": p.sequence.shortest_alias if p.sequence is not None else None,
                         "species_id": p.species_id,
                         "low_expressed": 1 if low_expressed else 0,
                         "profile": parsed_profile,
@@ -67,3 +72,28 @@ class CrossSpeciesExpressionProfile:
                 )
 
         return converted_profiles
+
+    def get_heatmap(self, *sequence_ids, option='raw'):
+        data = self.get_data(*sequence_ids)
+
+        output = {
+            'order': [],
+            'heatmap_data': []
+        }
+
+        for d in data:
+            if "profile" in d.keys() and "order" in d["profile"].keys():
+                output['order'] = d["profile"]["order"]
+                break
+
+        key = 'raw_data' if option == 'raw' else 'data'
+
+        for d in data:
+            output['heatmap_data'].append({
+                'sequence_id': d['sequence_id'],
+                'name': d['sequence_name'],
+                'shortest_alias': d['shortest_alias'],
+                'values': {k: v if v is not None else '-' for k,v in d['profile'][key].items()}
+            })
+
+        return output

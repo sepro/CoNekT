@@ -8,6 +8,8 @@ from conekt.models.expression.coexpression_clusters import CoexpressionCluster
 from conekt.models.expression.profiles import ExpressionProfile
 from conekt.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
 from conekt.models.sequences import Sequence
+from conekt.models.trees import Tree
+from conekt.models.expression.cross_species_profile import CrossSpeciesExpressionProfile
 
 heatmap = Blueprint('heatmap', __name__)
 
@@ -91,6 +93,24 @@ def heatmap_main():
             example['probes'] = ' '.join([p.sequence.name for p in profiles])
 
         return render_template("expression_heatmap.html", form=form, example=example)
+
+
+@heatmap.route('/comparative/tree/<int:tree_id>')
+@heatmap.route('/comparative/tree/<int:tree_id>/<option>')
+@cache.cached()
+def heatmap_comparative_tree(tree_id, option='raw'):
+    tree = Tree.query.get_or_404(tree_id)
+    sequences = tree.sequences
+    sequence_ids = [s.id for s in sequences]
+
+    heatmap_data = CrossSpeciesExpressionProfile().get_heatmap(*sequence_ids, option=option)
+
+    print(heatmap_data)
+
+    return render_template("expression_heatmap.html", order=heatmap_data['order'],
+                           profiles=heatmap_data['heatmap_data'],
+                           zlog=1 if option == 'zlog' else 0,
+                           raw=1 if option == 'raw' else 0)
 
 
 @heatmap.route('/inchlib/j/<cluster_id>.json')

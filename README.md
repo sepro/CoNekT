@@ -11,8 +11,8 @@ networks and more across different species. A public version including seven pla
 publicly available RNASeq samples (from the [SRA](https://www.ncbi.nlm.nih.gov/sra)) is available 
 [here](http://conekt.mpimp-golm.mpg.de/pub/).
 
-Here you can find **Tutorials** how to use the public version along with the source-code and build instructions that 
-allow you to host your own instance with other species or in-house data.
+Here you can find **tutorials** how to use the public version along with the **source-code** and build instructions that 
+allow you to **host your own instance** with other species or in-house data.
 
 Tutorials
 ---------
