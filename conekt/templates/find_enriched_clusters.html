@@ -154,7 +154,6 @@
                         'enable_clade_enrichment': $('#enable_clade_enrichment').is(":checked"),
                         'clade': $('#clade').val()
                     }
-            console.log(post_data);
             $.ajax({
                 type: "POST",
                 url: "{{ url_for('search.count_enriched_clusters') }}",
