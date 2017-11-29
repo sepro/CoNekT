@@ -45,6 +45,8 @@
         </div>
     {% elif tree %}
         <h1>Comparative Heatmap for <a href="{{ url_for('tree.tree_view', tree_id=tree.id) }}">{{ tree.label }}</a></h1>
+    {% elif family %}
+        <h1>Comparative Heatmap for <a href="{{ url_for('family.family_view', family_id=family.id) }}">{{ family.name }}</a></h1>
     {% else %}
         <h1>Heatmap</h1>
     {% endif %}
@@ -53,12 +55,16 @@
     {% elif raw == 1 %}
         {% if tree %}
             <p class="text-muted" >(Showing raw values, normalize by <a href="{{ url_for('heatmap.heatmap_comparative_tree', tree_id=tree.id, option='row') }}">row</a>)</p>
+        {% elif family %}
+            <p class="text-muted" >(Showing raw values, normalize by <a href="{{ url_for('heatmap.heatmap_comparative_family', family_id=family.id, option='row') }}">row</a>)</p>
         {% else %}
             <p class="text-muted" >(Showing raw values)</p>
         {% endif%}
     {% else %}
         {% if tree %}
             <p class="text-muted" >(Values are normalized against highest expression of the row, show <a href="{{ url_for('heatmap.heatmap_comparative_tree', tree_id=tree.id, option='raw') }}">raw</a> values)</p>
+        {% elif family %}
+            <p class="text-muted" >(Values are normalized against highest expression of the row, show <a href="{{ url_for('heatmap.heatmap_comparative_family', family_id=family.id, option='raw') }}">raw</a> values)</p>
         {% else %}
             <p class="text-muted" >(Values are normalized against highest expression of the row)</p>
         {% endif %}
@@ -92,7 +98,7 @@
                     <td><div><span>{{ p.name }}</span></div></td>
                     {% endif %}
                     {% for o in order %}
-                    <td class="value">{% if p['values'][o] != '-' %}{{ p['values'][o]|round(2) }}{% else %}-{% endif %}</td>
+                    <td class="value">{% if p['values'][o] != '-' and p['values'][o] is defined %}{{ p['values'][o]|round(2) }}{% else %}-{% endif %}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
