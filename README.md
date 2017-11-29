@@ -1,4 +1,7 @@
-# ![conekt logo](docs/images/icon-144x144.png "Conekt Logo") *CoNekT:* Coexpression Network Toolkit
+# *CoNekT:* Coexpression Network Toolkit
+
+![conekt logo](docs/images/icon-144x144.png "Conekt Logo") CoNekT, the **Co**expression **Net**work **T**oolkit, 
+documentation and code. 
 
 What is CoNekT ?
 ----------------
