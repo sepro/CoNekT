@@ -20,9 +20,9 @@ Tutorials
 **Coming Soon**
 
   * [The Basics](docs/tutorials/001_basics.md)
-  * Expression profiles, heatmaps and specificity
-  * Gene Families and Phylogenetic trees
-  * Comparing specificity
+  * [Expression profiles, heatmaps and specificity](docs/tutorials/002_expression_profiles.md)
+  * [Gene Families and Phylogenetic trees](docs/tutorials/003_gene_families_trees.md)
+  * [Comparing specificity](docs/tutorials/004_compare_specificity.md)
   * Coexpression Networks and Clusters
   
   
