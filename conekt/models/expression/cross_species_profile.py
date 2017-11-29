@@ -93,7 +93,7 @@ class CrossSpeciesExpressionProfile:
                 'sequence_id': d['sequence_id'],
                 'name': d['sequence_name'],
                 'shortest_alias': d['shortest_alias'],
-                'values': {k: v if v is not None else '-' for k,v in d['profile'][key].items()}
+                'values': {k: v if v is not None else '-' for k, v in d['profile'][key].items()}
             })
 
         return output

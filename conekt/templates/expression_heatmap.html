@@ -43,15 +43,25 @@
                 <span class="text-muted">(<i class="fa fa-flask" aria-hidden="true"></i> <em>Experimental feature, still under development</em>)</span></p>
             </div>
         </div>
+    {% elif tree %}
+        <h1>Comparative Heatmap for <a href="{{ url_for('tree.tree_view', tree_id=tree.id) }}">{{ tree.label }}</a></h1>
     {% else %}
         <h1>Heatmap</h1>
     {% endif %}
     {% if zlog == 1 %}
     <p class="text-muted" >(Values are log<sub>2</sub> transformed ratios of a genes expression in a sample divided by the mean expression level)</p>
     {% elif raw == 1 %}
-    <p class="text-muted" >(Showing raw values)</p>
+        {% if tree %}
+            <p class="text-muted" >(Showing raw values, normalize by <a href="{{ url_for('heatmap.heatmap_comparative_tree', tree_id=tree.id, option='row') }}">row</a>)</p>
+        {% else %}
+            <p class="text-muted" >(Showing raw values)</p>
+        {% endif%}
     {% else %}
-    <p class="text-muted" >(Values are normalized against highest expression of the row)</p>
+        {% if tree %}
+            <p class="text-muted" >(Values are normalized against highest expression of the row, show <a href="{{ url_for('heatmap.heatmap_comparative_tree', tree_id=tree.id, option='raw') }}">raw</a> values)</p>
+        {% else %}
+            <p class="text-muted" >(Values are normalized against highest expression of the row)</p>
+        {% endif %}
     {% endif %}
     <div class="row">
         <div class="col-lg-12">

@@ -105,12 +105,11 @@ def heatmap_comparative_tree(tree_id, option='raw'):
 
     heatmap_data = CrossSpeciesExpressionProfile().get_heatmap(*sequence_ids, option=option)
 
-    print(heatmap_data)
-
     return render_template("expression_heatmap.html", order=heatmap_data['order'],
                            profiles=heatmap_data['heatmap_data'],
                            zlog=1 if option == 'zlog' else 0,
-                           raw=1 if option == 'raw' else 0)
+                           raw=1 if option == 'raw' else 0,
+                           tree=tree)
 
 
 @heatmap.route('/inchlib/j/<cluster_id>.json')
