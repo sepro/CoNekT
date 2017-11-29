@@ -98,7 +98,7 @@
                     <td><div><span>{{ p.name }}</span></div></td>
                     {% endif %}
                     {% for o in order %}
-                    <td class="value">{% if p['values'][o] != '-' and p['values'][o] is defined %}{{ p['values'][o]|round(2) }}{% else %}-{% endif %}</td>
+                    <td class="value">{% if p['values'][o] != '-' %}{{ p['values'][o]|round(2) }}{% else %}-{% endif %}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}

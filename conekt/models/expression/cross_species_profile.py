@@ -57,6 +57,9 @@ class CrossSpeciesExpressionProfile:
                             parsed_profile["data"][c] = parsed_profile["raw_data"][c]/max_value
                         else:
                             parsed_profile["data"][c] = None
+                else:
+                    for c in self.conditions:
+                            parsed_profile["data"][c] = None
 
                 converted_profiles.append(
                     {
