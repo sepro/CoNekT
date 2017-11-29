@@ -3,35 +3,33 @@
 
 Code to build CoNekT and set up the website. 
 
+
+Tutorials
+---------
+
+Coming Soon
+
+
 Setting up CoNekT
 -----------------
-Below are the instructions to set up a new PlaNet version.
+Below are the instructions to set up and host your own CoNekT instance.
 
-[Linux Installation instructions](docs/install_linux.md)
-
-[Windows Installation instructions](docs/install_windows.md)
-
-
-[Connecting with MySQL/MariaDB](docs/connect_mysql.md)
-
-[Setting up CoNekt with apache and mod_wsgi](docs/apache_wsgi.md)
-
-
-[Build CoNekT](docs/building_conekt.md)
+  * [Linux Installation instructions](docs/install_linux.md)
+  * [Windows Installation instructions](docs/install_windows.md)
+  * [Run website](docs/run_website.md)
+  * [Build CoNekT](docs/building_conekt.md): Upload your data to the platform using the Admin interface
+  
+  
+Optional steps (recommended for production environments)
+  * [Connecting with MySQL/MariaDB](docs/connect_mysql.md)
+  * [Setting up CoNekT with apache and mod_wsgi](docs/apache_wsgi.md)
 
 
-[Run website](docs/run_website.md)
-
-
-Instructions for Developers
----------------------------
-
-Basic information on how CoNekT is designed can be found [Instructions for developers](docs/developer.md)
 
 Acknowledgements
 ----------------
 
-CoNekT is based upon many open-source projects, check the full list [here](docs/acknowledgements.md)
+CoNekT is based upon many open-source projects, check the full list [here](docs/acknowledgements.md). 
 
 
 Contact
