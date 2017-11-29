@@ -1,5 +1,6 @@
 # *CoNekT:* Coexpression Network Toolkit
 
+![conekt logo](docs/images/icon-144x144.png "Conekt Logo")
 
 Code to build CoNekT and set up the website. 
 
