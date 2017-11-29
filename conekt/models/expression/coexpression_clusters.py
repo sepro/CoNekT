@@ -345,6 +345,7 @@ class CoexpressionCluster(db.Model):
     # sequences defined in Sequence
     # sequence_associations defined in SequenceCoexpressionClusterAssociation'
     # go_enrichment defined in ClusterGOEnrichment
+    # clade_enrichment defined in ClusterCladeEnrichment
 
     @staticmethod
     def get_cluster(cluster_id):

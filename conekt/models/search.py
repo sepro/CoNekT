@@ -5,7 +5,9 @@ from conekt.models.expression.profiles import ExpressionProfile
 from conekt.models.gene_families import GeneFamily
 from conekt.models.go import GO
 from conekt.models.interpro import Interpro
+from conekt.models.expression.coexpression_clusters import CoexpressionCluster
 from conekt.models.relationships.cluster_go import ClusterGOEnrichment
+from conekt.models.relationships.cluster_clade import ClusterCladeEnrichment
 from conekt.models.sequences import Sequence
 from conekt.models.xrefs import XRef
 from conekt.models.species import Species
@@ -192,7 +194,8 @@ class Search:
         return sequences
 
     @staticmethod
-    def count_enriched_clusters(go_id, method=-1, min_enrichment=None, max_p=None, max_corrected_p=None):
+    def count_enriched_clusters(go_id, method=-1, min_enrichment=None, max_p=None, max_corrected_p=None,
+                                enriched_clade_id=None):
         """
         Function to get enriched clusters for a specific GO term
 
@@ -217,11 +220,16 @@ class Search:
 
         if max_corrected_p is not None:
             clusters = clusters.filter(ClusterGOEnrichment.corrected_p_value <= max_corrected_p)
+
+        if enriched_clade_id is not None:
+            clusters = clusters.filter(ClusterGOEnrichment.cluster.has(
+                CoexpressionCluster.clade_enrichment.any(clade_id=enriched_clade_id)))
 
         return clusters.count()
 
     @staticmethod
-    def enriched_clusters(go_id, method=-1, min_enrichment=None, max_p=None, max_corrected_p=None):
+    def enriched_clusters(go_id, method=-1, min_enrichment=None, max_p=None, max_corrected_p=None,
+                          enriched_clade_id=None):
         """
         Function to get enriched clusters for a specific GO term
 
@@ -246,6 +254,10 @@ class Search:
 
         if max_corrected_p is not None:
             clusters = clusters.filter(ClusterGOEnrichment.corrected_p_value <= max_corrected_p)
+
+        if enriched_clade_id is not None:
+            clusters = clusters.filter(ClusterGOEnrichment.cluster.has(
+                CoexpressionCluster.clade_enrichment.any(clade_id=enriched_clade_id)))
 
         return clusters.all()
 

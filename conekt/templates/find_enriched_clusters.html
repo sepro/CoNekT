@@ -85,13 +85,19 @@
                             {{form.min_enrichment(class_="form-control update_count") }}<br />
                             </div>
                             <div class="checkbox-group">
-                            <label>{{form.check_p(checked=False, class_="update_count") }} <span class="title">p-value</span></label><br />
+                            <label>{{form.check_p(checked=False, class_="update_count") }} <span class="title">p-Value</span></label><br />
                             {{form.max_p(class_="form-control update_count") }}<br />
                             </div>
                             <div class="checkbox-group">
-                            <label>{{form.check_corrected_p(checked=True, class_="update_count") }} <span class="title"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='fdr') }}" data-target="#helpModal">corrected p-value</abbr></span></label><br />
+                            <label>{{form.check_corrected_p(checked=True, class_="update_count") }} <span class="title"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='fdr') }}" data-target="#helpModal">Corrected p-value</abbr></span></label><br />
                             {{form.max_corrected_p(class_="form-control update_count") }}<br />
                             </div>
+                            <hr />
+                            <div class="checkbox-group">
+                            <label>{{form.enable_clade_enrichment(checked=False, class_="update_count") }} <span class="title">Enable Clade/Phylostrata Enrichment</span></label><br />
+                            {{form.clade(class_="form-control update_count") }}<br />
+                            </div>
+                            <hr />
                             <div class="pull-right">
                             {% if example and example.go_term %}
                                 <button class="btn btn-default" id="load_example">Load example</button>
@@ -113,6 +119,9 @@
                             <li>Set the parameters. Checkboxes enable/disable certain filters. (Recommended: enable corrected p-value and keep this below 0.05)</li>
                             <li>Click <strong>Find clusters</strong></li>
                             <br />
+                            <li>To limit results to clusters which are enriched for genes from a certain clade/phylostrata, check the box <strong>Enable Clade/Phylostrata enrichment</strong> and
+                            select the desired clade from the list.</li>
+                            <br />
                             <li>Using the <strong>Count</strong> button you can check how many clusters meet the current criteria.</li>
                         </ul>
                     </div>
@@ -133,7 +142,6 @@
             post_data = {
                         'method': $('#method').val(),
                         'go_term': $('#go_term').val(),
-                        'condition': $('#conditions').val(),
 
                         'check_enrichment':  $('#check_enrichment').is(":checked"),
                         'check_p': $('#check_p').is(":checked"),
@@ -141,7 +149,10 @@
 
                         'min_enrichment':  $('#min_enrichment').val(),
                         'max_p': $('#max_p').val(),
-                        'max_corrected_p': $('#max_corrected_p').val()
+                        'max_corrected_p': $('#max_corrected_p').val(),
+
+                        'enable_clade_enrichment': $('#enable_clade_enrichment').is(":checked"),
+                        'clade': $('#clade').val()
                     }
             console.log(post_data);
             $.ajax({
@@ -174,9 +185,11 @@ $(function () {
          if (element.prop( "checked" )) {
             element.closest( ".checkbox-group" ).find(".title").removeClass("text-muted");
             element.closest( ".checkbox-group" ).find(":text").prop('disabled', false);
+            element.closest( ".checkbox-group" ).find("select").prop('disabled', false);
         } else {
             element.closest( ".checkbox-group" ).find(".title").addClass("text-muted");
             element.closest( ".checkbox-group" ).find(":text").prop('disabled', true);
+            element.closest( ".checkbox-group" ).find("select").prop('disabled', true);
         }
     }
 
@@ -234,10 +247,12 @@ $(function () {
             $('#check_enrichment').prop('checked', false);
             $('#check_p').prop('checked', false);
             $('#check_corrected_p').prop('checked', true);
+            $('#enable_clade_enrichment').prop('checked', false);
 
             update_checks($('#check_enrichment'));
             update_checks($('#check_p'));
             update_checks($('#check_corrected_p'));
+            update_checks($('#enable_clade_enrichment'));
         });
     {% endif %}
 });

@@ -63,7 +63,7 @@ def tree_sequences_table(tree_id):
 @tree.route('/associations/<tree_id>/<int:page>')
 @cache.cached()
 def tree_associations(tree_id, page=1):
-    relations = SequenceSequenceCladeAssociation.query.filter(SequenceSequenceCladeAssociation.tree_id ==tree_id).\
+    relations = SequenceSequenceCladeAssociation.query.filter(SequenceSequenceCladeAssociation.tree_id == tree_id).\
         paginate(page, g.page_items, False).items
 
     return render_template('pagination/clade_relations.html', relations=relations)

@@ -189,6 +189,9 @@ def count_enriched_clusters():
         max_p = float(content["max_p"]) if check_p else None
         max_corrected_p = float(content["max_corrected_p"]) if check_corrected_p else None
 
+        enable_clade_enrichment = bool(content["enable_clade_enrichment"])
+        clade = int(content['clade']) if enable_clade_enrichment else None
+
         go = GO.query.filter(or_(GO.name == term,
                                  GO.label == term)).first()
 
@@ -196,7 +199,8 @@ def count_enriched_clusters():
                                                        method=method,
                                                        min_enrichment=min_enrichment,
                                                        max_p=max_p,
-                                                       max_corrected_p=max_corrected_p)
+                                                       max_corrected_p=max_corrected_p,
+                                                       enriched_clade_id=clade)
 
         return Response(json.dumps({'count': cluster_count, 'error': 0}), mimetype='application/json')
     except Exception as e:
@@ -224,6 +228,9 @@ def search_enriched_clusters():
         max_p = request.form.get('max_p') if check_p else None
         max_corrected_p = request.form.get('max_corrected_p') if check_corrected_p else None
 
+        enable_clade_enrichment = request.form.get('enable_clade_enrichment') == 'y'
+        clade = request.form.get('clade') if enable_clade_enrichment else None
+
         go = GO.query.filter(or_(GO.name == term,
                                  GO.label == term)).all()
 
@@ -234,7 +241,8 @@ def search_enriched_clusters():
                                                 method=method,
                                                 min_enrichment=min_enrichment,
                                                 max_p=max_p,
-                                                max_corrected_p=max_corrected_p)
+                                                max_corrected_p=max_corrected_p,
+                                                enriched_clade_id=clade)
             results.append({'go': g, 'clusters': clusters})
 
         return render_template("find_enriched_clusters.html", results=results)
