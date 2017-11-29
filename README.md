@@ -9,7 +9,7 @@ What is CoNekT ?
 CoNekT is an online platform that allows users to browse expression profiles, study expression specificty, co-expression
 networks and more across different species. A public version including seven plant species which includes thousands of 
 publicly available RNASeq samples (from the [SRA](https://www.ncbi.nlm.nih.gov/sra)) is available 
-[here](conekt.mpimp-golm.mpg.de/pub/).
+[here](http://conekt.mpimp-golm.mpg.de/pub/).
 
 Here you can find **Tutorials** how to use the public version along with the source-code and build instructions that 
 allow you to host your own instance with other species or in-house data.
@@ -23,7 +23,7 @@ Tutorials
   * [Expression profiles, heatmaps and specificity](docs/tutorials/002_expression_profiles.md)
   * [Gene Families and Phylogenetic trees](docs/tutorials/003_gene_families_trees.md)
   * [Comparing specificity](docs/tutorials/004_compare_specificity.md)
-  * Coexpression Networks and Clusters
+  * [Coexpression Networks and Clusters](docs/tutorials/005_coexpression_networks_clusters.md)
   
   
 Anything missing ? Further questions ? Don't hesitate to [contact](mailto:proost@mpimp-golm.mpg.de) us.
@@ -55,6 +55,6 @@ The authors would like to thank Andreas Donath for technical support and helpful
 Contact
 -------
 
-  * Marek Mutwil ( mutwil@mpmpi-golm.mpg.de )
-  * Sebastian Proost ( proost@mpimp-golm.mpg.de )
+  * [Marek Mutwil](mailto:mutwil@mpmpi-golm.mpg.de) ( mutwil@mpmpi-golm.mpg.de )
+  * [Sebastian Proost](mailto:proost@mpimp-golm.mpg.de) ( proost@mpimp-golm.mpg.de )
 
