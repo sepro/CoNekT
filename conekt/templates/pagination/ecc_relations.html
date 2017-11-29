@@ -5,8 +5,8 @@
                 <td>Query</td>
                 <td>Target</td>
                 <td>ECC Score</td>
-                <td>p-Value</td>
-                <td>p-Value (corrected)</td>
+                <!--<td>p-Value</td>
+                <td>p-Value (corrected)</td>-->
                 <td>Actions</td>
             </tr>
         </thead>
@@ -16,8 +16,8 @@
                     <td><a href="{{ url_for('sequence.sequence_view', sequence_id=relation.query_id) }}" class="qtip_tooltip qtip_dynamic_tooltip" qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=relation.query_id) }}">{{ relation.query_sequence.name }}</a></td>
                     <td><a href="{{ url_for('sequence.sequence_view', sequence_id=relation.target_id) }}" class="qtip_tooltip qtip_dynamic_tooltip" qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=relation.target_id) }}">{{ relation.target_sequence.name }}</a></td>
                     <td>{{ relation.ecc|round(2) }}</td>
-                    <td>{% if relation.p_value %}{{ relation.p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
-                    <td>{% if relation.corrected_p_value %}{{ relation.corrected_p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
+                    <!--<td>{% if relation.p_value %}{{ relation.p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
+                    <td>{% if relation.corrected_p_value %}{{ relation.corrected_p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>-->
                     <td><a href="{{ url_for('ecc.ecc_graph_pair', ecc_id=relation.id) }}" data-toggle="tooltip"  data-placement="top" title="View ECC pair as graph"><i class="fa fa-eye"></i></a>
                         <a href="{{ url_for('ecc.ecc_graph', sequence=relation.query_id, network=relation.query_network_method_id, family=relation.gene_family_method_id) }}" data-toggle="tooltip"  data-placement="top" title="View ECC as graph"><i class="fa fa-share-alt"></i></a></td>
                 </tr>
