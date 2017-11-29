@@ -96,8 +96,11 @@ textarea.form-control {
 }
 
 
-.panel-scroll { height:250px; max-height: 250px; width: 100%; margin: 0; overflow-y: auto; }
+.panel-scroll { min-height:25px; max-height: 250px; width: 100%; margin: 0; overflow-y: auto; }
 
+.panel-scroll > div {
+    margin-bottom: -20px;
+}
 /*
  * Loader
  */
