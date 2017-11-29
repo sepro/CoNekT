@@ -25,4 +25,4 @@ class SearchEnrichedClustersForm(FlaskForm):
         self.method.choices = [(s.id, "%s [%s]" % (s.method, s.network_method.species.name)) for s in CoexpressionClusteringMethod.query.order_by(CoexpressionClusteringMethod.method)]
         self.method.choices.append((-1, "All Species"))
 
-        self.clade.choices = [(c.id, c.name) for c in Clade.query.all()]
+        self.clade.choices = [(c.id, c.name) for c in Clade.query.order_by(Clade.name).all()]
