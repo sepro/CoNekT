@@ -72,7 +72,7 @@ def heatmap_main():
 
 
 @heatmap.route('/results/default', methods=['POST'] )
-def heatmap_custom_normal():
+def heatmap_custom_default():
     form = HeatmapForm(request.form)
     form.populate_species()
     form.populate_options()

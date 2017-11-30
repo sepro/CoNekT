@@ -130,7 +130,7 @@
                  <div class="panel with-nav-tabs panel-default">
                     <div class="panel-heading">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#tab1default" data-toggle="tab">Normal</a></li>
+                                <li class="active"><a href="#tab1default" data-toggle="tab">Default</a></li>
                                 <li><a href="#tab2default" data-toggle="tab">Comparative</a></li>
                             </ul>
                     </div>
@@ -138,7 +138,7 @@
                         <div class="tab-content">
                             <div class="tab-pane fade in active" id="tab1default">
                                 <div class="panel-body">
-                                    <form method="POST"  action="{{ url_for('heatmap.heatmap_custom_normal') }}"  role="form">
+                                    <form method="POST"  action="{{ url_for('heatmap.heatmap_custom_default') }}"  role="form">
                                         <div class="row">
                                             <div class="col-xs-12">
                                                 {{ form.csrf_token }}
@@ -181,10 +181,11 @@
                     <div class="panel-heading"><strong>Help</strong></div>
                     <div class="panel-body">
                         <ul>
-                            <li>First select the desired <strong>species</strong></li>
+                            <li>You can generate a detailed heatmap for a single species (Default-tab) and a cross-species comparative heatmap (Comparative-tab)</li>
+                            <li>First select the desired <strong>species</strong> <span class="text-muted">(Default only)</span></li>
                             <li>Next add the genes to include in the heatmap
                                 (space, tab or line separated) in the corresponding box</li>
-                            <li>Select if the heatmap should display raw values, zlog-transformed or row-normalized</li>
+                            <li>Select if the heatmap should display raw values or normalized</li>
                             <li>Click <strong>Generate heatmap</strong></li>
                         </ul>
                     </div>
