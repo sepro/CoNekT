@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, Response
+from flask import Blueprint, request, render_template, Response, redirect, flash, url_for
 
 import json
 
@@ -77,15 +77,17 @@ def heatmap_custom_default():
     form.populate_species()
     form.populate_options()
 
-    terms = request.form.get('probes').split()
+    probes = request.form.get('probes').split()
     species_id = request.form.get('species_id')
 
     option = request.form.get('options')
 
-    probes = terms
+    if len(probes) == 0:
+        flash("No genes selected!", "warning")
+        return redirect(url_for('heatmap.heatmap_main'))
 
     # also do search by gene ID
-    sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
+    sequences = Sequence.query.filter(Sequence.name.in_(probes)).all()
 
     for s in sequences:
         for ep in s.expression_profiles:
@@ -112,6 +114,10 @@ def heatmap_custom_comparable():
     terms = request.form.get('probes').split()
 
     option = request.form.get('options')
+
+    if len(terms) == 0:
+        flash("No genes selected!", "warning")
+        return redirect(url_for('heatmap.heatmap_main'))
 
     sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
     sequence_ids = [s.id for s in sequences]
