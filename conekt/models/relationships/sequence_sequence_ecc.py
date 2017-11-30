@@ -151,8 +151,6 @@ class SequenceSequenceECCAssociation(db.Model):
         query_network_data = json.loads(query_network)
         target_network_data = json.loads(target_network)
 
-        # print(query_network_data)
-
         sequences = [association.query_sequence.id, association.target_sequence.id]
 
         for n in query_network_data:
@@ -211,11 +209,32 @@ class SequenceSequenceECCAssociation(db.Model):
                         SequenceSequenceECCAssociation.target_id.in_(sequence_ids))).\
             all()
 
-        nodes = []
-        edges = []
+        nodes, edges = [], []
         node_sequence_ids = []
 
+        networks = []
+
         for a in associations:
+            query_network = a.query_sequence.network_nodes.filter_by(
+                method_id=a.query_network_method_id).first_or_404().network
+            target_network = a.target_sequence.network_nodes.filter_by(
+                method_id=a.target_network_method_id).first_or_404().network
+
+            if query_network not in networks:
+                networks.append((a.query_id,
+                                 a.query_sequence.name,
+                                 a.query_sequence.species_id,
+                                 a.query_sequence.species.name,
+                                 a.query_network_method_id,
+                                 query_network))
+            if target_network not in networks:
+                networks.append((a.target_id,
+                                 a.target_sequence.name,
+                                 a.target_sequence.species_id,
+                                 a.target_sequence.species.name,
+                                 a.target_network_method_id,
+                                 target_network))
+
             if a.query_id not in node_sequence_ids:
                 node_sequence_ids.append(a.query_id)
                 nodes.append({"id": a.query_sequence.name,
@@ -243,5 +262,36 @@ class SequenceSequenceECCAssociation(db.Model):
                           "ecc_score": a.ecc,
                           'ecc_pair_color': "#D33",
                           "edge_type": "ecc"})
+
+        new_edges = []
+
+        for sequence_id, sequence_name, species_id, species_name, network_method_id, n in networks:
+            network_data = json.loads(n)
+            for node in network_data:
+                gene_id = node['gene_id'] if 'gene_id' in node.keys() else None
+                gene_name = node['gene_name'] if 'gene_name' in node.keys() else None
+
+                if gene_id not in node_sequence_ids:
+                    node_sequence_ids.append(gene_id)
+                    nodes.append({
+                        "id": gene_name,
+                        "name": gene_name,
+                        "species_id": species_id,
+                        "species_name": species_name,
+                        "gene_id": gene_id,
+                        "gene_name": gene_name,
+                        "network_method_id": network_method_id,
+                        "node_type": "target"
+                    })
+
+                if (sequence_name, gene_name) not in new_edges:
+                    new_edges.append((sequence_name, gene_name))
+                    new_edges.append((gene_name, sequence_name))
+
+                    edges.append({"source": sequence_name,
+                                  "target": gene_name,
+                                  "link_score": node['link_score'] if 'link_score' in node else 0,
+                                  "edge_type": "expression",
+                                  'ecc_pair_color': "#3D3"})
 
         return {"nodes": nodes, "edges": edges}, gf_method_id

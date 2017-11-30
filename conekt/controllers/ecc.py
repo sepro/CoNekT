@@ -36,6 +36,19 @@ def ecc_graph(sequence, network, family):
                            family_method_id=family)
 
 
+@ecc.route('/graph_multi/')
+def ecc_graph_multi():
+    """
+    Returns a page rendering the ECC graph for a specific pair of sequences
+
+    :param ecc_id: internal ID of the sequence to sequence ECC relationship
+    :return: Response with html page that shows the pairwise ECC network
+    """
+
+    return render_template("expression_graph.html",
+                           ecc_multi=True)
+
+
 @ecc.route('/graph_pair/<int:ecc_id>')
 def ecc_graph_pair(ecc_id):
     """
@@ -107,5 +120,6 @@ def ecc_graph_multi_json():
     network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, family)
     network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
     network_cytoscape = CytoscapeHelper.add_species_data_nodes(network_cytoscape)
+    network_cytoscape = CytoscapeHelper.connect_homologs(network_cytoscape)
 
     return json.dumps(network_cytoscape)

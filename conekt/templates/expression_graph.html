@@ -13,6 +13,8 @@
         Custom network graph
     {% elif ecc_pair %}
         ECC Pair graph
+    {% elif ecc_multi %}
+        ECC Network
     {% endif %}
 {% endblock %}
 
@@ -34,6 +36,8 @@
             <h1>Custom network</h1>
             {% elif ecc_pair %}
             <h1>ECC pair</h1>
+            {% elif ecc_multi %}
+            <h1>ECC multi</h1>
             {% endif %}
              </div>
             <div class="clearfix">
@@ -63,7 +67,7 @@
                                     {% if cluster or cluster_one %}
                                     <li><a href="#" class="cy-node-color" attr="neighbors">Neighbors</a></li>
                                     {% endif %}
-                                    {% if sequence or ecc_pair %}
+                                    {% if sequence or ecc_pair or ecc_multi %}
                                     <li><a href="#" class="cy-node-color" attr="species_color">Species</a></li>
                                     {% endif %}
                                     {% if graph_data %}
@@ -92,7 +96,7 @@
                                     <li><a href="#" class="cy-edge-color" attr="depth_color">Depth</a></li>
                                     <li><a href="#" class="cy-edge-color" attr="link_pcc">PCC</a></li>
                                     <li><a href="#" class="cy-edge-color" attr="hrr">HRR</a></li>
-                                    {% elif ecc_pair %}
+                                    {% elif ecc_pair or ecc_multi %}
                                     <li><a href="#" class="cy-edge-color" attr="ecc_pair_color">Type</a></li>
                                     {% elif not sequence %}
                                     <li><a href="#" class="cy-edge-color" attr="link_score">Score</a></li>
@@ -111,7 +115,7 @@
                                     {% if sequence %}
                                     <li><a href="#" class="cy-edge-width" attr="ecc_width">ECC</a></li>
                                     {% endif %}
-                                    {% if not sequence and not ecc_pair %}
+                                    {% if not sequence and not ecc_pair and not ecc_multi %}
                                     <li><hr /></li>
                                     <li class="dropdown-header"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='hrr') }}" data-target="#helpModal">HRR</abbr> Filter</li>
                                     <li><p><strong>Cutoff:</strong> <span id="cy-edge-score-value" class="text-muted">{{cutoff}}</span></p></li>
@@ -206,12 +210,14 @@
             <div id="cy" json="{{ url_for('expression_cluster.expression_cluster_json', cluster_id=cluster.id, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% elif cluster_one %}
             <div id="cy" json="{{ url_for('graph_comparison.graph_comparison_cluster_json', one=cluster_one.id, two=cluster_two.id, family_method_id=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
-           {% elif sequence %}
+            {% elif sequence %}
             <div id="cy" json="{{ url_for('ecc.ecc_graph_json', sequence=sequence.id, network=network_method_id, family=family_method_id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
-           {% elif graph_data %}
+            {% elif graph_data %}
             <div id="cy" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
-           {% elif ecc_pair %}
+            {% elif ecc_pair %}
             <div id="cy" json="{{ url_for('ecc.ecc_graph_pair_json', ecc_id = ecc_pair.id) }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
+            {% elif ecc_multi %}
+            <div id="cy" json="{{ url_for('ecc.ecc_graph_multi_json') }}" cycss="{{ url_for('static', filename='js/cytoscape.cycss') }}"></div>
             {% endif %}
 
 
