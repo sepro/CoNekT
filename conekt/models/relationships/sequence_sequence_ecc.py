@@ -201,32 +201,47 @@ class SequenceSequenceECCAssociation(db.Model):
                           "edge_type": "expression",
                           'ecc_pair_color': "#3D3"})
 
-        """
-        Add gene families to sequences
-        """
-        seq_fams = SequenceFamilyAssociation.query.filter(and_(SequenceFamilyAssociation.sequence_id.in_(sequences),
-                                                               SequenceFamilyAssociation.family.has(method_id=association.gene_family_method_id)
-                                                               )).all()
-
-        seq_to_fam = {sf.sequence_id: sf.gene_family_id for sf in seq_fams}
-
-        for i, node in enumerate(nodes):
-            nodes[i]['family_id'] = seq_to_fam[node['gene_id']] if node['gene_id'] in seq_to_fam.keys() else None
-
-        """
-        Add edges between homologous genes from different targets
-        """
-
-        for i in range(len(nodes) - 1):
-            for j in range(i + 1, len(nodes)):
-                if nodes[i]['family_id'] == nodes[j]['family_id'] and nodes[i]['family_id'] is not None:
-                    edges.append(
-                        {'source': nodes[i]['id'],
-                         'target': nodes[j]['id'],
-                         'homology_color': "#33D",
-                         'edge_type': 'homology',
-                         'ecc_pair_color': "#33D",
-                         'homology': True}
-                    )
-
         return {"nodes": nodes, "edges": edges}, association.gene_family_method_id
+
+    @staticmethod
+    def get_ecc_multi_network(gf_method_id, sequence_ids):
+        associations = SequenceSequenceECCAssociation.query.\
+            filter(SequenceSequenceECCAssociation.gene_family_method_id == gf_method_id).\
+            filter(and_(SequenceSequenceECCAssociation.query_id.in_(sequence_ids),
+                        SequenceSequenceECCAssociation.target_id.in_(sequence_ids))).\
+            all()
+
+        nodes = []
+        edges = []
+        node_sequence_ids = []
+
+        for a in associations:
+            if a.query_id not in node_sequence_ids:
+                node_sequence_ids.append(a.query_id)
+                nodes.append({"id": a.query_sequence.name,
+                              "name": a.query_sequence.name,
+                              "species_id": a.query_sequence.species_id,
+                              "species_name": a.query_sequence.species.name,
+                              "gene_id": a.query_id,
+                              "gene_name": a.query_sequence.name,
+                              "network_method_id": a.query_network_method_id,
+                              "node_type": "query"})
+
+            if a.target_id not in node_sequence_ids:
+                node_sequence_ids.append(a.target_id)
+                nodes.append({"id": a.target_sequence.name,
+                              "name": a.target_sequence.name,
+                              "species_id": a.target_sequence.species_id,
+                              "species_name": a.target_sequence.species.name,
+                              "gene_id": a.target_id,
+                              "gene_name": a.target_sequence.name,
+                              "network_method_id": a.target_network_method_id,
+                              "node_type": "query"})
+
+            edges.append({"source": a.query_sequence.name,
+                          "target": a.target_sequence.name,
+                          "ecc_score": a.ecc,
+                          'ecc_pair_color': "#D33",
+                          "edge_type": "ecc"})
+
+        return {"nodes": nodes, "edges": edges}, gf_method_id

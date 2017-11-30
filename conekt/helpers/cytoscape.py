@@ -252,6 +252,28 @@ class CytoscapeHelper:
         return colored_network
 
     @staticmethod
+    def connect_homologs(network):
+        connected_network = deepcopy(network)
+        """
+        Add edges between homologous genes from different targets, family_id needs to be specified !
+        """
+
+        for i in range(len(connected_network['nodes']) - 1):
+            for j in range(i + 1, len(connected_network['nodes'])):
+                if connected_network['nodes'][i]['data']['family_id'] == connected_network['nodes'][j]['data']['family_id'] and connected_network['nodes'][i]['data']['family_id'] is not None:
+                    connected_network['edges'].append({
+                        'data': {'source': connected_network['nodes'][i]['data']['id'],
+                                 'target': connected_network['nodes'][j]['data']['id'],
+                                 'color': "#33D",
+                                 'homology_color': "#33D",
+                                 'edge_type': 'homology',
+                                 'ecc_pair_color': "#33D",
+                                 'homology': True}
+                    })
+
+        return connected_network
+
+    @staticmethod
     def add_connection_data_nodes(network):
         """
         A data to cytoscape compatible network's nodes based on the number of edges that node possesses

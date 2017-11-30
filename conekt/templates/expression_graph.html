@@ -111,7 +111,7 @@
                                     {% if sequence %}
                                     <li><a href="#" class="cy-edge-width" attr="ecc_width">ECC</a></li>
                                     {% endif %}
-                                    {% if not sequence %}
+                                    {% if not sequence and not ecc_pair %}
                                     <li><hr /></li>
                                     <li class="dropdown-header"><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='hrr') }}" data-target="#helpModal">HRR</abbr> Filter</li>
                                     <li><p><strong>Cutoff:</strong> <span id="cy-edge-score-value" class="text-muted">{{cutoff}}</span></p></li>
