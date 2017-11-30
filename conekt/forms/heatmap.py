@@ -17,3 +17,11 @@ class HeatmapForm(FlaskForm):
     def populate_options(self):
         self.options.choices = [('raw', 'Raw'), ('zlog', 'zLog-ransformed'), ('rnorm', 'Row-normalized')]
 
+
+class HeatmapComparableForm(FlaskForm):
+    probes = TextAreaField('probes', [InputRequired()])
+
+    options = SelectField('options')
+
+    def populate_options(self):
+        self.options.choices = [('raw', 'Raw'), ('rnorm', 'Row-normalized')]

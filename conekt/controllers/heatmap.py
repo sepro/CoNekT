@@ -3,7 +3,7 @@ from flask import Blueprint, request, render_template, Response
 import json
 
 from conekt import cache
-from conekt.forms.heatmap import HeatmapForm
+from conekt.forms.heatmap import HeatmapForm, HeatmapComparableForm
 from conekt.models.expression.coexpression_clusters import CoexpressionCluster
 from conekt.models.expression.profiles import ExpressionProfile
 from conekt.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
@@ -53,47 +53,75 @@ def heatmap_main():
     form.populate_species()
     form.populate_options()
 
-    if request.method == 'POST':
-        terms = request.form.get('probes').split()
-        species_id = request.form.get('species_id')
+    form2 = HeatmapComparableForm(request.form)
+    form2.populate_options()
 
-        option = request.form.get('options')
+    profiles = ExpressionProfile.query.filter(ExpressionProfile.sequence_id is not None).order_by(ExpressionProfile.species_id).limit(5).all()
 
-        probes = terms
+    example = {
+        'species_id': None,
+        'probes': None,
+        'options': 'zlog'
+    }
 
-        # also do search by gene ID
-        sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
+    if len(profiles) > 0:
+        example['species_id'] = profiles[0].species_id
+        example['probes'] = ' '.join([p.sequence.name for p in profiles])
 
-        for s in sequences:
-            for ep in s.expression_profiles:
-                probes.append(ep.probe)
+    return render_template("expression_heatmap.html", form=form, form2=form2, example=example)
 
-        # make probe list unique
-        probes = list(set(probes))
-        # TODO check if certain probes were not found and warn the user
-        current_heatmap = ExpressionProfile.get_heatmap(species_id, probes,
-                                                        zlog=(option == 'zlog'),
-                                                        raw=(option == 'raw'))
 
-        return render_template("expression_heatmap.html", order=current_heatmap['order'],
-                               profiles=current_heatmap['heatmap_data'],
-                               form=form,
-                               zlog=1 if option == 'zlog' else 0,
-                               raw=1 if option == 'raw' else 0)
-    else:
-        profiles = ExpressionProfile.query.filter(ExpressionProfile.sequence_id is not None).order_by(ExpressionProfile.species_id).limit(5).all()
+@heatmap.route('/results/default', methods=['POST'] )
+def heatmap_custom_normal():
+    form = HeatmapForm(request.form)
+    form.populate_species()
+    form.populate_options()
 
-        example = {
-            'species_id': None,
-            'probes': None,
-            'options': 'zlog'
-        }
+    terms = request.form.get('probes').split()
+    species_id = request.form.get('species_id')
 
-        if len(profiles) > 0:
-            example['species_id'] = profiles[0].species_id
-            example['probes'] = ' '.join([p.sequence.name for p in profiles])
+    option = request.form.get('options')
 
-        return render_template("expression_heatmap.html", form=form, example=example)
+    probes = terms
+
+    # also do search by gene ID
+    sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
+
+    for s in sequences:
+        for ep in s.expression_profiles:
+            probes.append(ep.probe)
+
+    # make probe list unique
+    probes = list(set(probes))
+    # TODO check if certain probes were not found and warn the user
+    current_heatmap = ExpressionProfile.get_heatmap(species_id, probes,
+                                                    zlog=(option == 'zlog'),
+                                                    raw=(option == 'raw'))
+
+    return render_template("expression_heatmap.html", order=current_heatmap['order'],
+                           profiles=current_heatmap['heatmap_data'],
+                           zlog=1 if option == 'zlog' else 0,
+                           raw=1 if option == 'raw' else 0)
+
+
+@heatmap.route('/results/comparable', methods=['POST'] )
+def heatmap_custom_comparable():
+    form = HeatmapComparableForm(request.form)
+    form.populate_options()
+
+    terms = request.form.get('probes').split()
+
+    option = request.form.get('options')
+
+    sequences = Sequence.query.filter(Sequence.name.in_(terms)).all()
+    sequence_ids = [s.id for s in sequences]
+
+    current_heatmap = CrossSpeciesExpressionProfile().get_heatmap(*sequence_ids, option=option)
+
+    return render_template("expression_heatmap.html", order=current_heatmap['order'],
+                           profiles=current_heatmap['heatmap_data'],
+                           zlog=1 if option == 'zlog' else 0,
+                           raw=1 if option == 'raw' else 0)
 
 
 @heatmap.route('/comparative/tree/<int:tree_id>')

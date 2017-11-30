@@ -127,28 +127,55 @@
         <p>Creates an expression heatmap (table with shaded cells) for a selected set of genes.</p>
         <div class="row">
              <div class="col-md-8 col-sm-6 col-xs-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading"><strong>Select genes</strong></div>
-                    <div class="panel-body">
-                        <form method="POST"  action="{{ url_for('heatmap.heatmap_main') }}"  role="form">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    {{ form.csrf_token }}
-                                    {{form.species_id(class_="form-control") }}<br />
-                                    {{form.probes(class_="form-control") }}<br />
-                                    {{form.options(class_="form-control") }}<br />
-                                    <div class="pull-right">
-                                    {% if example and example.probes %}
-                                        <button class="btn btn-default" id="load_example">Load example</button>
-                                    {% endif %}
-                                        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Generate heatmap</button>
-                                    </div>
+                 <div class="panel with-nav-tabs panel-default">
+                    <div class="panel-heading">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab1default" data-toggle="tab">Normal</a></li>
+                                <li><a href="#tab2default" data-toggle="tab">Comparative</a></li>
+                            </ul>
+                    </div>
+                    <div>
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="tab1default">
+                                <div class="panel-body">
+                                    <form method="POST"  action="{{ url_for('heatmap.heatmap_custom_normal') }}"  role="form">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                {{ form.csrf_token }}
+                                                {{form.species_id(class_="form-control") }}<br />
+                                                {{form.probes(class_="form-control") }}<br />
+                                                {{form.options(class_="form-control") }}<br />
+                                                <div class="pull-right">
+                                                {% if example and example.probes %}
+                                                    <button class="btn btn-default" id="load_example">Load example</button>
+                                                {% endif %}
+                                                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Generate heatmap</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-                        </form>
+                            <div class="tab-pane fade in" id="tab2default">
+                                <div class="panel-body">
+                                    <form method="POST"  action="{{ url_for('heatmap.heatmap_custom_comparable') }}"  role="form">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                {{ form2.csrf_token }}
+                                                {{form2.probes(class_="form-control") }}<br />
+                                                {{form2.options(class_="form-control") }}<br />
+                                                <div class="pull-right">
+                                                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Generate heatmap</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                 </div>
+             </div>
             <div class="col-md-4 col-sm-6 col-xs-12">
                 <div class="panel panel-default">
                     <div class="panel-heading"><strong>Help</strong></div>
