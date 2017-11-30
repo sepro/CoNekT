@@ -113,7 +113,7 @@ def ecc_graph_multi_json():
     :param ecc_id: internal ID of the sequence to sequence ECC relationship
     :return: JSON object compatible with cytoscape.js
     """
-    network, family = SequenceSequenceECCAssociation.get_ecc_multi_network(2, [230458, 35796, 162930])
+    network, family = SequenceSequenceECCAssociation.get_ecc_multi_network(1, [162930, 56261, 203621, 94050])
 
     network_cytoscape = CytoscapeHelper.parse_network(network)
     network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
@@ -121,5 +121,6 @@ def ecc_graph_multi_json():
     network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
     network_cytoscape = CytoscapeHelper.add_species_data_nodes(network_cytoscape)
     network_cytoscape = CytoscapeHelper.connect_homologs(network_cytoscape)
+    network_cytoscape = CytoscapeHelper.prune_unique_lc(network_cytoscape)
 
     return json.dumps(network_cytoscape)

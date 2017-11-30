@@ -1,4 +1,5 @@
 from copy import deepcopy
+from collections import Counter
 
 from flask import url_for
 from sqlalchemy.orm import joinedload
@@ -406,6 +407,43 @@ class CytoscapeHelper:
                 edge["data"]["depth_color"] = colors[edge["data"]["depth"]]
 
         return colored_network
+
+    @staticmethod
+    def prune_unique_lc(network):
+        """
+        Remove genes from network that have an lc that occurs only once
+
+        :param network: dict containing the network
+        :return: Cytoscape.js compatible network with the pruned network
+        """
+
+        lc_labels = []
+        for node in network["nodes"]:
+            if 'lc_label' in node['data'].keys():
+                lc_labels.append(node['data']['lc_label'])
+
+        lc_counter = Counter(lc_labels)
+
+        print(lc_counter)
+
+        pruned_network = {'nodes': [], 'edges': []}
+
+        good_nodes = []
+
+        for node in network['nodes']:
+            if 'lc_label' in node['data'].keys():
+                if lc_counter[node['data']['lc_label']] > 1:
+                    good_nodes.append(node['data']['name'])
+                    pruned_network['nodes'].append(deepcopy(node))
+            else:
+                good_nodes.append(node['data']['name'])
+                pruned_network['nodes'].append(deepcopy(node))
+
+        for edge in network['edges']:
+            if edge['data']['source'] in good_nodes and edge['data']['target'] in good_nodes:
+                pruned_network['edges'].append(deepcopy(edge))
+
+        return pruned_network
 
     @staticmethod
     def merge_networks(network_one, network_two):
