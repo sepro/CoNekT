@@ -18,3 +18,14 @@ name to bring up a brief description and other relevant information (e.g. useful
 
 ## Search
 
+On each page there is a **search box** available in the top right corner. This is a broad keyword search and will try to
+find genes, profiles, GO terms, InterPro domains and/or gene families based on their identifiers or descriptions.
+
+![search results](images/search_results.png "Search results")
+
+As seen in the results from searching for **Auxin transport** partial matches are also picked up and only the 50 hits in 
+each category are retained. The **advanced search** allows for more specific searches and should be used to narrow down
+results further.
+
+Gene identifiers link to details about the sequence, functional annotation but also expression profile which is covered 
+in the [next section](002_expression_profiles.md). 
