@@ -476,6 +476,16 @@ class CoexpressionCluster(db.Model):
                     cluster.__calculate_enrichment()
 
     def __calculate_clade_enrichment(self, background, gf_method_id):
+        """
+        Calculates the clade enrichment for a co-expression cluster (i.e. if genes which originated in a certain clade
+        are overrepresented). A background is required (how many genes there are per clade in the organism) and the
+        gene family method those clades are based on.
+
+        Calculations will be immediately committed to the DB.
+
+        :param background: dict with background
+        :param gf_method_id: internal ID of gene family method
+        """
         species_gene_count = self.method.network_method.species.sequence_count
         species_id = self.method.network_method.species_id
 
@@ -685,18 +695,33 @@ class CoexpressionCluster(db.Model):
 
     @property
     def interpro_stats(self):
+        """
+        Get InterPro statistics for the current cluster
+
+        :return: Interpro statistics
+        """
         sequence_ids = [s.id for s in self.sequences.all()]
 
         return Interpro.sequence_stats(sequence_ids)
 
     @property
     def go_stats(self):
+        """
+        Get GO statistics for the current cluster
+
+        :return: GO statistics
+        """
         sequence_ids = [s.id for s in self.sequences.all()]
 
         return GO.sequence_stats(sequence_ids)
 
     @property
     def family_stats(self):
+        """
+        Get gene family statistics for the current cluster
+
+        :return: gene family statistics
+        """
         sequence_ids = [s.id for s in self.sequences.all()]
 
         return GeneFamily.sequence_stats(sequence_ids)

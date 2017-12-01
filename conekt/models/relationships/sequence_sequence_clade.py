@@ -33,9 +33,18 @@ class SequenceSequenceCladeAssociation(db.Model):
 
     @property
     def readable_type(self):
+        """
+        Returns type (duplication or speciation) in a human-readable format
+
+        :return: string Duplication or Speciation
+        """
         return "Duplication" if self.duplication else "Speciation"
 
     @property
     def readable_score(self):
+        """
+        Returns the duplication consistency score in a nicer format
 
+        :return: string with dup. consistency score in .%3 - format. Or "Not available" for speciations.
+        """
         return "%.3f" % self.duplication_consistency_score if self.duplication else "Not available"

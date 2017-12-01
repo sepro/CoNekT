@@ -96,6 +96,15 @@ class ExpressionProfile(db.Model):
 
     @staticmethod
     def convert_profile(condition_to_tissue, profile_data, use_means=True):
+        """
+        Convert a full, detailed profile into a more general summarized one using conversion table stored in the
+        database
+
+        :param condition_to_tissue: dict with conversion instructions
+        :param profile_data: profile to convert
+        :param use_means: use means of detailed condition if True otherwise use samples independently. Default True
+        :return: New profile
+        """
         tissues = list(set(condition_to_tissue['conversion'].values()))
 
         output = {}

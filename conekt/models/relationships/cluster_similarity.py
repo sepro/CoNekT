@@ -32,4 +32,7 @@ class CoexpressionClusterSimilarity(db.Model):
 
     @staticmethod
     def empty_table():
+        """
+        Delete all content from this table. Use carefully !
+        """
         CoexpressionClusterSimilarity.query.delete()

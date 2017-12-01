@@ -188,6 +188,13 @@ class ExpressionNetworkMethod(db.Model):
 
     @staticmethod
     def __neighborhoods_overlap(neighborhood_a, neighborhood_b):
+        """
+        Checks if two genes have overlapping networks
+
+        :param neighborhood_a: neighborhood for first gene (string as stored in database)
+        :param neighborhood_b: neighborhood for second gene (string as stored in database)
+        :return: Bool, true if networks overlap
+        """
         genes_a = set([n['gene_id'] for n in json.loads(neighborhood_a) if n['gene_id'] is not None])
         genes_b = set([n['gene_id'] for n in json.loads(neighborhood_b) if n['gene_id'] is not None])
 
@@ -285,12 +292,22 @@ class ExpressionNetwork(db.Model):
 
     @property
     def neighbors_count(self):
+        """
+        Returns the number of neighors the current gene has
+
+        :return: int, number of neighbors
+        """
         data = json.loads(self.network)
 
         return len(data)
 
     @property
     def neighbors_table(self):
+        """
+        Returns a tab delimited representation of the current gene's neighbors
+
+        :return:
+        """
         data = json.loads(self.network)
         output = [["Sequence", "Description", "Alias", "PCC", "hrr"]]
 
@@ -430,6 +447,14 @@ class ExpressionNetwork(db.Model):
 
     @staticmethod
     def get_custom_network(method_id, probes):
+        """
+        Return a network dict for a certain set of probes/sequences. Only returns the selected nodes and connections
+        between them (if any)
+
+        :param method_id: network method to extract information from
+        :param probes: list of probe/sequence names
+        :return: network dict
+        """
         nodes = []
         edges = []
 
@@ -502,6 +527,19 @@ class ExpressionNetwork(db.Model):
     @staticmethod
     def read_expression_network_lstrap(network_file, species_id, description, score_type="rank",
                                        pcc_cutoff=0.7, limit=30, enable_second_level=False):
+        """
+        Reads a network from disk, generated using LSTrAP, determing hrr scores for each pair and store things in the
+        DB.
+
+        :param network_file: path to input file
+        :param species_id: species the data is from
+        :param description: description to add to the db for this network
+        :param score_type: which scores are used, default = "rank"
+        :param pcc_cutoff: pcc threshold, pairs with a score below this will be ignored
+        :param limit: hrr score threshold, pairs with a score above this will be ignored
+        :param enable_second_level: include second level neighborhood in the database (only to be used for sparse networks)
+        :return: internal ID of the new network
+        """
         # build conversion table for sequences
         sequences = Sequence.query.filter_by(species_id=species_id).all()
 

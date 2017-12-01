@@ -1,3 +1,8 @@
+"""
+Tables to be used to define many-to-many relations. In case additional parameters are defined on the relationship, an
+additional model needs to be created that extends these.
+"""
+
 from conekt import db
 
 sequence_go = db.Table('sequence_go',

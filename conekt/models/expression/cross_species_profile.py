@@ -10,8 +10,11 @@ from sqlalchemy.orm import undefer
 
 
 class CrossSpeciesExpressionProfile:
-
     def __init__(self):
+        """
+        Function that gets required data, checks for which species there is a comparative profile available and stores
+        details to convert the profiles for that species.
+        """
         self.condition_tissue = ConditionTissue.query.filter(ConditionTissue.in_tree == 1).all()
 
         # Way to merge various (potentially incomplete) lists and preserve the order (as good as possible)
@@ -27,6 +30,12 @@ class CrossSpeciesExpressionProfile:
         self.species_to_condition = {ct.species_id: ct for ct in self.condition_tissue}
 
     def get_data(self, *sequence_ids):
+        """
+        Gets comparative profiles for a set of sequences (where available)
+
+        :param sequence_ids: list of sequence ids to get data for
+        :return: list of dicts with available profiles.
+        """
         profiles = ExpressionProfile.query.filter(ExpressionProfile.sequence_id.in_(list(sequence_ids))).\
             options(undefer('profile')).all()
 
@@ -77,6 +86,13 @@ class CrossSpeciesExpressionProfile:
         return converted_profiles
 
     def get_heatmap(self, *sequence_ids, option='raw'):
+        """
+        Gets comparative data and converts it into a dict compatible with our heatmap visualization
+
+        :param sequence_ids: sequences
+        :param option: normalization method 'raw' -> no normalization, 'row' -> row based normalization
+        :return: list with dict entries compatible with our heatmap visualization
+        """
         data = self.get_data(*sequence_ids)
 
         output = {
