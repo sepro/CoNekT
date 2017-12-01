@@ -46,6 +46,15 @@ class SequenceSequenceECCAssociation(db.Model):
 
     @staticmethod
     def get_ecc_network(sequence, network, family):
+        """
+        Get network connecting a specific sequence to all genes with significant Expression Context Conservation.
+
+
+        :param sequence: internal ID of sequence
+        :param network: network method ID to consider
+        :param family: kind of gene families used to detect ECC
+        :return: network dict (can be made compatible using CytoscapeHelper)
+        """
         data = SequenceSequenceECCAssociation.query.filter(and_(
                 SequenceSequenceECCAssociation.query_id == sequence,
                 SequenceSequenceECCAssociation.query_network_method_id == network,
@@ -112,8 +121,8 @@ class SequenceSequenceECCAssociation(db.Model):
     @staticmethod
     def get_ecc_pair_network(ecc_id):
         """
-        Get all data for an SequenceSequenceECCAssociation to make a ECC graph
-
+        Get all data for an SequenceSequenceECCAssociation to make a ECC graph, similar to the pairwise comparisons in
+        Movahedi et al.
 
         :param ecc_id: interal id of the SequenceSequenceECCAssociation
         :return: ecc pair with neighborhood as graph dict
@@ -203,6 +212,15 @@ class SequenceSequenceECCAssociation(db.Model):
 
     @staticmethod
     def get_ecc_multi_network(gf_method_id, sequence_ids):
+        """
+        Creates an ECC network for multiple genes, the resulting network will contain all ECC partners of the input
+        genes. Pruning this network keeping only genes with non-unique label co-occurances is recommended !
+
+
+        :param gf_method_id: gene family method used to detect ECC
+        :param sequence_ids: sequences to include as the core of the network
+        :return: network dict
+        """
         associations = SequenceSequenceECCAssociation.query.\
             filter(SequenceSequenceECCAssociation.gene_family_method_id == gf_method_id).\
             filter(and_(SequenceSequenceECCAssociation.query_id.in_(sequence_ids),

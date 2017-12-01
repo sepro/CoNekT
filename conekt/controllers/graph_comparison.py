@@ -12,9 +12,9 @@ graph_comparison = Blueprint('graph_comparison', __name__)
 
 
 # TODO placeholder for the search function
-@graph_comparison.route('/')
-def graph_comparison_overview():
-    return "TEST"
+# @graph_comparison.route('/')
+# def graph_comparison_overview():
+#     return "TEST"
 
 
 @graph_comparison.route('/cluster/<int:one>/<int:two>')

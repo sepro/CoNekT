@@ -254,6 +254,14 @@ class CytoscapeHelper:
 
     @staticmethod
     def connect_homologs(network):
+        """
+        Connects homologous (or orthologous) genes using a dashed edge. Requires a cytoscape.js compatible network as
+        input and will return a network with homologs connected. Note that gene families need to be present in the
+        network *before* applying this function. (e.g. using add_family_data_nodes in this class)
+
+        :param network:
+        :return:
+        """
         connected_network = deepcopy(network)
         """
         Add edges between homologous genes from different targets, family_id needs to be specified !
@@ -411,7 +419,9 @@ class CytoscapeHelper:
     @staticmethod
     def prune_unique_lc(network):
         """
-        Remove genes from network that have an lc that occurs only once
+        Remove genes from network that have a unique label (label co-occ.). Requires a Cytoscape.js compatible network
+        and will return a purned copy in the same format. Note that label co-occ. need to be present in the
+        network *before* applying this function. (e.g. using add_lc_data_nodes in this class)
 
         :param network: dict containing the network
         :return: Cytoscape.js compatible network with the pruned network
