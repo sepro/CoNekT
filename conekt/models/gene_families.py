@@ -245,6 +245,13 @@ class GeneFamily(db.Model):
 
     @staticmethod
     def sequence_stats_subquery(sequences):
+        """
+        Same as sequence_stats but takes a BaseQuery returning sequences as input (to avoid multiple times querying
+        sequences by ID)
+
+        :param sequences: BaseQuery returning sequences
+        :return: dict with for each InterPro domain linked with any of the input sequences stats
+        """
         subquery = sequences.subquery()
 
         data = SequenceFamilyAssociation.query.join(subquery, SequenceFamilyAssociation.sequence_id == subquery.c.id).all()
@@ -286,6 +293,13 @@ class GeneFamily(db.Model):
 
     @staticmethod
     def __add_families(families, family_members):
+        """
+        Adds gene families to the database and assigs genes to their designated family
+
+        :param families:
+        :param family_members:
+        :return:
+        """
         for i, f in enumerate(families):
             db.session.add(f)
 

@@ -50,13 +50,18 @@ class Clade(db.Model):
 
     @staticmethod
     def add_clades_from_json(data):
+        """
+        Adds a clade from a dict with clade details
+
+        :param data: dict with clade details
+        """
         for c, data in data.items():
             Clade.add_clade(c, data['species'], data['tree'])
 
     @staticmethod
     def update_clades():
         """
-        Loop over all families and determine what clade they belong too
+        Loop over all families and determine what clade they belong too. Results are stored in the database
         """
         clades = Clade.query.all()
         families = GeneFamily.query.all()
@@ -119,6 +124,11 @@ class Clade(db.Model):
 
     @property
     def newick_tree_species(self):
+        """
+        Returns a Newick tree with the species present in the current clade.
+
+        :return: Newick tree (string) with species for the current clade
+        """
         species = {s.code: s.name for s in Species.query.all()}
 
         tree = newick.loads(self.newick_tree)[0]

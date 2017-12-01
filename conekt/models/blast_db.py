@@ -11,7 +11,9 @@ import os
 class BlastDB:
     @staticmethod
     def create_db():
-        # Raise an error if BLAST is not enabled
+        """
+        Creates a blast database using the settings specified in the app's configuration
+        """
         assert current_app.config['BLAST_ENABLED']
 
         TEMP_DIR = tempfile.mkdtemp()
