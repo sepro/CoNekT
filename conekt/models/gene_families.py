@@ -294,11 +294,10 @@ class GeneFamily(db.Model):
     @staticmethod
     def __add_families(families, family_members):
         """
-        Adds gene families to the database and assigs genes to their designated family
+        Adds gene families to the database and assigns genes to their designated family
 
-        :param families:
-        :param family_members:
-        :return:
+        :param families: list of GeneFamily objects
+        :param family_members: dict (keys = gene family name) with lists of members
         """
         for i, f in enumerate(families):
             db.session.add(f)
