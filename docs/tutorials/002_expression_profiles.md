@@ -24,6 +24,7 @@ should be used (recommended). Click **Show profiles** to get a single plot inclu
 
 ![expression profile comparison](images/expression_profile_comparison.png "Expression profile comparison example") 
 
+Furthermore, links to compare profiles from genes 
 
 ## Heatmaps
 
@@ -33,12 +34,18 @@ one species, or between species.
 The tool to create heatmaps is located in the tools menu, **Create heatmap** in the expression profile section. First
 select the correct tab, the default comparison will use all annotated condition but only allows genes from a single species
 to be included. The Comparative heatmap allows comparisons between multiple species, but only for a limited set of conditions.
-
+Depending on the type of heatmap you wish to create different normalization (or no normalization) options are available.
 
 ![heatmap entry](images/heatmap_entry.png "Heatmap form") 
 
+Hit **Generate heatmap** to create a heatmap for the selected genes. The heatmap can be transposed or stored locally using the
+buttons in the top right. 
+
+![heatmap example](images/heatmap_example.png "Heatmap example") 
 
 ## Expression Specificity
+
+
 
 ## Export *all* expressed genes
 
