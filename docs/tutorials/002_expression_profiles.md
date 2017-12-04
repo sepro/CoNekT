@@ -60,6 +60,10 @@ An overview of genes specific for a certain tissue (here Root Apices, 7 days aft
 the table header the results can be sorted. Genes with an expression level below 10 TPM are flagged as low abundant, 
 such low expressed genes should be treated carefully as they might comprise false positives !
 
+By combining expression specificity with gene families (discussed in the [next section](003_gene_families_trees.md)) 
+gene families with conserved specificity as well as sub- and neo-functionalized genes can be picked up as shown in 
+[part](004_compare_specificity.md) 4 of this tutorial. 
+
 ## Export *all* expressed genes
 
 To enable local analysis, all expressed genes in a certain condition/tissue can be exported using the 
