@@ -7,6 +7,7 @@ Homologous groups and OrthoGroups respectively.
 
 ## Gene Families
 
+![gene family](images/gene_family.png "Gene family") 
 
 
 
@@ -24,3 +25,6 @@ duplicated genes or after speciation events to be visualized.
 In the example above various genes related with cellulose synthase (an important component of plant cell walls) is shown.
 Here it is immediately clear that some groups of cellulose syntases are specific for leaves while others play a role in 
 reproductive structure. 
+
+Furthermore, links to view this information in the heatmap viewer are present top-right of the phylogenetic tree. From
+the heatmap expression levels can also be exported.

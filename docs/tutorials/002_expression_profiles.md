@@ -54,7 +54,7 @@ available), the desired **tissue/condition** and **SPM-cutoff** (specificity met
 Note that if settings change, the number in the button **Show genes** is updated. This shows the number of genes in the
 results. Once you have decided on the settings click that button to show the result.
 
-![specificity example](images/specificity_entry.png "Find specific genes result")
+![specificity example](images/specificity_example.png "Find specific genes result")
 
 An overview of genes specific for a certain tissue (here Root Apices, 7 days after germination). Note that by clicking
 the table header the results can be sorted. Genes with an expression level below 10 TPM are flagged as low abundant, 
