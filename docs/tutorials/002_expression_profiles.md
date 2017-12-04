@@ -45,7 +45,25 @@ buttons in the top right.
 
 ## Expression Specificity
 
+To pick up genes expressed *specifically* in a certain tissue/condition the  **Find specific profile** function, under the
+tools button in the menu, is available.  Select the **species**, the **method** (complete profile or a summary if any are 
+available), the desired **tissue/condition** and **SPM-cutoff** (specificity metric). 
 
+![specificity entry](images/specificity_entry.png "Find specific genes form") 
+
+Note that if settings change, the number in the button **Show genes** is updated. This shows the number of genes in the
+results. Once you have decided on the settings click that button to show the result.
+
+![specificity example](images/specificity_entry.png "Find specific genes result")
+
+An overview of genes specific for a certain tissue (here Root Apices, 7 days after germination). Note that by clicking
+the table header the results can be sorted. Genes with an expression level below 10 TPM are flagged as low abundant, 
+such low expressed genes should be treated carefully as they might comprise false positives !
 
 ## Export *all* expressed genes
 
+To enable local analysis, all expressed genes in a certain condition/tissue can be exported using the 
+**Export expression levels** feature under the tools button in the menu. Select the **species**, the **method** (full profile or
+summary if any are available) and the **condition** you wish to export. Click **Export genes** to get the data. 
+
+Note that exporting large sets of data can take up to a minute.
