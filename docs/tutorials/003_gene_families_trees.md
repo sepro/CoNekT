@@ -9,7 +9,9 @@ Homologous groups and OrthoGroups respectively.
 
 ![gene family](images/gene_family.png "Gene family") 
 
-
+Sequence pages link to the gene family a sequence belongs to, on the gene family page you can find a distribution 
+(shown above) depicting how many members for each species there are. Furthermore you can find associated domains and
+functional annotation, a suggested function (based on the function of members)... 
 
 ## Phylogenetic Trees
 

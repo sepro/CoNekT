@@ -62,7 +62,7 @@ such low expressed genes should be treated carefully as they might comprise fals
 
 By combining expression specificity with gene families (discussed in the [next section](003_gene_families_trees.md)) 
 gene families with conserved specificity as well as sub- and neo-functionalized genes can be picked up as shown in 
-[part](004_compare_specificity.md) 4 of this tutorial. 
+[part 4](004_compare_specificity.md) of this tutorial. 
 
 ## Export *all* expressed genes
 
