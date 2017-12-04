@@ -16,9 +16,27 @@ Furthermore, summarized profiles with fewer conditions are available (link below
 
 ![expression profile summary](images/expression_profile_summary.png "Expression profile summary example")
 
-The **download** buttons below expression plots allow you to download the raw data 
+The **download** buttons below expression plots allow you to download the data from the plot in a tab-delimited text file.
+
+Expression profiles can be compared between genes from the same species. From the tools menu select **Compare profiles**
+in the Expression profiles section. On the next page select the species, enter gene identifiers and select if normalization
+should be used (recommended). Click **Show profiles** to get a single plot including multiple genes.
+
+![expression profile comparison](images/expression_profile_comparison.png "Expression profile comparison example") 
+
 
 ## Heatmaps
+
+While comparing expression profiles is limited to 50 genes, heatmaps can be used to compare larger sets of genes within
+one species, or between species.
+
+The tool to create heatmaps is located in the tools menu, **Create heatmap** in the expression profile section. First
+select the correct tab, the default comparison will use all annotated condition but only allows genes from a single species
+to be included. The Comparative heatmap allows comparisons between multiple species, but only for a limited set of conditions.
+
+
+![heatmap entry](images/heatmap_entry.png "Heatmap form") 
+
 
 ## Expression Specificity
 
