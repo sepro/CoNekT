@@ -184,7 +184,7 @@ def expression_profile_download_plot(profile_id):
     """
     current_profile = ExpressionProfile.query.options(undefer('profile')).get_or_404(profile_id)
 
-    return Response(current_profile.table)
+    return Response(current_profile.table, mimetype='text/plain')
 
 
 @expression_profile.route('/download/plot/<profile_id>/<condition_tissue_id>')

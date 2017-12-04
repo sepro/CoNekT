@@ -16,6 +16,8 @@ Furthermore, summarized profiles with fewer conditions are available (link below
 
 ![expression profile summary](images/expression_profile_summary.png "Expression profile summary example")
 
+The **download** buttons below expression plots allow you to download the raw data 
+
 ## Heatmaps
 
 ## Expression Specificity
