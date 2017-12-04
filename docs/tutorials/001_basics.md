@@ -1,5 +1,7 @@
 # Tutorial: The basics
 
+Welcome to the CoNekT tutorial ! 
+
 ## Home page and Species page
 
 ![overview](images/overview.png "Conekt Overview")

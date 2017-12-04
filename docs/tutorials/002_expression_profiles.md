@@ -7,7 +7,14 @@ heatmaps and by applying various statistics genes specific for certain condition
 
 ## Expression Profiles
 
+On the top of each sequence page you can see the expression profile, highlighting in which annotated samples the gene
+is expressed and at which level. 
 
+![expression profile](images/expression_profile.png "Expression profile example")
+
+Furthermore, summarized profiles with fewer conditions are available (link below the plot). 
+
+![expression profile summary](images/expression_profile_summary.png "Expression profile summary example")
 
 ## Heatmaps
 
