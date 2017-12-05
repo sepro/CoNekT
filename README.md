@@ -17,8 +17,6 @@ allow you to **host your own instance** with other species or in-house data.
 Tutorials
 ---------
 
-**Coming Soon**
-
   * [The Basics](docs/tutorials/001_basics.md)
   * [Expression profiles, heatmaps and specificity](docs/tutorials/002_expression_profiles.md)
   * [Gene Families and Phylogenetic trees](docs/tutorials/003_gene_families_trees.md)

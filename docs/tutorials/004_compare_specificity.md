@@ -34,3 +34,4 @@ species (using the same SPM cutoff).
 
 Here **74** orthogroups are reported to show signs of sub- or neo-functionalization. This includes 
 **Cellulose Synthase (like)** genes included in the example from the [previous section](004_compare_specificity.md).
+
