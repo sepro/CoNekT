@@ -1,6 +1,6 @@
 # CoNekT Tutorials
 
-![conekt logo](docs/images/icon-144x144.png "Conekt Logo") New too CoNekT, check out some of the examples below to get
+![conekt logo](../../docs/images/icon-144x144.png "Conekt Logo") New too CoNekT, check out some of the examples below to get
 an impression what you can do !
 
 
