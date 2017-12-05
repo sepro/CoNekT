@@ -78,6 +78,9 @@ KEYWORD_EXAMPLES = ['AT1G01720', 'GO:0005737', 'Auxin']
 GLOB_MSG = None
 GLOB_MSG_TITLE = 'Info'
 
+# Tutorial URL
+TUTORIAL_URL = "https://github.molgen.mpg.de/proost/CoNekT/blob/master/docs/tutorials/overview.md"
+
 # Customize link to Imprint and Privacy Policy(legal requirement in Germany)
 IMPRINT_URL = None
 PRIVACY_POLICY_URL = None
