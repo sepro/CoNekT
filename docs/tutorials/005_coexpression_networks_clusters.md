@@ -19,10 +19,22 @@ A gene's coexpressed genes (referred to as the coexpression neighborhood) can be
 
 ![Coexpression entry(images/coexpression_entry.png "Coexpression Entry")
 
- The table icon ![table icon](images/table_icon.png "table icon") can be used to access a table with details on all 
- coexpressed genes. The network icon ![network icon](images/network_icon.png "network icon") lead to a network graph
- visualized using [Cytoscape.js](http://js.cytoscape.org/) of the gene and its coexpression neighborhood.
+The table icon ![table icon](images/table_icon.png "table icon") can be used to access a table with details on all 
+coexpressed genes. The network icon ![network icon](images/network_icon.png "network icon") lead to a network graph
+visualized using [Cytoscape.js](http://js.cytoscape.org/) of the gene and its coexpression neighborhood.
  
- 
+![Coexpression viewer](images/coexpression_viewer.png "Viewer") 
+
+You are able to pan (by dragging) and zoom (by scrolling) the graph. Node can be selected and moved by dragging.
+Furthermore on the top-right corner there is a control bar.
+
+![Control bar](images/control_bar.png "Control bar")
+
+From left to right, there is the "Reset View button" which will zoom the graph to fit the window. The search box where
+a gene ID, IntePro domain or GO term can be entered to highlight all matching genes, then there is the Node, edge and 
+layout controls which can be used to change the appearance of the nodes, edges and layout repectively. The right-most
+button is the export button which allow you to export the graph as an image (PNG and SVG are supported) or to a format
+which can be loaded in third party (XGMML) tools for local analysis.
+
 
 ## Coexpression Clusters 
