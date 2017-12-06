@@ -1,4 +1,4 @@
-{% macro expression_profile(target, url) -%}
+{% macro expression_profile(target, url, enable_zoom=none, enable_pan=none ) -%}
 $( document ).ready(function() {
     $.getJSON( "{{ url}}", function( data ) {
         var ctx = document.getElementById("{{ target }}").getContext("2d");
@@ -36,11 +36,63 @@ $( document ).ready(function() {
             }
         }
         var myChart = new Chart(ctx, data);
+
+        {% if enable_zoom %}
+            if (myChart.options.zoom.enabled) {
+                    $("#{{ enable_zoom }}").addClass("btn-success");
+                    $("#{{ enable_zoom }}").removeClass("btn-danger");
+                    $("#{{ enable_zoom }}").removeClass("btn-default");
+            } else {
+                    $("#{{ enable_zoom }}").addClass("btn-danger");
+                    $("#{{ enable_zoom }}").removeClass("btn-success");
+                    $("#{{ enable_zoom }}").removeClass("btn-default");
+            }
+            $("#{{ enable_zoom }}").click( function(ev) {
+                ev.preventDefault();
+
+                myChart.options.zoom.enabled = ! myChart.options.zoom.enabled;
+                if (myChart.options.zoom.enabled) {
+                    $(this).addClass("btn-success");
+                    $(this).removeClass("btn-danger");
+                    $(this).removeClass("btn-default");
+                } else {
+                    $(this).addClass("btn-danger");
+                    $(this).removeClass("btn-success");
+                    $(this).removeClass("btn-default");
+                }
+            });
+        {% endif%}
+        {% if enable_pan %}
+            if (myChart.options.pan.enabled) {
+                    $("#{{ enable_pan }}").addClass("btn-success");
+                    $("#{{ enable_pan }}").removeClass("btn-danger");
+                    $("#{{ enable_pan }}").removeClass("btn-default");
+            } else {
+                    $("#{{ enable_pan }}").addClass("btn-danger");
+                    $("#{{ enable_pan }}").removeClass("btn-success");
+                    $("#{{ enable_pan }}").removeClass("btn-default");
+            }
+            $("#{{ enable_pan }}").click( function(ev) {
+                ev.preventDefault();
+
+                myChart.options.pan.enabled = ! myChart.options.pan.enabled;
+                if (myChart.options.pan.enabled) {
+                    $(this).addClass("btn-success");
+                    $(this).removeClass("btn-danger");
+                    $(this).removeClass("btn-default");
+                } else {
+                    $(this).addClass("btn-danger");
+                    $(this).removeClass("btn-success");
+                    $(this).removeClass("btn-default");
+                }
+
+            });
+        {% endif%}
     });
 });
 {%- endmacro %}
 
-{% macro expression_profile_loader(target, url, loader_id) -%}
+{% macro expression_profile_loader(target, url, loader_id, enable_zoom=none, enable_pan=none) -%}
 $( document ).ready(function() {
     $("#{{ loader_id }}").html(get_loader_svg('{{loader_id}}_leafy'));
     init_planet_loader('{{loader_id}}_leafy');
@@ -83,6 +135,58 @@ $( document ).ready(function() {
         $("#{{ target }}").toggle();
         $("#{{ loader_id }}").toggle();
 
+
+        {% if enable_zoom %}
+            if (myChart.options.zoom.enabled) {
+                    $("#{{ enable_zoom }}").addClass("btn-success");
+                    $("#{{ enable_zoom }}").removeClass("btn-danger");
+                    $("#{{ enable_zoom }}").removeClass("btn-default");
+            } else {
+                    $("#{{ enable_zoom }}").addClass("btn-danger");
+                    $("#{{ enable_zoom }}").removeClass("btn-success");
+                    $("#{{ enable_zoom }}").removeClass("btn-default");
+            }
+            $("#{{ enable_zoom }}").click( function(ev) {
+                ev.preventDefault();
+
+                myChart.options.zoom.enabled = ! myChart.options.zoom.enabled;
+                if (myChart.options.zoom.enabled) {
+                    $(this).addClass("btn-success");
+                    $(this).removeClass("btn-danger");
+                    $(this).removeClass("btn-default");
+                } else {
+                    $(this).addClass("btn-danger");
+                    $(this).removeClass("btn-success");
+                    $(this).removeClass("btn-default");
+                }
+            });
+        {% endif%}
+        {% if enable_pan %}
+            if (myChart.options.pan.enabled) {
+                    $("#{{ enable_pan }}").addClass("btn-success");
+                    $("#{{ enable_pan }}").removeClass("btn-danger");
+                    $("#{{ enable_pan }}").removeClass("btn-default");
+            } else {
+                    $("#{{ enable_pan }}").addClass("btn-danger");
+                    $("#{{ enable_pan }}").removeClass("btn-success");
+                    $("#{{ enable_pan }}").removeClass("btn-default");
+            }
+            $("#{{ enable_pan }}").click( function(ev) {
+                ev.preventDefault();
+
+                myChart.options.pan.enabled = ! myChart.options.pan.enabled;
+                if (myChart.options.pan.enabled) {
+                    $(this).addClass("btn-success");
+                    $(this).removeClass("btn-danger");
+                    $(this).removeClass("btn-default");
+                } else {
+                    $(this).addClass("btn-danger");
+                    $(this).removeClass("btn-success");
+                    $(this).removeClass("btn-default");
+                }
+
+            });
+        {% endif%}
     });
 });
 {%- endmacro %}

@@ -74,6 +74,9 @@
                 <span class="warning-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <strong>Attention:</strong> This gene has <strong><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='lowabundance') }}" data-target="#helpModal">low abundance</abbr></strong>.</span>
                 <br /><br />
                 {% endif %}
+                <div class="pull-right">
+                    <a href="#" class="btn btn-default" id="enable_pan" data-toggle="tooltip" title="Toggle Pan"><i class="fa fa-arrows" aria-hidden="true"></i></a> <a href="#" class="btn btn-default" id="enable_zoom" data-toggle="tooltip" title="Toggle zoom"><i class="fa fa-search" aria-hidden="true"></i></a>
+                </div>
                 <div style="height:550px; max-height:550px; margin-top:30px">
                     <canvas id="expression-profile" class="center-block" height="550"/>
                 </div>
@@ -367,7 +370,6 @@
 <script src="{{ url_for('static', filename='js/hammer.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/chartjs-plugin-zoom.min.js') }}"></script>
 <script>
-
 $(function () {
   $("#go_table").stupidtable();
   $("#predicted_go_table").stupidtable();
@@ -421,7 +423,7 @@ $("#navbar-side a").on('click', function(event) {
 {% if expression_profiles|count > 0 %}
         {% for profile in expression_profiles %}
             {% if loop.first %}
-                {{ chartjs.expression_profile("expression-profile", url_for('expression_profile.expression_profile_plot_json', profile_id=profile.id)) }}
+                {{ chartjs.expression_profile("expression-profile", url_for('expression_profile.expression_profile_plot_json', profile_id=profile.id), enable_zoom="enable_zoom", enable_pan="enable_pan") }}
             {% endif %}
         {% endfor %}
 {% endif %}
