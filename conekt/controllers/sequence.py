@@ -37,12 +37,18 @@ def sequence_view(sequence_id):
 
     :param sequence_id: ID of the sequence
     """
+    from conekt.models.relationships.sequence_go import SequenceGOAssociation
+
     current_sequence = Sequence.query.get_or_404(sequence_id)
+
+    go_associations = current_sequence.go_associations.group_by(SequenceGOAssociation.go_id,
+                                                                SequenceGOAssociation.evidence,
+                                                                SequenceGOAssociation.source).all()
 
     # to avoid running long count queries, fetch relations here and pass to template
     return render_template('sequence.html',
                            sequence=current_sequence,
-                           go_associations=current_sequence.go_associations.all(),
+                           go_associations=go_associations,
                            interpro_associations=current_sequence.interpro_associations.all(),
                            families=current_sequence.families.all(),
                            expression_profiles=current_sequence.expression_profiles.all(),
