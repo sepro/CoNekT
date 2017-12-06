@@ -6,6 +6,7 @@ from conekt import cache
 from conekt.forms.heatmap import HeatmapForm, HeatmapComparableForm
 from conekt.models.expression.coexpression_clusters import CoexpressionCluster
 from conekt.models.expression.profiles import ExpressionProfile
+from conekt.models.condition_tissue import ConditionTissue
 from conekt.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
 from conekt.models.sequences import Sequence
 from conekt.models.trees import Tree
@@ -56,6 +57,7 @@ def heatmap_main():
     form2 = HeatmapComparableForm(request.form)
     form2.populate_options()
 
+    # Fetch data for normal example, get five profiles from a species
     profiles = ExpressionProfile.query.filter(ExpressionProfile.sequence_id is not None).order_by(ExpressionProfile.species_id).limit(5).all()
 
     example = {
@@ -68,10 +70,29 @@ def heatmap_main():
         example['species_id'] = profiles[0].species_id
         example['probes'] = ' '.join([p.sequence.name for p in profiles])
 
-    return render_template("expression_heatmap.html", form=form, form2=form2, example=example)
+    # Fetch data for comparative profile
+    condition_tissue = ConditionTissue.query.filter(ConditionTissue.in_tree == 1).all()
+    species_ids = [ct.species_id for ct in condition_tissue]
+    comparative_profiles = []
+
+    for s_id in species_ids[:3]:
+        profiles = ExpressionProfile.query.filter(ExpressionProfile.sequence_id is not None).filter(
+            ExpressionProfile.species_id == s_id).limit(3).all()
+        for p in profiles:
+            comparative_profiles.append(p.sequence.name)
+
+    # Fetch data for second example
+    example2 = {
+        'comparable_probes': ' '.join(comparative_profiles) if len(comparative_profiles) > 0 else None,
+        'comparable_options': 'rnorm'
+    }
+
+    return render_template("expression_heatmap.html", form=form, form2=form2,
+                           example=example,
+                           example2=example2)
 
 
-@heatmap.route('/results/default', methods=['POST'] )
+@heatmap.route('/results/default', methods=['POST'])
 def heatmap_custom_default():
     form = HeatmapForm(request.form)
     form.populate_species()
@@ -111,9 +132,9 @@ def heatmap_custom_comparable():
     form = HeatmapComparableForm(request.form)
     form.populate_options()
 
-    terms = request.form.get('probes').split()
+    terms = request.form.get('comparable_probes').split()
 
-    option = request.form.get('options')
+    option = request.form.get('comparable_options')
 
     if len(terms) == 0:
         flash("No genes selected!", "warning")

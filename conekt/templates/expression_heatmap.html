@@ -162,9 +162,12 @@
                                         <div class="row">
                                             <div class="col-xs-12">
                                                 {{ form2.csrf_token }}
-                                                {{form2.probes(class_="form-control") }}<br />
-                                                {{form2.options(class_="form-control") }}<br />
+                                                {{form2.comparable_probes(class_="form-control") }}<br />
+                                                {{form2.comparable_options(class_="form-control") }}<br />
                                                 <div class="pull-right">
+                                                    {% if example2 and example2.comparable_probes %}
+                                                        <button class="btn btn-default" id="load_example2">Load example</button>
+                                                    {% endif %}
                                                     <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#loaderModal">Generate heatmap</button>
                                                 </div>
                                             </div>
@@ -286,8 +289,20 @@ function tableTransform(objTable) {
 $(function() {
     $('#load_example').click(function (ev) {
         ev.preventDefault();
-        $('#zlog').prop('checked', true);
         {% for key, value in example.items() %}
+            $('#{{key}}').val("{{value}}");
+        {% endfor %}
+    });
+});
+</script>
+{% endif %}
+
+{% if example2 and example2.comparable_probes %}
+<script>
+$(function() {
+    $('#load_example2').click(function (ev) {
+        ev.preventDefault();
+        {% for key, value in example2.items() %}
             $('#{{key}}').val("{{value}}");
         {% endfor %}
     });
