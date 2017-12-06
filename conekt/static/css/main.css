@@ -45,6 +45,13 @@ input[readonly] {
   cursor: text !important;
 }
 
+form #species_id,
+form #species,
+form #speciesa,
+form #speciesb {
+    font-style: italic;
+}
+
 textarea.form-control {
   resize:vertical;
   min-height: 200px;
