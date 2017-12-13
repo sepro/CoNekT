@@ -160,6 +160,8 @@
             <thead>
                 <tr>
                     <th data-sort="string-ins"><span class="sort-icon"></span>Target</th>
+                    <th data-sort="string-ins"><span class="sort-icon"></span>Alias</th>
+                    <th data-sort="string-ins"><span class="sort-icon"></span>Description</th>
                     <th data-sort="float"><span class="sort-icon"></span><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr> score</th>
                     <!--<th class="col-xs-1" data-sort="float"><span class="sort-icon"></span>p-Value</th>
                     <th class="col-xs-1" data-sort="float"><span class="sort-icon"></span>p-Value <span class="text-muted">(adjusted)</span></th>-->
@@ -170,7 +172,9 @@
             <tbody>
                 {% for ecc_query_association in ecc_query_associations %}
                 <tr>
-                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.target_id) }}">{{ ecc_query_association.target_sequence.name }}</a></td>
+                    <td><a href="{{ url_for('sequence.sequence_view', sequence_id=ecc_query_association.target_id) }}" class="qtip_tooltip qtip_dynamic_tooltip" qtip_href="{{ url_for('sequence.sequence_tooltip', sequence_id=ecc_query_association.target_id) }}">{{ ecc_query_association.target_sequence.name }}</a></td>
+                    <td>{% if ecc_query_association.target_sequence.aliases %}{{ ecc_query_association.target_sequence.aliases|truncate(20) }}{% else %}<span class="text-muted">No alias</span>{% endif %}</td>
+                    <td>{% if ecc_query_association.target_sequence.description %}{{ ecc_query_association.target_sequence.description|truncate(60) }}{% else %}<span class="text-muted">No description available</span>{% endif %}</td>
                     <td>{{ ecc_query_association.ecc|round(2) }}</td>
                     <!--<td class="col-xs-1">{% if ecc_query_association.p_value %}{{ ecc_query_association.p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>
                     <td class="col-xs-1">{% if ecc_query_association.corrected_p_value %}{{ ecc_query_association.corrected_p_value|round(3) }}{% else %}<em class="text-muted">None</em>{% endif %}</td>-->
