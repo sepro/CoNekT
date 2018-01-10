@@ -44,8 +44,10 @@ class GeneFamilyMethod(db.Model):
     def drop_all_annotation():
         try:
             FamilyInterproAssociation.query.delete()
-        except Exception as _:
-            pass
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(e)
 
     def get_interpro_annotation(self):
         families = self.families.all()
