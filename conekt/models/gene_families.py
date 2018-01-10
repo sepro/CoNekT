@@ -44,6 +44,7 @@ class GeneFamilyMethod(db.Model):
     def drop_all_annotation():
         try:
             FamilyInterproAssociation.query.delete()
+            FamilyGOAssociation.query.delete()
             db.session.commit()
         except Exception as e:
             db.session.rollback()
