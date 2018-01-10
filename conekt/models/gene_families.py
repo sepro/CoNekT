@@ -40,6 +40,13 @@ class GeneFamilyMethod(db.Model):
     def __str__(self):
         return "%d. %s" % (self.id, self.method)
 
+    @staticmethod
+    def drop_all_annotation():
+        try:
+            FamilyInterproAssociation.query.delete()
+        except Exception as _:
+            pass
+
     def get_interpro_annotation(self):
         families = self.families.all()
 

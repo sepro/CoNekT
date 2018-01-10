@@ -73,3 +73,11 @@ def annotate_families_go(method_id):
     method.get_go_annotation()
     flash('Got GO annotations for gene families (method : %d)' % method_id, 'success')
     return redirect(url_for('admin.add.family_annotation.index'))
+
+
+@admin_controls.route('/drop/annotation/')
+@admin_required
+def drop_family_annotation():
+    GeneFamilyMethod.drop_all_annotation()
+    flash('Removed all family-wise annotation.', 'success')
+    return redirect(url_for('admin.add.family_annotation.index'))
