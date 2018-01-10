@@ -218,7 +218,7 @@ def search_enriched_clusters():
 
     if request.method == 'POST':
         term = request.form.get('go_term')
-        method = request.form.get('method')
+        method = int(request.form.get('method'))
 
         check_enrichment = request.form.get('check_enrichment') == 'y'
         check_p = request.form.get('check_p') == 'y'
