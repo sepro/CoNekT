@@ -179,6 +179,10 @@ class GeneFamily(db.Model):
     interpro_domains = db.relationship('Interpro', secondary=family_interpro, lazy='dynamic')
     xrefs = db.relationship('XRef', secondary=family_xref, lazy='dynamic')
 
+    # Other properties
+    # go_annotations from .relationships.family_go FamilyGOAssociation
+    # interpro_annotations from .relationships.family_intpro FamilyInterproAssociation
+
     def __init__(self, name):
         self.name = name
 
