@@ -24,22 +24,7 @@ Step-by-step instructions
   * [Adding GO term and InterPro domain definitions](./building/001_GO_InterPro_domains.md)
   * [Adding a new species and functional data](./building/002_species_functional_data.md)
   * [Adding expression profiles](./building/003_expression_profiles.md)
+  * [Adding co-expession networks and clusters](./building/004_coexpression_network_cluster.md)
+  * [Adding comparative genomics data](./building/005_comparative_genomics.md)
+  * [Precomputing counts and more](./building/006_precomputing_counts_etc.md)
 
-
-
-
-#### Adding coexpression network
-
-*UNDER CONSTRUCTION*
-
-#### Adding coexpression clusters
-
-*UNDER CONSTRUCTION*
-
-### Adding external references
-
-*UNDER CONSTRUCTION*
-
-### Computing enrichments, similarities, and counts ... 
-
-*UNDER CONSTRUCTION*

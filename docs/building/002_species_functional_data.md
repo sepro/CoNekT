@@ -60,7 +60,7 @@ Gene2   GO:0000227  ISS
 ...
 ```
 
-On the 'Admin panel', under 'Add' -> 'GO Genes' such a file can be 
+In the 'Admin panel', under 'Add' -> 'GO Genes' such a file can be 
 uploaded, for a species. Additionally a description needs to be provided
 from where the GO terms in the file originate from (the source). 
  
@@ -70,3 +70,25 @@ from where the GO terms in the file originate from (the source).
 To do so, in the 'Admin panel', under 'Add' -> 'InterPro genes' select a species, select the file and click 'Add InterPro'
 
 ![InterPro gene](../images/add_interpro_gene.png "Adding InterPro terms for a species")
+
+## Adding external references and aliases/tokens
+
+Some genes have an short handle that is easier to remember, this is also called the alias, 
+gene symbol or token. CoNekT uses these short labels in network graphs when they are 
+available. In addition to this, external references can be added to genes connecting your
+release with existing platforms.
+
+In the 'Admin panel', under 'Add' -> XRefs Genes this can be done. Select the **species** 
+first, and as platform select **custom**. Select a file containing the xrefs, here a 
+tab-delimited file is required with four columns, the gene ID in CoNekT, the gene ID or token,
+the name of the external platform or 'token' in case it is a symbol/alias/token, and a url 
+(empty in case no link exists).
+
+```
+Gene1   GN01    token   
+Gene1   alternative_name    token 
+Gene1   gene1   other_db    http://www.other-db.com/view/gene/gene1 
+...
+```
+
+![xrefs gene](../images/add_xrefs_genes.png "Adding XRefs to genes")
