@@ -33,7 +33,7 @@ SRR314816
 ...
 ```
 
-For profile plots on the website most likely a custum order of conditions
+For profile plots on the website most likely a custom order of conditions
 is preferred. (We usually order tissues from bottom to top) A file to 
 specify this needs to be provided, conditions need to be stated in the 
 orther they should appear in the plot.
@@ -58,3 +58,12 @@ data and add everything to the database.
 
 
 ![Add expression profiles](../images/add_expression_profiles.png)
+
+## Adding summarized profiles
+
+In case the complete profile is to detailed and more general profiles need to be included 
+(useful for specificity searches), there is the option to combine multiple condition in one.
+
+## Calculating expression specificity
+
+*UNDER CONSTRUCTION*
