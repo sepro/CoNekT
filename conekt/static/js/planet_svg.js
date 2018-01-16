@@ -114,10 +114,10 @@ function writeSVG(data) {
             text = node.data('name');
             if (node.data('best_name') !== '') { text = node.data('best_name'); }
 
-            group.text({y:6, fill:"none", stroke:'#888888'}).content(text)
+            group.text({y:6, fill:"none", stroke:'#ffffff'}).content(text)
                 .attr('text-anchor', 'middle')
                 .attr('font-family', 'sans-serif');
-            group.text({y:6, fill:"white"}).content(text)
+            group.text({y:6, fill:"black"}).content(text)
                 .attr('text-anchor', 'middle')
                 .attr('font-family', 'sans-serif');
         }
