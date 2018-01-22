@@ -34,4 +34,8 @@ Step-by-step instructions
   * [Adding co-expession networks and clusters](./building/004_coexpression_network_cluster.md)
   * [Adding comparative genomics data](./building/005_comparative_genomics.md)
   * [Precomputing counts and more](./building/006_precomputing_counts_etc.md)
+  
+  
+  * [Controls](./building/007_conrols.md)
+  * [CRUD](./building/008_crud.md)
 
