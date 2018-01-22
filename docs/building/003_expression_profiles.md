@@ -59,11 +59,31 @@ data and add everything to the database.
 
 ![Add expression profiles](../images/add_expression_profiles.png)
 
-## Adding summarized profiles
 
-In case the complete profile is to detailed and more general profiles need to be included 
-(useful for specificity searches), there is the option to combine multiple condition in one.
+## Calculating expression specificity and summerized profiles
 
-## Calculating expression specificity
+To enable Specificity searches, SPM values need to be pre-calculated. From the admin menu 
+select 'Add' -> 'Expression specificty'.
 
-*UNDER CONSTRUCTION*
+![Add expression specificity](../images/add_expression_specificty.png)
+
+Here you have two options available. The first one will calculate SPM values for all conditions
+in the profiles. Here you simply need to **select the species**, **enter a description** and click 
+**"Add Expression Specificities"**.
+
+In case different conditions need to be grouped, the second option should be used. Here you 
+**select the species** and **enter a description** similarly to the previous. Additionally a
+tab-delimited text file is required grouping conditions into broader categories. 
+
+```
+Roots (apex), 7 DAG Roots   rgba(153, 51, 0, 0.5)
+Roots (differentation zone), 4 DAP  Roots   rgba(153, 51, 0, 0.5)
+Roots (elongation zone), 4 DAP  Roots   rgba(153, 51, 0, 0.5)
+Roots (meristematic zone), 4 DAP    Roots   rgba(153, 51, 0, 0.5)
+Roots (QC cells), 6 DAS Roots   rgba(153, 51, 0, 0.5)
+...
+```
+
+Three columns are required, (i) the label in the full profile, (ii) the group it belongs to 
+and (iii) the color for that group. After adding that file click **"Add Expression Specificities"**
+in that section.
