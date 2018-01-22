@@ -36,6 +36,6 @@ Step-by-step instructions
   * [Precomputing counts and more](./building/006_precomputing_counts_etc.md)
   
   
-  * [Controls](./building/007_conrols.md)
+  * [Controls](./building/007_controls.md)
   * [CRUD](./building/008_crud.md)
 
