@@ -24,3 +24,8 @@ Other things to pre-calculate are :
 
 Note that if any of these are missing the corresponding features in the DB will
 simply be disabled.
+
+Finally there is one **Experimental** feature that turns neighborhoods into clusters.
+while this enables GO-enrichment for neighborhoods, it messes up cluster 
+similarities. This can be useful in case no network clustering is performed. 
+'Build' -> 'Neighborhood to clusters'
