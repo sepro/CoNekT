@@ -14,6 +14,8 @@ publicly available RNASeq samples (from the [SRA](https://www.ncbi.nlm.nih.gov/s
 Here you can find **tutorials** how to use the public version along with the **source-code** and build instructions that 
 allow you to **host your own instance** with other species or in-house data.
 
+![features_overview](./docs/images/feature_overview.png)
+
 Tutorials
 ---------
 
