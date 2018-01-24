@@ -35,6 +35,12 @@ node:selected {
         line-color: black;
 }
 
+node:unselected {
+        border-width:1px;
+        border-color:#888888;
+        border-opacity:0.5;
+}
+
 node.hidden {
     visibility: hidden;
 }
