@@ -35,6 +35,10 @@ node:selected {
         line-color: black;
 }
 
+node.hidden {
+    visibility: hidden;
+}
+
 node.found {
         width: 50px;
         height: 60px;
@@ -177,4 +181,8 @@ edge.default_width {
 
 edge.depth {
         width: mapData(depth, 0, 2, 3, 1);
+}
+
+edge.hidden {
+    visibility: hidden;
 }

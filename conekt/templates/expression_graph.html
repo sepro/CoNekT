@@ -62,13 +62,13 @@
                                     {% if node %}
                                     <li><a href="#" class="cy-node-color" attr="depth_color">Depth</a></li>
                                     {% endif %}
-                                    <li><a href="#" class="cy-node-color" attr="family_color">Family <span class="text-muted">(default)</span></a></li>
+                                    <li><a href="#" class="cy-node-color" attr="family_color">Family {%- if not (ecc_pair or ecc_multi) -%} <span class="text-muted">(default)</span>{%- endif -%}</a></li>
                                     <li><a href="#" class="cy-node-color" attr="lc_color">Label Co-occ.</a></li>
                                     {% if cluster or cluster_one %}
                                     <li><a href="#" class="cy-node-color" attr="neighbors">Neighbors</a></li>
                                     {% endif %}
                                     {% if sequence or ecc_pair or ecc_multi %}
-                                    <li><a href="#" class="cy-node-color" attr="species_color">Species</a></li>
+                                    <li><a href="#" class="cy-node-color" attr="species_color">Species {%- if ecc_pair or ecc_multi -%} <span class="text-muted">(default)</span>{%- endif -%}</a></li>
                                     {% endif %}
                                     {% if graph_data %}
                                     <li><a href="#" class="cy-node-color" attr="spm_color">Specificity</a></li>
@@ -85,6 +85,11 @@
                                         <li><a href="#" class="cy-node-shape" attr="spm_shape">Specificity</a></li>
                                         {% endif %}
                                     </div>
+                                    {% if ecc_pair %}
+                                    <li><hr /></li>
+                                    <li class="dropdown-header">Neighborhood comparison</li>
+                                    <li><a href="#" class="cy-node-hide">Show Only Intersection</a><a href="#" class="cy-node-show" style="display:none">Show All</a></li>
+                                    {% endif %}
                                 </ul>
                             </div>
                             <div class="dropdown btn-group" role="group">

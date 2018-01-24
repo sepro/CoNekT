@@ -26,7 +26,7 @@ Tutorials
   * [Coexpression Networks and Clusters](docs/tutorials/005_coexpression_networks_clusters.md)
   
   
-Anything missing ? Further questions ? Don't hesitate to [contact](mailto:proost@mpimp-golm.mpg.de) us.
+Anything missing ? Further questions ? Don't hesitate to [contact](mailto:sebastian.proost@gmail.com) us.
 
 Setting up CoNekT
 -----------------
@@ -56,5 +56,5 @@ Contact
 -------
 
   * [Marek Mutwil](mailto:mutwil@mpmpi-golm.mpg.de) ( mutwil@mpmpi-golm.mpg.de )
-  * [Sebastian Proost](mailto:proost@mpimp-golm.mpg.de) ( proost@mpimp-golm.mpg.de )
+  * [Sebastian Proost](mailto:sebastian.proost@gmail.com) ( sebastian.proost@gmail.com )
 

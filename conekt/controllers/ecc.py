@@ -101,6 +101,7 @@ def ecc_graph_pair_json(ecc_id):
     network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
     network_cytoscape = CytoscapeHelper.add_species_data_nodes(network_cytoscape)
     network_cytoscape = CytoscapeHelper.connect_homologs(network_cytoscape)
+    network_cytoscape = CytoscapeHelper.tag_ecc_singles(network_cytoscape)
 
     return json.dumps(network_cytoscape)
 

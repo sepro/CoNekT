@@ -390,6 +390,20 @@ $(function () { // on dom ready
         cy.nodes('[^compound]').addClass($(this).attr('attr'));
     });
 
+    $('.cy-node-hide').click(function (ev) {
+        ev.preventDefault();
+        cy.nodes('[tag="hideable"]').addClass('hidden');
+        $(this).hide();
+        $('.cy-node-show').show();
+    });
+
+    $('.cy-node-show').click(function (ev) {
+        ev.preventDefault();
+        cy.nodes('[tag="hideable"]').removeClass('hidden');
+        $(this).hide();
+        $('.cy-node-hide').show();
+    });
+
     $('.cy-edge-color').click(function (ev) {
         ev.preventDefault();
         $(this).closest('.cy-option-menu').find('.cy-edge-color').each(function () {

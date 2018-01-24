@@ -456,6 +456,65 @@ class CytoscapeHelper:
         return pruned_network
 
     @staticmethod
+    def tag_ecc_singles(network):
+        """
+        When comparing ECC pairs, genes without a homolog in the graph could be hidden, to this end these genes need
+        to be tagged so javascript can handle this.
+
+        :param network: input network
+        :return: network with singles tagged
+        """
+        output_network = deepcopy(network)
+
+        # Find Query genes, add hideable tag to everything except queries
+        queries = []
+        for n in output_network['nodes']:
+                if n['data']['node_type'] == 'query' and n['data']['name'] not in queries:
+                    queries.append(n['data']['name'])
+                    n['data']['tag'] = 'always_show'
+                else:
+                    n['data']['tag'] = 'hideable'
+
+        # Store neighborhoods
+        neighborhoods = {q: [] for q in queries}
+
+        for e in output_network['edges']:
+            if e['data']['source'] in queries:
+                if e['data']['target'] not in queries:
+                    neighborhoods[e['data']['source']].append(e['data']['target'])
+            elif e['data']['target'] in queries:
+                if e['data']['source'] not in queries:
+                    neighborhoods[e['data']['target']].append(e['data']['source'])
+
+        # adjust tags on genes that should be shown (shared neighborhood)
+        # Check for genes present in both neighborhoods (intra species comparisons)
+        for n in output_network['nodes']:
+            counter = 0
+            for k in queries:
+                if n['data']['name'] in neighborhoods[k]:
+                    counter += 1
+            if counter > 1:
+                n['data']['tag'] = 'always_show'
+
+        # Check homology edges
+        genes_to_show = []
+        for e in output_network['edges']:
+            if 'homology' in e['data'].keys() and e['data']['homology']:
+                counter = 0
+                for k in queries:
+                    if e['data']['source'] in neighborhoods[k] or e['data']['target'] in neighborhoods[k]:
+                        counter += 1
+                if counter > 1:
+                    genes_to_show.append(e['data']['source'])
+                    genes_to_show.append(e['data']['target'])
+
+        for n in output_network['nodes']:
+            if n['data']['name'] in genes_to_show:
+                n['data']['tag'] = 'always_show'
+
+        return output_network
+
+    @staticmethod
     def merge_networks(network_one, network_two):
         """
         Function to merge two networks. A compound/parent node is created for each network and based on the family_id,
