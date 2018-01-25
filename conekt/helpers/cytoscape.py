@@ -563,7 +563,7 @@ class CytoscapeHelper:
             # Prune is enabled, only return nodes which are in both lists (and compound nodes)
             nodes_to_keep = list(set(nodes_to_keep))
             return {'nodes': [n for n in nodes if n["data"]["id"] in nodes_to_keep],
-                    'edges': [e for e in edges if e["data"]["source"] in nodes_to_keep and e["data"]["target"]]}
+                    'edges': [e for e in edges if e["data"]["source"] in nodes_to_keep and e["data"]["target"]in nodes_to_keep]}
 
     @staticmethod
     def get_families(network):

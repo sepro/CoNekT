@@ -36,6 +36,8 @@ CACHE_TYPE = 'simple'
 CACHE_DEFAULT_TIMEOUT = 120
 CACHE_THRESHOLD = 10000
 
+WTF_CSRF_TIME_LIMIT = None
+
 # Minify pages when debug is off
 MINIFY_PAGE = not DEBUG
 

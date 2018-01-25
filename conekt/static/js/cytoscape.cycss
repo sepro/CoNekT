@@ -41,6 +41,17 @@ node:unselected {
         border-opacity:0.5;
 }
 
+node:parent {
+    background-color: #AAD8FF;
+    background-opacity:0.2;
+}
+
+node#compound_node_two {
+    background-color: #AAFFD8;
+    background-opacity:0.2;
+}
+
+
 node.hidden {
     visibility: hidden;
 }
