@@ -162,16 +162,16 @@ def expression_profile_compare_probes(probe_a, probe_b, species_id, normalize=0)
                            hrr=hrr)
 
 
-@expression_profile.route('/cross_species/')
-def expression_profile_cross_species():
-    """
-    DEBUG CODE: To be removed or
-    """
-    csep = CrossSpeciesExpressionProfile()
-
-    output = csep.get_data(*[78, 256593, 161407])
-
-    return Response(json.dumps(output))
+# @expression_profile.route('/cross_species/')
+# def expression_profile_cross_species():
+#     """
+#     DEBUG CODE
+#     """
+#     csep = CrossSpeciesExpressionProfile()
+#
+#     output = csep.get_data(*[78, 256593, 161407])
+#
+#     return Response(json.dumps(output))
 
 
 @expression_profile.route('/download/plot/<profile_id>')
