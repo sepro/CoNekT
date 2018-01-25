@@ -9,6 +9,7 @@ from statistics import mean
 from math import log
 
 from sqlalchemy.orm import joinedload, undefer
+from flask import flash
 
 SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
 
@@ -160,11 +161,25 @@ class ExpressionProfile(db.Model):
 
         output = []
 
+        not_found = [p.lower() for p in probes]
+
         for profile in profiles:
             name = profile.probe
             data = json.loads(profile.profile)
             order = data['order']
             experiments = data['data']
+
+            try:
+                not_found.remove(profile.probe.lower())
+            except ValueError as _:
+                # Element not in list
+                pass
+
+            try:
+                not_found.remove(profile.sequence.name.lower())
+            except ValueError as _:
+                # Element not in list
+                pass
 
             values = {}
 
@@ -188,6 +203,9 @@ class ExpressionProfile(db.Model):
                            "values": values,
                            "sequence_id": profile.sequence_id,
                            "shortest_alias":profile.sequence.shortest_alias})
+
+        if len(not_found) > 0:
+            flash("Couldn't fine profile for: %s" % ",".join(not_found), "warning")
 
         return {'order': order, 'heatmap_data': output}
 
