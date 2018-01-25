@@ -237,9 +237,12 @@ class ExpressionProfile(db.Model):
         if order_color_file is not None:
             with open(order_color_file, 'r') as fin:
                 for line in fin:
-                    o, c = line.strip().split('\t')
-                    order.append(o)
-                    colors.append(c)
+                    try:
+                        o, c = line.strip().split('\t')
+                        order.append(o)
+                        colors.append(c)
+                    except Exception as _:
+                        pass
 
         # build conversion table for sequences
         sequences = Sequence.query.filter_by(species_id=species_id).all()
