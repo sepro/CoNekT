@@ -1,9 +1,9 @@
 from conekt import db
-from conekt.models.species import Species
 from conekt.models.sequences import Sequence
 from conekt.models.condition_tissue import ConditionTissue
 
 import json
+import contextlib
 from collections import defaultdict
 from statistics import mean
 from math import log
@@ -169,17 +169,11 @@ class ExpressionProfile(db.Model):
             order = data['order']
             experiments = data['data']
 
-            try:
+            with contextlib.suppress(ValueError):
                 not_found.remove(profile.probe.lower())
-            except ValueError as _:
-                # Element not in list
-                pass
 
-            try:
+            with contextlib.suppress(ValueError):
                 not_found.remove(profile.sequence.name.lower())
-            except ValueError as _:
-                # Element not in list
-                pass
 
             values = {}
 
@@ -205,7 +199,7 @@ class ExpressionProfile(db.Model):
                            "shortest_alias":profile.sequence.shortest_alias})
 
         if len(not_found) > 0:
-            flash("Couldn't fine profile for: %s" % ",".join(not_found), "warning")
+            flash("Couldn't find profile for: %s" % ",".join(not_found), "warning")
 
         return {'order': order, 'heatmap_data': output}
 
