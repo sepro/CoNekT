@@ -30,6 +30,7 @@
             <p><strong>View as: </strong>{{ ca.cluster_actions(cluster.id, exclude=["graph"]) }}</p>
             {% elif cluster_one %}
             <h1>Comparing clusters: <strong>{{ cluster_one.name }}</strong> vs <strong>{{ cluster_two.name }}</strong></h1>
+            <span class="text-muted">(<strong>Note:</strong> Only genes which have a homolog in another cluster are shown)</span>
             {% elif sequence %}
             <h1><abbr title="Click to show help" href="{{ url_for('help.help_topic', topic='ecc') }}" data-target="#helpModal">ECC</abbr> network: <strong>{{ sequence.name }}</strong></h1>
             {% elif graph_data %}

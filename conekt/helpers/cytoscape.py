@@ -515,7 +515,7 @@ class CytoscapeHelper:
         return output_network
 
     @staticmethod
-    def merge_networks(network_one, network_two):
+    def merge_networks(network_one, network_two, prune=True):
         """
         Function to merge two networks. A compound/parent node is created for each network and based on the family_id,
         edges between homologous/orthologous genes are added.
@@ -524,6 +524,7 @@ class CytoscapeHelper:
 
         :param network_one: Dictionary (cytoscape.js structure) of the first network
         :param network_two: Dictionary (cytoscape.js structure) of the second network
+        :param prune: if True (will only retain nodes with a homolog in the other network
         :return: Cytoscape.js compatible network with both networks merged and homologs/orthologs connected
         """
         nodes = []
@@ -542,17 +543,27 @@ class CytoscapeHelper:
 
         # draw edges between nodes from different networks
         # TODO: optimize this to avoid nested loop
+
+        nodes_to_keep = ["compound_node_one", "compound_node_two"]  # Nodes to keep when prune is enabled
+
         for node_one in network_one["nodes"]:
             for node_two in network_two["nodes"]:
                 # if nodes are from the same family add an edge between them
                 if node_one["data"]["family_id"] is not None \
                         and node_one["data"]["family_id"] == node_two["data"]["family_id"]:
+                    nodes_to_keep.append(node_one["data"]["id"])
+                    nodes_to_keep.append(node_two["data"]["id"])
                     edges.append({'data': {'source': node_one["data"]["id"],
                                            'target': node_two["data"]["id"],
                                            'color': "#33D",
                                            'homology': True}})
-
-        return {'nodes': nodes, 'edges': edges}
+        if not prune:
+            return {'nodes': nodes, 'edges': edges}
+        else:
+            # Prune is enabled, only return nodes which are in both lists (and compound nodes)
+            nodes_to_keep = list(set(nodes_to_keep))
+            return {'nodes': [n for n in nodes if n["data"]["id"] in nodes_to_keep],
+                    'edges': [e for e in edges if e["data"]["source"] in nodes_to_keep and e["data"]["target"]]}
 
     @staticmethod
     def get_families(network):
