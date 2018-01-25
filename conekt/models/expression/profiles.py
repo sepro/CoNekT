@@ -199,7 +199,7 @@ class ExpressionProfile(db.Model):
                            "shortest_alias":profile.sequence.shortest_alias})
 
         if len(not_found) > 0:
-            flash("Couldn't find profile for: %s" % ",".join(not_found), "warning")
+            flash("Couldn't find profile for: %s" % ", ".join(not_found), "warning")
 
         return {'order': order, 'heatmap_data': output}
 

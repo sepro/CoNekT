@@ -1,5 +1,6 @@
 import json
 import base64
+import contextlib
 
 from flask import Blueprint, request, render_template, flash, Markup, url_for
 from sqlalchemy.orm import noload
@@ -85,12 +86,16 @@ def profile_comparison_main():
         # get max 51 profiles, only show the first 50 (the extra one is fetched to throw the warning)
         profiles = ExpressionProfile.get_profiles(species_id, probes, limit=51)
 
-        missing = []
-        for p in probes:
-            pass
+        not_found = [p.lower() for p in probes]
+        for p in profiles:
+            with contextlib.suppress(ValueError):
+                not_found.remove(p.probe.lower())
 
-        if len(missing) > 0:
-            flash("Warning! %s were not found in the database" % ', '.join(missing))
+            with contextlib.suppress(ValueError):
+                not_found.remove(p.sequence.name.lower())
+
+        if len(not_found) > 0:
+            flash("Couldn't find profile for: %s" % ", ".join(not_found), "warning")
 
         if len(profiles) > 50:
             flash(Markup(("To many profiles in this cluster only showing the <strong>first 50</strong>. <br />" +
