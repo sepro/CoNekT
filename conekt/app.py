@@ -326,6 +326,13 @@ def configure_admin_panel(app):
 def configure_error_handlers(app):
     # Custom error handler for 404 errors
 
+    from flask_wtf.csrf import CSRFError
+
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        flash("Could not handle request, CSRF token has expired. Please try again...", "warning")
+        return redirect(url_for('main.screen'))
+
     @app.errorhandler(405)
     def method_not_allowed(e):
         return render_template('error/405.html'), 405
