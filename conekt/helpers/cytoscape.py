@@ -109,9 +109,9 @@ class CytoscapeHelper:
                 data[i.sequence_id]["clade_count"] = 0
 
             if "interpro" in data[i.sequence_id]:
-                data[i.sequence_id]["interpro"] += [i.domain.label]
+                data[i.sequence_id]["interpro"] += [i.domain.description]
             else:
-                data[i.sequence_id]["interpro"] = [i.domain.label]
+                data[i.sequence_id]["interpro"] = [i.domain.description]
 
         for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys() \
