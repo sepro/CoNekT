@@ -110,9 +110,9 @@
                      {% if zlog == 1 %}
                  <p><span style="color:#333333;font-weight:bold">Dark gray</span> cells indicate values where the raw expression is zero (cannot be log-transformed). <span style="color:#0000FF;font-weight:bold">Blue</span> cells indicate samples where the expression of the gene is below average and <span style="color:#FF0000;font-weight:bold">red</span> cells indicate the gene is expressed above average in the sample. White cells are average.</p>
                     {% elif raw == 1 %}
-                 <p>Raw expression values (TPM normalized), <span style="color:#53db3b;font-weight:bold">Green</span> cells indicate low expression and <span style="color:#d11010;font-weight:bold">red</span> high.</p>
+                 <p>Raw expression values (TPM normalized), <span style="color:#53db3b;font-weight:bold">Green</span> cells indicate low expression and <span style="color:#d11010;font-weight:bold">red</span> high. (<span style="color:#333333;font-weight:bold">Dark gray</span> cells indicate missing values)</p>
                     {% else %}
-                    <p>Expression values normalized per gene (using the maximum value, <span style="color:#53db3b;font-weight:bold">Green</span> cells indicate low expression and <span style="color:#d11010;font-weight:bold">red</span> high.</p>
+                    <p>Expression values normalized per gene (using the maximum value, <span style="color:#53db3b;font-weight:bold">Green</span> cells indicate low expression and <span style="color:#d11010;font-weight:bold">red</span> high. (<span style="color:#333333;font-weight:bold">Dark gray</span> cells indicate missing values)</p>
                     {% endif %}
              </div>
          </div>
