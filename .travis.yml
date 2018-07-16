@@ -16,7 +16,7 @@ install:
 
 # command to run tests
 script:
-  - coverage run run_tests.py
+  - coverage run run_unittest.py
 
 after_success:
   - codecov
