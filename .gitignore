@@ -4,6 +4,8 @@
 /venv/
 /virtualenv/
 /whooshee/
+/dist/
+/build/
 
 tmp
 bin

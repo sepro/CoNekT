@@ -16,7 +16,8 @@ from sqlite3 import Connection as SQLite3Connection
 
 from conekt.flask_blast import BlastThread
 
-__all__ = ['db', 'login_manager', 'cache', 'htmlmin', 'blast_thread', 'compress', 'whooshee', 'migrate', 'csrf']
+__all__ = ['toolbar', 'db', 'login_manager', 'cache', 'htmlmin',
+           'blast_thread', 'compress', 'whooshee', 'migrate', 'csrf']
 
 db = SQLAlchemy()
 

@@ -18,7 +18,10 @@ from flask_admin.menu import MenuLink
 from flask_login import current_user
 from flask_admin import Admin
 
-from conekt.extensions import toolbar, db, login_manager, cache, htmlmin, blast_thread, compress, whooshee, migrate,csrf
+from conekt.extensions import toolbar, db, login_manager, cache, htmlmin, \
+    blast_thread, compress, whooshee, migrate, csrf
+
+import coloredlogs
 
 
 def create_app(config):
@@ -26,6 +29,8 @@ def create_app(config):
     # Important for db_create script
 
     app = Flask(__name__)
+
+    coloredlogs.install()
 
     app.config.from_object(config)
     configure_extensions(app)

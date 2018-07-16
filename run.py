@@ -40,5 +40,6 @@ def add_admin(username, password):
         db.session.add(User(username, password, "", is_admin=True))
         db.session.commit()
 
+
 if __name__ == '__main__':
     app.run()
