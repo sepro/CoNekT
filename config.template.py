@@ -5,7 +5,7 @@ Copy this file to config.py and change the settings accordingly
 """
 import os
 import tempfile
-basedir = os.path.abspath(os.path.dirname(__file__))
+basedir = os.getcwd()
 
 # Flask settings, make sure to turn DEBUG and TESTING to False for production
 DEBUG = True
@@ -23,7 +23,7 @@ ADMIN_PASSWORD = 'admin'
 ADMIN_EMAIL = 'admin@web.com'
 
 # Database settings, database location and path to migration scripts
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db', 'planet.db')
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db', 'conekt.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'migration')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = DEBUG
@@ -71,8 +71,8 @@ DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 # Front Page Options
 # Twitter handle (None to disable twitter feed)
-TWITTER_HANDLE = "LabMutwil"
-KEYWORD_EXAMPLES = ['AT1G01720', 'GO:0005737', 'Auxin']
+TWITTER_HANDLE = None
+KEYWORD_EXAMPLES = []
 
 # Global message
 # This message will be injected on each page !
