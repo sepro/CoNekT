@@ -1,0 +1,6 @@
+ignore:
+  - "config.py"
+  - "venv/*"
+  - "tests/*"
+  - "utils/benchmark.py"
+  - "virtualenv/*"

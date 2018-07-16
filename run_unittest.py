@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
-from coverage import coverage
-
 import unittest
 import os
-
-cov = coverage(branch=True, omit=['venv/*', 'tests/*', 'config.py', 'utils/benchmark.py'])
-cov.start()
-
 
 from tests.website import WebsiteTest
 from tests.utils import UtilsTest
@@ -18,10 +12,3 @@ if __name__ == '__main__':
         unittest.main(failfast=True)
     except:
         pass
-
-    cov.stop()
-    cov.save()
-    print("\n\nCoverage Report:\n")
-    cov.report()
-    cov.html_report(directory='tmp/coverage')
-    cov.erase()
