@@ -7,7 +7,6 @@ from conekt.models.gene_families import GeneFamily
 from conekt.models.sequences import Sequence
 
 import json
-import time
 
 family = Blueprint('family', __name__)
 
@@ -42,8 +41,6 @@ def family_view(family_id):
     """
     current_family = GeneFamily.query.get_or_404(family_id)
     sequence_count = len(current_family.sequences.with_entities(Sequence.id).all())
-
-    print("DEBUG:", current_family.interpro_annotations)
 
     return render_template('family.html', family=current_family,
                            count=sequence_count,
