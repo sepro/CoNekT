@@ -57,7 +57,7 @@ The authors would like to thank Andreas Donath for technical support and helpful
 Contact
 -------
 
-  * [Sebastian Proost](mailto:sebastian.proost@kuleuven.vib.be) ( sebastian.proost@kuleuven.vib.be )
+  * [Sebastian Proost](mailto:sebastian.proost@kuleuven.vib.be) ( sebastian.proost@kuleuven.vib.be)
   * [Marek Mutwil](mailto:mutwil@mpmpi-golm.mpg.de) ( mutwil@mpmpi-golm.mpg.de )
 
 

@@ -1,4 +1,4 @@
-#Setting up mod_wsgi with Apache
+# Setting up mod_wsgi with Apache
 
 Install apache and mod_wsgi for python 3
 
@@ -23,7 +23,7 @@ Configure apache, example below can be added to the default VirtualHost. A valid
 	WSGIScriptAlias /planet /path/to/conekt.wsgi
 
 	<Location /conekt>
-    	WSGIProcessGroup application
+        WSGIProcessGroup application
 	    WSGIApplicationGroup %{GLOBAL}
 	    Require all granted
 	</Location>

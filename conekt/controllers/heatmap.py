@@ -127,7 +127,7 @@ def heatmap_custom_default():
                            raw=1 if option == 'raw' else 0)
 
 
-@heatmap.route('/results/comparable', methods=['POST'] )
+@heatmap.route('/results/comparable', methods=['POST'])
 def heatmap_custom_comparable():
     form = HeatmapComparableForm(request.form)
     form.populate_options()
@@ -180,11 +180,15 @@ def heatmap_comparative_family(family_id, option='raw'):
 
     print(heatmap_data)
 
-    return render_template("expression_heatmap.html", order=heatmap_data['order'],
-                           profiles=heatmap_data['heatmap_data'],
-                           zlog=1 if option == 'zlog' else 0,
-                           raw=1 if option == 'raw' else 0,
-                           family=family)
+    if not heatmap_data['order'] == [] and not heatmap_data['heatmap_data'] == []:
+        return render_template("expression_heatmap.html", order=heatmap_data['order'],
+                               profiles=heatmap_data['heatmap_data'],
+                               zlog=1 if option == 'zlog' else 0,
+                               raw=1 if option == 'raw' else 0,
+                               family=family)
+    else:
+        flash("Cannot create a comparative heatmap for this family.", "warning")
+        return redirect(url_for('family.family_view', family_id=family_id))
 
 
 @heatmap.route('/inchlib/j/<cluster_id>.json')
