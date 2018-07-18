@@ -188,7 +188,11 @@ class ExpressionProfile(db.Model):
                     if row_mean == 0 or values[o] == 0:
                         values[o] = '-'
                     else:
-                        values[o] = log(values[o]/row_mean, 2)
+                        try:
+                            values[o] = log(values[o]/row_mean, 2)
+                        except ValueError as _:
+                            print("Unable to calculate log()", values[o], row_mean)
+                            values[o] = '-'
                 else:
                     if row_max != 0 and not raw:
                         values[o] = values[o]/row_max
@@ -196,7 +200,7 @@ class ExpressionProfile(db.Model):
             output.append({"name": name,
                            "values": values,
                            "sequence_id": profile.sequence_id,
-                           "shortest_alias":profile.sequence.shortest_alias})
+                           "shortest_alias": profile.sequence.shortest_alias})
 
         if len(not_found) > 0:
             flash("Couldn't find profile for: %s" % ", ".join(not_found), "warning")
