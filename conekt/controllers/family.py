@@ -34,7 +34,6 @@ def family_find(family_name):
 
 
 @family.route('/view/<family_id>')
-@cache.cached()
 def family_view(family_id):
     """
     Get a gene family based on the ID and show the details for this family
