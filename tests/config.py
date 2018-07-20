@@ -5,7 +5,8 @@ Copy this file to config.py and change the settings accordingly
 """
 import os
 import tempfile
-basedir = os.path.abspath(os.path.dirname(__file__))
+
+basedir = os.getcwd()
 
 # Flask settings, make sure to set the SECRET_KEY and turn DEBUG and TESTING to False for production
 DEBUG = False
@@ -21,12 +22,10 @@ ADMIN_EMAIL = 'admin@web.com'
 
 
 # Database settings, database location and path to migration scripts
-# THIS WILL CREATE A NEW DATABASE AND FILL IT WITH DUMMY DATA
-# DO NOT RUN THIS WITH AN EXISTING DATABASE AS IT WILL BE DROPPED !
-_, DATABASE_PATH = tempfile.mkstemp()
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE_PATH
+# Will use in memory db for testing
+SQLALCHEMY_DATABASE_URI = 'sqlite://'
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'migration')
-SQLALCHEMY_ECHO = DEBUG
+SQLALCHEMY_ECHO = False
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
