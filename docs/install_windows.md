@@ -8,7 +8,7 @@ Python >= 3.3 is required with virtualenv
     [download python ](https://www.python.org/downloads/)
 
 
-Clone the repository into a directory PlaNet using the Git Client for windows
+Clone the repository into a directory CoNekT using the Git Client for windows
 
 Set up the virtual environment for a shell (without setuptools as there is a bug preventing this)
 
