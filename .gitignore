@@ -6,6 +6,7 @@
 /whooshee/
 /dist/
 /build/
+/migrations/
 
 tmp
 bin
