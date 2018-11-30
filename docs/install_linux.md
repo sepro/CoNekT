@@ -1,4 +1,4 @@
-# CoNekt Linux Installation
+# CoNekT Linux Installation
 
 ## Getting Started
 
@@ -12,17 +12,17 @@ Install virtualenv
     sudo pip3 install virtualenv
 
 
-Clone the repository into a directory CoNekt
+Clone the repository into a directory CoNekT
 
-    git clone https://github.molgen.mpg.de/proost/CoNekt CoNekt
+    git clone https://github.molgen.mpg.de/proost/CoNekT CoNekT
 
 Set up the virtual environment
 
-    virtualenv --python=python3 CoNekt/
+    virtualenv --python=python3 CoNekT/
 
 Activate the virtual environment
 
-    cd PlaNet/
+    cd CoNekT/
     source bin/activate
 
 Install the requirements
@@ -50,4 +50,4 @@ Build initial database
     flask add_admin <new_username> <new_password> 
     
 
-You now have a fresh installation of CoNekt. How to fill it with your data is included in the section [Building CoNekt](building_conekt.md)
+You now have a fresh installation of CoNekT. How to fill it with your data is included in the section [Building CoNekT](building_conekt.md)
