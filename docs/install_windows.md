@@ -1,4 +1,4 @@
-# CoNekt Windows Installation
+# CoNekT Windows Installation
 
 ## Getting Started
 
@@ -12,13 +12,13 @@ Clone the repository into a directory PlaNet using the Git Client for windows
 
 Set up the virtual environment for a shell (without setuptools as there is a bug preventing this)
 
-    virtualenv --no-setuptools PlaNet
+    virtualenv --no-setuptools CoNekT
 
 Activate the virtual environment
 
     Scripts\activate
 
-Download [get-pip.py](https://bootstrap.pypa.io/get-pip.py) and run it in the PlaNet folder in the active
+Download [get-pip.py](https://bootstrap.pypa.io/get-pip.py) and run it in the CoNekT folder in the active
 virtual environment to install pip and setuptools manually
 
     Scripts\python.exe get-pip.py
@@ -49,4 +49,4 @@ Build initial database
     # Optional, create additional admin accounts
     flask add_admin <new_username> <new_password> 
 
-You now have a fresh installation of PlaNet. How to fill it with your data is included in the section [Building CoNekt](building_conekt.md)
+You now have a fresh installation of CoNekT. How to fill it with your data is included in the section [Building CoNekt](building_conekt.md)
