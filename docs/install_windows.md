@@ -58,5 +58,3 @@ Build initial database
 
 You now have a fresh installation of CoNekT running locally on [http://localhost:5000](http://localhost:5000). 
 How to fill it with your data is included in the section [Building CoNekT](building_conekt.md). 
-
-You now have a fresh installation of CoNekT. How to fill it with your data is included in the section [Building CoNekt](building_conekt.md)
