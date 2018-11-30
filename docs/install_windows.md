@@ -41,12 +41,22 @@ Build initial database
     set FLASK_APP=run.py
     
     # Create the DB (with the initial admin account)
+    # A bunch of SQL queries will be printed to the screen 
     flask initdb
     
     # Set up the migration
+    # This will create a number of files and suggest to check and edit settings in alembic.ini 
+    # You can do this if you wish, but it is not required
+    # more info on alembic : https://alembic.sqlalchemy.org/en/latest/tutorial.html
     flask db init
     
     # Optional, create additional admin accounts
     flask add_admin <new_username> <new_password> 
+    
+    # Start the server locally
+    flask run
+
+You now have a fresh installation of CoNekT running locally on [http://localhost:5000](http://localhost:5000). 
+How to fill it with your data is included in the section [Building CoNekT](building_conekt.md). 
 
 You now have a fresh installation of CoNekT. How to fill it with your data is included in the section [Building CoNekt](building_conekt.md)
