@@ -48,6 +48,9 @@ Build initial database
     # This will create a number of files and suggest to check and edit settings in alembic.ini 
     # You can do this if you wish, but it is not required
     # more info on alembic : https://alembic.sqlalchemy.org/en/latest/tutorial.html
+    #
+    # If you get an error that the folder already exists, remove the migrations folder or select another location by
+    # adding "-d <new_folder>" to the command
     flask db init
     
     # Optional, create additional admin accounts
