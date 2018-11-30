@@ -14,7 +14,7 @@ Install virtualenv
 
 Clone the repository into a directory CoNekT
 
-    git clone https://github.molgen.mpg.de/proost/CoNekT CoNekT
+    git clone https://github.com/sepro/CoNekT CoNekT
 
 Set up the virtual environment
 
