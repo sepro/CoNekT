@@ -34,8 +34,10 @@ def admin_required(fn):
         try:
             if current_user.is_admin:
                 return fn(*args, **kwargs)
-        except AttributeError:
-            pass
+        except Exception as e:
+            print(str(e))
+            raise
+
         user_unauthorized.send(current_app._get_current_object())
         abort(403)
     return decorated_view
@@ -50,6 +52,7 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
         cursor = dbapi_connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
+
 
 login_manager = LoginManager()
 toolbar = DebugToolbarExtension()
