@@ -87,3 +87,5 @@ Roots (QC cells), 6 DAS Roots   rgba(153, 51, 0, 0.5)
 Three columns are required, (i) the label in the full profile, (ii) the group it belongs to 
 and (iii) the color for that group. After adding that file click **"Add Expression Specificities"**
 in that section.
+
+These broader categories can be used in the **comparative heatmap** and combined with **phylogenetic trees**, to compare expression across species. To do this use the [CRUD](008_crud.md) interface for ConditionTissues and set the **in_tree** field to true. Note that this is **only** supported for the broad categories defined through the **Add Tissue Specificity** feature (selecting the specific conditions here will result in errors when viewing trees).
