@@ -5,24 +5,47 @@ this is to add the species to the database, and export the protein fastas from
 CoNekT. This ensures all IDs are the same.
 
 ## Importing OrthoGroups and Gene Families
-Output from [OrthoFinder 1.1.x](https://github.com/davidemms/OrthoFinder/releases/tag/1.1.10) and (tribe)MCL can be directly imported. To do so, enter a description, select the type of data you wish to import and select the required file (see below). Hit 
+Output from [OrthoFinder](https://github.com/davidemms/OrthoFinder/) and (tribe)MCL can be directly imported. To do so, 
+enter a description, select the type of data you wish to import and select the required file (see below). Hit 
 **Add Families** to upload the file and create the gene families in the database.
 
 For OrthoFinder, select Orthogroups.txt, from the output directory. For (tribe)MCL pick the 
 file with the final output (all members of a gene family on one line).
 
+Note: While you can use Orthogroups from all OrthoFinder versions, importing trees currently is only possible with 
+version 1.1.x.
+
 ![add_gf](../images/add_gf.png)
 
 ## Importing Trees (OrthoFinder 1.1.x only)
 
-[OrthoFinder 1.1.x](https://github.com/davidemms/OrthoFinder/releases/tag/1.1.10)'s phylogenetic trees can
-be imported into CoNekT. To do so **first create a tar gzip file, with a .tgz extension** containing all the 
-**rooted** trees (and only those trees), these can be found in the **working directory** (and have the word rooted in their filenames). In linux this can be done using the [*tar* command](https://www.howtogeek.com/248780/how-to-compress-and-extract-files-using-the-tar-command-on-linux/), windows users can use [7-zip](https://www.7-zip.org/), a free tool to create archives, to create this file.
+[OrthoFinder 1.1.x](https://github.com/davidemms/OrthoFinder/releases/tag/1.1.10)'s phylogenetic trees, produced by 
+ [DCLpar](https://www.cs.hmc.edu/~yjw/software/dlcpar/), can
+be imported into CoNekT. These can be found in the 
+**./Results_Jan01/Orthologues_Jan01/WorkingDirectory/dlcpar** (note that the date depends on the day you ran OrthoFinder
+ in this example Jan01).  
+
+To do so **first create a tar gzip file, with a .tgz extension** containing all the 
+**rooted** trees (and only those trees). In linux this can be done using the [*tar* command](https://www.howtogeek.com/248780/how-to-compress-and-extract-files-using-the-tar-command-on-linux/). 
+ 
+ ```bash
+ 
+# first navigate to the dlcpar directory that contains the trees
+# execute the command below.
+# This will create a file orthofinder_trees.tgz that can be uploaded
+tar -zcvf orthofinder_trees.tgz OG*_tree_id.txt
+
+```
+ 
+Windows users can use [7-zip](https://www.7-zip.org/), a free tool to create archives, to create this file.
 
 Furthermore you will need to locate the file **SequenceIDs.txt** which is 
-used to convert OrthoFinder's internal IDs back to CoNekT's.
+used to convert OrthoFinder's internal IDs back to CoNekT's. This file can be 
+found in **./Results_Jan01/WorkingDirectory**, and again the date is part of the directory structure, so ensure this 
+will vary depending on when you ran OrthoFinder.
 
-Note on OrthoFinder >= 2.0: OrthoFinder 2.0 and above changed the way trees are handled and stores the trees in a different format. This is currently not supported by CoNekT.
+Note on OrthoFinder >= 2.0: OrthoFinder 2.0 and above changed the way trees are handled and stores the trees in a 
+different format. This is currently not supported by CoNekT.
 
 ![add_trees](../images/add_trees.png)
 
@@ -69,4 +92,5 @@ clade and a **tree** with a newick tree of that clade.
 
 ## Tree Reconciliation
 
-Once trees are correctly uploaded to the database and the clades are defined, the tree reconsiliation can be started from the the admin panel's menu under : 'Build'->'Reconcile Trees'
+Once trees are correctly uploaded to the database and the clades are defined, the tree reconsiliation can be started 
+from the the admin panel's menu under : 'Build'->'Reconcile Trees'
