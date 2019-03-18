@@ -38,6 +38,9 @@ def add_family():
             elif source == 'orthofinder':
                 GeneFamily.add_families_from_orthofinder(temp_path, method_description)
                 flash('Added Gene families from file %s' % form.file.name, 'success')
+            elif source == 'general':
+                GeneFamily.add_families_general(temp_path, method_description)
+                flash('Added Gene families from file %s' % form.file.name, 'success')
             else:
                 flash('Method not implemented yet', 'danger')
             os.close(fd)

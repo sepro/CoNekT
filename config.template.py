@@ -58,12 +58,12 @@ BLASTP_PATH = ''
 BLASTP_DB_PATH = ''
 BLASTN_PATH = ''
 BLASTN_DB_PATH = ''
-BLASTP_CMD = BLASTP_PATH + ' -db ' + BLASTP_DB_PATH + ' -query <IN> -out <OUT> -outfmt 6 -num_threads 1'
-BLASTN_CMD = BLASTN_PATH + ' -db ' + BLASTN_DB_PATH + ' -query <IN> -out <OUT> -outfmt 6 -num_threads 1'
+BLASTP_CMD = '"' + BLASTP_PATH + '" -db "' + BLASTP_DB_PATH + '" -query "<IN>" -out "<OUT>" -outfmt 6 -num_threads 1'
+BLASTN_CMD = '"' + BLASTN_PATH + '" -db "' + BLASTN_DB_PATH + '" -query "<IN>" -out "<OUT>" -outfmt 6 -num_threads 1'
 
 MAKEBLASTDB_PATH = ''
-MAKEBLASTDB_PROT_CMD = MAKEBLASTDB_PATH + ' -in <IN>' ' -out ' + BLASTP_DB_PATH + ' -dbtype prot'
-MAKEBLASTDB_NUCL_CMD = MAKEBLASTDB_PATH + ' -in <IN>' ' -out ' + BLASTN_DB_PATH + ' -dbtype nucl'
+MAKEBLASTDB_PROT_CMD = '"' + MAKEBLASTDB_PATH + '" -in "<IN>"' ' -out "' + BLASTP_DB_PATH + '" -dbtype prot'
+MAKEBLASTDB_NUCL_CMD = '"' + MAKEBLASTDB_PATH + '" -in "<IN>"' ' -out "' + BLASTN_DB_PATH + '" -dbtype nucl'
 
 
 # Debug settings
@@ -81,7 +81,7 @@ GLOB_MSG = None
 GLOB_MSG_TITLE = 'Info'
 
 # Tutorial URL
-TUTORIAL_URL = "https://github.molgen.mpg.de/proost/CoNekT/blob/master/docs/tutorials/overview.md"
+TUTORIAL_URL = "https://github.com/sepro/CoNekT/blob/master/docs/tutorials/overview.md"
 
 # Customize link to Imprint and Privacy Policy(legal requirement in Germany)
 IMPRINT_URL = None

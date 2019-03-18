@@ -15,3 +15,15 @@ class AddTreesForm(FlaskForm):
     def populate_methods(self):
         self.gene_family_method_id.choices = [(gfm.id, gfm.method) for gfm in GeneFamilyMethod.query.all()]
 
+
+class AddGeneralTreesForm(FlaskForm):
+    """
+    Form to add generic/general trees
+    """
+    gene_family_method_id = SelectField('Gene Family Method', coerce=int)
+    description = TextAreaField('Description', [InputRequired()])
+
+    general_tree_archive = FileField()
+
+    def populate_methods(self):
+        self.gene_family_method_id.choices = [(gfm.id, gfm.method) for gfm in GeneFamilyMethod.query.all()]

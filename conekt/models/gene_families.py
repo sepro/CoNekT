@@ -448,3 +448,52 @@ class GeneFamily(db.Model):
         GeneFamily.__add_families(families, family_members)
 
         return method.id
+
+    @staticmethod
+    def add_families_general(filename, description, handle_isoforms=False):
+        """
+        Add gene families directly from General file format output. This is the same as OrthoFinder but the identifier
+        will be left alone
+
+        :param filename: The file to load
+        :param description: Description of the method to store in the database
+        :param handle_isoforms: should isoforms (indicated by .1 at the end) be handled
+        :return the new methods internal ID
+        """
+        # Create new method for these families
+        method = GeneFamilyMethod.add(description)
+
+        gene_hash = {}
+        all_sequences = Sequence.query.all()
+
+        for sequence in all_sequences:
+            gene_hash[sequence.name.lower()] = sequence
+
+            if handle_isoforms:
+                gene_id = re.sub('\.\d+$', '', sequence.name.lower())
+                gene_hash[gene_id] = sequence
+
+        families = []
+        family_members = defaultdict(list)
+
+        with open(filename, "r") as f_in:
+            for line in f_in:
+                gf_id, *parts = line.strip().split()
+
+                gf_id = gf_id.rstrip(':')
+
+                new_family = GeneFamily(gf_id)
+                new_family.original_name = gf_id
+                new_family.method_id = method.id
+
+                families.append(new_family)
+
+                for p in parts:
+                    if p.lower() in gene_hash.keys():
+                        family_members[new_family.name].append(gene_hash[p.lower()])
+
+        # add all families
+
+        GeneFamily.__add_families(families, family_members)
+
+        return method.id

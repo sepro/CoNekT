@@ -1,7 +1,7 @@
 from flask_admin import expose
 
-from conekt.controllers.admin.views import MyModelView,AdminBaseView
-from conekt.forms.admin.add_trees import AddTreesForm
+from conekt.controllers.admin.views import MyModelView, AdminBaseView
+from conekt.forms.admin.add_trees import AddTreesForm, AddGeneralTreesForm
 from conekt.forms.admin.reconcile_trees import ReconcileTreesForm
 
 
@@ -26,7 +26,12 @@ class AddTreesView(AdminBaseView):
         form = AddTreesForm()
         form.populate_methods()
 
-        return self.render('admin/add/trees.html', form=form)
+        form2 = AddGeneralTreesForm()
+        form2.populate_methods()
+
+        return self.render('admin/add/trees.html',
+                           form=form,
+                           form2=form2)
 
 
 class ReconcileTreesView(AdminBaseView):
