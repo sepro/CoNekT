@@ -118,8 +118,8 @@ class AdminTest(TestCase):
             self.assertTrue('InterPro data added.' in response.data.decode('utf-8'))  # Check for flash message
 
         # Add Species
-        with open('./tests/data/mamut.cds.fasta', 'rb') as fasta_data:
-            payload = {'code': 'mmu', 'name': 'Marek mutwiliana',
+        with open('./tests/data/test.cds.fasta', 'rb') as fasta_data:
+            payload = {'code': 'tst', 'name': 'Test species',
                        'data_type': 'genome', 'color': '#000000',
                        'highlight': '#DDDDDD',
                        'fasta': fasta_data,
@@ -131,7 +131,7 @@ class AdminTest(TestCase):
             self.assertTrue('Added species' in response.data.decode('utf-8'))  # Check for flash message
 
         # Add Sequence descriptions
-        with open('./tests/data/mamut.descriptions.txt', 'rb') as description_data:
+        with open('./tests/data/test.descriptions.txt', 'rb') as description_data:
             payload = {'species_id': 1, 'file': description_data}
 
             response = self.client.post('/admin_controls/add/sequence_descriptions', data=payload,
@@ -141,7 +141,7 @@ class AdminTest(TestCase):
             self.assertTrue('Added descriptions from file' in response.data.decode('utf-8'))  # Check for flash message
 
         # Add GO
-        with open('./tests/data/functional_data/mamut.go.txt', 'rb') as go_data:
+        with open('./tests/data/functional_data/test.go.txt', 'rb') as go_data:
             payload = {'species_id': 1,
                        'source': 'Fake unittest data',
                        'file': go_data}
@@ -152,7 +152,7 @@ class AdminTest(TestCase):
             self.assertTrue('Added GO terms from file' in response.data.decode('utf-8'))  # Check for flash message
 
         # Add InterPro
-        with open('./tests/data/functional_data/mamut.interpro.txt', 'rb') as interpro_data:
+        with open('./tests/data/functional_data/test.interpro.txt', 'rb') as interpro_data:
             payload = {'species_id': 1,
                        'file': interpro_data}
 
@@ -162,9 +162,9 @@ class AdminTest(TestCase):
             self.assertTrue('Added InterPro terms from file' in response.data.decode('utf-8'))  # Check for flash message
 
         # Add Expression Profiles
-        with open('./tests/data/expression/mamut.tpm.matrix.txt', 'rb') as matrix_data, \
-                open('./tests/data/expression/mamut.expression_annotation.txt', 'rb') as annotation_data, \
-                open('./tests/data/expression/mamut.expression_order_color.txt', 'rb') as order_color_data:
+        with open('./tests/data/expression/test.tpm.matrix.txt', 'rb') as matrix_data, \
+                open('./tests/data/expression/test.expression_annotation.txt', 'rb') as annotation_data, \
+                open('./tests/data/expression/test.expression_order_color.txt', 'rb') as order_color_data:
             payload = {'species_id': 1,
                        'source': 'lstrap',
                        'matrix_file': matrix_data,
@@ -177,7 +177,7 @@ class AdminTest(TestCase):
             self.assertTrue('Added expression profiles for species' in response.data.decode('utf-8'))  # Check for flash message
 
         # Add Co-Expression Network
-        with open('./tests/data/expression/mamut.pcc.txt', 'rb') as network_data:
+        with open('./tests/data/expression/test.pcc.txt', 'rb') as network_data:
             payload = {'species_id': 1,
                        'description': 'fake network for unittests',
                        'limit': 30,
@@ -190,7 +190,7 @@ class AdminTest(TestCase):
             self.assertTrue('Added coexpression network for species' in response.data.decode('utf-8'))  # Check for flash message
 
         # Add Co-Expression Clusters
-        with open('./tests/data/expression/mamut.mcl_clusters.txt', 'rb') as cluster_data:
+        with open('./tests/data/expression/test.mcl_clusters.txt', 'rb') as cluster_data:
             payload = {'network_id': 1,
                        'description': 'fake clusters for unittests',
                        'min_size': 1,
@@ -211,14 +211,14 @@ class AdminTest(TestCase):
         self.assertTrue('Calculated condition specificities for species' in response.data.decode('utf-8'))  # Check for flash message
 
         # Add Clades
-        payload = {'clades_json': json.dumps({"Marek mutwiliana": {"species": ["mmu"], "tree": None}})}
+        payload = {'clades_json': json.dumps({"Test species": {"species": ["tst"], "tree": None}})}
 
         response = self.client.post('/admin_controls/add/clades', data=payload, follow_redirects=True)
         self.assert200(response)
         self.assertTrue('Added clades' in response.data.decode('utf-8'))  # Check for flash message
 
         # Add MCL families
-        with open('./tests/data/comparative_data/mamut.families.mcl.txt', 'rb') as mcl_data:
+        with open('./tests/data/comparative_data/test.families.mcl.txt', 'rb') as mcl_data:
             payload = {
                 'method_description': 'Fake MCL families',
                 'source': 'mcl',
@@ -230,7 +230,7 @@ class AdminTest(TestCase):
             self.assertTrue('Added Gene families from file' in response.data.decode('utf-8'))  # Check for flash message
 
         # Add OrthoFinder families
-        with open('./tests/data/comparative_data/mamut.families.orthofinder.txt', 'rb') as of_data:
+        with open('./tests/data/comparative_data/test.families.orthofinder.txt', 'rb') as of_data:
             payload = {
                 'method_description': 'Fake OrthoFinder families',
                 'source': 'orthofinder',
@@ -242,7 +242,7 @@ class AdminTest(TestCase):
             self.assertTrue('Added Gene families from file' in response.data.decode('utf-8'))  # Check for flash message
 
         # Add Xrefs to sequences
-        with open('./tests/data/mamut.xref.txt', 'rb') as xref_data:
+        with open('./tests/data/test.xref.txt', 'rb') as xref_data:
             payload = {
                 'species_id': 1,
                 'platforms': 'custom',
@@ -282,8 +282,8 @@ class AdminTest(TestCase):
         self.assert200(response)
         self.assertTrue('Successfully exported data to FTP folder' in response.data.decode('utf-8'))  # Check for flash message
 
-        required_files = ['sequences/mmu.aa.fasta.gz', 'sequences/mmu.cds.fasta.gz', 'annotation/mmu.go.csv.gz',
-                          'annotation/mmu.interpro.csv.gz', 'expression/clustering_method_1.tab',
+        required_files = ['sequences/tst.aa.fasta.gz', 'sequences/tst.cds.fasta.gz', 'annotation/tst.go.csv.gz',
+                          'annotation/tst.interpro.csv.gz', 'expression/clustering_method_1.tab',
                           'expression/clustering_methods_overview.txt', 'expression/network_method_1.tab.gz',
                           'expression/network_methods_overview.txt', 'families/families_method_1.tab',
                           'families/families_method_2.tab', 'families/methods_overview.txt']

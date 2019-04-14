@@ -6,6 +6,9 @@
 ![conekt logo](docs/images/icon-144x144.png "Conekt Logo") CoNekT, the **Co**expression **Net**work **T**oolkit, 
 documentation and code. 
 
+If you use CoNekT in your research please cite: **CoNekT: an open-source framework for comparative genomic and transcriptomic network analyses.**
+Proost *et al*. 2018. ( [https://doi.org/10.1093/nar/gky336](https://doi.org/10.1093/nar/gky336) )
+
 What is CoNekT ?
 ----------------
 
@@ -19,6 +22,19 @@ allow you to **host your own instance** with other species or in-house data.
 
 ![features_overview](./docs/images/feature_overview.png)
 
+Changelog
+---------
+
+v1.1
+
+  * General tree import included
+  * Updated dependencies that had known security vulnerabilities and adjusted code where necessary
+  * Various small tweaks
+
+v1.0
+
+  * Initial release
+  
 Tutorials
 ---------
 
@@ -50,15 +66,12 @@ Optional steps (recommended for production environments)
 Acknowledgements
 ----------------
 
-CoNekT is based upon many open-source projects, check the full list [here](docs/acknowledgements.md). This work is 
-supported by [ERA-CAPS](http://www.eracaps.org/) though the [EVOREPRO](http://www.evorepro.org/) project. 
-The authors would like to thank Andreas Donath for technical support and helpful discussions.
+CoNekT is based upon many open-source projects, check the full list [here](docs/acknowledgements.md). 
 
 
 Contact
 -------
 
-  * [Sebastian Proost](mailto:sebastian.proost@kuleuven.vib.be) ( sebastian.proost@kuleuven.vib.be)
-  * [Marek Mutwil](mailto:mutwil@mpmpi-golm.mpg.de) ( mutwil@mpmpi-golm.mpg.de )
+Issues via GitHub are preferred way to report bug or provide feedback.
 
-
+  * [Sebastian Proost](https://www.kuleuven.be/wieiswie/en/person/00123248) ( https://www.kuleuven.be/wieiswie/en/person/00123248 )

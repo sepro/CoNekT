@@ -42,42 +42,42 @@ class BuildTest(TestCase):
         from conekt.models.gene_families import GeneFamily, GeneFamilyMethod
         from conekt.models.clades import Clade
 
-        Species.add('mmu', 'Marek mutwiliana')
+        Species.add('tst', 'test species')
         s = Species.query.first()
 
-        Sequence.add_from_fasta('./tests/data/mamut.cds.fasta', s.id)
-        Sequence.add_descriptions('./tests/data/mamut.descriptions.txt', s.id)
+        Sequence.add_from_fasta('./tests/data/test.cds.fasta', s.id)
+        Sequence.add_descriptions('./tests/data/test.descriptions.txt', s.id)
 
-        XRef.add_xref_genes_from_file(s.id, './tests/data/mamut.xref.txt')
+        XRef.add_xref_genes_from_file(s.id, './tests/data/test.xref.txt')
         GO.add_from_obo('./tests/data/test_go.obo')
-        GO.add_go_from_tab('./tests/data/functional_data/mamut.go.txt', s.id, source="Fake UnitTest Data")
+        GO.add_go_from_tab('./tests/data/functional_data/test.go.txt', s.id, source="Fake UnitTest Data")
 
         Interpro.add_from_xml('./tests/data/test_interpro.xml')
-        Interpro.add_interpro_from_interproscan('./tests/data/functional_data/mamut.interpro.txt', s.id)
+        Interpro.add_interpro_from_interproscan('./tests/data/functional_data/test.interpro.txt', s.id)
 
-        ExpressionProfile.add_profile_from_lstrap('./tests/data/expression/mamut.tpm.matrix.txt',
-                                                  './tests/data/expression/mamut.expression_annotation.txt',
+        ExpressionProfile.add_profile_from_lstrap('./tests/data/expression/test.tpm.matrix.txt',
+                                                  './tests/data/expression/test.expression_annotation.txt',
                                                   s.id,
-                                                  order_color_file='./tests/data/expression/mamut.expression_order_color.txt')
+                                                  order_color_file='./tests/data/expression/test.expression_order_color.txt')
 
-        ExpressionNetwork.read_expression_network_lstrap('./tests/data/expression/mamut.pcc.txt',
+        ExpressionNetwork.read_expression_network_lstrap('./tests/data/expression/test.pcc.txt',
                                                          s.id,
                                                          'Fake UnitTest Network')
 
         test_network = ExpressionNetworkMethod.query.first()
 
-        CoexpressionClusteringMethod.add_lstrap_coexpression_clusters('./tests/data/expression/mamut.mcl_clusters.txt',
+        CoexpressionClusteringMethod.add_lstrap_coexpression_clusters('./tests/data/expression/test.mcl_clusters.txt',
                                                                       'Test cluster',
                                                                       test_network.id,
                                                                       min_size=1)
 
         ExpressionSpecificityMethod.calculate_specificities(s.id, s.name + " condition specific profiles", False)
 
-        GeneFamily.add_families_from_mcl('./tests/data/comparative_data/mamut.families.mcl.txt', 'Fake Families')
+        GeneFamily.add_families_from_mcl('./tests/data/comparative_data/test.families.mcl.txt', 'Fake Families')
 
         GeneFamilyMethod.update_count()
 
-        Clade.add_clades_from_json({"Marek mutwiliana": {"species": ["mmu"], "tree": None}})
+        Clade.add_clades_from_json({"test species": {"species": ["tst"], "tree": None}})
         Clade.update_clades()
         Clade.update_clades_interpro()
 
@@ -130,7 +130,7 @@ class BuildTest(TestCase):
 
         self.assertEqual(test_interpro.label, 'IPR000001')              # Check if Interpro domain is added
         self.assertTrue('Kringle' in test_interpro.description)         # Check if description is added
-        self.assertEqual(test_interpro.species_counts['mmu'], 1)        # Check if species profiles are generated
+        self.assertEqual(test_interpro.species_counts['tst'], 1)        # Check if species profiles are generated
 
         self.assertEqual(test_profile.sequence.name, 'Gene01')          # Check if profile is linked with gene
         self.assertEqual(test_profile.probe, 'Gene01')                  # Check if probe is set
