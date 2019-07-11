@@ -13,9 +13,7 @@ What is CoNekT ?
 ----------------
 
 CoNekT is an online platform that allows users to browse expression profiles, study expression specificty, co-expression
-networks and more across different species. A public version including seven plant species which includes thousands of 
-publicly available RNASeq samples (from the [SRA](https://www.ncbi.nlm.nih.gov/sra)) is available 
-[here](http://conekt.mpimp-golm.mpg.de/pub/).
+networks and more across different species.
 
 Here you can find **tutorials** how to use the public version along with the **source-code** and build instructions that 
 allow you to **host your own instance** with other species or in-house data.
