@@ -67,6 +67,5 @@ How to fill it with your data is included in the section [Building CoNekT](build
 CoNekT is based on Flask which offers various ways to run the site in production, an overview can be found 
 [here](http://flask.pocoo.org/docs/1.0/deploying/) . 
 
-We configured [CoNekT-Plants](http://conekt.mpimp-golm.mpg.de/pub/) with a [mysql database](connect_mysql.md) 
-(recommended for production) and host it using Apache using this [configuration](apache_wsgi.md)  
+We recommend a [mysql database](connect_mysql.md) for production and hosting CoNekT using a proper webserver like Apache using this [configuration](apache_wsgi.md)  
 
