@@ -69,6 +69,6 @@ CoNekT is based upon many open-source projects, check the full list [here](docs/
 Contact
 -------
 
-Issues via GitHub are preferred way to report bug or provide feedback.
+[Issues](https://github.com/sepro/CoNekT/issues/new/choose) are the preferred way to report bugs and errors, start a [discussion](https://github.com/sepro/CoNekT/discussions) for suggestions and feedback.
 
   * [Sebastian Proost](https://www.kuleuven.be/wieiswie/en/person/00123248) ( https://www.kuleuven.be/wieiswie/en/person/00123248 )
