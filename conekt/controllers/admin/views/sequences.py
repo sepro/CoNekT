@@ -8,9 +8,10 @@ class AddSequenceDescriptionsView(AdminBaseView):
     """
     Admin page to add human readable descriptions to genes
     """
-    @expose('/')
+
+    @expose("/")
     def index(self):
         form = AddSequenceDescriptionsForm()
         form.populate_species()
 
-        return self.render('admin/add/sequence_descriptions.html', form=form)
+        return self.render("admin/add/sequence_descriptions.html", form=form)

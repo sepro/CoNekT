@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, index=True)
     first_name = db.Column(db.String(50))
@@ -17,8 +17,16 @@ class User(db.Model):
     wants_newsletter = db.Column(db.SmallInteger)
     registered = db.Column(db.DateTime)
 
-    def __init__(self, username, password, email, reset_key='', is_admin=False, is_banned=False,
-                 registered=datetime.now().replace(microsecond=0)):
+    def __init__(
+        self,
+        username,
+        password,
+        email,
+        reset_key="",
+        is_admin=False,
+        is_banned=False,
+        registered=datetime.now().replace(microsecond=0),
+    ):
         self.username = username
         self.password_hash = generate_password_hash(password)
         self.email = email
@@ -29,7 +37,7 @@ class User(db.Model):
         self.wants_newsletter = False
 
     def __repr__(self):
-        return '<User %d>' % self.id
+        return "<User %d>" % self.id
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)

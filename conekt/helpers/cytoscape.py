@@ -6,7 +6,9 @@ from sqlalchemy.orm import joinedload
 
 from conekt.models.expression.specificity import ExpressionSpecificity
 from conekt.models.expression.profiles import ExpressionProfile
-from conekt.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
+from conekt.models.relationships.sequence_cluster import (
+    SequenceCoexpressionClusterAssociation,
+)
 from conekt.models.relationships.sequence_family import SequenceFamilyAssociation
 from conekt.models.relationships.sequence_interpro import SequenceInterproAssociation
 from conekt.models.sequences import Sequence
@@ -16,7 +18,6 @@ from utils.color import family_to_shape_and_color, index_to_shape_and_color
 
 
 class CytoscapeHelper:
-
     @staticmethod
     def parse_network(network):
         """
@@ -38,10 +39,14 @@ class CytoscapeHelper:
 
         for n in output["nodes"]:
             if n["data"]["gene_id"] is not None:
-                n["data"]["gene_link"] = url_for("sequence.sequence_view", sequence_id=n["data"]["gene_id"])
+                n["data"]["gene_link"] = url_for(
+                    "sequence.sequence_view", sequence_id=n["data"]["gene_id"]
+                )
 
             if n["data"]["id"] != n["data"]["gene_name"]:
-                n["data"]["profile_link"] = url_for("expression_profile.expression_profile_find", probe=n["data"]["id"])
+                n["data"]["profile_link"] = url_for(
+                    "expression_profile.expression_profile_find", probe=n["data"]["id"]
+                )
 
             n["data"]["color"] = "#CCC"
             n["data"]["shape"] = "ellipse"
@@ -68,13 +73,18 @@ class CytoscapeHelper:
             if "data" in node.keys() and "gene_id" in node["data"].keys():
                 sequence_ids.append(node["data"]["gene_id"])
 
-        sequence_families = SequenceFamilyAssociation.query.\
-            filter(SequenceFamilyAssociation.sequence_id.in_(sequence_ids)).\
-            options(joinedload('family.clade')).\
-            filter(SequenceFamilyAssociation.family.has(method_id=family_method_id)).all()
+        sequence_families = (
+            SequenceFamilyAssociation.query.filter(
+                SequenceFamilyAssociation.sequence_id.in_(sequence_ids)
+            )
+            .options(joinedload("family.clade"))
+            .filter(SequenceFamilyAssociation.family.has(method_id=family_method_id))
+            .all()
+        )
 
-        sequence_interpro = SequenceInterproAssociation.query.\
-            filter(SequenceInterproAssociation.sequence_id.in_(sequence_ids)).all()
+        sequence_interpro = SequenceInterproAssociation.query.filter(
+            SequenceInterproAssociation.sequence_id.in_(sequence_ids)
+        ).all()
 
         data = {}
 
@@ -85,7 +95,9 @@ class CytoscapeHelper:
             data[s.sequence_id] = {}
             data[s.sequence_id]["name"] = s.family.name
             data[s.sequence_id]["id"] = s.gene_family_id
-            data[s.sequence_id]["url"] = url_for('family.family_view', family_id=s.gene_family_id)
+            data[s.sequence_id]["url"] = url_for(
+                "family.family_view", family_id=s.gene_family_id
+            )
             if s.family.clade is not None:
                 clade_index = clade_list.index(s.family.clade.name)
                 color, shape = index_to_shape_and_color(clade_index)
@@ -114,22 +126,35 @@ class CytoscapeHelper:
                 data[i.sequence_id]["interpro"] = [i.domain.description]
 
         for node in completed_network["nodes"]:
-            if "data" in node.keys() and "gene_id" in node["data"].keys() \
-                    and node["data"]["gene_id"] in data.keys():
+            if (
+                "data" in node.keys()
+                and "gene_id" in node["data"].keys()
+                and node["data"]["gene_id"] in data.keys()
+            ):
                 if "interpro" in data[node["data"]["gene_id"]]:
                     node["data"]["interpro"] = data[node["data"]["gene_id"]]["interpro"]
                 node["data"]["family_name"] = data[node["data"]["gene_id"]]["name"]
                 node["data"]["family_id"] = data[node["data"]["gene_id"]]["id"]
                 node["data"]["family_url"] = data[node["data"]["gene_id"]]["url"]
 
-                if "clade" in data[node["data"]["gene_id"]] and \
-                   "clade_count" in data[node["data"]["gene_id"]] and \
-                   "clade_shape" in data[node["data"]["gene_id"]] and \
-                   "clade_color" in data[node["data"]["gene_id"]]:
-                    node["data"]["family_clade"] = data[node["data"]["gene_id"]]["clade"]
-                    node["data"]["family_clade_color"] = data[node["data"]["gene_id"]]["clade_color"]
-                    node["data"]["family_clade_shape"] = data[node["data"]["gene_id"]]["clade_shape"]
-                    node["data"]["family_clade_count"] = data[node["data"]["gene_id"]]["clade_count"]
+                if (
+                    "clade" in data[node["data"]["gene_id"]]
+                    and "clade_count" in data[node["data"]["gene_id"]]
+                    and "clade_shape" in data[node["data"]["gene_id"]]
+                    and "clade_color" in data[node["data"]["gene_id"]]
+                ):
+                    node["data"]["family_clade"] = data[node["data"]["gene_id"]][
+                        "clade"
+                    ]
+                    node["data"]["family_clade_color"] = data[node["data"]["gene_id"]][
+                        "clade_color"
+                    ]
+                    node["data"]["family_clade_shape"] = data[node["data"]["gene_id"]][
+                        "clade_shape"
+                    ]
+                    node["data"]["family_clade_count"] = data[node["data"]["gene_id"]][
+                        "clade_count"
+                    ]
                 else:
                     node["data"]["family_clade_color"] = "#CCC"
                     node["data"]["family_clade_shape"] = "rectangle"
@@ -177,12 +202,22 @@ class CytoscapeHelper:
         for node in completed_network["nodes"]:
             if "data" in node.keys() and "gene_id" in node["data"].keys():
                 if node["data"]["gene_id"] in fam_to_shape_and_color:
-                    node["data"]["family_color"] = fam_to_shape_and_color[node["data"]["gene_id"]][1]
-                    node["data"]["family_shape"] = fam_to_shape_and_color[node["data"]["gene_id"]][0]
+                    node["data"]["family_color"] = fam_to_shape_and_color[
+                        node["data"]["gene_id"]
+                    ][1]
+                    node["data"]["family_shape"] = fam_to_shape_and_color[
+                        node["data"]["gene_id"]
+                    ][0]
                 if node["data"]["gene_id"] in both_to_shape_and_color:
-                    node["data"]["lc_label"] = both_to_shape_and_color[node["data"]["gene_id"]][2]
-                    node["data"]["lc_color"] = both_to_shape_and_color[node["data"]["gene_id"]][1]
-                    node["data"]["lc_shape"] = both_to_shape_and_color[node["data"]["gene_id"]][0]
+                    node["data"]["lc_label"] = both_to_shape_and_color[
+                        node["data"]["gene_id"]
+                    ][2]
+                    node["data"]["lc_color"] = both_to_shape_and_color[
+                        node["data"]["gene_id"]
+                    ][1]
+                    node["data"]["lc_shape"] = both_to_shape_and_color[
+                        node["data"]["gene_id"]
+                    ][0]
 
         return completed_network
 
@@ -206,7 +241,10 @@ class CytoscapeHelper:
 
         descriptions = {s.id: s.description for s in sequences}
         best_names = {s.id: s.best_name for s in sequences}
-        tokens = {s.id: ", ".join([x.name for x in s.xrefs if x.platform == 'token']) for s in sequences}
+        tokens = {
+            s.id: ", ".join([x.name for x in s.xrefs if x.platform == "token"])
+            for s in sequences
+        }
 
         # Set empty tokens to None
         for k, v in tokens.items():
@@ -267,18 +305,26 @@ class CytoscapeHelper:
         Add edges between homologous genes from different targets, family_id needs to be specified !
         """
 
-        for i in range(len(connected_network['nodes']) - 1):
-            for j in range(i + 1, len(connected_network['nodes'])):
-                if connected_network['nodes'][i]['data']['family_id'] == connected_network['nodes'][j]['data']['family_id'] and connected_network['nodes'][i]['data']['family_id'] is not None:
-                    connected_network['edges'].append({
-                        'data': {'source': connected_network['nodes'][i]['data']['id'],
-                                 'target': connected_network['nodes'][j]['data']['id'],
-                                 'color': "#33D",
-                                 'homology_color': "#33D",
-                                 'edge_type': 'homology',
-                                 'ecc_pair_color': "#33D",
-                                 'homology': True}
-                    })
+        for i in range(len(connected_network["nodes"]) - 1):
+            for j in range(i + 1, len(connected_network["nodes"])):
+                if (
+                    connected_network["nodes"][i]["data"]["family_id"]
+                    == connected_network["nodes"][j]["data"]["family_id"]
+                    and connected_network["nodes"][i]["data"]["family_id"] is not None
+                ):
+                    connected_network["edges"].append(
+                        {
+                            "data": {
+                                "source": connected_network["nodes"][i]["data"]["id"],
+                                "target": connected_network["nodes"][j]["data"]["id"],
+                                "color": "#33D",
+                                "homology_color": "#33D",
+                                "edge_type": "homology",
+                                "ecc_pair_color": "#33D",
+                                "homology": True,
+                            }
+                        }
+                    )
 
         return connected_network
 
@@ -297,8 +343,15 @@ class CytoscapeHelper:
                 probe = node["data"]["id"]
                 neighbors = 0
                 for edge in colored_network["edges"]:
-                    if "data" in edge.keys() and "source" in edge["data"].keys() and "target" in edge["data"].keys():
-                        if probe == edge["data"]["source"] or probe == edge["data"]["target"]:
+                    if (
+                        "data" in edge.keys()
+                        and "source" in edge["data"].keys()
+                        and "target" in edge["data"].keys()
+                    ):
+                        if (
+                            probe == edge["data"]["source"]
+                            or probe == edge["data"]["target"]
+                        ):
                             neighbors += 1
 
                 node["data"]["neighbors"] = neighbors
@@ -333,27 +386,45 @@ class CytoscapeHelper:
         """
         colored_network = deepcopy(network)
 
-        probes = [node['data']['id'] for node in colored_network['nodes'] if 'id' in node['data']]
+        probes = [
+            node["data"]["id"]
+            for node in colored_network["nodes"]
+            if "id" in node["data"]
+        ]
 
-        sequence_cluster_ass = SequenceCoexpressionClusterAssociation.query.filter(SequenceCoexpressionClusterAssociation.probe.in_(probes))\
-            .filter(SequenceCoexpressionClusterAssociation.coexpression_cluster.has(method_id=cluster_method_id)).all()
+        sequence_cluster_ass = (
+            SequenceCoexpressionClusterAssociation.query.filter(
+                SequenceCoexpressionClusterAssociation.probe.in_(probes)
+            )
+            .filter(
+                SequenceCoexpressionClusterAssociation.coexpression_cluster.has(
+                    method_id=cluster_method_id
+                )
+            )
+            .all()
+        )
 
         data = {}
         for sca in sequence_cluster_ass:
             data[sca.probe] = {}
-            data[sca.probe]['cluster_id'] = sca.coexpression_cluster_id
-            data[sca.probe]['cluster_name'] = sca.coexpression_cluster.name
+            data[sca.probe]["cluster_id"] = sca.coexpression_cluster_id
+            data[sca.probe]["cluster_name"] = sca.coexpression_cluster.name
 
-        color_shapes = family_to_shape_and_color({p: [v['cluster_name']] for p, v in data.items()})
+        color_shapes = family_to_shape_and_color(
+            {p: [v["cluster_name"]] for p, v in data.items()}
+        )
 
         for node in colored_network["nodes"]:
-            if node['data']['id'] in data.keys():
-                node['data']['cluster_id'] = data[node['data']['id']]['cluster_id']
-                node['data']['cluster_name'] = data[node['data']['id']]['cluster_name']
-                node['data']['cluster_url'] = url_for('expression_cluster.expression_cluster_view', cluster_id=node['data']['cluster_id'])
-                if node['data']['id'] in color_shapes.keys():
-                    node['data']['cluster_color'] = color_shapes[node['data']['id']][1]
-                    node['data']['cluster_shape'] = color_shapes[node['data']['id']][0]
+            if node["data"]["id"] in data.keys():
+                node["data"]["cluster_id"] = data[node["data"]["id"]]["cluster_id"]
+                node["data"]["cluster_name"] = data[node["data"]["id"]]["cluster_name"]
+                node["data"]["cluster_url"] = url_for(
+                    "expression_cluster.expression_cluster_view",
+                    cluster_id=node["data"]["cluster_id"],
+                )
+                if node["data"]["id"] in color_shapes.keys():
+                    node["data"]["cluster_color"] = color_shapes[node["data"]["id"]][1]
+                    node["data"]["cluster_shape"] = color_shapes[node["data"]["id"]][0]
 
         return colored_network
 
@@ -368,31 +439,49 @@ class CytoscapeHelper:
         """
         colored_network = deepcopy(network)
 
-        probes = [node['data']['id'] for node in colored_network['nodes'] if 'id' in node['data']]
+        probes = [
+            node["data"]["id"]
+            for node in colored_network["nodes"]
+            if "id" in node["data"]
+        ]
 
-        spm = ExpressionSpecificity.query.filter(ExpressionSpecificity.method_id == specificity_method_id).filter(ExpressionSpecificity.profile.has(ExpressionProfile.probe.in_(probes))).all();
+        spm = (
+            ExpressionSpecificity.query.filter(
+                ExpressionSpecificity.method_id == specificity_method_id
+            )
+            .filter(
+                ExpressionSpecificity.profile.has(ExpressionProfile.probe.in_(probes))
+            )
+            .all()
+        )
 
         data = {}
 
         for s in spm:
             if s.profile.probe in data.keys():
-                if s.score > data[s.profile.probe]['score']:
-                    data[s.profile.probe]['score'] = s.score
-                    data[s.profile.probe]['condition'] = s.condition
+                if s.score > data[s.profile.probe]["score"]:
+                    data[s.profile.probe]["score"] = s.score
+                    data[s.profile.probe]["condition"] = s.condition
             else:
                 data[s.profile.probe] = {}
-                data[s.profile.probe]['score'] = s.score
-                data[s.profile.probe]['condition'] = s.condition
+                data[s.profile.probe]["score"] = s.score
+                data[s.profile.probe]["condition"] = s.condition
 
-        color_shapes = family_to_shape_and_color({p: [v['condition']] for p, v in data.items()})
+        color_shapes = family_to_shape_and_color(
+            {p: [v["condition"]] for p, v in data.items()}
+        )
 
         for node in colored_network["nodes"]:
-            if node['data']['id'] in data.keys():
-                node['data']['spm_score'] = data[node['data']['id']]['score']
-                node['data']['spm_condition'] = data[node['data']['id']]['condition']
-                if node['data']['id'] in color_shapes.keys():
-                    node['data']['spm_condition_color'] = color_shapes[node['data']['id']][1]
-                    node['data']['spm_condition_shape'] = color_shapes[node['data']['id']][0]
+            if node["data"]["id"] in data.keys():
+                node["data"]["spm_score"] = data[node["data"]["id"]]["score"]
+                node["data"]["spm_condition"] = data[node["data"]["id"]]["condition"]
+                if node["data"]["id"] in color_shapes.keys():
+                    node["data"]["spm_condition_color"] = color_shapes[
+                        node["data"]["id"]
+                    ][1]
+                    node["data"]["spm_condition_shape"] = color_shapes[
+                        node["data"]["id"]
+                    ][0]
 
         return colored_network
 
@@ -429,29 +518,32 @@ class CytoscapeHelper:
 
         lc_labels = []
         for node in network["nodes"]:
-            if 'lc_label' in node['data'].keys():
-                lc_labels.append(node['data']['lc_label'])
+            if "lc_label" in node["data"].keys():
+                lc_labels.append(node["data"]["lc_label"])
 
         lc_counter = Counter(lc_labels)
 
         print(lc_counter)
 
-        pruned_network = {'nodes': [], 'edges': []}
+        pruned_network = {"nodes": [], "edges": []}
 
         good_nodes = []
 
-        for node in network['nodes']:
-            if 'lc_label' in node['data'].keys():
-                if lc_counter[node['data']['lc_label']] > 1:
-                    good_nodes.append(node['data']['name'])
-                    pruned_network['nodes'].append(deepcopy(node))
+        for node in network["nodes"]:
+            if "lc_label" in node["data"].keys():
+                if lc_counter[node["data"]["lc_label"]] > 1:
+                    good_nodes.append(node["data"]["name"])
+                    pruned_network["nodes"].append(deepcopy(node))
             else:
-                good_nodes.append(node['data']['name'])
-                pruned_network['nodes'].append(deepcopy(node))
+                good_nodes.append(node["data"]["name"])
+                pruned_network["nodes"].append(deepcopy(node))
 
-        for edge in network['edges']:
-            if edge['data']['source'] in good_nodes and edge['data']['target'] in good_nodes:
-                pruned_network['edges'].append(deepcopy(edge))
+        for edge in network["edges"]:
+            if (
+                edge["data"]["source"] in good_nodes
+                and edge["data"]["target"] in good_nodes
+            ):
+                pruned_network["edges"].append(deepcopy(edge))
 
         return pruned_network
 
@@ -468,49 +560,52 @@ class CytoscapeHelper:
 
         # Find Query genes, add hideable tag to everything except queries
         queries = []
-        for n in output_network['nodes']:
-                if n['data']['node_type'] == 'query' and n['data']['name'] not in queries:
-                    queries.append(n['data']['name'])
-                    n['data']['tag'] = 'always_show'
-                else:
-                    n['data']['tag'] = 'hideable'
+        for n in output_network["nodes"]:
+            if n["data"]["node_type"] == "query" and n["data"]["name"] not in queries:
+                queries.append(n["data"]["name"])
+                n["data"]["tag"] = "always_show"
+            else:
+                n["data"]["tag"] = "hideable"
 
         # Store neighborhoods
         neighborhoods = {q: [] for q in queries}
 
-        for e in output_network['edges']:
-            if e['data']['source'] in queries:
-                if e['data']['target'] not in queries:
-                    neighborhoods[e['data']['source']].append(e['data']['target'])
-            elif e['data']['target'] in queries:
-                if e['data']['source'] not in queries:
-                    neighborhoods[e['data']['target']].append(e['data']['source'])
+        for e in output_network["edges"]:
+            if e["data"]["source"] in queries:
+                if e["data"]["target"] not in queries:
+                    neighborhoods[e["data"]["source"]].append(e["data"]["target"])
+            elif e["data"]["target"] in queries:
+                if e["data"]["source"] not in queries:
+                    neighborhoods[e["data"]["target"]].append(e["data"]["source"])
 
         # adjust tags on genes that should be shown (shared neighborhood)
         # Check for genes present in both neighborhoods (intra species comparisons)
-        for n in output_network['nodes']:
+        for n in output_network["nodes"]:
             counter = 0
             for k in queries:
-                if n['data']['name'] in neighborhoods[k]:
+                if n["data"]["name"] in neighborhoods[k]:
                     counter += 1
             if counter > 1:
-                n['data']['tag'] = 'always_show'
+                n["data"]["tag"] = "always_show"
 
         # Check homology edges
         genes_to_show = []
-        for e in output_network['edges']:
-            if 'homology' in e['data'].keys() and e['data']['homology']:
+        for e in output_network["edges"]:
+            if "homology" in e["data"].keys() and e["data"]["homology"]:
                 counter = 0
                 for k in queries:
-                    if e['data']['source'] in neighborhoods[k] or e['data']['target'] in neighborhoods[k]:
+                    if (
+                        e["data"]["source"] in neighborhoods[k]
+                        or e["data"]["target"] in neighborhoods[k]
+                    ):
                         counter += 1
                 if counter > 1:
-                    genes_to_show.append(e['data']['source'])
-                    genes_to_show.append(e['data']['target'])
+                    genes_to_show.append(e["data"]["source"])
+                    genes_to_show.append(e["data"]["target"])
 
-        for n in output_network['nodes']:
-            if n['data']['name'] in genes_to_show:
-                n['data']['tag'] = 'always_show'
+        for n in output_network["nodes"]:
+            if n["data"]["name"] in genes_to_show:
+                n["data"]["tag"] = "always_show"
 
         return output_network
 
@@ -528,10 +623,14 @@ class CytoscapeHelper:
         :return: Cytoscape.js compatible network with both networks merged and homologs/orthologs connected
         """
         nodes = []
-        edges = network_one['edges'] + network_two['edges']
+        edges = network_one["edges"] + network_two["edges"]
 
-        nodes.append({"data": {"id": "compound_node_one", "compound": True, "color": "#BEF"}})
-        nodes.append({"data": {"id": "compound_node_two", "compound": True, "color": "#BEF"}})
+        nodes.append(
+            {"data": {"id": "compound_node_one", "compound": True, "color": "#BEF"}}
+        )
+        nodes.append(
+            {"data": {"id": "compound_node_two", "compound": True, "color": "#BEF"}}
+        )
 
         for node in network_one["nodes"]:
             node["data"]["parent"] = "compound_node_one"
@@ -544,26 +643,44 @@ class CytoscapeHelper:
         # draw edges between nodes from different networks
         # TODO: optimize this to avoid nested loop
 
-        nodes_to_keep = ["compound_node_one", "compound_node_two"]  # Nodes to keep when prune is enabled
+        nodes_to_keep = [
+            "compound_node_one",
+            "compound_node_two",
+        ]  # Nodes to keep when prune is enabled
 
         for node_one in network_one["nodes"]:
             for node_two in network_two["nodes"]:
                 # if nodes are from the same family add an edge between them
-                if node_one["data"]["family_id"] is not None \
-                        and node_one["data"]["family_id"] == node_two["data"]["family_id"]:
+                if (
+                    node_one["data"]["family_id"] is not None
+                    and node_one["data"]["family_id"] == node_two["data"]["family_id"]
+                ):
                     nodes_to_keep.append(node_one["data"]["id"])
                     nodes_to_keep.append(node_two["data"]["id"])
-                    edges.append({'data': {'source': node_one["data"]["id"],
-                                           'target': node_two["data"]["id"],
-                                           'color': "#33D",
-                                           'homology': True}})
+                    edges.append(
+                        {
+                            "data": {
+                                "source": node_one["data"]["id"],
+                                "target": node_two["data"]["id"],
+                                "color": "#33D",
+                                "homology": True,
+                            }
+                        }
+                    )
         if not prune:
-            return {'nodes': nodes, 'edges': edges}
+            return {"nodes": nodes, "edges": edges}
         else:
             # Prune is enabled, only return nodes which are in both lists (and compound nodes)
             nodes_to_keep = list(set(nodes_to_keep))
-            return {'nodes': [n for n in nodes if n["data"]["id"] in nodes_to_keep],
-                    'edges': [e for e in edges if e["data"]["source"] in nodes_to_keep and e["data"]["target"]in nodes_to_keep]}
+            return {
+                "nodes": [n for n in nodes if n["data"]["id"] in nodes_to_keep],
+                "edges": [
+                    e
+                    for e in edges
+                    if e["data"]["source"] in nodes_to_keep
+                    and e["data"]["target"] in nodes_to_keep
+                ],
+            }
 
     @staticmethod
     def get_families(network):
@@ -573,6 +690,10 @@ class CytoscapeHelper:
         :param network: network to extract families from
         :return: List of all families that occur in the network
         """
-        return [f["data"]["family_name"] for f in network["nodes"] if 'data' in f.keys() and
-                'family_name' in f["data"].keys() and
-                f["data"]["family_name"] is not None]
+        return [
+            f["data"]["family_name"]
+            for f in network["nodes"]
+            if "data" in f.keys()
+            and "family_name" in f["data"].keys()
+            and f["data"]["family_name"] is not None
+        ]

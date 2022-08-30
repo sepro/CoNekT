@@ -6,9 +6,10 @@ from conekt.models.expression.networks import ExpressionNetworkMethod
 
 
 class BuildCoexpressionClustersForm(FlaskForm):
-    network_id = SelectField('Network', coerce=int)
-    description = StringField('Description', [InputRequired()])
+    network_id = SelectField("Network", coerce=int)
+    description = StringField("Description", [InputRequired()])
 
     def populate_networks(self):
-        self.network_id.choices = [(e.id, str(e))
-                                   for e in ExpressionNetworkMethod.query.all()]
+        self.network_id.choices = [
+            (e.id, str(e)) for e in ExpressionNetworkMethod.query.all()
+        ]

@@ -8,7 +8,8 @@ class ExpressionNetworkMethodAdminView(MyModelView):
     """
     ExpressionNetworkMethod view for admins, specifies what is available in CRUD
     """
-    form_columns = ('description', 'edge_type', 'species')
+
+    form_columns = ("description", "edge_type", "species")
 
     column_display_pk = True
 
@@ -22,9 +23,10 @@ class AddCoexpressionNetworkView(AdminBaseView):
     Note: the input is a full PCC co-expression network, however, prior to adding the network HR Ranks are
     calculated and used as an additional filter.
     """
-    @expose('/')
+
+    @expose("/")
     def index(self):
         form = AddCoexpressionNetworkForm()
         form.populate_species()
 
-        return self.render('admin/add/coexpression_network.html', form=form)
+        return self.render("admin/add/coexpression_network.html", form=form)

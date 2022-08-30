@@ -5,9 +5,5 @@ from wtforms.validators import InputRequired, DataRequired
 
 
 class AddFunctionalDataForm(FlaskForm):
-    go = FileField('GO')
-    interpro = FileField('InterPro')
-
-
-
-
+    go = FileField("GO")
+    interpro = FileField("InterPro")

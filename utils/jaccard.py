@@ -1,4 +1,3 @@
-
 def jaccard(list_a, list_b):
     """
     Calculates the jaccard index from two python lists.
@@ -10,5 +9,4 @@ def jaccard(list_a, list_b):
     union_count = len(set(list_a + list_b))
     intersection_count = len(set(list_a).intersection(set(list_b)))
 
-    return intersection_count/union_count
-
+    return intersection_count / union_count

@@ -4,18 +4,18 @@ from conekt import cache
 from conekt.models.sequences import Sequence
 from sqlalchemy.orm import undefer, noload
 
-sequence = Blueprint('sequence', __name__)
+sequence = Blueprint("sequence", __name__)
 
 
-@sequence.route('/')
+@sequence.route("/")
 def sequence_overview():
     """
     For lack of a better alternative redirect users to the main page
     """
-    return redirect(url_for('main.screen'))
+    return redirect(url_for("main.screen"))
 
 
-@sequence.route('/find/<sequence_name>')
+@sequence.route("/find/<sequence_name>")
 @cache.cached()
 def sequence_find(sequence_name):
     """
@@ -26,10 +26,10 @@ def sequence_find(sequence_name):
     """
     current_sequence = Sequence.query.filter_by(name=sequence_name).first_or_404()
 
-    return redirect(url_for('sequence.sequence_view', sequence_id=current_sequence.id))
+    return redirect(url_for("sequence.sequence_view", sequence_id=current_sequence.id))
 
 
-@sequence.route('/view/<sequence_id>')
+@sequence.route("/view/<sequence_id>")
 @cache.cached()
 def sequence_view(sequence_id):
     """
@@ -41,24 +41,27 @@ def sequence_view(sequence_id):
 
     current_sequence = Sequence.query.get_or_404(sequence_id)
 
-    go_associations = current_sequence.go_associations.group_by(SequenceGOAssociation.go_id,
-                                                                SequenceGOAssociation.evidence,
-                                                                SequenceGOAssociation.source).all()
+    go_associations = current_sequence.go_associations.group_by(
+        SequenceGOAssociation.go_id,
+        SequenceGOAssociation.evidence,
+        SequenceGOAssociation.source,
+    ).all()
 
     # to avoid running long count queries, fetch relations here and pass to template
-    return render_template('sequence.html',
-                           sequence=current_sequence,
-                           go_associations=go_associations,
-                           interpro_associations=current_sequence.interpro_associations.all(),
-                           families=current_sequence.families.all(),
-                           expression_profiles=current_sequence.expression_profiles.all(),
-                           network_nodes=current_sequence.network_nodes.all(),
-                           coexpression_clusters=current_sequence.coexpression_clusters.all(),
-                           ecc_query_associations=current_sequence.ecc_query_associations.all()
-                           )
+    return render_template(
+        "sequence.html",
+        sequence=current_sequence,
+        go_associations=go_associations,
+        interpro_associations=current_sequence.interpro_associations.all(),
+        families=current_sequence.families.all(),
+        expression_profiles=current_sequence.expression_profiles.all(),
+        network_nodes=current_sequence.network_nodes.all(),
+        coexpression_clusters=current_sequence.coexpression_clusters.all(),
+        ecc_query_associations=current_sequence.ecc_query_associations.all(),
+    )
 
 
-@sequence.route('/tooltip/<sequence_id>')
+@sequence.route("/tooltip/<sequence_id>")
 @cache.cached()
 def sequence_tooltip(sequence_id):
     """
@@ -68,10 +71,10 @@ def sequence_tooltip(sequence_id):
     """
     current_sequence = Sequence.query.get_or_404(sequence_id)
 
-    return render_template('tooltips/sequence.html', sequence=current_sequence)
+    return render_template("tooltips/sequence.html", sequence=current_sequence)
 
 
-@sequence.route('/modal/coding/<sequence_id>')
+@sequence.route("/modal/coding/<sequence_id>")
 def sequence_modal_coding(sequence_id):
     """
     Returns the coding sequence in a modal
@@ -79,15 +82,18 @@ def sequence_modal_coding(sequence_id):
     :param sequence_id: ID of the sequence
     :return: Response with the fasta file
     """
-    current_sequence = Sequence.query\
-        .options(undefer('coding_sequence'))\
-        .options(noload('xrefs'))\
+    current_sequence = (
+        Sequence.query.options(undefer("coding_sequence"))
+        .options(noload("xrefs"))
         .get_or_404(sequence_id)
+    )
 
-    return render_template('modals/sequence.html', sequence=current_sequence, coding=True)
+    return render_template(
+        "modals/sequence.html", sequence=current_sequence, coding=True
+    )
 
 
-@sequence.route('/modal/protein/<sequence_id>')
+@sequence.route("/modal/protein/<sequence_id>")
 def sequence_modal_protein(sequence_id):
     """
     Returns the protein sequence in a modal
@@ -95,15 +101,18 @@ def sequence_modal_protein(sequence_id):
     :param sequence_id: ID of the sequence
     :return: Response with the fasta file
     """
-    current_sequence = Sequence.query\
-        .options(undefer('coding_sequence'))\
-        .options(noload('xrefs'))\
+    current_sequence = (
+        Sequence.query.options(undefer("coding_sequence"))
+        .options(noload("xrefs"))
         .get_or_404(sequence_id)
+    )
 
-    return render_template('modals/sequence.html', sequence=current_sequence, coding=False)
+    return render_template(
+        "modals/sequence.html", sequence=current_sequence, coding=False
+    )
 
 
-@sequence.route('/fasta/coding/<sequence_id>')
+@sequence.route("/fasta/coding/<sequence_id>")
 def sequence_fasta_coding(sequence_id):
     """
     Returns the coding sequence as a downloadable fasta file
@@ -111,20 +120,23 @@ def sequence_fasta_coding(sequence_id):
     :param sequence_id: ID of the sequence
     :return: Response with the fasta file
     """
-    current_sequence = Sequence.query\
-        .options(undefer('coding_sequence'))\
-        .options(noload('xrefs'))\
+    current_sequence = (
+        Sequence.query.options(undefer("coding_sequence"))
+        .options(noload("xrefs"))
         .get_or_404(sequence_id)
+    )
 
     fasta = ">" + current_sequence.name + "\n" + current_sequence.coding_sequence + "\n"
     response = make_response(fasta)
-    response.headers["Content-Disposition"] = "attachment; filename=" + current_sequence.name + ".coding.fasta"
-    response.headers['Content-type'] = 'text/plain'
+    response.headers["Content-Disposition"] = (
+        "attachment; filename=" + current_sequence.name + ".coding.fasta"
+    )
+    response.headers["Content-type"] = "text/plain"
 
     return response
 
 
-@sequence.route('/fasta/protein/<sequence_id>')
+@sequence.route("/fasta/protein/<sequence_id>")
 def sequence_fasta_protein(sequence_id):
     """
     Returns the protein sequence as a downloadable fasta file
@@ -132,14 +144,19 @@ def sequence_fasta_protein(sequence_id):
     :param sequence_id: ID of the sequence
     :return: Response with the fasta file
     """
-    current_sequence = Sequence.query\
-        .options(undefer('coding_sequence'))\
-        .options(noload('xrefs'))\
+    current_sequence = (
+        Sequence.query.options(undefer("coding_sequence"))
+        .options(noload("xrefs"))
         .get_or_404(sequence_id)
+    )
 
-    fasta = ">" + current_sequence.name + "\n" + current_sequence.protein_sequence + "\n"
+    fasta = (
+        ">" + current_sequence.name + "\n" + current_sequence.protein_sequence + "\n"
+    )
     response = make_response(fasta)
-    response.headers["Content-Disposition"] = "attachment; filename=" + current_sequence.name + ".protein.fasta"
-    response.headers['Content-type'] = 'text/plain'
+    response.headers["Content-Disposition"] = (
+        "attachment; filename=" + current_sequence.name + ".protein.fasta"
+    )
+    response.headers["Content-type"] = "text/plain"
 
     return response

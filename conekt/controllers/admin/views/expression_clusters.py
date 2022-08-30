@@ -13,7 +13,8 @@ class CoexpressionClusteringMethodAdminView(MyModelView):
     """
     CoexpressionClusteringMethod view for admins, specifies what is available in CRUD
     """
-    form_columns = ('method', 'network_method')
+
+    form_columns = ("method", "network_method")
 
     column_display_pk = True
 
@@ -24,28 +25,35 @@ class ClusterSimilaritiesView(AdminBaseView):
     """
     Control panel for administrators. Contains links to start computing cluster similarities
     """
-    @expose('/')
+
+    @expose("/")
     def index(self):
-        message = Markup('<strong>Note: </strong> some operations on this page can take a long time and slow down the '
-                         'database. This can effect the user-experience of others negatively.<br />Also avoid running '
-                         'multiple updates simultaniously.')
-        flash(message, 'danger')
+        message = Markup(
+            "<strong>Note: </strong> some operations on this page can take a long time and slow down the "
+            "database. This can effect the user-experience of others negatively.<br />Also avoid running "
+            "multiple updates simultaniously."
+        )
+        flash(message, "danger")
 
         gene_family_methods = GeneFamilyMethod.query.all()
 
-        return self.render('admin/build/cluster_similarities.html', gene_family_methods=gene_family_methods)
+        return self.render(
+            "admin/build/cluster_similarities.html",
+            gene_family_methods=gene_family_methods,
+        )
 
 
 class AddCoexpressionClustersView(AdminBaseView):
     """
     Add Coexpression clusters, computed outside of PlaNet, to the database
     """
-    @expose('/')
+
+    @expose("/")
     def index(self):
         form = AddCoexpressionClustersForm()
         form.populate_networks()
 
-        return self.render('admin/add/coexpression_clusters.html', form=form)
+        return self.render("admin/add/coexpression_clusters.html", form=form)
 
 
 class BuildCoexpressionClustersView(AdminBaseView):
@@ -55,18 +63,19 @@ class BuildCoexpressionClustersView(AdminBaseView):
     Note: Computing the clusters is done on the server. This might cause a high load for the duration of the
     calculations
     """
-    @expose('/')
+
+    @expose("/")
     def index(self):
         form = BuildCoexpressionClustersForm()
         form.populate_networks()
 
-        return self.render('admin/build/coexpression_clusters.html', form=form)
+        return self.render("admin/build/coexpression_clusters.html", form=form)
 
 
 class BuildNeighorhoodToClustersView(AdminBaseView):
-    @expose('/')
+    @expose("/")
     def index(self):
         form = NeighborhoodToClustersForm()
         form.populate_networks()
 
-        return self.render('admin/build/neighborhood_to_clusters.html', form=form)
+        return self.render("admin/build/neighborhood_to_clusters.html", form=form)

@@ -9,19 +9,21 @@ from utils.parser.interpro import DomainParser as InterproDomainParser
 from sqlalchemy.orm import joinedload
 
 
-SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
+SQL_COLLATION = "NOCASE" if db.engine.name == "sqlite" else ""
 
 
-@whooshee.register_model('description')
+@whooshee.register_model("description")
 class Interpro(db.Model):
-    __tablename__ = 'interpro'
+    __tablename__ = "interpro"
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String(50, collation=SQL_COLLATION), unique=True, index=True)
     description = db.Column(db.Text)
 
-    clade_id = db.Column(db.Integer, db.ForeignKey('clades.id', ondelete='SET NULL'), index=True)
+    clade_id = db.Column(
+        db.Integer, db.ForeignKey("clades.id", ondelete="SET NULL"), index=True
+    )
 
-    sequences = db.relationship('Sequence', secondary=sequence_interpro, lazy='dynamic')
+    sequences = db.relationship("Sequence", secondary=sequence_interpro, lazy="dynamic")
 
     # Other properties
     # sequence_associations = defined in SequenceInterproRelationship
@@ -37,7 +39,7 @@ class Interpro(db.Model):
         :return: a list of all species (codes)
         """
 
-        sequences = self.sequences.options(joinedload('species')).all()
+        sequences = self.sequences.options(joinedload("species")).all()
 
         output = []
 
@@ -54,7 +56,7 @@ class Interpro(db.Model):
         :return: a dict with counts per species (codes are keys)
         """
 
-        sequences = self.sequences.options(joinedload('species')).all()
+        sequences = self.sequences.options(joinedload("species")).all()
 
         output = {}
 
@@ -74,14 +76,18 @@ class Interpro(db.Model):
         :param sequence_ids: list of sequence ids
         :return: dict with for each InterPro domain linked with any of the input sequences stats
         """
-        data = SequenceInterproAssociation.query.filter(SequenceInterproAssociation.sequence_id.in_(sequence_ids)).all()
+        data = SequenceInterproAssociation.query.filter(
+            SequenceInterproAssociation.sequence_id.in_(sequence_ids)
+        ).all()
 
         return Interpro.__sequence_stats_associations(data)
 
     @staticmethod
     def sequence_stats_subquery(sequences):
         subquery = sequences.subquery()
-        data = SequenceInterproAssociation.query.join(subquery, SequenceInterproAssociation.sequence_id == subquery.c.id).all()
+        data = SequenceInterproAssociation.query.join(
+            subquery, SequenceInterproAssociation.sequence_id == subquery.c.id
+        ).all()
 
         return Interpro.__sequence_stats_associations(data)
 
@@ -92,21 +98,21 @@ class Interpro(db.Model):
         for d in associations:
             if d.interpro_id not in output.keys():
                 output[d.interpro_id] = {
-                    'domain': d.domain,
-                    'count': 1,
-                    'sequences': [d.sequence_id],
-                    'species': [d.sequence.species_id]
+                    "domain": d.domain,
+                    "count": 1,
+                    "sequences": [d.sequence_id],
+                    "species": [d.sequence.species_id],
                 }
             else:
-                output[d.interpro_id]['count'] += 1
-                if d.sequence_id not in output[d.interpro_id]['sequences']:
-                    output[d.interpro_id]['sequences'].append(d.sequence_id)
-                if d.sequence.species_id not in output[d.interpro_id]['species']:
-                    output[d.interpro_id]['species'].append(d.sequence.species_id)
+                output[d.interpro_id]["count"] += 1
+                if d.sequence_id not in output[d.interpro_id]["sequences"]:
+                    output[d.interpro_id]["sequences"].append(d.sequence_id)
+                if d.sequence.species_id not in output[d.interpro_id]["species"]:
+                    output[d.interpro_id]["species"].append(d.sequence.species_id)
 
         for k, v in output.items():
-            v['species_count'] = len(v['species'])
-            v['sequence_count'] = len(v['sequences'])
+            v["species_count"] = len(v["species"])
+            v["sequence_count"] = len(v["sequences"])
 
         return output
 
@@ -201,10 +207,12 @@ class Interpro(db.Model):
                     if domain["id"] in domain_hash.keys():
                         current_domain = domain_hash[domain["id"]]
 
-                        new_domain = {"sequence_id": current_sequence.id,
-                                      "interpro_id": current_domain.id,
-                                      "start": domain["start"],
-                                      "stop": domain["stop"]}
+                        new_domain = {
+                            "sequence_id": current_sequence.id,
+                            "interpro_id": current_domain.id,
+                            "start": domain["start"],
+                            "stop": domain["stop"],
+                        }
 
                         new_domains.append(new_domain)
 
@@ -214,7 +222,9 @@ class Interpro(db.Model):
                 print("Gene", gene, "not found in the database.")
 
             if len(new_domains) > 400:
-                db.engine.execute(SequenceInterproAssociation.__table__.insert(), new_domains)
+                db.engine.execute(
+                    SequenceInterproAssociation.__table__.insert(), new_domains
+                )
                 new_domains = []
 
         db.engine.execute(SequenceInterproAssociation.__table__.insert(), new_domains)
@@ -252,10 +262,12 @@ class Interpro(db.Model):
                     if domain["id"] in domain_hash.keys():
                         current_domain = domain_hash[domain["id"]]
 
-                        new_domain = {"sequence_id": current_sequence.id,
-                                      "interpro_id": current_domain.id,
-                                      "start": domain["start"],
-                                      "stop": domain["stop"]}
+                        new_domain = {
+                            "sequence_id": current_sequence.id,
+                            "interpro_id": current_domain.id,
+                            "start": domain["start"],
+                            "stop": domain["stop"],
+                        }
 
                         new_domains.append(new_domain)
 
@@ -265,7 +277,9 @@ class Interpro(db.Model):
                 print("Gene", gene, "not found in the database.")
 
             if len(new_domains) > 400:
-                db.engine.execute(SequenceInterproAssociation.__table__.insert(), new_domains)
+                db.engine.execute(
+                    SequenceInterproAssociation.__table__.insert(), new_domains
+                )
                 new_domains = []
 
         db.engine.execute(SequenceInterproAssociation.__table__.insert(), new_domains)

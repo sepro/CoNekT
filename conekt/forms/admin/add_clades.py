@@ -4,6 +4,4 @@ from wtforms.validators import InputRequired
 
 
 class AddCladesForm(FlaskForm):
-    clades_json = TextAreaField('Clade definitions', [InputRequired()])
-
-
+    clades_json = TextAreaField("Clade definitions", [InputRequired()])

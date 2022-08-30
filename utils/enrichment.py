@@ -4,24 +4,35 @@ from mpmath import loggamma
 
 def logchoose(ni, ki):
     try:
-        lgn1 = loggamma(ni+1)
-        lgk1 = loggamma(ki+1)
-        lgnk1 = loggamma(ni-ki+1)
+        lgn1 = loggamma(ni + 1)
+        lgk1 = loggamma(ki + 1)
+        lgnk1 = loggamma(ni - ki + 1)
     except ValueError:
-        #print ni,ki
+        # print ni,ki
         raise ValueError
     return lgn1 - (lgnk1 + lgk1)
 
 
 def gauss_hypergeom(X, n, m, N):
-    assert N >= m, 'Number of items %i must be larger than the number of marked items %i' % (N, m)
-    assert m >= X, 'Number of marked items %i must be larger than the number of sucesses %i' % (m, X)
-    assert n >= X, 'Number of draws %i must be larger than the number of sucesses %i' % (n, X)
-    assert N >= n, 'Number of draws %i must be smaller than the total number of items %i' % (n, N)
+    assert (
+        N >= m
+    ), "Number of items %i must be larger than the number of marked items %i" % (N, m)
+    assert (
+        m >= X
+    ), "Number of marked items %i must be larger than the number of sucesses %i" % (
+        m,
+        X,
+    )
+    assert (
+        n >= X
+    ), "Number of draws %i must be larger than the number of sucesses %i" % (n, X)
+    assert (
+        N >= n
+    ), "Number of draws %i must be smaller than the total number of items %i" % (n, N)
 
     r1 = logchoose(m, X)
     try:
-        r2 = logchoose(N-m, n-X)
+        r2 = logchoose(N - m, n - X)
     except ValueError:
         return 0
     r3 = logchoose(N, n)
@@ -40,14 +51,28 @@ def hypergeo_cdf(X, n, m, N):
     :param N: total number of items
     :return: cummulative distribution function
     """
-    assert N >= m, 'Number of items %i must be larger than the number of marked items %i' % (N, m)
-    assert m >= X, 'Number of marked items %i must be larger than the number of sucesses %i' % (m, X)
-    assert n >= X, 'Number of draws %i must be larger than the number of sucesses %i' % (n, X)
-    assert N >= n, 'Number of draws %i must be smaller than the total number of items %i' % (n, N)
-    assert N-m >= n-X, 'There are more failures %i than unmarked items %i' % (N-m, n-X)
+    assert (
+        N >= m
+    ), "Number of items %i must be larger than the number of marked items %i" % (N, m)
+    assert (
+        m >= X
+    ), "Number of marked items %i must be larger than the number of sucesses %i" % (
+        m,
+        X,
+    )
+    assert (
+        n >= X
+    ), "Number of draws %i must be larger than the number of sucesses %i" % (n, X)
+    assert (
+        N >= n
+    ), "Number of draws %i must be smaller than the total number of items %i" % (n, N)
+    assert N - m >= n - X, "There are more failures %i than unmarked items %i" % (
+        N - m,
+        n - X,
+    )
 
     s = 0
-    for i in range(0, X+1):
+    for i in range(0, X + 1):
         s += max(gauss_hypergeom(i, n, m, N), 0.0)
     return min(max(s, 0.0), 1)
 
@@ -63,14 +88,28 @@ def hypergeo_sf(X, n, m, N):
     :param N: total number of items
     :return: significance
     """
-    assert N >= m, 'Number of items %i must be larger than the number of marked items %i' % (N, m)
-    assert m >= X, 'Number of marked items %i must be larger than the number of sucesses %i' % (m, X)
-    assert n >= X, 'Number of draws %i must be larger than the number of sucesses %i' % (n, X)
-    assert N >= n, 'Number of draws %i must be smaller than the total number of items %i' % (n, N)
-    assert N-m >= n-X, 'There are more failures %i than unmarked items %i' % (N-m, n-X)
+    assert (
+        N >= m
+    ), "Number of items %i must be larger than the number of marked items %i" % (N, m)
+    assert (
+        m >= X
+    ), "Number of marked items %i must be larger than the number of sucesses %i" % (
+        m,
+        X,
+    )
+    assert (
+        n >= X
+    ), "Number of draws %i must be larger than the number of sucesses %i" % (n, X)
+    assert (
+        N >= n
+    ), "Number of draws %i must be smaller than the total number of items %i" % (n, N)
+    assert N - m >= n - X, "There are more failures %i than unmarked items %i" % (
+        N - m,
+        n - X,
+    )
 
     s = 0
-    for i in range(X, min(m, n)+1):
+    for i in range(X, min(m, n) + 1):
         s += max(gauss_hypergeom(i, n, m, N), 0.0)
     return min(max(s, 0.0), 1)
 
@@ -79,7 +118,7 @@ def rank_simple(vector):
     return sorted(range(len(vector)), key=vector.__getitem__)
 
 
-def rankdata(a, method='average'):
+def rankdata(a, method="average"):
     """
 
     source: http://stackoverflow.com/questions/3071415/efficient-method-to-calculate-the-rank-vector-of-a-list-in-python
@@ -88,25 +127,25 @@ def rankdata(a, method='average'):
     :return:
     """
     n = len(a)
-    ivec=rank_simple(a)
-    svec=[a[rank] for rank in ivec]
+    ivec = rank_simple(a)
+    svec = [a[rank] for rank in ivec]
     sumranks = 0
     dupcount = 0
-    newarray = [0]*n
+    newarray = [0] * n
     for i in range(n):
         sumranks += i
         dupcount += 1
-        if i == n-1 or svec[i] != svec[i+1]:
-            for j in range(i-dupcount+1,i+1):
-                if method == 'average':
+        if i == n - 1 or svec[i] != svec[i + 1]:
+            for j in range(i - dupcount + 1, i + 1):
+                if method == "average":
                     averank = sumranks / float(dupcount) + 1
                     newarray[ivec[j]] = averank
-                elif method == 'max':
-                    newarray[ivec[j]] = i+1
-                elif method == 'min':
-                    newarray[ivec[j]] = i+1 -dupcount+1
+                elif method == "max":
+                    newarray[ivec[j]] = i + 1
+                elif method == "min":
+                    newarray[ivec[j]] = i + 1 - dupcount + 1
                 else:
-                    raise NameError('Unsupported method')
+                    raise NameError("Unsupported method")
 
             sumranks = 0
             dupcount = 0
@@ -121,12 +160,12 @@ def fdr_correction(a):
     :param a: list of p-values
     :return: list with adjusted/corrected p-values
     """
-    ranks = rankdata(a, method='max')
+    ranks = rankdata(a, method="max")
 
     output = []
 
     for p, rank in zip(a, ranks):
-        corrected = p * (len(a)/rank)
+        corrected = p * (len(a) / rank)
         output.append(corrected if corrected < max(a) else max(a))
 
     return output

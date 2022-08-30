@@ -2,24 +2,26 @@ from flask import Blueprint, redirect, url_for, render_template
 from sqlalchemy import and_
 
 from conekt.models.sequences import Sequence
-from conekt.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
+from conekt.models.relationships.sequence_sequence_ecc import (
+    SequenceSequenceECCAssociation,
+)
 
 from conekt.helpers.cytoscape import CytoscapeHelper
 
 import json
 
-ecc = Blueprint('ecc', __name__)
+ecc = Blueprint("ecc", __name__)
 
 
-@ecc.route('/')
+@ecc.route("/")
 def ecc_overview():
     """
     For lack of a better alternative redirect users to the main page
     """
-    return redirect(url_for('main.screen'))
+    return redirect(url_for("main.screen"))
 
 
-@ecc.route('/graph/<int:sequence>/<int:network>/<int:family>')
+@ecc.route("/graph/<int:sequence>/<int:network>/<int:family>")
 def ecc_graph(sequence, network, family):
     """
     Returns a page rendering the ECC graph for a specific sequence
@@ -30,13 +32,15 @@ def ecc_graph(sequence, network, family):
     :return: Response with html page that shows the ECC network
     """
     sequence = Sequence.query.get_or_404(sequence)
-    return render_template("expression_graph.html",
-                           sequence=sequence,
-                           network_method_id=network,
-                           family_method_id=family)
+    return render_template(
+        "expression_graph.html",
+        sequence=sequence,
+        network_method_id=network,
+        family_method_id=family,
+    )
 
 
-@ecc.route('/graph_multi/')
+@ecc.route("/graph_multi/")
 def ecc_graph_multi():
     """
     Returns a page rendering the ECC graph for a specific pair of sequences
@@ -45,11 +49,10 @@ def ecc_graph_multi():
     :return: Response with html page that shows the pairwise ECC network
     """
 
-    return render_template("expression_graph.html",
-                           ecc_multi=True)
+    return render_template("expression_graph.html", ecc_multi=True)
 
 
-@ecc.route('/graph_pair/<int:ecc_id>')
+@ecc.route("/graph_pair/<int:ecc_id>")
 def ecc_graph_pair(ecc_id):
     """
     Returns a page rendering the ECC graph for a specific pair of sequences
@@ -59,11 +62,10 @@ def ecc_graph_pair(ecc_id):
     """
     ecc_pair = SequenceSequenceECCAssociation.query.get_or_404(ecc_id)
 
-    return render_template("expression_graph.html",
-                           ecc_pair=ecc_pair)
+    return render_template("expression_graph.html", ecc_pair=ecc_pair)
 
 
-@ecc.route('/json/<int:sequence>/<int:network>/<int:family>')
+@ecc.route("/json/<int:sequence>/<int:network>/<int:family>")
 def ecc_graph_json(sequence, network, family):
     """
     Returns a JSON object compatible with cytoscape.js that contains the ECC graph for a specific sequence
@@ -85,7 +87,7 @@ def ecc_graph_json(sequence, network, family):
     return json.dumps(network_cytoscape)
 
 
-@ecc.route('/pair_json/<int:ecc_id>')
+@ecc.route("/pair_json/<int:ecc_id>")
 def ecc_graph_pair_json(ecc_id):
     """
     Returns a JSON object compatible with cytoscape.js that contains the ECC graph for a specific pair of sequences
@@ -106,7 +108,7 @@ def ecc_graph_pair_json(ecc_id):
     return json.dumps(network_cytoscape)
 
 
-@ecc.route('/multi_json/')
+@ecc.route("/multi_json/")
 def ecc_graph_multi_json():
     """
     Returns a JSON object compatible with cytoscape.js that contains the ECC graph for a specific pair of sequences
@@ -114,7 +116,9 @@ def ecc_graph_multi_json():
     :param ecc_id: internal ID of the sequence to sequence ECC relationship
     :return: JSON object compatible with cytoscape.js
     """
-    network, family = SequenceSequenceECCAssociation.get_ecc_multi_network(1, [162930, 56261, 203621, 94050])
+    network, family = SequenceSequenceECCAssociation.get_ecc_multi_network(
+        1, [162930, 56261, 203621, 94050]
+    )
 
     network_cytoscape = CytoscapeHelper.parse_network(network)
     network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)

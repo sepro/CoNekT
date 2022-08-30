@@ -4,4 +4,4 @@ from wtforms.validators import InputRequired
 
 
 class BasicSearchForm(FlaskForm):
-    terms = StringField('Terms', [InputRequired()])
+    terms = StringField("Terms", [InputRequired()])

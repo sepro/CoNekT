@@ -11,7 +11,7 @@ from conekt.models.clades import Clade
 from conekt.models.expression.coexpression_clusters import CoexpressionCluster
 
 
-@admin_controls.route('/update/clades')
+@admin_controls.route("/update/clades")
 @admin_required
 def update_clades():
     """
@@ -24,14 +24,14 @@ def update_clades():
         Clade.update_clades()
         Clade.update_clades_interpro()
     except Exception as e:
-        flash('An error occurred while updating clades', 'danger')
+        flash("An error occurred while updating clades", "danger")
     else:
-        flash('All clades updated', 'success')
+        flash("All clades updated", "success")
 
-    return redirect(url_for('admin.index'))
+    return redirect(url_for("admin.index"))
 
 
-@admin_controls.route('/add/clades', methods=['POST'])
+@admin_controls.route("/add/clades", methods=["POST"])
 @admin_required
 def add_clades():
     """
@@ -41,22 +41,24 @@ def add_clades():
     """
     form = AddCladesForm(request.form)
 
-    if request.method == 'POST' and form.validate():
-        clades_json = json.loads(request.form.get('clades_json'))
+    if request.method == "POST" and form.validate():
+        clades_json = json.loads(request.form.get("clades_json"))
 
         Clade.add_clades_from_json(clades_json)
 
-        flash('Added clades %s to the database' % ', '.join(clades_json.keys()), 'success')
-        return redirect(url_for('admin.index'))
+        flash(
+            "Added clades %s to the database" % ", ".join(clades_json.keys()), "success"
+        )
+        return redirect(url_for("admin.index"))
     else:
         if not form.validate():
-            flash('Unable to validate data, potentially missing fields', 'danger')
-            return redirect(url_for('admin.index'))
+            flash("Unable to validate data, potentially missing fields", "danger")
+            return redirect(url_for("admin.index"))
         else:
             abort(405)
 
 
-@admin_controls.route('/calculate_clade_enrichment/<int:gf_method_id>')
+@admin_controls.route("/calculate_clade_enrichment/<int:gf_method_id>")
 @admin_required
 def calculate_clade_enrichment(gf_method_id):
     """
@@ -67,9 +69,17 @@ def calculate_clade_enrichment(gf_method_id):
     try:
         CoexpressionCluster.calculate_clade_enrichment(gf_method_id)
     except Exception as e:
-        flash(Markup('An error occurred! Please ensure the file is <strong>correctly formatted</strong>' +
-                     ' and <strong>update the counts</strong> if necessary'), 'warning')
+        flash(
+            Markup(
+                "An error occurred! Please ensure the file is <strong>correctly formatted</strong>"
+                + " and <strong>update the counts</strong> if necessary"
+            ),
+            "warning",
+        )
     finally:
-        flash('Successfully calculated clade enrichment for co-expression clusters', 'success')
+        flash(
+            "Successfully calculated clade enrichment for co-expression clusters",
+            "success",
+        )
 
-    return redirect(url_for('admin.controls.index'))
+    return redirect(url_for("admin.controls.index"))

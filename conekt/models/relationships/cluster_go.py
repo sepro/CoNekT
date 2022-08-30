@@ -2,22 +2,26 @@ from conekt import db
 
 
 class ClusterGOEnrichment(db.Model):
-    __tablename__ = 'cluster_go_enrichment'
-    __table_args__ = {'extend_existing': True}
+    __tablename__ = "cluster_go_enrichment"
+    __table_args__ = {"extend_existing": True}
 
     id = db.Column(db.Integer, primary_key=True)
-    cluster_id = db.Column(db.Integer, db.ForeignKey('coexpression_clusters.id', ondelete='CASCADE'))
-    go_id = db.Column(db.Integer, db.ForeignKey('go.id', ondelete='CASCADE'))
+    cluster_id = db.Column(
+        db.Integer, db.ForeignKey("coexpression_clusters.id", ondelete="CASCADE")
+    )
+    go_id = db.Column(db.Integer, db.ForeignKey("go.id", ondelete="CASCADE"))
 
-    cluster = db.relationship('CoexpressionCluster', backref=db.backref('go_enrichment',
-                                                                        lazy='dynamic',
-                                                                        passive_deletes=True),
-                              lazy='joined')
+    cluster = db.relationship(
+        "CoexpressionCluster",
+        backref=db.backref("go_enrichment", lazy="dynamic", passive_deletes=True),
+        lazy="joined",
+    )
 
-    go = db.relationship('GO', backref=db.backref('enriched_clusters',
-                                                  lazy='dynamic',
-                                                  passive_deletes=True),
-                         lazy='joined')
+    go = db.relationship(
+        "GO",
+        backref=db.backref("enriched_clusters", lazy="dynamic", passive_deletes=True),
+        lazy="joined",
+    )
 
     """
     Counts required to calculate the enrichment,
@@ -38,8 +42,8 @@ class ClusterGOEnrichment(db.Model):
 
     @property
     def cluster_percentage(self):
-        return self.cluster_count*100/self.cluster_size
+        return self.cluster_count * 100 / self.cluster_size
 
     @property
     def genome_percentage(self):
-        return self.go_count*100/self.go_size
+        return self.go_count * 100 / self.go_size

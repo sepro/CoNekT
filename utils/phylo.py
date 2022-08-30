@@ -1,4 +1,3 @@
-
 def get_clade(species, clades_to_species):
     """
     Checks for a list of species which clade matches best (fewest other species in the clade).
@@ -42,4 +41,4 @@ def duplication_consistency(set_one, set_two):
     union_size = len(set(set_one).union(set(set_two)))
     intersection_size = len(set(set_one).intersection(set(set_two)))
 
-    return intersection_size/union_size
+    return intersection_size / union_size

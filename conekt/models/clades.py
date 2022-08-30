@@ -8,19 +8,19 @@ from utils.phylo import get_clade
 import json
 import newick
 
-SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
+SQL_COLLATION = "NOCASE" if db.engine.name == "sqlite" else ""
 
 
 class Clade(db.Model):
-    __tablename__ = 'clades'
+    __tablename__ = "clades"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50, collation=SQL_COLLATION), unique=True, index=True)
     species = db.Column(db.Text(collation=SQL_COLLATION))
     species_count = db.Column(db.Integer)
     newick_tree = db.Column(db.Text)
 
-    families = db.relationship('GeneFamily', backref='clade', lazy='dynamic')
-    interpro = db.relationship('Interpro', backref='clade', lazy='dynamic')
+    families = db.relationship("GeneFamily", backref="clade", lazy="dynamic")
+    interpro = db.relationship("Interpro", backref="clade", lazy="dynamic")
 
     def __init__(self, name, species, tree):
         self.name = name
@@ -56,7 +56,7 @@ class Clade(db.Model):
         :param data: dict with clade details
         """
         for c, data in data.items():
-            Clade.add_clade(c, data['species'], data['tree'])
+            Clade.add_clade(c, data["species"], data["tree"])
 
     @staticmethod
     def update_clades():
@@ -78,7 +78,7 @@ class Clade(db.Model):
                 continue
 
             # find the clade with the fewest species that contains all the codes
-            selected_clade, _  = get_clade(family_species, clade_to_species)
+            selected_clade, _ = get_clade(family_species, clade_to_species)
             if selected_clade is None:
                 f.clade_id = None
             else:
@@ -96,7 +96,7 @@ class Clade(db.Model):
         Loop over all families and determine what clade they belong too
         """
         clades = Clade.query.all()
-        interpro= Interpro.query.all()
+        interpro = Interpro.query.all()
 
         clade_to_species = {c.name: json.loads(c.species) for c in clades}
         clade_to_id = {c.name: c.id for c in clades}

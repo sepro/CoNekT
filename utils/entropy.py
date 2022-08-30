@@ -13,9 +13,9 @@ def entropy(dist):
     l = sum(dist)
 
     for d in dist:
-        d_x = d/l
+        d_x = d / l
         if d_x > 0:
-            e += - d_x*log2(d_x)
+            e += -d_x * log2(d_x)
 
     return e
 
@@ -32,16 +32,16 @@ def entropy_from_values(values, num_bins=20):
 
     hist = []
 
-    bins = [b/num_bins for b in range(0, num_bins)]
+    bins = [b / num_bins for b in range(0, num_bins)]
 
     v_max = max(values)
 
     if v_max > 0:
-        n_values = [v/v_max for v in values]
+        n_values = [v / v_max for v in values]
         hist = [0] * num_bins
 
         for v in n_values:
             b = bisect(bins, v)
-            hist[b-1] += 1
+            hist[b - 1] += 1
 
     return entropy(hist)

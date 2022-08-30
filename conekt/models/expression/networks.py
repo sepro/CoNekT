@@ -2,7 +2,9 @@ from flask import url_for
 from conekt import db
 
 from conekt.models.relationships.sequence_family import SequenceFamilyAssociation
-from conekt.models.relationships.sequence_sequence_ecc import SequenceSequenceECCAssociation
+from conekt.models.relationships.sequence_sequence_ecc import (
+    SequenceSequenceECCAssociation,
+)
 from conekt.models.gene_families import GeneFamily
 from conekt.models.sequences import Sequence
 
@@ -17,32 +19,36 @@ from sqlalchemy import and_
 
 from collections import defaultdict
 
-SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
+SQL_COLLATION = "NOCASE" if db.engine.name == "sqlite" else ""
 
 
 class ExpressionNetworkMethod(db.Model):
-    __tablename__ = 'expression_network_methods'
+    __tablename__ = "expression_network_methods"
     id = db.Column(db.Integer, primary_key=True)
-    species_id = db.Column(db.Integer, db.ForeignKey('species.id'), index=True)
+    species_id = db.Column(db.Integer, db.ForeignKey("species.id"), index=True)
     description = db.Column(db.Text)
-    edge_type = db.Column(db.Enum("rank", "weight", name='edge_type'))
+    edge_type = db.Column(db.Enum("rank", "weight", name="edge_type"))
     probe_count = db.Column(db.Integer)
 
     hrr_cutoff = db.Column(db.Integer)
     pcc_cutoff = db.Column(db.Float)
     enable_second_level = db.Column(db.SmallInteger)
 
-    probes = db.relationship('ExpressionNetwork',
-                             backref=db.backref('method', lazy='joined'),
-                             lazy='dynamic',
-                             cascade="all, delete-orphan",
-                             passive_deletes=True)
+    probes = db.relationship(
+        "ExpressionNetwork",
+        backref=db.backref("method", lazy="joined"),
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
 
-    clustering_methods = db.relationship('CoexpressionClusteringMethod',
-                                         backref='network_method',
-                                         lazy='dynamic',
-                                         cascade='all, delete-orphan',
-                                         passive_deletes=True)
+    clustering_methods = db.relationship(
+        "CoexpressionClusteringMethod",
+        backref="network_method",
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
 
     def __init__(self, species_id, description, edge_type="rank"):
         self.species_id = species_id
@@ -51,7 +57,7 @@ class ExpressionNetworkMethod(db.Model):
         self.enable_second_level = False
 
     def __repr__(self):
-        return str(self.id) + ". " + self.description + ' [' + str(self.species) + ']'
+        return str(self.id) + ". " + self.description + " [" + str(self.species) + "]"
 
     @staticmethod
     def update_count():
@@ -90,12 +96,17 @@ class ExpressionNetworkMethod(db.Model):
 
         # Get all the network information and store in dictionary
         for n in network_method_ids:
-            current_network = db.engine.execute(db.select([ExpressionNetwork.__table__.c.sequence_id,
-                                                           ExpressionNetwork.__table__.c.network,
-                                                           ExpressionNetwork.__table__.c.method_id]).
-                                                where(ExpressionNetwork.__table__.c.method_id == n).
-                                                where(ExpressionNetwork.__table__.c.sequence_id.isnot(None))
-                                                ).fetchall()
+            current_network = db.engine.execute(
+                db.select(
+                    [
+                        ExpressionNetwork.__table__.c.sequence_id,
+                        ExpressionNetwork.__table__.c.network,
+                        ExpressionNetwork.__table__.c.method_id,
+                    ]
+                )
+                .where(ExpressionNetwork.__table__.c.method_id == n)
+                .where(ExpressionNetwork.__table__.c.sequence_id.isnot(None))
+            ).fetchall()
 
             for sequence, network, network_method_id in current_network:
                 if sequence is not None:
@@ -103,12 +114,17 @@ class ExpressionNetworkMethod(db.Model):
                     sequence_network_method[int(sequence)] = int(network_method_id)
 
         # Get family data and store in dictionary
-        current_families = db.engine.execute(db.select([SequenceFamilyAssociation.__table__.c.sequence_id,
-                                                        SequenceFamilyAssociation.__table__.c.gene_family_id,
-                                                        GeneFamily.__table__.c.method_id]).
-                                             select_from(SequenceFamilyAssociation.__table__.join(GeneFamily.__table__)).
-                                             where(GeneFamily.__table__.c.method_id == gene_family_method_id)
-                                             ).fetchall()
+        current_families = db.engine.execute(
+            db.select(
+                [
+                    SequenceFamilyAssociation.__table__.c.sequence_id,
+                    SequenceFamilyAssociation.__table__.c.gene_family_id,
+                    GeneFamily.__table__.c.method_id,
+                ]
+            )
+            .select_from(SequenceFamilyAssociation.__table__.join(GeneFamily.__table__))
+            .where(GeneFamily.__table__.c.method_id == gene_family_method_id)
+        ).fetchall()
 
         for sequence, family, method in current_families:
             sequence_family[int(sequence)] = int(family)
@@ -140,9 +156,9 @@ class ExpressionNetworkMethod(db.Model):
         for n in network_method_ids:
             thresholds[n] = {}
             for m in network_method_ids:
-                thresholds[n][m] = ExpressionNetworkMethod.__set_thresholds(network_families[n],
-                                                                            network_families[m],
-                                                                            max_size=max_size)
+                thresholds[n][m] = ExpressionNetworkMethod.__set_thresholds(
+                    network_families[n], network_families[m], max_size=max_size
+                )
 
         # Data loaded start calculating ECCs
         new_ecc_scores = []
@@ -150,41 +166,68 @@ class ExpressionNetworkMethod(db.Model):
         for family, sequences in family_sequence.items():
             for i in range(len(sequences) - 1):
                 query = sequences[i]
-                for j in range(i+1, len(sequences)):
+                for j in range(i + 1, len(sequences)):
                     target = sequences[j]
-                    if query in sequence_network.keys() and target in sequence_network.keys() and query != target:
+                    if (
+                        query in sequence_network.keys()
+                        and target in sequence_network.keys()
+                        and query != target
+                    ):
                         # Ignore genes with overlapping neighborhoods
-                        if not ExpressionNetworkMethod.__neighborhoods_overlap(sequence_network[query], sequence_network[target]):
-                            ecc, significant = ExpressionNetworkMethod.__ecc(sequence_network[query],
-                                                                             sequence_network[target],
-                                                                             sequence_family,
-                                                                             thresholds[sequence_network_method[query]][sequence_network_method[target]],
-                                                                             family,
-                                                                             max_size=max_size)
+                        if not ExpressionNetworkMethod.__neighborhoods_overlap(
+                            sequence_network[query], sequence_network[target]
+                        ):
+                            ecc, significant = ExpressionNetworkMethod.__ecc(
+                                sequence_network[query],
+                                sequence_network[target],
+                                sequence_family,
+                                thresholds[sequence_network_method[query]][
+                                    sequence_network_method[target]
+                                ],
+                                family,
+                                max_size=max_size,
+                            )
                             if significant:
-                                new_ecc_scores.append({
-                                    'query_id': query,
-                                    'target_id': target,
-                                    'ecc': ecc,
-                                    'gene_family_method_id': gene_family_method_id,
-                                    'query_network_method_id': sequence_network_method[query],
-                                    'target_network_method_id': sequence_network_method[target],
-                                })
+                                new_ecc_scores.append(
+                                    {
+                                        "query_id": query,
+                                        "target_id": target,
+                                        "ecc": ecc,
+                                        "gene_family_method_id": gene_family_method_id,
+                                        "query_network_method_id": sequence_network_method[
+                                            query
+                                        ],
+                                        "target_network_method_id": sequence_network_method[
+                                            target
+                                        ],
+                                    }
+                                )
 
                                 # add reciprocal relation
-                                new_ecc_scores.append({
-                                    'query_id': target,
-                                    'target_id': query,
-                                    'ecc': ecc,
-                                    'gene_family_method_id': gene_family_method_id,
-                                    'query_network_method_id': sequence_network_method[target],
-                                    'target_network_method_id': sequence_network_method[query],
-                                })
+                                new_ecc_scores.append(
+                                    {
+                                        "query_id": target,
+                                        "target_id": query,
+                                        "ecc": ecc,
+                                        "gene_family_method_id": gene_family_method_id,
+                                        "query_network_method_id": sequence_network_method[
+                                            target
+                                        ],
+                                        "target_network_method_id": sequence_network_method[
+                                            query
+                                        ],
+                                    }
+                                )
                                 if len(new_ecc_scores) > 400:
-                                    db.engine.execute(SequenceSequenceECCAssociation.__table__.insert(), new_ecc_scores)
+                                    db.engine.execute(
+                                        SequenceSequenceECCAssociation.__table__.insert(),
+                                        new_ecc_scores,
+                                    )
                                     new_ecc_scores = []
 
-        db.engine.execute(SequenceSequenceECCAssociation.__table__.insert(), new_ecc_scores)
+        db.engine.execute(
+            SequenceSequenceECCAssociation.__table__.insert(), new_ecc_scores
+        )
 
     @staticmethod
     def __neighborhoods_overlap(neighborhood_a, neighborhood_b):
@@ -195,8 +238,20 @@ class ExpressionNetworkMethod(db.Model):
         :param neighborhood_b: neighborhood for second gene (string as stored in database)
         :return: Bool, true if networks overlap
         """
-        genes_a = set([n['gene_id'] for n in json.loads(neighborhood_a) if n['gene_id'] is not None])
-        genes_b = set([n['gene_id'] for n in json.loads(neighborhood_b) if n['gene_id'] is not None])
+        genes_a = set(
+            [
+                n["gene_id"]
+                for n in json.loads(neighborhood_a)
+                if n["gene_id"] is not None
+            ]
+        )
+        genes_b = set(
+            [
+                n["gene_id"]
+                for n in json.loads(neighborhood_b)
+                if n["gene_id"] is not None
+            ]
+        )
 
         return len(genes_a.intersection(genes_b)) > 0
 
@@ -216,11 +271,19 @@ class ExpressionNetworkMethod(db.Model):
         q_data = json.loads(q_network)
         t_data = json.loads(t_network)
 
-        q_genes = [t['gene_id'] for t in q_data if t['gene_id'] is not None]
-        t_genes = [t['gene_id'] for t in t_data if t['gene_id'] is not None]
+        q_genes = [t["gene_id"] for t in q_data if t["gene_id"] is not None]
+        t_genes = [t["gene_id"] for t in t_data if t["gene_id"] is not None]
 
-        q_families = [families[q] for q in q_genes if q in families.keys() and families[q] != query_family]
-        t_families = [families[t] for t in t_genes if t in families.keys() and families[t] != query_family]
+        q_families = [
+            families[q]
+            for q in q_genes
+            if q in families.keys() and families[q] != query_family
+        ]
+        t_families = [
+            families[t]
+            for t in t_genes
+            if t in families.keys() and families[t] != query_family
+        ]
 
         # print("***\nQuery %d\n%s\n%s" % (query_family, ','.join([str(q) for q in q_families]), ','.join([str(t) for t in t_families])))
 
@@ -229,10 +292,14 @@ class ExpressionNetworkMethod(db.Model):
         else:
             ecc = jaccard(q_families, t_families)
 
-            q_size = len(set(q_families)) if len(set(q_families)) < max_size else max_size
-            t_size = len(set(t_families)) if len(set(t_families)) < max_size else max_size
+            q_size = (
+                len(set(q_families)) if len(set(q_families)) < max_size else max_size
+            )
+            t_size = (
+                len(set(t_families)) if len(set(t_families)) < max_size else max_size
+            )
 
-            t = thresholds[q_size-1][t_size-1]
+            t = thresholds[q_size - 1][t_size - 1]
 
             return ecc, ecc > t
 
@@ -257,9 +324,9 @@ class ExpressionNetworkMethod(db.Model):
             for j in range(0, max_size, step):
                 scores = []
                 for _ in range(iterations):
-                    if i+1 < len(families_a) and j+1 < len(families_b):
-                        i_fams = random.sample(families_a, i+1)
-                        j_fams = random.sample(families_b, j+1)
+                    if i + 1 < len(families_a) and j + 1 < len(families_b):
+                        i_fams = random.sample(families_a, i + 1)
+                        j_fams = random.sample(families_b, j + 1)
                         scores.append(jaccard(i_fams, j_fams))
                     else:
                         # Cannot calculate threshold with these families, add 1
@@ -269,7 +336,7 @@ class ExpressionNetworkMethod(db.Model):
                 print(iterations, len(scores), scores)
                 scores = sorted(scores)
                 for _ in range(step):
-                    new_threshholds.append(scores[int(iterations*0.95)])
+                    new_threshholds.append(scores[int(iterations * 0.95)])
             for _ in range(step):
                 thresholds.append(new_threshholds)
 
@@ -277,12 +344,18 @@ class ExpressionNetworkMethod(db.Model):
 
 
 class ExpressionNetwork(db.Model):
-    __tablename__ = 'expression_networks'
+    __tablename__ = "expression_networks"
     id = db.Column(db.Integer, primary_key=True)
     probe = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
-    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id', ondelete='CASCADE'), index=True)
+    sequence_id = db.Column(
+        db.Integer, db.ForeignKey("sequences.id", ondelete="CASCADE"), index=True
+    )
     network = db.Column(db.Text)
-    method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id', ondelete='CASCADE'), index=True)
+    method_id = db.Column(
+        db.Integer,
+        db.ForeignKey("expression_network_methods.id", ondelete="CASCADE"),
+        index=True,
+    )
 
     def __init__(self, probe, sequence_id, network, method_id):
         self.probe = probe
@@ -312,8 +385,14 @@ class ExpressionNetwork(db.Model):
         output = [["Sequence", "Description", "Alias", "PCC", "hrr"]]
 
         # Pull in descriptions and aliases
-        sequence_ids = [d["gene_id"] for d in data if "gene_id" in d.keys() and d["gene_id"] is not None]
-        sequences = {s.id: s for s in Sequence.query.filter(Sequence.id.in_(sequence_ids))}
+        sequence_ids = [
+            d["gene_id"]
+            for d in data
+            if "gene_id" in d.keys() and d["gene_id"] is not None
+        ]
+        sequences = {
+            s.id: s for s in Sequence.query.filter(Sequence.id.in_(sequence_ids))
+        }
 
         for d in data:
             try:
@@ -325,11 +404,19 @@ class ExpressionNetwork(db.Model):
                     description = description if description is not None else ""
                     alias = alias if alias is not None else ""
 
-                output.append([d["gene_name"], description, alias, str(d["link_pcc"]), str(d["hrr"])])
+                output.append(
+                    [
+                        d["gene_name"],
+                        description,
+                        alias,
+                        str(d["link_pcc"]),
+                        str(d["hrr"]),
+                    ]
+                )
             except Exception as e:
                 print(e)
 
-        return '\n'.join(['\t'.join(l) for l in output])
+        return "\n".join(["\t".join(l) for l in output])
 
     @staticmethod
     def get_neighborhood(probe, depth=0):
@@ -347,13 +434,21 @@ class ExpressionNetwork(db.Model):
         edge_type = node.method.edge_type
 
         # add the initial node
-        nodes = [{"id": node.probe,
-                  "name": node.probe,
-                  "probe_id": node.id,
-                  "gene_id": int(node.sequence_id) if node.sequence_id is not None else None,
-                  "gene_name": node.sequence.name if node.sequence_id is not None else node.probe,
-                  "node_type": "query",
-                  "depth": 0}]
+        nodes = [
+            {
+                "id": node.probe,
+                "name": node.probe,
+                "probe_id": node.id,
+                "gene_id": int(node.sequence_id)
+                if node.sequence_id is not None
+                else None,
+                "gene_name": node.sequence.name
+                if node.sequence_id is not None
+                else node.probe,
+                "node_type": "query",
+                "depth": 0,
+            }
+        ]
         edges = []
 
         # lists necessary for doing deeper searches
@@ -365,18 +460,23 @@ class ExpressionNetwork(db.Model):
 
         for link in links:
             nodes.append(ExpressionNetwork.__process_link(link, depth=0))
-            edges.append({"source": node.probe,
-                          "target": link["probe_name"],
-                          "profile_comparison":
-                              url_for('expression_profile.expression_profile_compare_probes',
-                                      probe_a=node.probe,
-                                      probe_b=link["probe_name"],
-                                      species_id=node.method.species.id),
-                          "depth": 0,
-                          "link_score": link["link_score"],
-                          "link_pcc": link["link_pcc"] if "link_pcc" in link.keys() else None,
-                          "hrr": link["hrr"] if "hrr" in link.keys() else None,
-                          "edge_type": edge_type})
+            edges.append(
+                {
+                    "source": node.probe,
+                    "target": link["probe_name"],
+                    "profile_comparison": url_for(
+                        "expression_profile.expression_profile_compare_probes",
+                        probe_a=node.probe,
+                        probe_b=link["probe_name"],
+                        species_id=node.method.species.id,
+                    ),
+                    "depth": 0,
+                    "link_score": link["link_score"],
+                    "link_pcc": link["link_pcc"] if "link_pcc" in link.keys() else None,
+                    "hrr": link["hrr"] if "hrr" in link.keys() else None,
+                    "edge_type": edge_type,
+                }
+            )
             additional_nodes.append(link["probe_name"])
             existing_edges.append([node.probe, link["probe_name"]])
             existing_edges.append([link["probe_name"], node.probe])
@@ -384,10 +484,13 @@ class ExpressionNetwork(db.Model):
 
         # iterate n times to add deeper links
         if len(additional_nodes) > 0:
-            for i in range(1, depth+1):
-                new_nodes = ExpressionNetwork.\
-                    query.filter(and_(ExpressionNetwork.probe.in_(additional_nodes),
-                                      ExpressionNetwork.method_id == method_id))
+            for i in range(1, depth + 1):
+                new_nodes = ExpressionNetwork.query.filter(
+                    and_(
+                        ExpressionNetwork.probe.in_(additional_nodes),
+                        ExpressionNetwork.method_id == method_id,
+                    )
+                )
                 next_nodes = []
 
                 for new_node in new_nodes:
@@ -395,23 +498,34 @@ class ExpressionNetwork(db.Model):
 
                     for link in new_links:
                         if link["probe_name"] not in existing_nodes:
-                            nodes.append(ExpressionNetwork.__process_link(link, depth=depth))
+                            nodes.append(
+                                ExpressionNetwork.__process_link(link, depth=depth)
+                            )
                             existing_nodes.append(link["probe_name"])
                             next_nodes.append(link["probe_name"])
 
                         if [new_node.probe, link["probe_name"]] not in existing_edges:
-                            edges.append({"source": new_node.probe,
-                                          "target": link["probe_name"],
-                                          "profile_comparison":
-                                              url_for('expression_profile.expression_profile_compare_probes',
-                                                      probe_a=new_node.probe,
-                                                      probe_b=link["probe_name"],
-                                                      species_id=node.method.species.id),
-                                          "depth": i,
-                                          "link_score": link["link_score"],
-                                          "link_pcc": link["link_pcc"] if "link_pcc" in link.keys() else None,
-                                          "hrr": link["hrr"] if "hrr" in link.keys() else None,
-                                          "edge_type": edge_type})
+                            edges.append(
+                                {
+                                    "source": new_node.probe,
+                                    "target": link["probe_name"],
+                                    "profile_comparison": url_for(
+                                        "expression_profile.expression_profile_compare_probes",
+                                        probe_a=new_node.probe,
+                                        probe_b=link["probe_name"],
+                                        species_id=node.method.species.id,
+                                    ),
+                                    "depth": i,
+                                    "link_score": link["link_score"],
+                                    "link_pcc": link["link_pcc"]
+                                    if "link_pcc" in link.keys()
+                                    else None,
+                                    "hrr": link["hrr"]
+                                    if "hrr" in link.keys()
+                                    else None,
+                                    "edge_type": edge_type,
+                                }
+                            )
                             existing_edges.append([new_node.probe, link["probe_name"]])
                             existing_edges.append([link["probe_name"], new_node.probe])
 
@@ -420,26 +534,37 @@ class ExpressionNetwork(db.Model):
         # Add links between the last set of nodes added
         new_nodes = []
         if len(additional_nodes) > 0:
-            new_nodes = ExpressionNetwork.query.filter(and_(ExpressionNetwork.probe.in_(additional_nodes),
-                                                            ExpressionNetwork.method_id == method_id))
+            new_nodes = ExpressionNetwork.query.filter(
+                and_(
+                    ExpressionNetwork.probe.in_(additional_nodes),
+                    ExpressionNetwork.method_id == method_id,
+                )
+            )
 
         for new_node in new_nodes:
             new_links = json.loads(new_node.network)
             for link in new_links:
                 if link["probe_name"] in existing_nodes:
                     if [new_node.probe, link["probe_name"]] not in existing_edges:
-                        edges.append({"source": new_node.probe,
-                                      "target": link["probe_name"],
-                                      "profile_comparison":
-                                          url_for('expression_profile.expression_profile_compare_probes',
-                                                  probe_a=new_node.probe,
-                                                  probe_b=link["probe_name"],
-                                                  species_id=node.method.species.id),
-                                      "depth": depth+1,
-                                      "link_score": link["link_score"],
-                                      "link_pcc": link["link_pcc"] if "link_pcc" in link.keys() else None,
-                                      "hrr": link["hrr"] if "hrr" in link.keys() else None,
-                                      "edge_type": edge_type})
+                        edges.append(
+                            {
+                                "source": new_node.probe,
+                                "target": link["probe_name"],
+                                "profile_comparison": url_for(
+                                    "expression_profile.expression_profile_compare_probes",
+                                    probe_a=new_node.probe,
+                                    probe_b=link["probe_name"],
+                                    species_id=node.method.species.id,
+                                ),
+                                "depth": depth + 1,
+                                "link_score": link["link_score"],
+                                "link_pcc": link["link_pcc"]
+                                if "link_pcc" in link.keys()
+                                else None,
+                                "hrr": link["hrr"] if "hrr" in link.keys() else None,
+                                "edge_type": edge_type,
+                            }
+                        )
                         existing_edges.append([new_node.probe, link["probe_name"]])
                         existing_edges.append([link["probe_name"], new_node.probe])
 
@@ -458,19 +583,24 @@ class ExpressionNetwork(db.Model):
         nodes = []
         edges = []
 
-        probes = ExpressionNetwork.query.filter(ExpressionNetwork.method_id == method_id).\
-            filter(ExpressionNetwork.probe.in_(probes)).all()
+        probes = (
+            ExpressionNetwork.query.filter(ExpressionNetwork.method_id == method_id)
+            .filter(ExpressionNetwork.probe.in_(probes))
+            .all()
+        )
 
         valid_nodes = []
 
         for p in probes:
-            node = {"id": p.probe,
-                    "name": p.probe,
-                    "probe_id": p.id,
-                    "gene_id": int(p.sequence_id) if p.sequence_id is not None else None,
-                    "gene_name": p.sequence.name if p.sequence_id is not None else p.probe,
-                    "node_type": "query",
-                    "depth": 0}
+            node = {
+                "id": p.probe,
+                "name": p.probe,
+                "probe_id": p.id,
+                "gene_id": int(p.sequence_id) if p.sequence_id is not None else None,
+                "gene_name": p.sequence.name if p.sequence_id is not None else p.probe,
+                "node_type": "query",
+                "depth": 0,
+            }
 
             valid_nodes.append(p.probe)
             nodes.append(node)
@@ -483,18 +613,25 @@ class ExpressionNetwork(db.Model):
             for n in neighborhood:
                 if n["probe_name"] in valid_nodes:
                     if [source, n["probe_name"]] not in existing_edges:
-                        edges.append({"source": source,
-                                      "target": n["probe_name"],
-                                      "profile_comparison":
-                                          url_for('expression_profile.expression_profile_compare_probes',
-                                                  probe_a=source,
-                                                  probe_b=n["probe_name"],
-                                                  species_id=p.method.species.id),
-                                      "depth": 0,
-                                      "link_score": n["link_score"],
-                                      "link_pcc": n["link_pcc"] if "link_pcc" in n.keys() else None,
-                                      "hrr": n["hrr"] if "hrr" in n.keys() else None,
-                                      "edge_type": p.method.edge_type})
+                        edges.append(
+                            {
+                                "source": source,
+                                "target": n["probe_name"],
+                                "profile_comparison": url_for(
+                                    "expression_profile.expression_profile_compare_probes",
+                                    probe_a=source,
+                                    probe_b=n["probe_name"],
+                                    species_id=p.method.species.id,
+                                ),
+                                "depth": 0,
+                                "link_score": n["link_score"],
+                                "link_pcc": n["link_pcc"]
+                                if "link_pcc" in n.keys()
+                                else None,
+                                "hrr": n["hrr"] if "hrr" in n.keys() else None,
+                                "edge_type": p.method.edge_type,
+                            }
+                        )
                         existing_edges.append([source, n["probe_name"]])
                         existing_edges.append([n["probe_name"], source])
 
@@ -510,23 +647,34 @@ class ExpressionNetwork(db.Model):
         :return: a hash formatted for use as a node with cytoscape.js
         """
         if linked_probe["gene_id"] is not None:
-            return {"id": linked_probe["probe_name"],
-                    "name": linked_probe["probe_name"],
-                    "gene_id": linked_probe["gene_id"],
-                    "gene_name": linked_probe["gene_name"],
-                    "node_type": "linked",
-                    "depth": depth}
+            return {
+                "id": linked_probe["probe_name"],
+                "name": linked_probe["probe_name"],
+                "gene_id": linked_probe["gene_id"],
+                "gene_name": linked_probe["gene_name"],
+                "node_type": "linked",
+                "depth": depth,
+            }
         else:
-            return {"id": linked_probe["probe_name"],
-                    "name": linked_probe["probe_name"],
-                    "gene_id": None,
-                    "gene_name": linked_probe["probe_name"],
-                    "node_type": "linked",
-                    "depth": depth}
+            return {
+                "id": linked_probe["probe_name"],
+                "name": linked_probe["probe_name"],
+                "gene_id": None,
+                "gene_name": linked_probe["probe_name"],
+                "node_type": "linked",
+                "depth": depth,
+            }
 
     @staticmethod
-    def read_expression_network_lstrap(network_file, species_id, description, score_type="rank",
-                                       pcc_cutoff=0.7, limit=30, enable_second_level=False):
+    def read_expression_network_lstrap(
+        network_file,
+        species_id,
+        description,
+        score_type="rank",
+        pcc_cutoff=0.7,
+        limit=30,
+        enable_second_level=False,
+    ):
         """
         Reads a network from disk, generated using LSTrAP, determing hrr scores for each pair and store things in the
         DB.
@@ -562,42 +710,53 @@ class ExpressionNetwork(db.Model):
             print(e)
 
         network = {}
-        scores = defaultdict(lambda: defaultdict(lambda: None))     # Score for non-existing pairs will be None
+        scores = defaultdict(
+            lambda: defaultdict(lambda: None)
+        )  # Score for non-existing pairs will be None
 
         with open(network_file) as fin:
             for linenr, line in enumerate(fin):
                 try:
-                    query, hits = line.strip().split(' ')
-                    query = query.replace(':', '')
+                    query, hits = line.strip().split(" ")
+                    query = query.replace(":", "")
                 except ValueError:
-                    print("Error parsing line %d: \"%s\"" % (linenr, line))
+                    print('Error parsing line %d: "%s"' % (linenr, line))
                     # skip this line and continue
                     continue
 
                 network[query] = {
                     "probe": query,
-                    "sequence_id": sequence_dict[query.upper()] if query.upper() in sequence_dict.keys() else None,
+                    "sequence_id": sequence_dict[query.upper()]
+                    if query.upper() in sequence_dict.keys()
+                    else None,
                     "linked_probes": [],
                     "total_count": 0,
-                    "method_id": network_method.id
+                    "method_id": network_method.id,
                 }
 
-                for i, h in enumerate(hits.split('\t')):
+                for i, h in enumerate(hits.split("\t")):
                     try:
-                        name, value = h.split('(')
-                        value = float(value.replace(')', ''))
+                        name, value = h.split("(")
+                        value = float(value.replace(")", ""))
                         if value > pcc_cutoff:
                             network[query]["total_count"] += 1
                             if i < limit:
-                                link = {"probe_name": name,
-                                        "gene_name": name,
-                                        "gene_id": sequence_dict[name.upper()] if name.upper() in sequence_dict.keys() else None,
-                                        "link_score": i,
-                                        "link_pcc": value}
+                                link = {
+                                    "probe_name": name,
+                                    "gene_name": name,
+                                    "gene_id": sequence_dict[name.upper()]
+                                    if name.upper() in sequence_dict.keys()
+                                    else None,
+                                    "link_score": i,
+                                    "link_pcc": value,
+                                }
                                 network[query]["linked_probes"].append(link)
                                 scores[query][name] = i
                     except ValueError as e:
-                        print("Error on line %d, skipping ... (%s)" % (i, str(h)), file=sys.stderr)
+                        print(
+                            "Error on line %d, skipping ... (%s)" % (i, str(h)),
+                            file=sys.stderr,
+                        )
 
         # HRR
         hr_ranks = defaultdict(lambda: defaultdict(int))
@@ -614,10 +773,14 @@ class ExpressionNetwork(db.Model):
         for query in network.keys():
 
             for i, l in enumerate(network[query]["linked_probes"]):
-                network[query]["linked_probes"][i]["hrr"] = hr_ranks[query][l["probe_name"]]
+                network[query]["linked_probes"][i]["hrr"] = hr_ranks[query][
+                    l["probe_name"]
+                ]
 
             # Dump links WITH HRR into json string
-            network[query]["network"] = json.dumps([n for n in network[query]["linked_probes"] if n['hrr'] is not None])
+            network[query]["network"] = json.dumps(
+                [n for n in network[query]["linked_probes"] if n["hrr"] is not None]
+            )
 
         # add nodes in sets of 400 to avoid sending to much in a single query
         new_nodes = []

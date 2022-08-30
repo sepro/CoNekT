@@ -11,7 +11,7 @@ from conekt.forms.admin.add_xrefs import AddXRefsForm, AddXRefsFamiliesForm
 from conekt.models.xrefs import XRef
 
 
-@admin_controls.route('/add/xrefs', methods=['POST'])
+@admin_controls.route("/add/xrefs", methods=["POST"])
 @admin_required
 def add_xrefs():
     """
@@ -27,44 +27,49 @@ def add_xrefs():
     """
     form = AddXRefsForm(request.form)
 
-    if request.method == 'POST':
-        species_id = int(request.form.get('species_id'))
-        platform = request.form.get('platforms')
+    if request.method == "POST":
+        species_id = int(request.form.get("species_id"))
+        platform = request.form.get("platforms")
 
-        if platform == 'plaza_3_dicots':
+        if platform == "plaza_3_dicots":
             XRef.create_plaza_xref_genes(species_id)
-            flash('Added XRefs to PLAZA 3.0 dicots for species id %d' % species_id, 'success')
-            return redirect(url_for('admin.index'))
-        elif platform == 'evex':
+            flash(
+                "Added XRefs to PLAZA 3.0 dicots for species id %d" % species_id,
+                "success",
+            )
+            return redirect(url_for("admin.index"))
+        elif platform == "evex":
             XRef.create_evex_xref_genes(species_id)
-            flash('Added XRefs to EVEX dicots for species id %d' % species_id, 'success')
-            return redirect(url_for('admin.index'))
+            flash(
+                "Added XRefs to EVEX dicots for species id %d" % species_id, "success"
+            )
+            return redirect(url_for("admin.index"))
         else:
             xref_data = request.files[form.file.name].read()
-            if xref_data != b'':
+            if xref_data != b"":
                 fd, temp_path = mkstemp()
 
-                with open(temp_path, 'wb') as xref_writer:
+                with open(temp_path, "wb") as xref_writer:
                     xref_writer.write(xref_data)
 
                 XRef.add_xref_genes_from_file(species_id, temp_path)
 
                 os.close(fd)
                 os.remove(temp_path)
-                flash('Added XRefs from file %s' % form.file.name, 'success')
+                flash("Added XRefs from file %s" % form.file.name, "success")
             else:
-                flash('Empty file or no file provided, cannot add XRefs', 'danger')
+                flash("Empty file or no file provided, cannot add XRefs", "danger")
 
-            return redirect(url_for('admin.index'))
+            return redirect(url_for("admin.index"))
     else:
         if not form.validate():
-            flash('Unable to validate data, potentially missing fields', 'danger')
-            return redirect(url_for('admin.index'))
+            flash("Unable to validate data, potentially missing fields", "danger")
+            return redirect(url_for("admin.index"))
         else:
             abort(405)
 
 
-@admin_controls.route('/add/xrefs_family', methods=['POST'])
+@admin_controls.route("/add/xrefs_family", methods=["POST"])
 @admin_required
 def add_xrefs_family():
     """
@@ -77,26 +82,26 @@ def add_xrefs_family():
     """
     form = AddXRefsFamiliesForm(request.form)
 
-    if request.method == 'POST':
-        gene_family_methods_id = int(request.form.get('gene_family_method_id'))
+    if request.method == "POST":
+        gene_family_methods_id = int(request.form.get("gene_family_method_id"))
 
         xref_data = request.files[form.file.name].read()
-        if xref_data != b'':
+        if xref_data != b"":
             fd, temp_path = mkstemp()
-            open(temp_path, 'wb').write(xref_data)
+            open(temp_path, "wb").write(xref_data)
 
             XRef.add_xref_families_from_file(gene_family_methods_id, temp_path)
 
             os.close(fd)
             os.remove(temp_path)
-            flash('Added XRefs from file %s' % form.file.name, 'success')
+            flash("Added XRefs from file %s" % form.file.name, "success")
         else:
-            flash('Empty file or no file provided, cannot add XRefs', 'danger')
+            flash("Empty file or no file provided, cannot add XRefs", "danger")
 
-        return redirect(url_for('admin.index'))
+        return redirect(url_for("admin.index"))
     else:
         if not form.validate():
-            flash('Unable to validate data, potentially missing fields', 'danger')
-            return redirect(url_for('admin.index'))
+            flash("Unable to validate data, potentially missing fields", "danger")
+            return redirect(url_for("admin.index"))
         else:
             abort(405)

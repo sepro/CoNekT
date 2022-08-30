@@ -9,7 +9,8 @@ class TreeMethodAdminView(MyModelView):
     """
     GeneFamilyMethod view for admins, specifies what is available in CRUD
     """
-    form_columns = ('description', )
+
+    form_columns = ("description",)
     form_edit_rules = form_columns
 
     column_display_pk = True
@@ -21,7 +22,8 @@ class AddTreesView(AdminBaseView):
     """
     Admin page to add human readable descriptions to genes
     """
-    @expose('/')
+
+    @expose("/")
     def index(self):
         form = AddTreesForm()
         form.populate_methods()
@@ -29,18 +31,17 @@ class AddTreesView(AdminBaseView):
         form2 = AddGeneralTreesForm()
         form2.populate_methods()
 
-        return self.render('admin/add/trees.html',
-                           form=form,
-                           form2=form2)
+        return self.render("admin/add/trees.html", form=form, form2=form2)
 
 
 class ReconcileTreesView(AdminBaseView):
     """
     Admin page to add human readable descriptions to genes
     """
-    @expose('/')
+
+    @expose("/")
     def index(self):
         form = ReconcileTreesForm()
         form.populate_methods()
 
-        return self.render('admin/build/reconcile_trees.html', form=form)
+        return self.render("admin/build/reconcile_trees.html", form=form)

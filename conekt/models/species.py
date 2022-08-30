@@ -1,14 +1,14 @@
 from conekt import db
 
-SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
+SQL_COLLATION = "NOCASE" if db.engine.name == "sqlite" else ""
 
 
 class Species(db.Model):
-    __tablename__ = 'species'
+    __tablename__ = "species"
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(50, collation=SQL_COLLATION), unique=True)
     name = db.Column(db.String(200, collation=SQL_COLLATION))
-    data_type = db.Column(db.Enum('genome', 'transcriptome', name='data_type'))
+    data_type = db.Column(db.Enum("genome", "transcriptome", name="data_type"))
     color = db.Column(db.String(7), default="#C7C7C7")
     highlight = db.Column(db.String(7), default="#DEDEDE")
     sequence_count = db.Column(db.Integer)
@@ -16,14 +16,51 @@ class Species(db.Model):
     profile_count = db.Column(db.Integer)
     description = db.Column(db.Text)
 
-    sequences = db.relationship('Sequence', backref='species', lazy='dynamic', cascade="all, delete-orphan", passive_deletes=True)
-    networks = db.relationship('ExpressionNetworkMethod', backref='species', lazy='dynamic', cascade="all, delete-orphan", passive_deletes=True)
-    profiles = db.relationship('ExpressionProfile', backref='species', lazy='dynamic', cascade="all, delete-orphan", passive_deletes=True)
-    expression_specificities = db.relationship('ExpressionSpecificityMethod', backref='species', lazy='dynamic', cascade="all, delete-orphan", passive_deletes=True)
-    condition_tissues = db.relationship('ConditionTissue', backref='species', lazy='dynamic', cascade="all, delete-orphan", passive_deletes=True)
+    sequences = db.relationship(
+        "Sequence",
+        backref="species",
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+    networks = db.relationship(
+        "ExpressionNetworkMethod",
+        backref="species",
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+    profiles = db.relationship(
+        "ExpressionProfile",
+        backref="species",
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+    expression_specificities = db.relationship(
+        "ExpressionSpecificityMethod",
+        backref="species",
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+    condition_tissues = db.relationship(
+        "ConditionTissue",
+        backref="species",
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
 
-    def __init__(self, code, name, data_type='genome',
-                 color="#C7C7C7", highlight="#DEDEDE", description=None):
+    def __init__(
+        self,
+        code,
+        name,
+        data_type="genome",
+        color="#C7C7C7",
+        highlight="#DEDEDE",
+        description=None,
+    ):
         self.code = code
         self.name = name
         self.data_type = data_type
@@ -40,9 +77,17 @@ class Species(db.Model):
     @property
     def has_interpro(self):
         from conekt.models.sequences import Sequence
-        from conekt.models.relationships.sequence_interpro import SequenceInterproAssociation
+        from conekt.models.relationships.sequence_interpro import (
+            SequenceInterproAssociation,
+        )
 
-        domain = SequenceInterproAssociation.query.join(Sequence, Sequence.id == SequenceInterproAssociation.sequence_id).filter(Sequence.species_id == self.id).first()
+        domain = (
+            SequenceInterproAssociation.query.join(
+                Sequence, Sequence.id == SequenceInterproAssociation.sequence_id
+            )
+            .filter(Sequence.species_id == self.id)
+            .first()
+        )
 
         if domain is not None:
             return True
@@ -54,7 +99,13 @@ class Species(db.Model):
         from conekt.models.sequences import Sequence
         from conekt.models.relationships.sequence_go import SequenceGOAssociation
 
-        go = SequenceGOAssociation.query.join(Sequence, Sequence.id == SequenceGOAssociation.sequence_id).filter(Sequence.species_id == self.id).first()
+        go = (
+            SequenceGOAssociation.query.join(
+                Sequence, Sequence.id == SequenceGOAssociation.sequence_id
+            )
+            .filter(Sequence.species_id == self.id)
+            .first()
+        )
 
         if go is not None:
             return True
@@ -62,10 +113,23 @@ class Species(db.Model):
             return False
 
     @staticmethod
-    def add(code, name, data_type='genome',
-            color="#C7C7C7", highlight="#DEDEDE", description=None):
+    def add(
+        code,
+        name,
+        data_type="genome",
+        color="#C7C7C7",
+        highlight="#DEDEDE",
+        description=None,
+    ):
 
-        new_species = Species(code, name, data_type=data_type, color=color, highlight=highlight, description=description)
+        new_species = Species(
+            code,
+            name,
+            data_type=data_type,
+            color=color,
+            highlight=highlight,
+            description=description,
+        )
 
         species = Species.query.filter_by(code=code).first()
 

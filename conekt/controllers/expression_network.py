@@ -10,10 +10,10 @@ from conekt.models.gene_families import GeneFamilyMethod
 
 from utils.benchmark import benchmark
 
-expression_network = Blueprint('expression_network', __name__)
+expression_network = Blueprint("expression_network", __name__)
 
 
-@expression_network.route('/')
+@expression_network.route("/")
 def expression_network_overview():
     """
     Overview of all networks in the current database with basic information
@@ -23,7 +23,7 @@ def expression_network_overview():
     return render_template("expression_network.html", networks=networks)
 
 
-@expression_network.route('/species/<species_id>')
+@expression_network.route("/species/<species_id>")
 @cache.cached()
 def expression_network_species(species_id):
     """
@@ -32,11 +32,13 @@ def expression_network_species(species_id):
     networks = ExpressionNetworkMethod.query.filter_by(species_id=species_id).all()
     species = Species.query.get_or_404(species_id)
 
-    return render_template("expression_network.html", networks=networks, species=species)
+    return render_template(
+        "expression_network.html", networks=networks, species=species
+    )
 
 
-@expression_network.route('/graph/<node_id>')
-@expression_network.route('/graph/<node_id>/<int:family_method_id>')
+@expression_network.route("/graph/<node_id>")
+@expression_network.route("/graph/<node_id>/<int:family_method_id>")
 @cache.cached()
 def expression_network_graph(node_id, family_method_id=None):
     """
@@ -60,11 +62,16 @@ def expression_network_graph(node_id, family_method_id=None):
 
     depth = 1 if enable_second_level else 0
 
-    return render_template("expression_graph.html", node=node, depth=depth, family_method_id=family_method_id,
-                           cutoff=node.method.hrr_cutoff)
+    return render_template(
+        "expression_graph.html",
+        node=node,
+        depth=depth,
+        family_method_id=family_method_id,
+        cutoff=node.method.hrr_cutoff,
+    )
 
 
-@expression_network.route('/download/neighbors/<node_id>')
+@expression_network.route("/download/neighbors/<node_id>")
 @cache.cached()
 def expression_network_download_neighbors(node_id):
     """
@@ -79,8 +86,8 @@ def expression_network_download_neighbors(node_id):
     return Response(network.neighbors_table)
 
 
-@expression_network.route('/json/<node_id>')
-@expression_network.route('/json/<node_id>/<int:family_method_id>')
+@expression_network.route("/json/<node_id>")
+@expression_network.route("/json/<node_id>/<int:family_method_id>")
 @cache.cached()
 def expression_network_json(node_id, family_method_id=None):
     """
@@ -104,34 +111,42 @@ def expression_network_json(node_id, family_method_id=None):
             family_method_id = None
 
     network_cytoscape = CytoscapeHelper.parse_network(network)
-    network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, family_method_id)
+    network_cytoscape = CytoscapeHelper.add_family_data_nodes(
+        network_cytoscape, family_method_id
+    )
     network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
     network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
 
-    return Response(json.dumps(network_cytoscape), mimetype='application/json')
+    return Response(json.dumps(network_cytoscape), mimetype="application/json")
 
 
-@expression_network.route('/export/<method_id>')
+@expression_network.route("/export/<method_id>")
 def expression_network_export(method_id):
-
     def generate(method_id):
         header = "gene_a\tgene_b\thrr\tpcc\n"
         yield header
 
-        nodes = ExpressionNetwork.query.filter(ExpressionNetwork.method_id == method_id).all()
+        nodes = ExpressionNetwork.query.filter(
+            ExpressionNetwork.method_id == method_id
+        ).all()
 
         for n in nodes:
             neighbors = json.loads(n.network)
             for neighbor in neighbors:
                 gene_a = n.sequence.name if n.sequence_id is not None else n.probe
 
-                probe_b = neighbor["probe_name"] if "probe_name" in neighbor.keys() else "Unknown"
-                gene_b = neighbor["gene_name"] if "gene_name" in neighbor.keys() else probe_b
+                probe_b = (
+                    neighbor["probe_name"]
+                    if "probe_name" in neighbor.keys()
+                    else "Unknown"
+                )
+                gene_b = (
+                    neighbor["gene_name"] if "gene_name" in neighbor.keys() else probe_b
+                )
 
                 hrr = neighbor["hrr"] if "hrr" in neighbor.keys() else None
                 pcc = neighbor["link_pcc"] if "link_pcc" in neighbor.keys() else None
 
-                yield '\t'.join([gene_a, gene_b, str(hrr), str(pcc)]) + '\n'
+                yield "\t".join([gene_a, gene_b, str(hrr), str(pcc)]) + "\n"
 
-    return Response(generate(method_id), mimetype='text/plain')
-
+    return Response(generate(method_id), mimetype="text/plain")

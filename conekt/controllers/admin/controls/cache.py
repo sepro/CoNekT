@@ -6,7 +6,7 @@ from conekt import cache
 from conekt.controllers.admin.controls import admin_controls
 
 
-@admin_controls.route('/clear/cache')
+@admin_controls.route("/clear/cache")
 @admin_required
 def clear_cache():
     """
@@ -17,8 +17,8 @@ def clear_cache():
     try:
         cache.clear()
     except Exception as e:
-        flash('An error occurred while clearing the cache', 'danger')
+        flash("An error occurred while clearing the cache", "danger")
     else:
-        flash('Cache cleared', 'success')
+        flash("Cache cleared", "success")
 
-    return redirect(url_for('admin.controls.index'))
+    return redirect(url_for("admin.controls.index"))

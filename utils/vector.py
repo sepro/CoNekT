@@ -9,7 +9,7 @@ def dot_prod(a, b):
     :param b: second list
     :return: dot product (a . b)
     """
-    return sum([i*j for (i, j) in zip(a, b)])
+    return sum([i * j for (i, j) in zip(a, b)])
 
 
 def norm(a):

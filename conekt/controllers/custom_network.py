@@ -7,10 +7,10 @@ from conekt.helpers.cytoscape import CytoscapeHelper
 from conekt.models.expression.networks import ExpressionNetwork, ExpressionNetworkMethod
 from conekt.models.sequences import Sequence
 
-custom_network = Blueprint('custom_network', __name__)
+custom_network = Blueprint("custom_network", __name__)
 
 
-@custom_network.route('/', methods=['GET', 'POST'])
+@custom_network.route("/", methods=["GET", "POST"])
 def custom_network_main():
     """
     Profile comparison tool, accepts a species and a list of probes and plots the profiles for the selected
@@ -18,13 +18,13 @@ def custom_network_main():
     form = CustomNetworkForm(request.form)
     form.populate_method()
 
-    if request.method == 'POST':
-        terms = request.form.get('probes').split()
-        method_id = request.form.get('method_id')
+    if request.method == "POST":
+        terms = request.form.get("probes").split()
+        method_id = request.form.get("method_id")
 
-        family_method_id = request.form.get('family_method')
-        cluster_method_id = request.form.get('cluster_method')
-        specificity_method_id = request.form.get('specificity_method')
+        family_method_id = request.form.get("family_method")
+        cluster_method_id = request.form.get("cluster_method")
+        specificity_method_id = request.form.get("specificity_method")
 
         probes = terms
 
@@ -42,27 +42,37 @@ def custom_network_main():
         network = ExpressionNetwork.get_custom_network(method_id, probes)
 
         network_cytoscape = CytoscapeHelper.parse_network(network)
-        network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, family_method_id)
+        network_cytoscape = CytoscapeHelper.add_family_data_nodes(
+            network_cytoscape, family_method_id
+        )
         network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
         network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
-        network_cytoscape = CytoscapeHelper.add_cluster_data_nodes(network_cytoscape, cluster_method_id)
-        network_cytoscape = CytoscapeHelper.add_specificity_data_nodes(network_cytoscape, specificity_method_id)
+        network_cytoscape = CytoscapeHelper.add_cluster_data_nodes(
+            network_cytoscape, cluster_method_id
+        )
+        network_cytoscape = CytoscapeHelper.add_specificity_data_nodes(
+            network_cytoscape, specificity_method_id
+        )
 
-        return render_template("expression_graph.html", graph_data=Markup(json.dumps(network_cytoscape)),
-                               cutoff=network_method.hrr_cutoff)
+        return render_template(
+            "expression_graph.html",
+            graph_data=Markup(json.dumps(network_cytoscape)),
+            cutoff=network_method.hrr_cutoff,
+        )
     else:
 
-        example = {
-            'method_id': None,
-            'probes': None
-        }
+        example = {"method_id": None, "probes": None}
 
-        data = ExpressionNetwork.query.order_by(ExpressionNetwork.method_id).limit(20).all()
+        data = (
+            ExpressionNetwork.query.order_by(ExpressionNetwork.method_id)
+            .limit(20)
+            .all()
+        )
 
         probes = []
 
         for d in data:
-            example['method_id'] = d.method_id
+            example["method_id"] = d.method_id
 
             if d.probe not in probes:
                 probes.append(d.probe)
@@ -74,12 +84,12 @@ def custom_network_main():
 
             if len(probes) >= 35:
                 break
-        example['probes'] = ' '.join(probes)
+        example["probes"] = " ".join(probes)
 
         return render_template("custom_network.html", form=form, example=example)
 
 
-@custom_network.route('/form_data')
+@custom_network.route("/form_data")
 def custom_network_form_data():
     """
     Returns a JSON object with valid options for
@@ -92,28 +102,35 @@ def custom_network_form_data():
     network_methods = ExpressionNetworkMethod.query.all()
 
     for nm in network_methods:
-        output.append({
-            'id': nm.id,
-            'name': nm.species.name + ' (' + nm.description + ')',
-            'clustering_methods': [{'id': c.id, 'method': c.method} for c in nm.clustering_methods],
-            'species': nm.species.name,
-            'specificity_methods': [{'id': es.id, 'method': es.description} for es in nm.species.expression_specificities]
-        })
+        output.append(
+            {
+                "id": nm.id,
+                "name": nm.species.name + " (" + nm.description + ")",
+                "clustering_methods": [
+                    {"id": c.id, "method": c.method} for c in nm.clustering_methods
+                ],
+                "species": nm.species.name,
+                "specificity_methods": [
+                    {"id": es.id, "method": es.description}
+                    for es in nm.species.expression_specificities
+                ],
+            }
+        )
 
-    return Response(json.dumps(output), mimetype='application/json')
+    return Response(json.dumps(output), mimetype="application/json")
 
 
-@custom_network.route('/json', methods=['POST'])
+@custom_network.route("/json", methods=["POST"])
 def custom_network_json():
     """
     Profile comparison tool, accepts a species and a list of probes and plots the profiles for the selected
     """
-    terms = request.form.get('probes').split()
-    method_id = request.form.get('method_id')
+    terms = request.form.get("probes").split()
+    method_id = request.form.get("method_id")
 
-    family_method_id = request.form.get('family_method')
-    cluster_method_id = request.form.get('cluster_method')
-    specificity_method_id = request.form.get('specificity_method')
+    family_method_id = request.form.get("family_method")
+    cluster_method_id = request.form.get("cluster_method")
+    specificity_method_id = request.form.get("specificity_method")
 
     probes = terms
 
@@ -130,11 +147,16 @@ def custom_network_json():
     network = ExpressionNetwork.get_custom_network(method_id, probes)
 
     network_cytoscape = CytoscapeHelper.parse_network(network)
-    network_cytoscape = CytoscapeHelper.add_family_data_nodes(network_cytoscape, family_method_id)
+    network_cytoscape = CytoscapeHelper.add_family_data_nodes(
+        network_cytoscape, family_method_id
+    )
     network_cytoscape = CytoscapeHelper.add_lc_data_nodes(network_cytoscape)
     network_cytoscape = CytoscapeHelper.add_descriptions_nodes(network_cytoscape)
-    network_cytoscape = CytoscapeHelper.add_cluster_data_nodes(network_cytoscape, cluster_method_id)
-    network_cytoscape = CytoscapeHelper.add_specificity_data_nodes(network_cytoscape, specificity_method_id)
+    network_cytoscape = CytoscapeHelper.add_cluster_data_nodes(
+        network_cytoscape, cluster_method_id
+    )
+    network_cytoscape = CytoscapeHelper.add_specificity_data_nodes(
+        network_cytoscape, specificity_method_id
+    )
 
-    return Response(json.dumps(network_cytoscape), mimetype='application/json')
-
+    return Response(json.dumps(network_cytoscape), mimetype="application/json")

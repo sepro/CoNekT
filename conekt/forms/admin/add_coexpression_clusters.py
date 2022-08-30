@@ -7,12 +7,18 @@ from conekt.models.expression.networks import ExpressionNetworkMethod
 
 
 class AddCoexpressionClustersForm(FlaskForm):
-    network_id = SelectField('Network', coerce=int)
-    description = StringField('Description', [InputRequired()])
-    min_size = SelectField('Minimum cluster size', coerce=int, choices=[(i, i) for i in range(1, 11, 1)], default=10)
+    network_id = SelectField("Network", coerce=int)
+    description = StringField("Description", [InputRequired()])
+    min_size = SelectField(
+        "Minimum cluster size",
+        coerce=int,
+        choices=[(i, i) for i in range(1, 11, 1)],
+        default=10,
+    )
 
     file = FileField()
 
     def populate_networks(self):
-        self.network_id.choices = [(e.id, str(e))
-                                   for e in ExpressionNetworkMethod.query.all()]
+        self.network_id.choices = [
+            (e.id, str(e)) for e in ExpressionNetworkMethod.query.all()
+        ]

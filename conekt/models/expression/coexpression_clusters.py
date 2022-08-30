@@ -13,7 +13,9 @@ from conekt.models.gene_families import GeneFamily, GeneFamilyMethod
 from conekt.models.interpro import Interpro
 from conekt.models.go import GO
 from conekt.models.relationships.cluster_similarity import CoexpressionClusterSimilarity
-from conekt.models.relationships.sequence_cluster import SequenceCoexpressionClusterAssociation
+from conekt.models.relationships.sequence_cluster import (
+    SequenceCoexpressionClusterAssociation,
+)
 from conekt.models.relationships.sequence_family import SequenceFamilyAssociation
 from conekt.models.relationships.sequence_go import SequenceGOAssociation
 from conekt.models.relationships.cluster_go import ClusterGOEnrichment
@@ -28,17 +30,23 @@ from utils.hcca import HCCA
 
 
 class CoexpressionClusteringMethod(db.Model):
-    __tablename__ = 'coexpression_clustering_methods'
+    __tablename__ = "coexpression_clustering_methods"
     id = db.Column(db.Integer, primary_key=True)
-    network_method_id = db.Column(db.Integer, db.ForeignKey('expression_network_methods.id', ondelete='CASCADE'), index=True)
+    network_method_id = db.Column(
+        db.Integer,
+        db.ForeignKey("expression_network_methods.id", ondelete="CASCADE"),
+        index=True,
+    )
     method = db.Column(db.Text)
     cluster_count = db.Column(db.Integer)
 
-    clusters = db.relationship('CoexpressionCluster',
-                               backref=db.backref('method', lazy='joined'),
-                               lazy='dynamic',
-                               cascade="all, delete-orphan",
-                               passive_deletes=True)
+    clusters = db.relationship(
+        "CoexpressionCluster",
+        backref=db.backref("method", lazy="joined"),
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
 
     @staticmethod
     def update_counts():
@@ -59,7 +67,9 @@ class CoexpressionClusteringMethod(db.Model):
 
     @staticmethod
     def clusters_from_neighborhoods(method, network_method_id):
-        probes = ExpressionNetwork.query.filter_by(method_id=network_method_id).all()  # Load all probes
+        probes = ExpressionNetwork.query.filter_by(
+            method_id=network_method_id
+        ).all()  # Load all probes
 
         clusters = defaultdict(list)
         clusters_orm = {}
@@ -71,8 +81,11 @@ class CoexpressionClusteringMethod(db.Model):
             if p.sequence_id is not None:
                 sequence_to_probe[p.sequence_id] = p.probe
                 neighborhood = json.loads(p.network)
-                sequence_ids = [n["gene_id"] for n in neighborhood if "gene_id" in n.keys()
-                                and n["gene_id"] is not None]
+                sequence_ids = [
+                    n["gene_id"]
+                    for n in neighborhood
+                    if "gene_id" in n.keys() and n["gene_id"] is not None
+                ]
 
                 # check if there are neighbors for this sequence
                 if len(sequence_ids) > 0:
@@ -121,7 +134,11 @@ class CoexpressionClusteringMethod(db.Model):
                 relation = SequenceCoexpressionClusterAssociation()
                 relation.sequence_id = sequence_id
                 relation.coexpression_cluster_id = clusters_orm[cluster].id
-                relation.probe = sequence_to_probe[sequence_id] if sequence_id in sequence_to_probe.keys() else None
+                relation.probe = (
+                    sequence_to_probe[sequence_id]
+                    if sequence_id in sequence_to_probe.keys()
+                    else None
+                )
 
                 db.session.add(relation)
 
@@ -138,7 +155,14 @@ class CoexpressionClusteringMethod(db.Model):
             print(e)
 
     @staticmethod
-    def build_hcca_clusters(method, network_method_id, step_size=3, hrr_cutoff=30, min_cluster_size=40, max_cluster_size=200):
+    def build_hcca_clusters(
+        method,
+        network_method_id,
+        step_size=3,
+        hrr_cutoff=30,
+        min_cluster_size=40,
+        max_cluster_size=200,
+    ):
         """
         method to build HCCA clusters for a certain network
 
@@ -155,19 +179,26 @@ class CoexpressionClusteringMethod(db.Model):
         sequence_probe = {}
 
         # Get network from DB
-        print("Loading Network data from DB...", sep='')
-        ExpressionNetworkMethod.query.get_or_404(network_method_id)                     # Check if method exists
+        print("Loading Network data from DB...", sep="")
+        ExpressionNetworkMethod.query.get_or_404(
+            network_method_id
+        )  # Check if method exists
 
-        probes = ExpressionNetwork.query.filter_by(method_id=network_method_id).all()   # Load all probes
+        probes = ExpressionNetwork.query.filter_by(
+            method_id=network_method_id
+        ).all()  # Load all probes
 
         for p in probes:
             # Loop over probes and store hrr for all neighbors
             if p.sequence_id is not None:
                 neighborhood = json.loads(p.network)
-                network_data[p.sequence_id] = {nb["gene_id"]: nb["hrr"] for nb in neighborhood
-                                               if "gene_id" in nb.keys()
-                                               and "hrr" in nb.keys()
-                                               and nb["gene_id"] is not None}
+                network_data[p.sequence_id] = {
+                    nb["gene_id"]: nb["hrr"]
+                    for nb in neighborhood
+                    if "gene_id" in nb.keys()
+                    and "hrr" in nb.keys()
+                    and nb["gene_id"] is not None
+                }
 
                 sequence_probe[p.sequence_id] = p.probe
 
@@ -187,7 +218,7 @@ class CoexpressionClusteringMethod(db.Model):
             step_size=step_size,
             hrr_cutoff=hrr_cutoff,
             min_cluster_size=min_cluster_size,
-            max_cluster_size=max_cluster_size
+            max_cluster_size=max_cluster_size,
         )
 
         hcca_util.load_data(network_data)
@@ -236,9 +267,17 @@ class CoexpressionClusteringMethod(db.Model):
 
                 relation = SequenceCoexpressionClusterAssociation()
 
-                relation.probe = sequence_probe[gene_id] if gene_id in sequence_probe.keys() else None
+                relation.probe = (
+                    sequence_probe[gene_id]
+                    if gene_id in sequence_probe.keys()
+                    else None
+                )
                 relation.sequence_id = gene_id
-                relation.coexpression_cluster_id = cluster_dict[cluster_name].id if cluster_name in cluster_dict.keys() else None
+                relation.coexpression_cluster_id = (
+                    cluster_dict[cluster_name].id
+                    if cluster_name in cluster_dict.keys()
+                    else None
+                )
 
                 if relation.coexpression_cluster_id is not None:
                     db.session.add(relation)
@@ -258,12 +297,13 @@ class CoexpressionClusteringMethod(db.Model):
                 db.session.rollback()
                 print(e)
 
-
         else:
             print("No clusters found! Not adding anything to DB !")
 
     @staticmethod
-    def add_lstrap_coexpression_clusters(cluster_file, description, network_id, prefix='cluster_', min_size=10):
+    def add_lstrap_coexpression_clusters(
+        cluster_file, description, network_id, prefix="cluster_", min_size=10
+    ):
         """
         Adds MCL clusters, as produced by LSTrAP, to the database
 
@@ -299,7 +339,7 @@ class CoexpressionClusteringMethod(db.Model):
             i = 1
             for line in f:
                 probes = [p for p in line.strip().split()]
-                genes = [p.replace('.1', '') for p in probes]
+                genes = [p.replace(".1", "") for p in probes]
                 cluster_id = "%s%04d" % (prefix, i)
 
                 if len(probes) >= min_size:
@@ -336,9 +376,12 @@ class CoexpressionClusteringMethod(db.Model):
 
 
 class CoexpressionCluster(db.Model):
-    __tablename__ = 'coexpression_clusters'
+    __tablename__ = "coexpression_clusters"
     id = db.Column(db.Integer, primary_key=True)
-    method_id = db.Column(db.Integer, db.ForeignKey('coexpression_clustering_methods.id', ondelete='CASCADE'))
+    method_id = db.Column(
+        db.Integer,
+        db.ForeignKey("coexpression_clustering_methods.id", ondelete="CASCADE"),
+    )
     name = db.Column(db.String(50), index=True)
 
     # Other properties
@@ -359,9 +402,13 @@ class CoexpressionCluster(db.Model):
 
         probes = [member.probe for member in cluster.sequence_associations.all()]
 
-        network = cluster.method.network_method.probes.\
-            options(joinedload('sequence').load_only('name')).\
-            filter(ExpressionNetwork.probe.in_(probes)).all()
+        network = (
+            cluster.method.network_method.probes.options(
+                joinedload("sequence").load_only("name")
+            )
+            .filter(ExpressionNetwork.probe.in_(probes))
+            .all()
+        )
 
         nodes = []
         edges = []
@@ -369,29 +416,47 @@ class CoexpressionCluster(db.Model):
         existing_edges = []
 
         for node in network:
-            nodes.append({"id": node.probe,
-                          "name": node.probe,
-                          "gene_id": int(node.sequence_id) if node.sequence_id is not None else None,
-                          "gene_name": node.sequence.name if node.sequence_id is not None else node.probe,
-                          "depth": 0})
+            nodes.append(
+                {
+                    "id": node.probe,
+                    "name": node.probe,
+                    "gene_id": int(node.sequence_id)
+                    if node.sequence_id is not None
+                    else None,
+                    "gene_name": node.sequence.name
+                    if node.sequence_id is not None
+                    else node.probe,
+                    "depth": 0,
+                }
+            )
 
             links = json.loads(node.network)
 
             for link in links:
                 # only add links that are in the cluster !
-                if link["probe_name"] in probes and [node.probe, link["probe_name"]] not in existing_edges:
-                    edges.append({"source": node.probe,
-                                  "target": link["probe_name"],
-                                  "profile_comparison":
-                                      url_for('expression_profile.expression_profile_compare_probes',
-                                              probe_a=node.probe,
-                                              probe_b=link["probe_name"],
-                                              species_id=node.method.species.id),
-                                  "depth": 0,
-                                  "link_score": link["link_score"],
-                                  "link_pcc": link["link_pcc"] if "link_pcc" in link.keys() else None,
-                                  "hrr": link["hrr"] if "hrr" in link.keys() else None,
-                                  "edge_type": cluster.method.network_method.edge_type})
+                if (
+                    link["probe_name"] in probes
+                    and [node.probe, link["probe_name"]] not in existing_edges
+                ):
+                    edges.append(
+                        {
+                            "source": node.probe,
+                            "target": link["probe_name"],
+                            "profile_comparison": url_for(
+                                "expression_profile.expression_profile_compare_probes",
+                                probe_a=node.probe,
+                                probe_b=link["probe_name"],
+                                species_id=node.method.species.id,
+                            ),
+                            "depth": 0,
+                            "link_score": link["link_score"],
+                            "link_pcc": link["link_pcc"]
+                            if "link_pcc" in link.keys()
+                            else None,
+                            "hrr": link["hrr"] if "hrr" in link.keys() else None,
+                            "edge_type": cluster.method.network_method.edge_type,
+                        }
+                    )
                     existing_edges.append([node.probe, link["probe_name"]])
                     existing_edges.append([link["probe_name"], node.probe])
 
@@ -406,28 +471,37 @@ class CoexpressionCluster(db.Model):
 
         sequences = self.sequences.options(load_only("id")).all()
 
-        associations = SequenceGOAssociation.query\
-            .filter(SequenceGOAssociation.sequence_id.in_([s.id for s in sequences]))\
-            .filter(SequenceGOAssociation.predicted == 0)\
-            .options(load_only("sequence_id", "go_id"))\
+        associations = (
+            SequenceGOAssociation.query.filter(
+                SequenceGOAssociation.sequence_id.in_([s.id for s in sequences])
+            )
+            .filter(SequenceGOAssociation.predicted == 0)
+            .options(load_only("sequence_id", "go_id"))
             .group_by(SequenceGOAssociation.sequence_id, SequenceGOAssociation.go_id)
+        )
 
         go_data = {}
 
         for a in associations:
             if a.go_id not in go_data.keys():
                 go_data[a.go_id] = {}
-                go_data[a.go_id]["total_count"] = json.loads(a.go.species_counts)[str(species_id)]
+                go_data[a.go_id]["total_count"] = json.loads(a.go.species_counts)[
+                    str(species_id)
+                ]
                 go_data[a.go_id]["cluster_count"] = 1
             else:
                 go_data[a.go_id]["cluster_count"] += 1
 
         p_values = []
         for go_id in go_data:
-            p_values.append(hypergeo_sf(go_data[go_id]['cluster_count'],
-                                        len(sequences),
-                                        go_data[go_id]['total_count'],
-                                        gene_count))
+            p_values.append(
+                hypergeo_sf(
+                    go_data[go_id]["cluster_count"],
+                    len(sequences),
+                    go_data[go_id]["total_count"],
+                    gene_count,
+                )
+            )
 
         corrected_p_values = fdr_correction(p_values)
 
@@ -436,12 +510,15 @@ class CoexpressionCluster(db.Model):
             enrichment.cluster_id = self.id
             enrichment.go_id = go_id
 
-            enrichment.cluster_count = go_data[go_id]['cluster_count']
+            enrichment.cluster_count = go_data[go_id]["cluster_count"]
             enrichment.cluster_size = len(sequences)
-            enrichment.go_count = go_data[go_id]['total_count']
+            enrichment.go_count = go_data[go_id]["total_count"]
             enrichment.go_size = gene_count
 
-            enrichment.enrichment = log2((go_data[go_id]['cluster_count']/len(sequences))/(go_data[go_id]['total_count']/gene_count))
+            enrichment.enrichment = log2(
+                (go_data[go_id]["cluster_count"] / len(sequences))
+                / (go_data[go_id]["total_count"] / gene_count)
+            )
             enrichment.p_value = p_values[i]
             enrichment.corrected_p_value = corrected_p_values[i]
 
@@ -494,15 +571,25 @@ class CoexpressionCluster(db.Model):
         cluster_gene_count = self.sequences.count()
 
         try:
-            sequences = self.sequences.\
-                join(SequenceFamilyAssociation, Sequence.id == SequenceFamilyAssociation.sequence_id).\
-                join(GeneFamily, SequenceFamilyAssociation.gene_family_id == GeneFamily.id).\
-                add_columns(Sequence.name,
-                            Sequence.species_id,
-                            SequenceFamilyAssociation.gene_family_id,
-                            GeneFamily.method_id,
-                            GeneFamily.clade_id).\
-                filter(GeneFamily.method_id == gf_method_id).all()
+            sequences = (
+                self.sequences.join(
+                    SequenceFamilyAssociation,
+                    Sequence.id == SequenceFamilyAssociation.sequence_id,
+                )
+                .join(
+                    GeneFamily,
+                    SequenceFamilyAssociation.gene_family_id == GeneFamily.id,
+                )
+                .add_columns(
+                    Sequence.name,
+                    Sequence.species_id,
+                    SequenceFamilyAssociation.gene_family_id,
+                    GeneFamily.method_id,
+                    GeneFamily.clade_id,
+                )
+                .filter(GeneFamily.method_id == gf_method_id)
+                .all()
+            )
         except Exception as e:
             print(e, file=sys.stderr)
 
@@ -514,43 +601,47 @@ class CoexpressionCluster(db.Model):
         for clade_id, count in cluster_clade_count.items():
             try:
                 background_count = background[species_id][clade_id]
-                p_value = hypergeo_sf(count,
-                                      cluster_gene_count,
-                                      background_count,
-                                      species_gene_count)
-                enrichment = log2((count/cluster_gene_count)/(background_count/species_gene_count))
+                p_value = hypergeo_sf(
+                    count, cluster_gene_count, background_count, species_gene_count
+                )
+                enrichment = log2(
+                    (count / cluster_gene_count)
+                    / (background_count / species_gene_count)
+                )
 
-                enrichment_scores.append({
-                    'clade_count': background_count,
-                    'clade_size': species_gene_count,
-                    'cluster_count': count,
-                    'cluster_size': cluster_gene_count,
-                    'p_value': p_value,
-                    'enrichment': enrichment,
-                    'clade_id': clade_id,
-                    'cluster_id': self.id
-                })
+                enrichment_scores.append(
+                    {
+                        "clade_count": background_count,
+                        "clade_size": species_gene_count,
+                        "cluster_count": count,
+                        "cluster_size": cluster_gene_count,
+                        "p_value": p_value,
+                        "enrichment": enrichment,
+                        "clade_id": clade_id,
+                        "cluster_id": self.id,
+                    }
+                )
 
             except Exception as e:
                 print(e, file=sys.stderr)
 
-        corrected_p_values = fdr_correction([es['p_value'] for es in enrichment_scores])
+        corrected_p_values = fdr_correction([es["p_value"] for es in enrichment_scores])
 
         commit_required = False
         for es, corrected_p_value in zip(enrichment_scores, corrected_p_values):
-            if es['p_value'] < 0.05 and es['enrichment'] > 0:
+            if es["p_value"] < 0.05 and es["enrichment"] > 0:
                 commit_required = True
                 cluster_clade_enrichment = ClusterCladeEnrichment()
-                cluster_clade_enrichment.p_value = es['p_value']
+                cluster_clade_enrichment.p_value = es["p_value"]
                 cluster_clade_enrichment.corrected_p_value = corrected_p_value
-                cluster_clade_enrichment.enrichment = es['enrichment']
-                cluster_clade_enrichment.clade_id = es['clade_id']
-                cluster_clade_enrichment.cluster_id = es['cluster_id']
+                cluster_clade_enrichment.enrichment = es["enrichment"]
+                cluster_clade_enrichment.clade_id = es["clade_id"]
+                cluster_clade_enrichment.cluster_id = es["cluster_id"]
                 cluster_clade_enrichment.gene_family_method_id = gf_method_id
-                cluster_clade_enrichment.clade_count = es['clade_count']
-                cluster_clade_enrichment.clade_size = es['clade_size']
-                cluster_clade_enrichment.cluster_count = es['cluster_count']
-                cluster_clade_enrichment.cluster_size = es['cluster_size']
+                cluster_clade_enrichment.clade_count = es["clade_count"]
+                cluster_clade_enrichment.clade_size = es["clade_size"]
+                cluster_clade_enrichment.cluster_count = es["cluster_count"]
+                cluster_clade_enrichment.cluster_size = es["cluster_size"]
 
                 db.session.add(cluster_clade_enrichment)
 
@@ -572,20 +663,22 @@ class CoexpressionCluster(db.Model):
         if empty:
             try:
                 print("Removing Existing Enrichment")
-                db.session.query(ClusterCladeEnrichment).\
-                    filter(ClusterCladeEnrichment.gene_family_method_id == gene_family_method_id).delete()
+                db.session.query(ClusterCladeEnrichment).filter(
+                    ClusterCladeEnrichment.gene_family_method_id
+                    == gene_family_method_id
+                ).delete()
                 db.session.commit()
             except Exception as e:
                 db.session.rollback()
                 print(e)
 
-        print("Calculating background...", sep='')
+        print("Calculating background...", sep="")
         gf_method = GeneFamilyMethod.query.get(gene_family_method_id)
         counts = gf_method.get_clade_distribution()
-        print(' Done!')
+        print(" Done!")
 
         # calculate enrichment
-        print("Calculate enrichment", sep='')
+        print("Calculate enrichment", sep="")
 
         clusters = CoexpressionCluster.query.all()
 
@@ -621,19 +714,38 @@ class CoexpressionCluster(db.Model):
         """
 
         # sqlalchemy to fetch cluster associations
-        fields = [SequenceCoexpressionClusterAssociation.__table__.c.sequence_id,
-                  SequenceCoexpressionClusterAssociation.__table__.c.coexpression_cluster_id]
-        condition = SequenceCoexpressionClusterAssociation.__table__.c.sequence_id is not None
-        cluster_associations = db.engine.execute(db.select(fields).where(condition)).fetchall()
+        fields = [
+            SequenceCoexpressionClusterAssociation.__table__.c.sequence_id,
+            SequenceCoexpressionClusterAssociation.__table__.c.coexpression_cluster_id,
+        ]
+        condition = (
+            SequenceCoexpressionClusterAssociation.__table__.c.sequence_id is not None
+        )
+        cluster_associations = db.engine.execute(
+            db.select(fields).where(condition)
+        ).fetchall()
 
         # sqlalchemy to fetch sequence family associations
-        fields = [SequenceFamilyAssociation.__table__.c.sequence_id, SequenceFamilyAssociation.__table__.c.gene_family_id, GeneFamily.__table__.c.method_id]
+        fields = [
+            SequenceFamilyAssociation.__table__.c.sequence_id,
+            SequenceFamilyAssociation.__table__.c.gene_family_id,
+            GeneFamily.__table__.c.method_id,
+        ]
         condition = GeneFamily.__table__.c.method_id == gene_family_method_id
-        table = join(SequenceFamilyAssociation.__table__, GeneFamily.__table__, SequenceFamilyAssociation.__table__.c.gene_family_id == GeneFamily.__table__.c.id)
-        sequence_families = db.engine.execute(db.select(fields).select_from(table).where(condition)).fetchall()
+        table = join(
+            SequenceFamilyAssociation.__table__,
+            GeneFamily.__table__,
+            SequenceFamilyAssociation.__table__.c.gene_family_id
+            == GeneFamily.__table__.c.id,
+        )
+        sequence_families = db.engine.execute(
+            db.select(fields).select_from(table).where(condition)
+        ).fetchall()
 
         # convert sqlachemy results into dictionary
-        sequence_to_family = {seq_id: fam_id for seq_id, fam_id, method_id in sequence_families}
+        sequence_to_family = {
+            seq_id: fam_id for seq_id, fam_id, method_id in sequence_families
+        }
 
         cluster_to_sequences = {}
         cluster_to_families = {}
@@ -644,7 +756,15 @@ class CoexpressionCluster(db.Model):
             cluster_to_sequences[cluster_id].append(seq_id)
 
         for cluster_id, sequences in cluster_to_sequences.items():
-            families = list(set([sequence_to_family[s] for s in sequences if s in sequence_to_family.keys()]))
+            families = list(
+                set(
+                    [
+                        sequence_to_family[s]
+                        for s in sequences
+                        if s in sequence_to_family.keys()
+                    ]
+                )
+            )
             if len(families) > 0:
                 cluster_to_families[cluster_id] = families
 
@@ -653,7 +773,7 @@ class CoexpressionCluster(db.Model):
         data = []
 
         for i in range(len(keys) - 1):
-            for j in range(i+1, len(keys)):
+            for j in range(i + 1, len(keys)):
                 current_keys = [keys[x] for x in [i, j]]
                 current_families = [cluster_to_families[k] for k in current_keys]
 
@@ -663,16 +783,24 @@ class CoexpressionCluster(db.Model):
 
         ordered_j = sorted([a[2] for a in data])
         if len(ordered_j) > 0:
-            percentile_cutoff = ordered_j[int(len(ordered_j)*percentile_pass)]
+            percentile_cutoff = ordered_j[int(len(ordered_j) * percentile_pass)]
 
-            database = [{'source_id': d[0],
-                         'target_id': d[1],
-                         'gene_family_method_id': gene_family_method_id,
-                         'jaccard_index': d[2],
-                         'p_value': 0,
-                         'corrected_p_value': 0} for d in data if d[2] >= percentile_cutoff]
+            database = [
+                {
+                    "source_id": d[0],
+                    "target_id": d[1],
+                    "gene_family_method_id": gene_family_method_id,
+                    "jaccard_index": d[2],
+                    "p_value": 0,
+                    "corrected_p_value": 0,
+                }
+                for d in data
+                if d[2] >= percentile_cutoff
+            ]
 
-            db.engine.execute(CoexpressionClusterSimilarity.__table__.insert(), database)
+            db.engine.execute(
+                CoexpressionClusterSimilarity.__table__.insert(), database
+            )
         else:
             print("No similar clusters found!")
 
@@ -685,13 +813,16 @@ class CoexpressionCluster(db.Model):
 
         sequence_subquery = self.sequences.subquery()
 
-        profiles = ExpressionProfile.query.\
-            options(undefer('profile')).\
-            join(sequence_subquery, ExpressionProfile.sequence_id == sequence_subquery.c.id).all()
+        profiles = (
+            ExpressionProfile.query.options(undefer("profile"))
+            .join(
+                sequence_subquery,
+                ExpressionProfile.sequence_id == sequence_subquery.c.id,
+            )
+            .all()
+        )
 
         return profiles
-
-
 
     @property
     def interpro_stats(self):

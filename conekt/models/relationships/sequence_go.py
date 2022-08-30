@@ -4,30 +4,69 @@ import json
 
 
 class SequenceGOAssociation(db.Model):
-    __tablename__ = 'sequence_go'
-    __table_args__ = {'extend_existing': True}
+    __tablename__ = "sequence_go"
+    __table_args__ = {"extend_existing": True}
 
     id = db.Column(db.Integer, primary_key=True)
-    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id', ondelete='CASCADE'))
-    go_id = db.Column(db.Integer, db.ForeignKey('go.id', ondelete='CASCADE'))
+    sequence_id = db.Column(
+        db.Integer, db.ForeignKey("sequences.id", ondelete="CASCADE")
+    )
+    go_id = db.Column(db.Integer, db.ForeignKey("go.id", ondelete="CASCADE"))
 
-    evidence = db.Column(db.Enum('EXP', 'IDA', 'IPI', 'IMP', 'IGI', 'IEP',
-                                 'ISS', 'ISO', 'ISA', 'ISM', 'IGC', 'IBA', 'IBD', 'IKR', 'IRD', 'RCA',
-                                 'TAS', 'NAS', 'IC', 'ND', 'IEA', name='evidence'))
+    evidence = db.Column(
+        db.Enum(
+            "EXP",
+            "IDA",
+            "IPI",
+            "IMP",
+            "IGI",
+            "IEP",
+            "ISS",
+            "ISO",
+            "ISA",
+            "ISM",
+            "IGC",
+            "IBA",
+            "IBD",
+            "IKR",
+            "IRD",
+            "RCA",
+            "TAS",
+            "NAS",
+            "IC",
+            "ND",
+            "IEA",
+            name="evidence",
+        )
+    )
     source = db.Column(db.Text)
 
     predicted = db.Column(db.SmallInteger, default=False)
     prediction_data = db.Column(db.Text)
 
-    sequence = db.relationship('Sequence', backref=db.backref('go_associations',
-                                                              lazy='dynamic',
-                                                              passive_deletes=True), lazy='joined')
+    sequence = db.relationship(
+        "Sequence",
+        backref=db.backref("go_associations", lazy="dynamic", passive_deletes=True),
+        lazy="joined",
+    )
 
-    go = db.relationship('GO', backref=db.backref('sequence_associations',
-                                                  lazy='dynamic',
-                                                  passive_deletes=True), lazy='joined')
+    go = db.relationship(
+        "GO",
+        backref=db.backref(
+            "sequence_associations", lazy="dynamic", passive_deletes=True
+        ),
+        lazy="joined",
+    )
 
-    def __init__(self, sequence_id, go_id, evidence, source, predicted=False, prediction_data=None):
+    def __init__(
+        self,
+        sequence_id,
+        go_id,
+        evidence,
+        source,
+        predicted=False,
+        prediction_data=None,
+    ):
         self.sequence_id = sequence_id
         self.go_id = go_id
         self.evidence = evidence

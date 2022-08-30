@@ -33,6 +33,4 @@ class MyModelView(ModelView):
         if endpoint:
             return endpoint
 
-        return '%s' % self.__class__.__name__.lower()
-
-
+        return "%s" % self.__class__.__name__.lower()

@@ -2,63 +2,69 @@ from flask import Blueprint, render_template, current_app, redirect, g, flash, u
 
 from conekt.models.news import News
 
-main = Blueprint('main', __name__)
+main = Blueprint("main", __name__)
 
 
-@main.route('/')
+@main.route("/")
 def screen():
     """
     Shows the main screen
     """
 
-    keyword_examples = current_app.config['KEYWORD_EXAMPLES'] if'KEYWORD_EXAMPLES' in current_app.config.keys() else None
+    keyword_examples = (
+        current_app.config["KEYWORD_EXAMPLES"]
+        if "KEYWORD_EXAMPLES" in current_app.config.keys()
+        else None
+    )
 
     news = News.query.order_by(News.posted.desc()).limit(5)
 
-    return render_template('static_pages/main.html', news=news, keyword_examples=keyword_examples)
+    return render_template(
+        "static_pages/main.html", news=news, keyword_examples=keyword_examples
+    )
 
 
-@main.route('/features')
+@main.route("/features")
 def features():
     """
     Shows overview of features
     """
-    return render_template('static_pages/features.html')
+    return render_template("static_pages/features.html")
 
 
-@main.route('/about')
+@main.route("/about")
 def about():
     """
     Shows the about page
     """
-    return render_template('static_pages/about.html')
+    return render_template("static_pages/about.html")
 
 
-@main.route('/contact')
+@main.route("/contact")
 def contact():
     """
     Shows the about contact
     """
-    return render_template('static_pages/contact.html')
+    return render_template("static_pages/contact.html")
 
 
-@main.route('/disclaimer')
+@main.route("/disclaimer")
 def disclaimer():
     """
     Shows the disclaimer
     """
-    return render_template('static_pages/disclaimer.html')
+    return render_template("static_pages/disclaimer.html")
 
 
-@main.route('/privacy')
+@main.route("/privacy")
 def privacy_policy():
     """
     Shows the privacy policy
     """
-    return render_template('static_pages/privacy_policy.html')
+    return render_template("static_pages/privacy_policy.html")
 
 
-@main.route('/imprint')
+@main.route("/imprint")
 def imprint():
     if g.imprint is not None:
         return redirect(g.imprint)

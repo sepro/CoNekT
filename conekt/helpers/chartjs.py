@@ -17,26 +17,29 @@ def prepare_profiles_download(profiles, normalize=False):
 
     if len(profiles) > 0:
         data = json.loads(profiles[0].profile)
-        labels = data['order']
+        labels = data["order"]
 
     # initiate output array with header
-    output = ['genes\t' + '\t'.join(labels)]
+    output = ["genes\t" + "\t".join(labels)]
 
     for count, p in enumerate(profiles):
         data = json.loads(p.profile)
-        expression_values = [mean(data['data'][label]) for label in labels]
+        expression_values = [mean(data["data"][label]) for label in labels]
         label = p.probe if p.sequence_id is None else p.sequence.name
 
         if normalize:
             max_expression = max(expression_values)
-            expression_values = [value/max_expression if max_expression > 0 else 0 for value in expression_values]
+            expression_values = [
+                value / max_expression if max_expression > 0 else 0
+                for value in expression_values
+            ]
 
-        output.append(label + '\t' + '\t'.join(str(e) for e in expression_values))
+        output.append(label + "\t" + "\t".join(str(e) for e in expression_values))
 
-    return '\n'.join(output)
+    return "\n".join(output)
 
 
-def prepare_profiles(profiles, normalize=False, xlabel='', ylabel=''):
+def prepare_profiles(profiles, normalize=False, xlabel="", ylabel=""):
     """
     Function to convert a list of NetworkProfiles to a dict compatible with chart.js
 
@@ -52,82 +55,69 @@ def prepare_profiles(profiles, normalize=False, xlabel='', ylabel=''):
 
     if len(profiles) > 0:
         data = json.loads(profiles[0].profile)
-        labels = data['order']
+        labels = data["order"]
 
     for count, p in enumerate(profiles):
         data = json.loads(p.profile)
-        expression_values = [mean(data['data'][label]) for label in labels]
+        expression_values = [mean(data["data"][label]) for label in labels]
 
         if normalize:
             max_expression = max(expression_values)
-            expression_values = [value/max_expression if max_expression > 0 else None for value in expression_values]
+            expression_values = [
+                value / max_expression if max_expression > 0 else None
+                for value in expression_values
+            ]
 
-        datasets.append({
-            'label': p.probe if p.sequence_id is None else p.sequence.name,
-            'fill': True,
-            'showLine': True,
-            'backgroundColor': "rgba(220,220,220,0.1)" if len(profiles) > 12 else COLORS[count],
-            'borderColor': "rgba(175,175,175,0.2)" if len(profiles) > 12 else COLORS[count],
-            'pointRadius': 3 if len(profiles) < 13 else 0,
-            'data': expression_values
-        })
+        datasets.append(
+            {
+                "label": p.probe if p.sequence_id is None else p.sequence.name,
+                "fill": True,
+                "showLine": True,
+                "backgroundColor": "rgba(220,220,220,0.1)"
+                if len(profiles) > 12
+                else COLORS[count],
+                "borderColor": "rgba(175,175,175,0.2)"
+                if len(profiles) > 12
+                else COLORS[count],
+                "pointRadius": 3 if len(profiles) < 13 else 0,
+                "data": expression_values,
+            }
+        )
 
     output = {
-        'type': 'line',
-        'data': {
-            'labels': labels,
-            'datasets': datasets
-        },
+        "type": "line",
+        "data": {"labels": labels, "datasets": datasets},
         "options": {
-          "legend": {
-            "display": len(profiles) < 13
-          },
-          "tooltips": {
-            "enabled": len(profiles) < 13,
-            "mode": 'label',
-            "intersect": True
-          },
-          "scales": {
-              "xAxes": [{
-                  "scaleLabel": {
-                      "display": xlabel != '',
-                      "labelString": xlabel
-                  },
-                  "gridLines": {
-                    "display": False
-                },
-                "ticks": {
-                    "maxRotation": 90,
-                    "minRotation": 90
-                }
-              }
-              ],
-              "yAxes": [{
-                "scaleLabel": {
-                    "display": ylabel != '',
-                    "labelString": ylabel
-                },
-                "ticks": {
-                    "beginAtZero": True
-                }
-              }
-              ]
-          },
-          "pan" : {
-              "enabled": True,
-              "mode": 'y'
-          },
-          "zoom": {
-              "enabled": True,
-              "mode": 'y'
-          }
-        }
+            "legend": {"display": len(profiles) < 13},
+            "tooltips": {
+                "enabled": len(profiles) < 13,
+                "mode": "label",
+                "intersect": True,
+            },
+            "scales": {
+                "xAxes": [
+                    {
+                        "scaleLabel": {"display": xlabel != "", "labelString": xlabel},
+                        "gridLines": {"display": False},
+                        "ticks": {"maxRotation": 90, "minRotation": 90},
+                    }
+                ],
+                "yAxes": [
+                    {
+                        "scaleLabel": {"display": ylabel != "", "labelString": ylabel},
+                        "ticks": {"beginAtZero": True},
+                    }
+                ],
+            },
+            "pan": {"enabled": True, "mode": "y"},
+            "zoom": {"enabled": True, "mode": "y"},
+        },
     }
 
     return output
 
 
-def prepare_avg_profiles(profiles, xlabel='', ylabel=''):
+def prepare_avg_profiles(profiles, xlabel="", ylabel=""):
     """
     Takes a set of profiles and generates the average profile
 
@@ -140,25 +130,32 @@ def prepare_avg_profiles(profiles, xlabel='', ylabel=''):
     labels = []
     datasets = []
 
-    background_color=[]
-    point_color=[]
+    background_color = []
+    point_color = []
 
     means = []
     stdevs = []
 
     if len(profiles) > 0:
         data = json.loads(profiles[0].profile)
-        labels = data['order']
+        labels = data["order"]
 
-        background_color = data["colors"] if "colors" in data.keys() else "rgba(175,175,175,0.2)"
-        point_color = "rgba(55,55,55,0.4)" if "colors" in data.keys() else "rgba(220,22,22,1)"
+        background_color = (
+            data["colors"] if "colors" in data.keys() else "rgba(175,175,175,0.2)"
+        )
+        point_color = (
+            "rgba(55,55,55,0.4)" if "colors" in data.keys() else "rgba(220,22,22,1)"
+        )
 
     for p in profiles:
         data = json.loads(p.profile)
-        expression_values = [mean(data['data'][label]) for label in labels]
+        expression_values = [mean(data["data"][label]) for label in labels]
 
         max_expression = max(expression_values)
-        expression_values = [value/max_expression if max_expression != 0 else 0 for value in expression_values]
+        expression_values = [
+            value / max_expression if max_expression != 0 else 0
+            for value in expression_values
+        ]
 
         datasets.append(expression_values)
 
@@ -171,78 +168,59 @@ def prepare_avg_profiles(profiles, xlabel='', ylabel=''):
         else:
             stdevs.append(None)
 
-    output = {"type": "bar",
-              "data": {
-                      "labels": list(data["order"]),
-                      "counts": [None]*len(data["order"]),
-                      "datasets": [
-                          {
-                            "type": "line",
-                            "label": "Mean - Stdev",
-                            "fill": False,
-                            "showLine": False,
-                            "pointBorderColor": point_color,
-                            "pointBackgroundColor": point_color,
-                            "data": [m - sd for m, sd in zip(means, stdevs)]
-                          }, {
-                            "type": "line",
-                            "label": "Mean + Stdev",
-                            "fill": False,
-                            "showLine": False,
-                            "pointBorderColor": point_color,
-                            "pointBackgroundColor": point_color,
-                            "data": [m + sd for m, sd in zip(means, stdevs)]
-                          }, {
-                            "label": "Mean",
-                            "backgroundColor": background_color,
-                            "data": means
-                          }]
-                      },
-              "options": {
-                  "legend": {
-                    "display": False
-                  },
-                  "scales": {
-                      "xAxes": [{
-                        "scaleLabel": {
-                              "display": xlabel != '',
-                              "labelString": xlabel
-                          },
-                        "gridLines": {
-                            "display": False
-                        },
-                        "ticks": {
-                            "maxRotation": 90,
-                            "minRotation": 90
-                        }
-                      }
-                      ],
-                      "yAxes": [{
-                          "scaleLabel": {
-                              "display": ylabel != '',
-                              "labelString": ylabel
-                          },
-                          "ticks": {
-                            "beginAtZero": True
-                        }
-                      }
-                      ]
-                  },
-                  "pan" : {
-                      "enabled": True,
-                      "mode": 'y'
-                  },
-                  "zoom": {
-                      "enabled": True,
-                      "mode": 'y'
-                  }
-              }
-              }
+    output = {
+        "type": "bar",
+        "data": {
+            "labels": list(data["order"]),
+            "counts": [None] * len(data["order"]),
+            "datasets": [
+                {
+                    "type": "line",
+                    "label": "Mean - Stdev",
+                    "fill": False,
+                    "showLine": False,
+                    "pointBorderColor": point_color,
+                    "pointBackgroundColor": point_color,
+                    "data": [m - sd for m, sd in zip(means, stdevs)],
+                },
+                {
+                    "type": "line",
+                    "label": "Mean + Stdev",
+                    "fill": False,
+                    "showLine": False,
+                    "pointBorderColor": point_color,
+                    "pointBackgroundColor": point_color,
+                    "data": [m + sd for m, sd in zip(means, stdevs)],
+                },
+                {"label": "Mean", "backgroundColor": background_color, "data": means},
+            ],
+        },
+        "options": {
+            "legend": {"display": False},
+            "scales": {
+                "xAxes": [
+                    {
+                        "scaleLabel": {"display": xlabel != "", "labelString": xlabel},
+                        "gridLines": {"display": False},
+                        "ticks": {"maxRotation": 90, "minRotation": 90},
+                    }
+                ],
+                "yAxes": [
+                    {
+                        "scaleLabel": {"display": ylabel != "", "labelString": ylabel},
+                        "ticks": {"beginAtZero": True},
+                    }
+                ],
+            },
+            "pan": {"enabled": True, "mode": "y"},
+            "zoom": {"enabled": True, "mode": "y"},
+        },
+    }
 
     return output
 
 
-def prepare_expression_profile(data, show_sample_count=False, xlabel='', ylabel=''):
+def prepare_expression_profile(data, show_sample_count=False, xlabel="", ylabel=""):
     """
     Converts data from Expression Profile to a format compatible with Chart.js
 
@@ -263,80 +241,74 @@ def prepare_expression_profile(data, show_sample_count=False, xlabel='', ylabel=
         processed_maxs[key] = max(expression_values)
         counts[key] = len(expression_values)
 
-    background_color = data["colors"] if "colors" in data.keys() else "rgba(175,175,175,0.2)"
-    point_color = "rgba(55,55,55,0.4)" if "colors" in data.keys() else "rgba(220,22,22,1)"
+    background_color = (
+        data["colors"] if "colors" in data.keys() else "rgba(175,175,175,0.2)"
+    )
+    point_color = (
+        "rgba(55,55,55,0.4)" if "colors" in data.keys() else "rgba(220,22,22,1)"
+    )
 
-    output = {"type": "bar",
-              "data": {
-                      "labels": list(data["order"]),
-                      "counts": list([counts[c] for c in data["order"]]) if show_sample_count else [None]*len(data["order"]),
-                      "datasets": [
-                          {
-                            "type": "line",
-                            "label": "Minimum",
-                            "fill": False,
-                            "showLine": False,
-                            "pointBorderColor": point_color,
-                            "pointBackgroundColor": point_color,
-                            "data": list([processed_mins[c] for c in data["order"]])},
-                          {
-                            "type": "line",
-                            "label": "Maximum",
-                            "fill": False,
-                            "showLine": False,
-                            "pointBorderColor": point_color,
-                            "pointBackgroundColor": point_color,
-                            "data": list([processed_maxs[c] for c in data["order"]])},
-                          {
-                            "label": "Mean",
-                            "backgroundColor": background_color,
-                            "data": list([processed_means[c] for c in data["order"]])}]
-                      },
-              "options": {
-                  "legend": {
-                    "display": False
-                  },
-                  "scales": {
-                      "xAxes": [{
-                        "scaleLabel": {
-                              "display": xlabel != '',
-                              "labelString": xlabel
-                          },
-                        "gridLines": {
-                            "display": False
-                        },
-                        "ticks": {
-                            "maxRotation": 90,
-                            "minRotation": 90
-                        }
-                      }
-                      ],
-                      "yAxes": [{
-                          "scaleLabel": {
-                              "display": ylabel != '',
-                              "labelString": ylabel
-                          },
-                          "ticks": {
-                            "beginAtZero": True
-                        }
-                      }
-                      ]
-                  },
-                  "pan" : {
-                      "enabled": True,
-                      "mode": 'y'
-                  },
-                  "zoom": {
-                      "enabled": True,
-                      "mode": 'y'
-                  }
-              }
-              }
+    output = {
+        "type": "bar",
+        "data": {
+            "labels": list(data["order"]),
+            "counts": list([counts[c] for c in data["order"]])
+            if show_sample_count
+            else [None] * len(data["order"]),
+            "datasets": [
+                {
+                    "type": "line",
+                    "label": "Minimum",
+                    "fill": False,
+                    "showLine": False,
+                    "pointBorderColor": point_color,
+                    "pointBackgroundColor": point_color,
+                    "data": list([processed_mins[c] for c in data["order"]]),
+                },
+                {
+                    "type": "line",
+                    "label": "Maximum",
+                    "fill": False,
+                    "showLine": False,
+                    "pointBorderColor": point_color,
+                    "pointBackgroundColor": point_color,
+                    "data": list([processed_maxs[c] for c in data["order"]]),
+                },
+                {
+                    "label": "Mean",
+                    "backgroundColor": background_color,
+                    "data": list([processed_means[c] for c in data["order"]]),
+                },
+            ],
+        },
+        "options": {
+            "legend": {"display": False},
+            "scales": {
+                "xAxes": [
+                    {
+                        "scaleLabel": {"display": xlabel != "", "labelString": xlabel},
+                        "gridLines": {"display": False},
+                        "ticks": {"maxRotation": 90, "minRotation": 90},
+                    }
+                ],
+                "yAxes": [
+                    {
+                        "scaleLabel": {"display": ylabel != "", "labelString": ylabel},
+                        "ticks": {"beginAtZero": True},
+                    }
+                ],
+            },
+            "pan": {"enabled": True, "mode": "y"},
+            "zoom": {"enabled": True, "mode": "y"},
+        },
+    }
 
     return output
 
 
-def prepare_profile_comparison(data_first, data_second, labels, normalize=1, xlabel='', ylabel=''):
+def prepare_profile_comparison(
+    data_first, data_second, labels, normalize=1, xlabel="", ylabel=""
+):
     processed_first_means = {}
     processed_second_means = {}
 
@@ -350,63 +322,53 @@ def prepare_profile_comparison(data_first, data_second, labels, normalize=1, xla
 
     if normalize == 1:
         for k, v in processed_first_means.items():
-            processed_first_means[k] = v/first_max
+            processed_first_means[k] = v / first_max
 
         for k, v in processed_second_means.items():
-            processed_second_means[k] = v/second_max
+            processed_second_means[k] = v / second_max
 
-    output = {"type": "bar",
-              "data": {
-                          "labels": list(data_first["order"]),
-                          "datasets": [{
-                              "label": labels[0],
-                              "backgroundColor": "rgba(220,22,22,0.5)",
-                              "data": list([processed_first_means[c] for c in data_first["order"]])},
-                              {
-                              "label": labels[1],
-                              "backgroundColor": "rgba(22,22,220,0.5)",
-                              "data": list([processed_second_means[c] for c in data_second["order"]])}]
-              },
-              "options": {
-                  "legend": {
-                    "display": True
-                  },
-                  "scales": {
-                      "xAxes": [{
-                        "scaleLabel": {
-                              "display": xlabel != '',
-                              "labelString": xlabel
-                        },
-                        "gridLines": {
-                            "display": False
-                        },
-                        "ticks": {
-                            "maxRotation": 90,
-                            "minRotation": 90
-                        }
-                      }
-                      ],
-                      "yAxes": [{
-                        "scaleLabel": {
-                            "display": ylabel != '',
-                            "labelString": ylabel
-                        },
-                        "ticks": {
-                            "beginAtZero": True
-                        }
-                      }
-                      ]
-                  },
-                  "pan" : {
-                      "enabled": True,
-                      "mode": 'y'
-                  },
-                  "zoom": {
-                      "enabled": True,
-                      "mode": 'y'
-                  }
-              }
-              }
+    output = {
+        "type": "bar",
+        "data": {
+            "labels": list(data_first["order"]),
+            "datasets": [
+                {
+                    "label": labels[0],
+                    "backgroundColor": "rgba(220,22,22,0.5)",
+                    "data": list(
+                        [processed_first_means[c] for c in data_first["order"]]
+                    ),
+                },
+                {
+                    "label": labels[1],
+                    "backgroundColor": "rgba(22,22,220,0.5)",
+                    "data": list(
+                        [processed_second_means[c] for c in data_second["order"]]
+                    ),
+                },
+            ],
+        },
+        "options": {
+            "legend": {"display": True},
+            "scales": {
+                "xAxes": [
+                    {
+                        "scaleLabel": {"display": xlabel != "", "labelString": xlabel},
+                        "gridLines": {"display": False},
+                        "ticks": {"maxRotation": 90, "minRotation": 90},
+                    }
+                ],
+                "yAxes": [
+                    {
+                        "scaleLabel": {"display": ylabel != "", "labelString": ylabel},
+                        "ticks": {"beginAtZero": True},
+                    }
+                ],
+            },
+            "pan": {"enabled": True, "mode": "y"},
+            "zoom": {"enabled": True, "mode": "y"},
+        },
+    }
 
     return output
 
@@ -415,14 +377,15 @@ def prepare_doughnut(counts):
     output = {
         "data": {
             "labels": [counts[s]["label"] for s in counts.keys()],
-            "datasets": [{
-                "data": [counts[s]["value"] for s in counts.keys()],
-                "backgroundColor": [counts[s]["color"] for s in counts.keys()],
-                "hoverBackgroundColor": [counts[s]["color"] for s in counts.keys()]
-            }]
-        }
-        ,
-        "type": "doughnut"
+            "datasets": [
+                {
+                    "data": [counts[s]["value"] for s in counts.keys()],
+                    "backgroundColor": [counts[s]["color"] for s in counts.keys()],
+                    "hoverBackgroundColor": [counts[s]["color"] for s in counts.keys()],
+                }
+            ],
+        },
+        "type": "doughnut",
     }
 
     return output

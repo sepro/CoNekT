@@ -10,11 +10,12 @@ class OboEntry:
     """
     Class to store data for a single entry in an OBO file
     """
+
     def __init__(self):
-        self.id = ''
-        self.name = ''
-        self.namespace = ''
-        self.definition = ''
+        self.id = ""
+        self.name = ""
+        self.namespace = ""
+        self.definition = ""
         self.is_a = []
         self.synonym = []
         self.alt_id = []
@@ -89,6 +90,7 @@ class Parser:
     """
     Reads the specified obo file
     """
+
     def __init__(self):
         self.terms = []
 
@@ -107,10 +109,10 @@ class Parser:
 
         if compressed:
             load = gzip.open
-            load_type = 'rt'
+            load_type = "rt"
         else:
             load = open
-            load_type = 'r'
+            load_type = "r"
 
         with load(filename, load_type) as f:
             current_term = None

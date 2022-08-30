@@ -11,22 +11,28 @@ from math import log
 from sqlalchemy.orm import joinedload, undefer
 from flask import flash
 
-SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
+SQL_COLLATION = "NOCASE" if db.engine.name == "sqlite" else ""
 
 
 class ExpressionProfile(db.Model):
-    __tablename__ = 'expression_profiles'
+    __tablename__ = "expression_profiles"
     id = db.Column(db.Integer, primary_key=True)
-    species_id = db.Column(db.Integer, db.ForeignKey('species.id', ondelete='CASCADE'), index=True)
+    species_id = db.Column(
+        db.Integer, db.ForeignKey("species.id", ondelete="CASCADE"), index=True
+    )
     probe = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
-    sequence_id = db.Column(db.Integer, db.ForeignKey('sequences.id', ondelete='CASCADE'), index=True)
+    sequence_id = db.Column(
+        db.Integer, db.ForeignKey("sequences.id", ondelete="CASCADE"), index=True
+    )
     profile = db.deferred(db.Column(db.Text))
 
-    specificities = db.relationship('ExpressionSpecificity',
-                                    backref=db.backref('profile', lazy='joined'),
-                                    lazy='dynamic',
-                                    cascade="all, delete-orphan",
-                                    passive_deletes=True)
+    specificities = db.relationship(
+        "ExpressionSpecificity",
+        backref=db.backref("profile", lazy="joined"),
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
 
     def __init__(self, probe, sequence_id, profile):
         self.probe = probe
@@ -47,15 +53,13 @@ class ExpressionProfile(db.Model):
         for o in order:
             try:
                 values = data["data"][o]
-                output.append([o,
-                               str(mean(values)),
-                               str(min(values)),
-                               str(max(values))
-                               ])
+                output.append(
+                    [o, str(mean(values)), str(min(values)), str(max(values))]
+                )
             except Exception as e:
                 print(e)
 
-        return '\n'.join(['\t'.join(l) for l in output])
+        return "\n".join(["\t".join(l) for l in output])
 
     @property
     def table(self):
@@ -76,9 +80,9 @@ class ExpressionProfile(db.Model):
         :param use_means: Use the mean of the condition (recommended)
         :return: table with data (string)
         """
-        table = ExpressionProfile.__profile_to_table(self.tissue_profile(condition_tissue_id,
-                                                                         use_means=use_means)
-                                                     )
+        table = ExpressionProfile.__profile_to_table(
+            self.tissue_profile(condition_tissue_id, use_means=use_means)
+        )
         return table
 
     @property
@@ -106,14 +110,19 @@ class ExpressionProfile(db.Model):
         :param use_means: use means of detailed condition if True otherwise use samples independently. Default True
         :return: New profile
         """
-        tissues = list(set(condition_to_tissue['conversion'].values()))
+        tissues = list(set(condition_to_tissue["conversion"].values()))
 
         output = {}
 
         for t in tissues:
-            valid_conditions = [k for k in profile_data['data'] if k in condition_to_tissue['conversion'] and condition_to_tissue['conversion'][k] == t]
+            valid_conditions = [
+                k
+                for k in profile_data["data"]
+                if k in condition_to_tissue["conversion"]
+                and condition_to_tissue["conversion"][k] == t
+            ]
             valid_values = []
-            for k, v in profile_data['data'].items():
+            for k, v in profile_data["data"].items():
                 if k in valid_conditions:
                     if use_means:
                         valid_values.append(mean(v))
@@ -122,9 +131,11 @@ class ExpressionProfile(db.Model):
 
             output[t] = valid_values if len(valid_values) > 0 else [0]
 
-        return {'order': condition_to_tissue['order'],
-                'colors': condition_to_tissue['colors'],
-                'data': output}
+        return {
+            "order": condition_to_tissue["order"],
+            "colors": condition_to_tissue["colors"],
+            "data": output,
+        }
 
     def tissue_profile(self, condition_tissue_id, use_means=True):
         """
@@ -140,7 +151,9 @@ class ExpressionProfile(db.Model):
         condition_to_tissue = json.loads(ct.data)
         profile_data = json.loads(self.profile)
 
-        output = ExpressionProfile.convert_profile(condition_to_tissue, profile_data, use_means=use_means)
+        output = ExpressionProfile.convert_profile(
+            condition_to_tissue, profile_data, use_means=use_means
+        )
 
         return output
 
@@ -154,8 +167,12 @@ class ExpressionProfile(db.Model):
         :param probes: a list of probes to include in the heatmap
         :param zlog: enable zlog transformation (otherwise normalization against highest expressed condition)
         """
-        profiles = ExpressionProfile.query.options(undefer('profile')).filter_by(species_id=species_id).\
-            filter(ExpressionProfile.probe.in_(probes)).all()
+        profiles = (
+            ExpressionProfile.query.options(undefer("profile"))
+            .filter_by(species_id=species_id)
+            .filter(ExpressionProfile.probe.in_(probes))
+            .all()
+        )
 
         order = []
 
@@ -166,8 +183,8 @@ class ExpressionProfile(db.Model):
         for profile in profiles:
             name = profile.probe
             data = json.loads(profile.profile)
-            order = data['order']
-            experiments = data['data']
+            order = data["order"]
+            experiments = data["data"]
 
             with contextlib.suppress(ValueError):
                 not_found.remove(profile.probe.lower())
@@ -186,26 +203,30 @@ class ExpressionProfile(db.Model):
             for o in order:
                 if zlog:
                     if row_mean == 0 or values[o] == 0:
-                        values[o] = '-'
+                        values[o] = "-"
                     else:
                         try:
-                            values[o] = log(values[o]/row_mean, 2)
+                            values[o] = log(values[o] / row_mean, 2)
                         except ValueError as _:
                             print("Unable to calculate log()", values[o], row_mean)
-                            values[o] = '-'
+                            values[o] = "-"
                 else:
                     if row_max != 0 and not raw:
-                        values[o] = values[o]/row_max
+                        values[o] = values[o] / row_max
 
-            output.append({"name": name,
-                           "values": values,
-                           "sequence_id": profile.sequence_id,
-                           "shortest_alias": profile.sequence.shortest_alias})
+            output.append(
+                {
+                    "name": name,
+                    "values": values,
+                    "sequence_id": profile.sequence_id,
+                    "shortest_alias": profile.sequence.shortest_alias,
+                }
+            )
 
         if len(not_found) > 0:
             flash("Couldn't find profile for: %s" % ", ".join(not_found), "warning")
 
-        return {'order': order, 'heatmap_data': output}
+        return {"order": order, "heatmap_data": output}
 
     @staticmethod
     def get_profiles(species_id, probes, limit=1000):
@@ -218,17 +239,21 @@ class ExpressionProfile(db.Model):
         :param limit: maximum number of probes to get
         :return: List of ExpressionProfile objects including the full profiles
         """
-        profiles = ExpressionProfile.query.\
-            options(undefer('profile')).\
-            filter(ExpressionProfile.probe.in_(probes)).\
-            filter_by(species_id=species_id).\
-            options(joinedload('sequence').load_only('name').noload('xrefs')).\
-            limit(limit).all()
+        profiles = (
+            ExpressionProfile.query.options(undefer("profile"))
+            .filter(ExpressionProfile.probe.in_(probes))
+            .filter_by(species_id=species_id)
+            .options(joinedload("sequence").load_only("name").noload("xrefs"))
+            .limit(limit)
+            .all()
+        )
 
         return profiles
 
     @staticmethod
-    def add_profile_from_lstrap(matrix_file, annotation_file, species_id, order_color_file=None):
+    def add_profile_from_lstrap(
+        matrix_file, annotation_file, species_id, order_color_file=None
+    ):
         """
         Function to convert an (normalized) expression matrix (lstrap output) into a profile
 
@@ -239,22 +264,22 @@ class ExpressionProfile(db.Model):
         """
         annotation = {}
 
-        with open(annotation_file, 'r') as fin:
+        with open(annotation_file, "r") as fin:
             # get rid of the header
             _ = fin.readline()
 
             for line in fin:
-                parts = line.strip().split('\t')
+                parts = line.strip().split("\t")
                 if len(parts) > 1:
                     run, description = parts
                     annotation[run] = description
 
         order, colors = [], []
         if order_color_file is not None:
-            with open(order_color_file, 'r') as fin:
+            with open(order_color_file, "r") as fin:
                 for line in fin:
                     try:
-                        o, c = line.strip().split('\t')
+                        o, c = line.strip().split("\t")
                         order.append(o)
                         colors.append(c)
                     except Exception as _:
@@ -271,7 +296,7 @@ class ExpressionProfile(db.Model):
             # read header
             _, *colnames = fin.readline().rstrip().split()
 
-            colnames = [c.replace('.htseq', '') for c in colnames]
+            colnames = [c.replace(".htseq", "") for c in colnames]
 
             # determine order after annotation is not defined
             if order is None:
@@ -295,13 +320,16 @@ class ExpressionProfile(db.Model):
                         condition = annotation[c]
                         profile[condition].append(float(v))
 
-                new_probe = {"species_id": species_id,
-                             "probe": transcript,
-                             "sequence_id": sequence_dict[transcript.upper()] if transcript.upper() in sequence_dict.keys() else None,
-                             "profile": json.dumps({"order": order,
-                                                    "colors": colors,
-                                                    "data": profile})
-                             }
+                new_probe = {
+                    "species_id": species_id,
+                    "probe": transcript,
+                    "sequence_id": sequence_dict[transcript.upper()]
+                    if transcript.upper() in sequence_dict.keys()
+                    else None,
+                    "profile": json.dumps(
+                        {"order": order, "colors": colors, "data": profile}
+                    ),
+                }
 
                 new_probes.append(new_probe)
 

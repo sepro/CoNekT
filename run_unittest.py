@@ -7,7 +7,7 @@ from tests.utils import UtilsTest
 from tests.build import BuildTest
 from tests.admin import AdminTest
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         unittest.main(failfast=True)
     except:

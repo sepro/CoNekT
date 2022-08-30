@@ -33,30 +33,30 @@ class Fasta:
             print("Reading FASTA file:" + filename + "...", file=sys.stderr)
 
         # Initialize variables
-        name = ''
+        name = ""
         sequence = []
         count = 1
 
         # open file
         if compressed:
-            f = gzip.open(filename, 'rt')
+            f = gzip.open(filename, "rt")
         else:
-            f = open(filename, 'r')
+            f = open(filename, "r")
 
         for line in f:
             line = line.rstrip()
             if line.startswith(">"):
                 # ignore if first
-                if not name == '':
-                    self.sequences[name] = ''.join(sequence)
+                if not name == "":
+                    self.sequences[name] = "".join(sequence)
                     count += 1
-                name = line.lstrip('>')
+                name = line.lstrip(">")
                 sequence = []
             else:
                 sequence.append(line)
 
         # add last gene
-        self.sequences[name] = ''.join(sequence)
+        self.sequences[name] = "".join(sequence)
 
         f.close()
         if verbose:
@@ -68,7 +68,7 @@ class Fasta:
 
         :param filename: file to write to
         """
-        with open(filename, 'w') as f:
+        with open(filename, "w") as f:
             for k, v in self.sequences.items():
                 print(">" + k, file=f)
                 print(v, file=f)

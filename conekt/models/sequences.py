@@ -1,6 +1,11 @@
 from conekt import db, whooshee
 
-from conekt.models.relationships import sequence_go, sequence_interpro, sequence_family, sequence_coexpression_cluster
+from conekt.models.relationships import (
+    sequence_go,
+    sequence_interpro,
+    sequence_family,
+    sequence_coexpression_cluster,
+)
 from conekt.models.relationships import sequence_xref, sequence_sequence_ecc
 from utils.sequence import translate
 from utils.parser.fasta import Fasta
@@ -9,30 +14,40 @@ from sqlalchemy.orm import undefer
 import operator
 import sys
 
-SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
+SQL_COLLATION = "NOCASE" if db.engine.name == "sqlite" else ""
 
 
-@whooshee.register_model('description')
+@whooshee.register_model("description")
 class Sequence(db.Model):
-    __tablename__ = 'sequences'
+    __tablename__ = "sequences"
     id = db.Column(db.Integer, primary_key=True)
-    species_id = db.Column(db.Integer, db.ForeignKey('species.id', ondelete='CASCADE'), index=True)
+    species_id = db.Column(
+        db.Integer, db.ForeignKey("species.id", ondelete="CASCADE"), index=True
+    )
     name = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
     description = db.Column(db.Text)
     coding_sequence = db.deferred(db.Column(db.Text))
-    type = db.Column(db.Enum('protein_coding', 'TE', 'RNA', name='sequence_type'), default='protein_coding')
+    type = db.Column(
+        db.Enum("protein_coding", "TE", "RNA", name="sequence_type"),
+        default="protein_coding",
+    )
     is_mitochondrial = db.Column(db.SmallInteger, default=False)
     is_chloroplast = db.Column(db.SmallInteger, default=False)
 
-    expression_profiles = db.relationship('ExpressionProfile', backref=db.backref('sequence', lazy='joined'),
-                                          lazy='dynamic',
-                                          cascade="all, delete-orphan",
-                                          passive_deletes=True)
-    network_nodes = db.relationship('ExpressionNetwork',
-                                    backref=db.backref('sequence', lazy='joined'),
-                                    lazy='dynamic',
-                                    cascade="all, delete-orphan",
-                                    passive_deletes=True)
+    expression_profiles = db.relationship(
+        "ExpressionProfile",
+        backref=db.backref("sequence", lazy="joined"),
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+    network_nodes = db.relationship(
+        "ExpressionNetwork",
+        backref=db.backref("sequence", lazy="joined"),
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
 
     # Other properties
     #
@@ -41,38 +56,59 @@ class Sequence(db.Model):
     # go_associations declared in 'SequenceGOAssociation'
     # family_associations declared in 'SequenceFamilyAssociation'
 
-    go_labels = db.relationship('GO', secondary=sequence_go, lazy='dynamic')
-    interpro_domains = db.relationship('Interpro', secondary=sequence_interpro, lazy='dynamic')
-    families = db.relationship('GeneFamily', secondary=sequence_family, lazy='dynamic')
+    go_labels = db.relationship("GO", secondary=sequence_go, lazy="dynamic")
+    interpro_domains = db.relationship(
+        "Interpro", secondary=sequence_interpro, lazy="dynamic"
+    )
+    families = db.relationship("GeneFamily", secondary=sequence_family, lazy="dynamic")
 
-    coexpression_clusters = db.relationship('CoexpressionCluster', secondary=sequence_coexpression_cluster,
-                                            backref=db.backref('sequences', lazy='dynamic'),
-                                            lazy='dynamic')
+    coexpression_clusters = db.relationship(
+        "CoexpressionCluster",
+        secondary=sequence_coexpression_cluster,
+        backref=db.backref("sequences", lazy="dynamic"),
+        lazy="dynamic",
+    )
 
-    ecc_query_associations = db.relationship('SequenceSequenceECCAssociation',
-                                             primaryjoin="SequenceSequenceECCAssociation.query_id == Sequence.id",
-                                             backref=db.backref('query_sequence', lazy='joined'),
-                                             lazy='dynamic')
+    ecc_query_associations = db.relationship(
+        "SequenceSequenceECCAssociation",
+        primaryjoin="SequenceSequenceECCAssociation.query_id == Sequence.id",
+        backref=db.backref("query_sequence", lazy="joined"),
+        lazy="dynamic",
+    )
 
-    ecc_target_associations = db.relationship('SequenceSequenceECCAssociation',
-                                              primaryjoin="SequenceSequenceECCAssociation.target_id == Sequence.id",
-                                              backref=db.backref('target_sequence', lazy='joined'),
-                                              lazy='dynamic')
+    ecc_target_associations = db.relationship(
+        "SequenceSequenceECCAssociation",
+        primaryjoin="SequenceSequenceECCAssociation.target_id == Sequence.id",
+        backref=db.backref("target_sequence", lazy="joined"),
+        lazy="dynamic",
+    )
 
-    clade_associations_one = db.relationship('SequenceSequenceCladeAssociation',
-                                             primaryjoin="SequenceSequenceCladeAssociation.sequence_one_id == Sequence.id",
-                                             backref=db.backref('sequence_one', lazy='joined'),
-                                             lazy='dynamic')
+    clade_associations_one = db.relationship(
+        "SequenceSequenceCladeAssociation",
+        primaryjoin="SequenceSequenceCladeAssociation.sequence_one_id == Sequence.id",
+        backref=db.backref("sequence_one", lazy="joined"),
+        lazy="dynamic",
+    )
 
-    clade_associations_two = db.relationship('SequenceSequenceCladeAssociation',
-                                             primaryjoin="SequenceSequenceCladeAssociation.sequence_two_id == Sequence.id",
-                                             backref=db.backref('sequence_two', lazy='joined'),
-                                             lazy='dynamic')
+    clade_associations_two = db.relationship(
+        "SequenceSequenceCladeAssociation",
+        primaryjoin="SequenceSequenceCladeAssociation.sequence_two_id == Sequence.id",
+        backref=db.backref("sequence_two", lazy="joined"),
+        lazy="dynamic",
+    )
 
-    xrefs = db.relationship('XRef', secondary=sequence_xref, lazy='joined')
+    xrefs = db.relationship("XRef", secondary=sequence_xref, lazy="joined")
 
-    def __init__(self, species_id, name, coding_sequence, type='protein_coding', is_chloroplast=False,
-                 is_mitochondrial=False, description=None):
+    def __init__(
+        self,
+        species_id,
+        name,
+        coding_sequence,
+        type="protein_coding",
+        is_chloroplast=False,
+        is_mitochondrial=False,
+        description=None,
+    ):
         self.species_id = species_id
         self.name = name
         self.description = description
@@ -98,7 +134,7 @@ class Sequence(db.Model):
 
         :return: human readable string with aliases or None
         """
-        t = [x.name for x in self.xrefs if x.platform == 'token']
+        t = [x.name for x in self.xrefs if x.platform == "token"]
 
         return ", ".join(t) if len(t) > 0 else None
 
@@ -109,7 +145,7 @@ class Sequence(db.Model):
 
         :return: string with shortest alias or None (in case no aliases exist)
         """
-        t = [x.name for x in self.xrefs if x.platform == 'token']
+        t = [x.name for x in self.xrefs if x.platform == "token"]
 
         return min(t, key=len) if len(t) > 0 else None
 
@@ -120,7 +156,7 @@ class Sequence(db.Model):
 
         :return: display name
         """
-        t = [x.name for x in self.xrefs if x.platform == 'display']
+        t = [x.name for x in self.xrefs if x.platform == "display"]
 
         return t[0] if len(t) > 0 else self.name
 
@@ -146,14 +182,16 @@ class Sequence(db.Model):
 
         :return: string with readable version of the sequence type
         """
-        conversion = {'protein_coding': 'protein coding',
-                      'TE': 'transposable element',
-                      'RNA': 'RNA'}
+        conversion = {
+            "protein_coding": "protein coding",
+            "TE": "transposable element",
+            "RNA": "RNA",
+        }
 
         if self.type in conversion.keys():
             return conversion[self.type]
         else:
-            return 'other'
+            return "other"
 
     @staticmethod
     def add_from_fasta(filename, species_id, compressed=False):
@@ -163,14 +201,18 @@ class Sequence(db.Model):
         new_sequences = []
 
         # Loop over sequences, sorted by name (key here) and add to db
-        for name, sequence in sorted(fasta_data.sequences.items(), key=operator.itemgetter(0)):
-            new_sequence = {"species_id": species_id,
-                            "name": name,
-                            "description": None,
-                            "coding_sequence": sequence,
-                            "type": "protein_coding",
-                            "is_mitochondrial": False,
-                            "is_chloroplast": False}
+        for name, sequence in sorted(
+            fasta_data.sequences.items(), key=operator.itemgetter(0)
+        ):
+            new_sequence = {
+                "species_id": species_id,
+                "name": name,
+                "description": None,
+                "coding_sequence": sequence,
+                "type": "protein_coding",
+                "is_mitochondrial": False,
+                "is_chloroplast": False,
+            }
 
             new_sequences.append(new_sequence)
 
@@ -196,9 +238,9 @@ class Sequence(db.Model):
         with open(filename, "r") as f_in:
             for i, line in enumerate(f_in):
                 try:
-                    name, description = line.strip().split('\t')
+                    name, description = line.strip().split("\t")
                 except ValueError:
-                    print("Cannot parse line %d: \"%s\"" % (i, line), file=sys.stderr)
+                    print('Cannot parse line %d: "%s"' % (i, line), file=sys.stderr)
                 finally:
                     if name in seq_dict.keys():
                         seq_dict[name].description = description
@@ -210,7 +252,7 @@ class Sequence(db.Model):
 
     @staticmethod
     def export_cds(filename):
-        sequences = Sequence.query.options(undefer('coding_sequence')).all()
+        sequences = Sequence.query.options(undefer("coding_sequence")).all()
 
         with open(filename, "w") as f_out:
             for s in sequences:
@@ -218,7 +260,7 @@ class Sequence(db.Model):
 
     @staticmethod
     def export_protein(filename):
-        sequences = Sequence.query.options(undefer('coding_sequence')).all()
+        sequences = Sequence.query.options(undefer("coding_sequence")).all()
 
         with open(filename, "w") as f_out:
             for s in sequences:

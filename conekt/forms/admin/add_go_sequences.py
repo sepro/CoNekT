@@ -7,11 +7,13 @@ from conekt.models.species import Species
 
 
 class AddGOForm(FlaskForm):
-    species_id = SelectField('Species', coerce=int)
+    species_id = SelectField("Species", coerce=int)
 
-    source = StringField('Source', [InputRequired()])
+    source = StringField("Source", [InputRequired()])
 
     file = FileField()
 
     def populate_species(self):
-        self.species_id.choices = [(s.id, s.name) for s in Species.query.order_by(Species.name)]
+        self.species_id.choices = [
+            (s.id, s.name) for s in Species.query.order_by(Species.name)
+        ]

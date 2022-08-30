@@ -3,12 +3,12 @@ from conekt.models.species import Species
 from conekt.models.gene_families import GeneFamilyMethod
 
 
-SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
+SQL_COLLATION = "NOCASE" if db.engine.name == "sqlite" else ""
 
 
-@whooshee.register_model('name')
+@whooshee.register_model("name")
 class XRef(db.Model):
-    __tablename__ = 'xrefs'
+    __tablename__ = "xrefs"
     id = db.Column(db.Integer, primary_key=True)
     platform = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
     name = db.Column(db.String(50, collation=SQL_COLLATION), index=True)
@@ -43,7 +43,11 @@ class XRef(db.Model):
 
         :param species_id: species ID of the species to process
         """
-        XRef.__create_xref_genes(species_id, "PLAZA 3.0 Dicots", "http://bioinformatics.psb.ugent.be/plaza/versions/plaza_v3_dicots/genes/view/%s")
+        XRef.__create_xref_genes(
+            species_id,
+            "PLAZA 3.0 Dicots",
+            "http://bioinformatics.psb.ugent.be/plaza/versions/plaza_v3_dicots/genes/view/%s",
+        )
 
     @staticmethod
     def create_evex_xref_genes(species_id):
@@ -52,7 +56,9 @@ class XRef(db.Model):
 
         :param species_id: species ID of the species to process
         """
-        XRef.__create_xref_genes(species_id, "EVEX", "http://www.evexdb.org/search/?search=%s")
+        XRef.__create_xref_genes(
+            species_id, "EVEX", "http://www.evexdb.org/search/?search=%s"
+        )
 
     @staticmethod
     def add_xref_genes_from_file(species_id, filename):
@@ -63,7 +69,7 @@ class XRef(db.Model):
 
         with open(filename, "r") as f:
             for i, line in enumerate(f):
-                sequence, name, platform, url = line.split('\t')
+                sequence, name, platform, url = line.split("\t")
 
                 xref = XRef()
                 xref.name = name
@@ -97,7 +103,7 @@ class XRef(db.Model):
 
         with open(filename, "r") as f:
             for line in f:
-                family, name, platform, url = line.split('\t')
+                family, name, platform, url = line.split("\t")
 
                 xref = XRef()
                 xref.name = name

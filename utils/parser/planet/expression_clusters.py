@@ -2,7 +2,9 @@ import csv
 
 
 class Parser:
-    def __init__(self, ):
+    def __init__(
+        self,
+    ):
         self.clusters = {}
 
     def read_expression_clusters(self, network_file, cluster_file):
@@ -19,7 +21,7 @@ class Parser:
 
         # the network file is required for the mapping from numeric ids to gene ids
         with open(network_file) as csvfile:
-            reader = csv.reader(csvfile, delimiter='\t')
+            reader = csv.reader(csvfile, delimiter="\t")
             for probe_id, parts in enumerate(reader):
                 # probe_id in this case is the line number (starting from zero)
 
@@ -27,11 +29,11 @@ class Parser:
                 gene_id = parts[1]
 
                 id_to_probe[probe_id] = {}
-                id_to_probe[probe_id]['probe'] = probe
-                id_to_probe[probe_id]['gene'] = gene_id
+                id_to_probe[probe_id]["probe"] = probe
+                id_to_probe[probe_id]["gene"] = gene_id
 
         with open(cluster_file) as csvfile:
-            reader = csv.reader(csvfile, delimiter='\t')
+            reader = csv.reader(csvfile, delimiter="\t")
             for parts in reader:
                 probe_id = int(parts[0])
                 cluster_id = parts[1]
@@ -40,5 +42,9 @@ class Parser:
                     self.clusters[cluster_id] = []
 
                 if probe_id in id_to_probe.keys():
-                    self.clusters[cluster_id].append({'probe': id_to_probe[probe_id]['probe'],
-                                                      'gene': id_to_probe[probe_id]['gene']})
+                    self.clusters[cluster_id].append(
+                        {
+                            "probe": id_to_probe[probe_id]["probe"],
+                            "gene": id_to_probe[probe_id]["gene"],
+                        }
+                    )

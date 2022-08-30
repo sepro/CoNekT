@@ -11,23 +11,30 @@ from collections import defaultdict
 
 import json
 
-SQL_COLLATION = 'NOCASE' if db.engine.name == 'sqlite' else ''
+SQL_COLLATION = "NOCASE" if db.engine.name == "sqlite" else ""
 
 
-@whooshee.register_model('name', 'description')
+@whooshee.register_model("name", "description")
 class GO(db.Model):
-    __tablename__ = 'go'
+    __tablename__ = "go"
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String(50, collation=SQL_COLLATION), unique=True, index=True)
     name = db.Column(db.Text)
-    type = db.Column(db.Enum('biological_process', 'molecular_function', 'cellular_component', name='go_type'))
+    type = db.Column(
+        db.Enum(
+            "biological_process",
+            "molecular_function",
+            "cellular_component",
+            name="go_type",
+        )
+    )
     description = db.Column(db.Text)
     obsolete = db.Column(db.SmallInteger)
     is_a = db.Column(db.Text)
     extended_go = db.Column(db.Text)
     species_counts = db.Column(db.Text)
 
-    sequences = db.relationship('Sequence', secondary=sequence_go, lazy='dynamic')
+    sequences = db.relationship("Sequence", secondary=sequence_go, lazy="dynamic")
 
     # Other properties
     #
@@ -54,25 +61,25 @@ class GO(db.Model):
 
     @property
     def short_type(self):
-        if self.type == 'biological_process':
-            return 'BP'
-        elif self.type == 'molecular_function':
-            return 'MF'
-        elif self.type == 'cellular_component':
-            return 'CC'
+        if self.type == "biological_process":
+            return "BP"
+        elif self.type == "molecular_function":
+            return "MF"
+        elif self.type == "cellular_component":
+            return "CC"
         else:
-            return 'UNK'
+            return "UNK"
 
     @property
     def readable_type(self):
-        if self.type == 'biological_process':
-            return 'Biological process'
-        elif self.type == 'molecular_function':
-            return 'Molecular function'
-        elif self.type == 'cellular_component':
-            return 'Cellular component'
+        if self.type == "biological_process":
+            return "Biological process"
+        elif self.type == "molecular_function":
+            return "Molecular function"
+        elif self.type == "cellular_component":
+            return "Cellular component"
         else:
-            return 'Unknown type'
+            return "Unknown type"
 
     @property
     def parent_count(self):
@@ -80,7 +87,7 @@ class GO(db.Model):
         Returns total number of genes 'above' this gene in the DAG
         :return:
         """
-        return len(self.extended_go.split(';')) if self.extended_go != '' else 0
+        return len(self.extended_go.split(";")) if self.extended_go != "" else 0
 
     @property
     def interpro_stats(self):
@@ -123,7 +130,9 @@ class GO(db.Model):
         :param exclude_predicted: if True (default) predicted GO labels will be excluded
         :return: dict with for each InterPro domain linked with any of the input sequences stats
         """
-        query = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id.in_(sequence_ids))
+        query = SequenceGOAssociation.query.filter(
+            SequenceGOAssociation.sequence_id.in_(sequence_ids)
+        )
 
         if exclude_predicted:
             query = query.filter(SequenceGOAssociation.predicted == 0)
@@ -141,7 +150,9 @@ class GO(db.Model):
         if exclude_predicted:
             query = query.filter(SequenceGOAssociation.predicted == 0)
 
-        data = query.join(subquery, SequenceGOAssociation.sequence_id == subquery.c.id).all()
+        data = query.join(
+            subquery, SequenceGOAssociation.sequence_id == subquery.c.id
+        ).all()
 
         return GO.__sequence_stats_associations(data)
 
@@ -151,21 +162,21 @@ class GO(db.Model):
         for d in associations:
             if d.go_id not in output.keys():
                 output[d.go_id] = {
-                    'go': d.go,
-                    'count': 1,
-                    'sequences': [d.sequence_id],
-                    'species': [d.sequence.species_id]
+                    "go": d.go,
+                    "count": 1,
+                    "sequences": [d.sequence_id],
+                    "species": [d.sequence.species_id],
                 }
             else:
-                output[d.go_id]['count'] += 1
-                if d.sequence_id not in output[d.go_id]['sequences']:
-                    output[d.go_id]['sequences'].append(d.sequence_id)
-                if d.sequence.species_id not in output[d.go_id]['species']:
-                    output[d.go_id]['species'].append(d.sequence.species_id)
+                output[d.go_id]["count"] += 1
+                if d.sequence_id not in output[d.go_id]["sequences"]:
+                    output[d.go_id]["sequences"].append(d.sequence_id)
+                if d.sequence.species_id not in output[d.go_id]["species"]:
+                    output[d.go_id]["species"].append(d.sequence.species_id)
 
         for k, v in output.items():
-            v['species_count'] = len(v['species'])
-            v['sequence_count'] = len(v['sequences'])
+            v["species_count"] = len(v["species"])
+            v["sequence_count"] = len(v["sequences"])
 
         return output
 
@@ -177,7 +188,9 @@ class GO(db.Model):
         :param exclude_predicted: if True (default) predicted GO labels will be excluded
         """
         # link species to sequences
-        sequences = db.engine.execute(db.select([Sequence.__table__.c.id, Sequence.__table__.c.species_id])).fetchall()
+        sequences = db.engine.execute(
+            db.select([Sequence.__table__.c.id, Sequence.__table__.c.species_id])
+        ).fetchall()
 
         sequence_to_species = {}
         for seq_id, species_id in sequences:
@@ -186,10 +199,14 @@ class GO(db.Model):
 
         # get go for all genes
         associations = db.engine.execute(
-            db.select([SequenceGOAssociation.__table__.c.sequence_id,
-                       SequenceGOAssociation.__table__.c.go_id], distinct=True)\
-            .where(SequenceGOAssociation.__table__.c.predicted == 0))\
-            .fetchall()
+            db.select(
+                [
+                    SequenceGOAssociation.__table__.c.sequence_id,
+                    SequenceGOAssociation.__table__.c.go_id,
+                ],
+                distinct=True,
+            ).where(SequenceGOAssociation.__table__.c.predicted == 0)
+        ).fetchall()
 
         count = {}
         for seq_id, go_id in associations:
@@ -205,9 +222,11 @@ class GO(db.Model):
 
         # update counts
         for go_id, data in count.items():
-            db.engine.execute(db.update(GO.__table__)
-                              .where(GO.__table__.c.id == go_id)
-                              .values(species_counts=json.dumps(data)))
+            db.engine.execute(
+                db.update(GO.__table__)
+                .where(GO.__table__.c.id == go_id)
+                .values(species_counts=json.dumps(data))
+            )
 
     @staticmethod
     def add_from_obo(filename, empty=True, compressed=False):
@@ -233,8 +252,15 @@ class GO(db.Model):
         obo_parser.extend_go()
 
         for i, term in enumerate(obo_parser.terms):
-            go = GO(term.id, term.name, term.namespace, term.definition, term.is_obsolete, ";".join(term.is_a),
-                    ";".join(term.extended_go))
+            go = GO(
+                term.id,
+                term.name,
+                term.namespace,
+                term.definition,
+                term.is_obsolete,
+                ";".join(term.is_a),
+                ";".join(term.extended_go),
+            )
 
             db.session.add(go)
 
@@ -287,7 +313,8 @@ class GO(db.Model):
                             "sequence_id": current_sequence.id,
                             "go_id": current_term.id,
                             "evidence": term["evidence"],
-                            "source": term["source"]}
+                            "source": term["source"],
+                        }
                         associations.append(association)
                     else:
                         print(term, "not found in the database.")
@@ -295,7 +322,9 @@ class GO(db.Model):
                 print("Gene", gene, "not found in the database.")
 
             if len(associations) > 400:
-                db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
+                db.engine.execute(
+                    SequenceGOAssociation.__table__.insert(), associations
+                )
                 associations = []
 
         # Add extended GOs
@@ -313,7 +342,10 @@ class GO(db.Model):
                     if term["id"] in go_hash.keys():
                         extended_terms = go_hash[term["id"]].extended_go.split(";")
                         for extended_term in extended_terms:
-                            if extended_term not in current_terms and extended_term not in new_terms:
+                            if (
+                                extended_term not in current_terms
+                                and extended_term not in new_terms
+                            ):
                                 new_terms.append(extended_term)
 
                 for new_term in new_terms:
@@ -323,11 +355,14 @@ class GO(db.Model):
                             "sequence_id": current_sequence.id,
                             "go_id": current_term.id,
                             "evidence": None,
-                            "source": "Extended"}
+                            "source": "Extended",
+                        }
                         associations.append(association)
 
                     if len(associations) > 400:
-                        db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
+                        db.engine.execute(
+                            SequenceGOAssociation.__table__.insert(), associations
+                        )
                         associations = []
 
         db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
@@ -352,7 +387,7 @@ class GO(db.Model):
 
         with open(filename, "r") as f:
             for line in f:
-                gene, term, evidence = line.strip().split('\t')
+                gene, term, evidence = line.strip().split("\t")
                 if gene in gene_hash.keys():
                     current_sequence = gene_hash[gene]
                     if term in go_hash.keys():
@@ -361,7 +396,8 @@ class GO(db.Model):
                             "sequence_id": current_sequence.id,
                             "go_id": current_term.id,
                             "evidence": evidence,
-                            "source": source}
+                            "source": source,
+                        }
                         associations.append(association)
 
                         if term not in gene_go[gene]:
@@ -373,7 +409,9 @@ class GO(db.Model):
                     print("Gene", gene, "not found in the database.")
 
                 if len(associations) > 400:
-                    db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
+                    db.engine.execute(
+                        SequenceGOAssociation.__table__.insert(), associations
+                    )
                     associations = []
 
         # Add extended GOs
@@ -391,7 +429,10 @@ class GO(db.Model):
                     if term in go_hash.keys():
                         extended_terms = go_hash[term].extended_go.split(";")
                         for extended_term in extended_terms:
-                            if extended_term not in current_terms and extended_term not in new_terms:
+                            if (
+                                extended_term not in current_terms
+                                and extended_term not in new_terms
+                            ):
                                 new_terms.append(extended_term)
 
                 for new_term in new_terms:
@@ -401,17 +442,22 @@ class GO(db.Model):
                             "sequence_id": current_sequence.id,
                             "go_id": current_term.id,
                             "evidence": None,
-                            "source": "Extended"}
+                            "source": "Extended",
+                        }
                         associations.append(association)
 
                     if len(associations) > 400:
-                        db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
+                        db.engine.execute(
+                            SequenceGOAssociation.__table__.insert(), associations
+                        )
                         associations = []
 
         db.engine.execute(SequenceGOAssociation.__table__.insert(), associations)
 
     @staticmethod
-    def predict_from_network(expression_network_method_id, threshold=5, source="PlaNet Prediction"):
+    def predict_from_network(
+        expression_network_method_id, threshold=5, source="PlaNet Prediction"
+    ):
         """
         Function to transfer GO terms from neighbors in the network. If n or more (based on threshold) neighbors have a
         GO label (excluding other predicted labels) the term is transferred.
@@ -422,10 +468,14 @@ class GO(db.Model):
         """
         from conekt.models.expression.networks import ExpressionNetworkMethod
 
-        expression_network_method = ExpressionNetworkMethod.query.get(expression_network_method_id)
+        expression_network_method = ExpressionNetworkMethod.query.get(
+            expression_network_method_id
+        )
 
         if expression_network_method is None:
-            print("ERROR: Network Method ID %d not found" % expression_network_method_id)
+            print(
+                "ERROR: Network Method ID %d not found" % expression_network_method_id
+            )
             return
 
         # Get all genes that belong to the network
@@ -434,14 +484,21 @@ class GO(db.Model):
         new_associations = []
 
         for i, probe in enumerate(probes):
-            print("Predicting GO for gene: %d, %s (%d out of %d)" %
-                  (probe.sequence_id, probe.sequence.name, i, expression_network_method.probe_count))
+            print(
+                "Predicting GO for gene: %d, %s (%d out of %d)"
+                % (
+                    probe.sequence_id,
+                    probe.sequence.name,
+                    i,
+                    expression_network_method.probe_count,
+                )
+            )
 
             # Get neighborhood from database
             neighborhood = json.loads(probe.network)
 
             # Get sequence ids from genes in first level neighborhood
-            sequence_ids = [n['gene_id'] for n in neighborhood if 'gene_id' in n]
+            sequence_ids = [n["gene_id"] for n in neighborhood if "gene_id" in n]
 
             # If the number of genes in the neighborhood is smaller than the threshold skip (no prediction possible)
             # If there is no sequence associated with the probe skip as well
@@ -449,15 +506,28 @@ class GO(db.Model):
                 continue
 
             # Get own GO terms
-            own_associations = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id == probe.sequence_id)
+            own_associations = SequenceGOAssociation.query.filter(
+                SequenceGOAssociation.sequence_id == probe.sequence_id
+            )
             own_terms = list(set([a.go_id for a in own_associations]))
 
             # Get GO terms from neighbors
-            associations = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id.in_(sequence_ids)).\
-                filter(SequenceGOAssociation.predicted == 0).all()
+            associations = (
+                SequenceGOAssociation.query.filter(
+                    SequenceGOAssociation.sequence_id.in_(sequence_ids)
+                )
+                .filter(SequenceGOAssociation.predicted == 0)
+                .all()
+            )
 
             # Make GO terms from neighbors unique and ignore terms the current gene has already
-            unique_associations = set([(a.sequence_id, a.go_id) for a in associations if a.go_id not in own_terms])
+            unique_associations = set(
+                [
+                    (a.sequence_id, a.go_id)
+                    for a in associations
+                    if a.go_id not in own_terms
+                ]
+            )
 
             go_counts = defaultdict(lambda: 0)
 
@@ -465,45 +535,59 @@ class GO(db.Model):
                 go_counts[ua[1]] += 1
 
             # Determine new terms (that occurred equal or more times than the desired threshold
-            new_terms = [{
-                'go_id': k,
-                'score': v
-            } for k, v in go_counts.items() if v >= threshold]
+            new_terms = [
+                {"go_id": k, "score": v} for k, v in go_counts.items() if v >= threshold
+            ]
 
             # Store new terms in a list that can be added to the database
             for nt in new_terms:
-                new_associations.append({
-                    'sequence_id': probe.sequence_id,
-                    'go_id': nt['go_id'],
-                    'evidence': 'IEP',
-                    'source': source,
-                    'predicted': True,
-                    'prediction_data': json.dumps({'score': nt['score'],
-                                                   'threshold': threshold,
-                                                   'network_method': expression_network_method_id,
-                                                   'prediction_method': 'Neighbor counting'
-                                                   })
-                })
+                new_associations.append(
+                    {
+                        "sequence_id": probe.sequence_id,
+                        "go_id": nt["go_id"],
+                        "evidence": "IEP",
+                        "source": source,
+                        "predicted": True,
+                        "prediction_data": json.dumps(
+                            {
+                                "score": nt["score"],
+                                "threshold": threshold,
+                                "network_method": expression_network_method_id,
+                                "prediction_method": "Neighbor counting",
+                            }
+                        ),
+                    }
+                )
 
         # Add new labels to the database in chuncks of 400
         for i in range(0, len(new_associations), 400):
-            db.engine.execute(SequenceGOAssociation.__table__.insert(), new_associations[i: i + 400])
+            db.engine.execute(
+                SequenceGOAssociation.__table__.insert(), new_associations[i : i + 400]
+            )
 
     @staticmethod
-    def predict_from_network_enrichment(expression_network_method_id, cutoff=0.05, source="PlaNet Prediction"):
+    def predict_from_network_enrichment(
+        expression_network_method_id, cutoff=0.05, source="PlaNet Prediction"
+    ):
         from conekt.models.expression.networks import ExpressionNetworkMethod
 
-        expression_network_method = ExpressionNetworkMethod.query.get(expression_network_method_id)
+        expression_network_method = ExpressionNetworkMethod.query.get(
+            expression_network_method_id
+        )
 
         if expression_network_method is None:
-            print("ERROR: Network Method ID %d not found" % expression_network_method_id)
+            print(
+                "ERROR: Network Method ID %d not found" % expression_network_method_id
+            )
             return
 
         probes = expression_network_method.probes.all()
 
         # Get all GO terms and get background
         # Important, counts are obtained from precomputed counts in the species_counts field !!
-        go_data = db.engine.execute(db.select([GO.__table__.c.id, GO.__table__.c.species_counts])).fetchall()
+        go_data = db.engine.execute(
+            db.select([GO.__table__.c.id, GO.__table__.c.species_counts])
+        ).fetchall()
 
         go_background = defaultdict(lambda: 0)
 
@@ -511,30 +595,52 @@ class GO(db.Model):
             if counts_json is not "":
                 counts = json.loads(counts_json)
                 if str(expression_network_method.species_id) in counts.keys():
-                    go_background[go_id] = counts[str(expression_network_method.species_id)]
+                    go_background[go_id] = counts[
+                        str(expression_network_method.species_id)
+                    ]
 
         new_associations = []
 
         for i, probe in enumerate(probes):
-            print("Predicting GO for gene: %d, %s (%d out of %d)" %
-                  (probe.sequence_id, probe.sequence.name, i, expression_network_method.probe_count))
+            print(
+                "Predicting GO for gene: %d, %s (%d out of %d)"
+                % (
+                    probe.sequence_id,
+                    probe.sequence.name,
+                    i,
+                    expression_network_method.probe_count,
+                )
+            )
 
             # Get neighborhood from database
             neighborhood = json.loads(probe.network)
 
             # Get sequence ids from genes in first level neighborhood
-            sequence_ids = [n['gene_id'] for n in neighborhood if 'gene_id' in n]
+            sequence_ids = [n["gene_id"] for n in neighborhood if "gene_id" in n]
 
             # Get own GO terms
-            own_associations = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id == probe.sequence_id)
+            own_associations = SequenceGOAssociation.query.filter(
+                SequenceGOAssociation.sequence_id == probe.sequence_id
+            )
             own_terms = list(set([a.go_id for a in own_associations]))
 
             # Get GO terms from neighbors
-            associations = SequenceGOAssociation.query.filter(SequenceGOAssociation.sequence_id.in_(sequence_ids)).\
-                filter(SequenceGOAssociation.predicted == 0).all()
+            associations = (
+                SequenceGOAssociation.query.filter(
+                    SequenceGOAssociation.sequence_id.in_(sequence_ids)
+                )
+                .filter(SequenceGOAssociation.predicted == 0)
+                .all()
+            )
 
             # Make GO terms from neighbors unique and ignore terms the current gene has already
-            unique_associations = set([(a.sequence_id, a.go_id) for a in associations if a.go_id not in own_terms])
+            unique_associations = set(
+                [
+                    (a.sequence_id, a.go_id)
+                    for a in associations
+                    if a.go_id not in own_terms
+                ]
+            )
             go_counts = defaultdict(lambda: 0)
 
             for ua in unique_associations:
@@ -544,7 +650,9 @@ class GO(db.Model):
             enriched_go = []
 
             for go_id, count in go_counts.items():
-                p_value = hypergeo_sf(count, len(sequence_ids), go_background[go_id], len(probes))
+                p_value = hypergeo_sf(
+                    count, len(sequence_ids), go_background[go_id], len(probes)
+                )
                 if p_value < cutoff:
                     enriched_go.append((go_id, p_value))
 
@@ -553,20 +661,27 @@ class GO(db.Model):
 
             # push new prediction in a dict that will be added to the DB
             for corrected_p, (go_id, p_value) in zip(corrected_p, enriched_go):
-                new_associations.append({
-                    'sequence_id': probe.sequence_id,
-                    'go_id': go_id,
-                    'evidence': 'IEP',
-                    'source': source,
-                    'predicted': True,
-                    'prediction_data': json.dumps({'p-cutoff': cutoff,
-                                                   'p-value': p_value,
-                                                   'p-value (FDR)': corrected_p,
-                                                   'network_method': expression_network_method_id,
-                                                   'prediction_method': 'Neighborhood enrichment'
-                                                   })
-                })
+                new_associations.append(
+                    {
+                        "sequence_id": probe.sequence_id,
+                        "go_id": go_id,
+                        "evidence": "IEP",
+                        "source": source,
+                        "predicted": True,
+                        "prediction_data": json.dumps(
+                            {
+                                "p-cutoff": cutoff,
+                                "p-value": p_value,
+                                "p-value (FDR)": corrected_p,
+                                "network_method": expression_network_method_id,
+                                "prediction_method": "Neighborhood enrichment",
+                            }
+                        ),
+                    }
+                )
 
         # Add new labels to the database in chuncks of 400
         for i in range(0, len(new_associations), 400):
-            db.engine.execute(SequenceGOAssociation.__table__.insert(), new_associations[i: i + 400])
+            db.engine.execute(
+                SequenceGOAssociation.__table__.insert(), new_associations[i : i + 400]
+            )

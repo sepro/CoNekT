@@ -5,7 +5,13 @@ from wtforms.validators import InputRequired, DataRequired
 
 
 class AddFamiliesForm(FlaskForm):
-    method_description = StringField('Description', [InputRequired])
-    source = SelectField('Source', choices=[('mcl', 'MCL'), ('orthofinder', 'OrthoFinder'), ('general', 'General')])
+    method_description = StringField("Description", [InputRequired])
+    source = SelectField(
+        "Source",
+        choices=[
+            ("mcl", "MCL"),
+            ("orthofinder", "OrthoFinder"),
+            ("general", "General"),
+        ],
+    )
     file = FileField()
-

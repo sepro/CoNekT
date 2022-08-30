@@ -8,7 +8,8 @@ class CladesAdminView(MyModelView):
     """
     Clades view for admins, specifies what is available in CRUD
     """
-    form_columns = ('id', 'name', 'species', 'newick_tree')
+
+    form_columns = ("id", "name", "species", "newick_tree")
 
     column_display_pk = True
 
@@ -19,8 +20,9 @@ class AddCladesView(AdminBaseView):
     """
     Admin page where all clades, in JSON, can be uploaded
     """
-    @expose('/')
+
+    @expose("/")
     def index(self):
         form = AddCladesForm()
 
-        return self.render('admin/add/clades.html', form=form)
+        return self.render("admin/add/clades.html", form=form)

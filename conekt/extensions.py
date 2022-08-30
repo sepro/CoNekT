@@ -16,17 +16,28 @@ from sqlite3 import Connection as SQLite3Connection
 
 from conekt.flask_blast import BlastThread
 
-__all__ = ['toolbar', 'db', 'login_manager', 'cache', 'htmlmin',
-           'blast_thread', 'compress', 'whooshee', 'migrate', 'csrf']
+__all__ = [
+    "toolbar",
+    "db",
+    "login_manager",
+    "cache",
+    "htmlmin",
+    "blast_thread",
+    "compress",
+    "whooshee",
+    "migrate",
+    "csrf",
+]
 
 db = SQLAlchemy()
 
 
 def admin_required(fn):
     """
-        Extend Flask-Login to support @admin_required decorator
-        Requires User class to support is_admin() method
+    Extend Flask-Login to support @admin_required decorator
+    Requires User class to support is_admin() method
     """
+
     @wraps(fn)
     def decorated_view(*args, **kwargs):
         if not current_user.is_authenticated:
@@ -40,13 +51,14 @@ def admin_required(fn):
 
         user_unauthorized.send(current_app._get_current_object())
         abort(403)
+
     return decorated_view
 
 
 @event.listens_for(Engine, "connect")
 def set_sqlite_pragma(dbapi_connection, connection_record):
     """
-        Will force sqlite contraint foreign keys
+    Will force sqlite contraint foreign keys
     """
     if isinstance(dbapi_connection, SQLite3Connection):
         cursor = dbapi_connection.cursor()

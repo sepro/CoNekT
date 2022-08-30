@@ -9,27 +9,35 @@ class AddXRefsView(AdminBaseView):
     """
     Admin page to add external references to genes
     """
-    @expose('/')
+
+    @expose("/")
     def index(self):
         form = AddXRefsForm()
         form.populate_species()
 
-        if current_app.config['WHOOSHEE_ENABLE_INDEXING']:
-            flash("WHOOSHEE Indexing is enabled, this can take a long time to complete.", "warning")
+        if current_app.config["WHOOSHEE_ENABLE_INDEXING"]:
+            flash(
+                "WHOOSHEE Indexing is enabled, this can take a long time to complete.",
+                "warning",
+            )
 
-        return self.render('admin/add/xrefs.html', form=form)
+        return self.render("admin/add/xrefs.html", form=form)
 
 
 class AddXRefsFamiliesView(AdminBaseView):
     """
     Admin page to add external references to families
     """
-    @expose('/')
+
+    @expose("/")
     def index(self):
         form = AddXRefsFamiliesForm()
         form.populate_methods()
 
-        if current_app.config['WHOOSHEE_ENABLE_INDEXING']:
-            flash("WHOOSHEE Indexing is enabled, this can take a long time to complete.", "warning")
+        if current_app.config["WHOOSHEE_ENABLE_INDEXING"]:
+            flash(
+                "WHOOSHEE Indexing is enabled, this can take a long time to complete.",
+                "warning",
+            )
 
-        return self.render('admin/add/xrefs_families.html', form=form)
+        return self.render("admin/add/xrefs_families.html", form=form)

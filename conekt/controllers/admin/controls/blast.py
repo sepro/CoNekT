@@ -6,7 +6,7 @@ from conekt.controllers.admin.controls import admin_controls
 from conekt.models.blast_db import BlastDB
 
 
-@admin_controls.route('/build_blast_db')
+@admin_controls.route("/build_blast_db")
 @admin_required
 def build_blast_db():
     """
@@ -18,8 +18,8 @@ def build_blast_db():
     try:
         BlastDB.create_db()
     except Exception as e:
-        flash('An error occurred while building the Blast DB', 'danger')
+        flash("An error occurred while building the Blast DB", "danger")
     else:
-        flash('Blast DB build', 'success')
+        flash("Blast DB build", "success")
 
-    return redirect(url_for('admin.controls.index'))
+    return redirect(url_for("admin.controls.index"))

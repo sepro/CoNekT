@@ -9,10 +9,10 @@ from conekt.models.clades import Clade
 from sqlalchemy.orm import undefer, noload
 from sqlalchemy import desc
 
-species = Blueprint('species', __name__)
+species = Blueprint("species", __name__)
 
 
-@species.route('/')
+@species.route("/")
 @cache.cached()
 def species_overview():
     """
@@ -26,10 +26,10 @@ def species_overview():
 
     tree = largest_clade.newick_tree_species if largest_clade is not None else None
 
-    return render_template('species.html', all_species=all_species, species_tree=tree)
+    return render_template("species.html", all_species=all_species, species_tree=tree)
 
 
-@species.route('/view/<species_id>')
+@species.route("/view/<species_id>")
 @cache.cached()
 def species_view(species_id):
     """
@@ -41,19 +41,42 @@ def species_view(species_id):
     current_species = Species.query.get_or_404(species_id)
 
     if not current_species.has_interpro:
-        flash(Markup('No <strong>InterPro domains</strong> present in the database for this species'), 'warning')
+        flash(
+            Markup(
+                "No <strong>InterPro domains</strong> present in the database for this species"
+            ),
+            "warning",
+        )
 
     if not current_species.has_go:
-        flash(Markup('No <strong>GO annotation</strong> present in the database for this species'), 'warning')
+        flash(
+            Markup(
+                "No <strong>GO annotation</strong> present in the database for this species"
+            ),
+            "warning",
+        )
 
-    description = None if current_species.description is None \
-        else Markup(markdown(current_species.description, extensions=['markdown.extensions.tables', 'markdown.extensions.attr_list']))
+    description = (
+        None
+        if current_species.description is None
+        else Markup(
+            markdown(
+                current_species.description,
+                extensions=[
+                    "markdown.extensions.tables",
+                    "markdown.extensions.attr_list",
+                ],
+            )
+        )
+    )
 
-    return render_template('species.html', species=current_species, description=description)
+    return render_template(
+        "species.html", species=current_species, description=description
+    )
 
 
-@species.route('/sequences/<species_id>/')
-@species.route('/sequences/<species_id>/<int:page>')
+@species.route("/sequences/<species_id>/")
+@species.route("/sequences/<species_id>/<int:page>")
 @cache.cached()
 def species_sequences(species_id, page=1):
     """
@@ -62,14 +85,16 @@ def species_sequences(species_id, page=1):
     :param species_id: Internal ID of the species
     :param page: Page number
     """
-    sequences = Species.query.get(species_id).sequences.paginate(page,
-                                                                 g.page_items,
-                                                                 False).items
+    sequences = (
+        Species.query.get(species_id)
+        .sequences.paginate(page, g.page_items, False)
+        .items
+    )
 
-    return render_template('pagination/sequences.html', sequences=sequences)
+    return render_template("pagination/sequences.html", sequences=sequences)
 
 
-@species.route('/download/coding/<species_id>')
+@species.route("/download/coding/<species_id>")
 def species_download_coding(species_id):
     """
     Generates a fasta file with all coding sequences for a given species
@@ -80,22 +105,26 @@ def species_download_coding(species_id):
     output = []
 
     current_species = Species.query.get(species_id)
-    sequences = db.engine.execute(db.select([Sequence.__table__.c.name, Sequence.__table__.c.coding_sequence]).
-                                  where(Sequence.__table__.c.species_id == current_species.id)).\
-        fetchall()
+    sequences = db.engine.execute(
+        db.select(
+            [Sequence.__table__.c.name, Sequence.__table__.c.coding_sequence]
+        ).where(Sequence.__table__.c.species_id == current_species.id)
+    ).fetchall()
 
     for (name, coding_sequence) in sequences:
         output.append(">" + name)
         output.append(coding_sequence)
 
     response = make_response("\n".join(output))
-    response.headers["Content-Disposition"] = "attachment; filename=" + current_species.code + ".cds.fasta"
-    response.headers['Content-type'] = 'text/plain'
+    response.headers["Content-Disposition"] = (
+        "attachment; filename=" + current_species.code + ".cds.fasta"
+    )
+    response.headers["Content-type"] = "text/plain"
 
     return response
 
 
-@species.route('/download/protein/<species_id>')
+@species.route("/download/protein/<species_id>")
 def species_download_protein(species_id):
     """
     Generates a fasta file with all amino acid sequences for a given species
@@ -106,7 +135,11 @@ def species_download_protein(species_id):
     output = []
 
     current_species = Species.query.get(species_id)
-    sequences = current_species.sequences.options(undefer('coding_sequence')).options(noload('xrefs')).all()
+    sequences = (
+        current_species.sequences.options(undefer("coding_sequence"))
+        .options(noload("xrefs"))
+        .all()
+    )
 
     for s in sequences:
         if s.type == "protein_coding":
@@ -114,13 +147,15 @@ def species_download_protein(species_id):
             output.append(s.protein_sequence)
 
     response = make_response("\n".join(output))
-    response.headers["Content-Disposition"] = "attachment; filename=" + current_species.code + ".aa.fasta"
-    response.headers['Content-type'] = 'text/plain'
+    response.headers["Content-Disposition"] = (
+        "attachment; filename=" + current_species.code + ".aa.fasta"
+    )
+    response.headers["Content-type"] = "text/plain"
 
     return response
 
 
-@species.route('/stream/coding/<species_id>')
+@species.route("/stream/coding/<species_id>")
 def species_stream_coding(species_id):
     """
     Generates a fasta file with all coding sequences for a given species. However this is send as a streaming
@@ -129,18 +164,21 @@ def species_stream_coding(species_id):
     :param species_id: Internal ID of the species
     :return: Streamed response with the fasta file
     """
+
     def generate(selected_species):
-        sequences = db.engine.execute(db.select([Sequence.__table__.c.name, Sequence.__table__.c.coding_sequence]).
-                                      where(Sequence.__table__.c.species_id == selected_species)).\
-            fetchall()
+        sequences = db.engine.execute(
+            db.select(
+                [Sequence.__table__.c.name, Sequence.__table__.c.coding_sequence]
+            ).where(Sequence.__table__.c.species_id == selected_species)
+        ).fetchall()
 
         for name, coding_sequence in sequences:
-            yield ">" + name + '\n' + coding_sequence + '\n'
+            yield ">" + name + "\n" + coding_sequence + "\n"
 
-    return Response(generate(species_id), mimetype='text/plain')
+    return Response(generate(species_id), mimetype="text/plain")
 
 
-@species.route('/stream/protein/<species_id>')
+@species.route("/stream/protein/<species_id>")
 def species_stream_protein(species_id):
     """
     Generates a fasta file with all amino acid sequences for a given species. However this is send as a streaming
@@ -149,18 +187,17 @@ def species_stream_protein(species_id):
     :param species_id: Internal ID of the species
     :return: Streamed response with the fasta file
     """
+
     def generate(selected_species):
-        sequences = Sequence.query\
-            .options(undefer('coding_sequence'))\
-            .options(noload('xrefs'))\
-            .filter_by(species_id=selected_species)\
+        sequences = (
+            Sequence.query.options(undefer("coding_sequence"))
+            .options(noload("xrefs"))
+            .filter_by(species_id=selected_species)
             .all()
+        )
 
         for s in sequences:
             if s.type == "protein_coding":
-                yield ">" + s.name + '\n' + s.protein_sequence + '\n'
+                yield ">" + s.name + "\n" + s.protein_sequence + "\n"
 
-    return Response(generate(species_id), mimetype='text/plain')
-
-
-
+    return Response(generate(species_id), mimetype="text/plain")

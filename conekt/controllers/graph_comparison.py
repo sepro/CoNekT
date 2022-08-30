@@ -8,7 +8,7 @@ from conekt.models.expression.coexpression_clusters import CoexpressionCluster
 from conekt.models.gene_families import GeneFamilyMethod
 
 
-graph_comparison = Blueprint('graph_comparison', __name__)
+graph_comparison = Blueprint("graph_comparison", __name__)
 
 
 # TODO placeholder for the search function
@@ -17,8 +17,8 @@ graph_comparison = Blueprint('graph_comparison', __name__)
 #     return "TEST"
 
 
-@graph_comparison.route('/cluster/<int:one>/<int:two>')
-@graph_comparison.route('/cluster/<int:one>/<int:two>/<int:family_method_id>')
+@graph_comparison.route("/cluster/<int:one>/<int:two>")
+@graph_comparison.route("/cluster/<int:one>/<int:two>/<int:family_method_id>")
 @cache.cached()
 def graph_comparison_cluster(one, two, family_method_id=1):
     """
@@ -33,14 +33,24 @@ def graph_comparison_cluster(one, two, family_method_id=1):
     cluster_one = CoexpressionCluster.query.get_or_404(one)
     cluster_two = CoexpressionCluster.query.get_or_404(two)
 
-    cutoff = max([cluster_one.method.network_method.hrr_cutoff, cluster_two.method.network_method.hrr_cutoff])
+    cutoff = max(
+        [
+            cluster_one.method.network_method.hrr_cutoff,
+            cluster_two.method.network_method.hrr_cutoff,
+        ]
+    )
 
-    return render_template('expression_graph.html', cluster_one=cluster_one, cluster_two=cluster_two,
-                           family_method_id=family_method_id, cutoff=cutoff)
+    return render_template(
+        "expression_graph.html",
+        cluster_one=cluster_one,
+        cluster_two=cluster_two,
+        family_method_id=family_method_id,
+        cutoff=cutoff,
+    )
 
 
-@graph_comparison.route('/cluster/json/<int:one>/<int:two>')
-@graph_comparison.route('/cluster/json/<int:one>/<int:two>/<int:family_method_id>')
+@graph_comparison.route("/cluster/json/<int:one>/<int:two>")
+@graph_comparison.route("/cluster/json/<int:one>/<int:two>/<int:family_method_id>")
 @cache.cached()
 def graph_comparison_cluster_json(one, two, family_method_id=None):
     """
@@ -68,4 +78,4 @@ def graph_comparison_cluster_json(one, two, family_method_id=None):
     output = CytoscapeHelper.add_lc_data_nodes(output)
     output = CytoscapeHelper.add_descriptions_nodes(output)
 
-    return Response(json.dumps(output), mimetype='application/json')
+    return Response(json.dumps(output), mimetype="application/json")

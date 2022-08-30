@@ -16,17 +16,17 @@ class Parser:
         """
         with open(conversion) as f:
             for line in f:
-                parts = line.strip().split('\t')
+                parts = line.strip().split("\t")
                 self.probe_list[parts[0]] = parts[1]
 
         with open(plotfile) as csvfile:
-            reader = csv.reader(csvfile, delimiter='\t')
+            reader = csv.reader(csvfile, delimiter="\t")
             headers = next(reader, None)
             headers.pop(0)
             self.conditions = headers
             for row in reader:
                 probe_id = row.pop(0)
-                expr_values = [x.strip('-').split('-') for x in row]
+                expr_values = [x.strip("-").split("-") for x in row]
 
                 float_values = []
                 for condition in expr_values:
@@ -34,4 +34,3 @@ class Parser:
 
                 probe_data = dict(zip(headers, float_values))
                 self.profiles[probe_id] = probe_data
-

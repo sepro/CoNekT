@@ -1,4 +1,2 @@
-
-
-def read_mcl(filename, prefix='cluster_'):
+def read_mcl(filename, prefix="cluster_"):
     pass

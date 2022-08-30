@@ -7,9 +7,11 @@ from conekt.models.species import Species
 
 
 class AddSequenceDescriptionsForm(FlaskForm):
-    species_id = SelectField('Species', coerce=int)
+    species_id = SelectField("Species", coerce=int)
 
     file = FileField()
 
     def populate_species(self):
-        self.species_id.choices = [(s.id, s.name) for s in Species.query.order_by(Species.name)]
+        self.species_id.choices = [
+            (s.id, s.name) for s in Species.query.order_by(Species.name)
+        ]

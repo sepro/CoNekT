@@ -1,12 +1,16 @@
 import sys
 import json
 
+
 class HCCA:
     """
     The HCCA class to create clusters from a Rank Based Network
 
     """
-    def __init__(self, step_size=3, hrr_cutoff=50, min_cluster_size=40, max_cluster_size=200):
+
+    def __init__(
+        self, step_size=3, hrr_cutoff=50, min_cluster_size=40, max_cluster_size=200
+    ):
         """
         Clear lists and store settings
 
@@ -58,7 +62,7 @@ class HCCA:
         """
         Removes nodes contained in islands (smaller than min_size) from the analysis
         """
-        print("Detecting loners...", end='')
+        print("Detecting loners...", end="")
 
         node_count = len(self.curDic)
 
@@ -109,7 +113,7 @@ class HCCA:
             connections = self.curDic[n]
 
             inside = set(nvn) & set(connections)
-            outside = (set(connections) - set(inside))
+            outside = set(connections) - set(inside)
             in_score = 0
             out_score = 0
             for j in inside:
@@ -197,7 +201,9 @@ class HCCA:
                 del self.curDic[clustered[i][j]]
         connections = list(set(connected) - set(clustered_nodes))
         for i in range(len(connections)):
-            self.curDic[connections[i]] = list(set(self.curDic[connections[i]]) - set(clustered_nodes))
+            self.curDic[connections[i]] = list(
+                set(self.curDic[connections[i]]) - set(clustered_nodes)
+            )
 
     def __filler(self, left_overs):
         """
@@ -212,7 +218,10 @@ class HCCA:
         if len(left_overs) != 0:
             for i in range(len(left_overs)):
                 for j in range(len(self.clustered)):
-                    connections = list(set(self.scoreDic[left_overs[i]].keys()) & set(self.clustered[j]))
+                    connections = list(
+                        set(self.scoreDic[left_overs[i]].keys())
+                        & set(self.clustered[j])
+                    )
                     score = 0
                     for k in range(len(connections)):
                         score += self.scoreDic[left_overs[i]][connections[k]]
@@ -252,20 +261,33 @@ class HCCA:
                 for j in range(len(clusters[0])):
                     if clusters[0][j] not in checked:
                         cur_seed = []
-                        self.__biggest_isle([clusters[0][j]], set(clusters[0]), cur_seed)
+                        self.__biggest_isle(
+                            [clusters[0][j]], set(clusters[0]), cur_seed
+                        )
                         checked += cur_seed[0]
                         # Check if cluster is withing the desired size range
-                        if self.max_cluster_size > len(cur_seed[0]) > self.min_cluster_size:
+                        if (
+                            self.max_cluster_size
+                            > len(cur_seed[0])
+                            > self.min_cluster_size
+                        ):
                             save.append(cur_seed[0])
                             break
 
-        print("\nFinding non-overlappers...", end='')
+        print("\nFinding non-overlappers...", end="")
         new_cluster = self.__find_non_overlapping(save)
-        print("Done!\nFound %s non overlapping SPCs. Making a cluster list..." % len(new_cluster), end='')
+        print(
+            "Done!\nFound %s non overlapping SPCs. Making a cluster list..."
+            % len(new_cluster),
+            end="",
+        )
         for i in range(len(new_cluster)):
             self.clustered.append(new_cluster[i])
 
-        print("Done!\n\nCurrent number of clusters %d. Starting the network edit..." % len(self.clustered))
+        print(
+            "Done!\n\nCurrent number of clusters %d. Starting the network edit..."
+            % len(self.clustered)
+        )
         self.__network_editor(new_cluster)
         print("Done!\nFinished the edits.")
 
@@ -301,11 +323,13 @@ class HCCA:
 
         :param filename: path to file to read
         """
-        print("Reading Rank Based network from HRR file...", end='')
+        print("Reading Rank Based network from HRR file...", end="")
 
         a = open(filename).readlines()  # open network file
 
-        for i in range(len(a)):         # this loop processess the network file into 2 dicts (curDic and scoreDic).
+        for i in range(
+            len(a)
+        ):  # this loop processess the network file into 2 dicts (curDic and scoreDic).
             splitted = a[i].split("\t")
             dicto = {}
             connections = []
@@ -343,7 +367,7 @@ class HCCA:
         :param data: dictionary with co-expressed pairs and their ranks
         :return:
         """
-        print("Loading network from dict...", sep='')
+        print("Loading network from dict...", sep="")
 
         self.curDic = {}
         self.scoreDic = {}
@@ -357,7 +381,11 @@ class HCCA:
                 self.curDic[gene] = neighbors
 
         for gene, scores in data.items():
-            self.scoreDic[gene] = {k: 1/(score + 1) for k, score in scores.items() if score < self.hrrCutoff}
+            self.scoreDic[gene] = {
+                k: 1 / (score + 1)
+                for k, score in scores.items()
+                if score < self.hrrCutoff
+            }
 
         print("Done!")
 
@@ -400,6 +428,7 @@ class HCCA:
         with open(filename, "w") as v:
             v.writelines(save)
 
+
 if __name__ == "__main__":
     hcca_test = HCCA(step_size=3, hrr_cutoff=30)
 
@@ -410,6 +439,3 @@ if __name__ == "__main__":
     hcca_test.write_output(sys.argv[2])
 
     print(hcca_test.clusters)
-
-
-

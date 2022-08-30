@@ -10,7 +10,7 @@ from conekt.models.go import GO
 from conekt.models.species import Species
 
 
-@admin_controls.route('/update/counts')
+@admin_controls.route("/update/counts")
 @admin_required
 def update_counts():
     """
@@ -22,40 +22,45 @@ def update_counts():
         CoexpressionClusteringMethod.update_counts()
     except Exception as e:
         print("ERROR:", e)
-        flash('An error occurred while re-doing CoexpressionClusteringMethod counts', 'danger')
+        flash(
+            "An error occurred while re-doing CoexpressionClusteringMethod counts",
+            "danger",
+        )
     else:
-        flash('CoexpressionClusteringMethod count updated', 'success')
+        flash("CoexpressionClusteringMethod count updated", "success")
 
     try:
         ExpressionNetworkMethod.update_count()
     except Exception as e:
         print("ERROR:", e)
-        flash('An error occurred while re-doing ExpressionNetworkMethod counts', 'danger')
+        flash(
+            "An error occurred while re-doing ExpressionNetworkMethod counts", "danger"
+        )
     else:
-        flash('ExpressionNetworkMethod counts updated', 'success')
+        flash("ExpressionNetworkMethod counts updated", "success")
 
     try:
         GeneFamilyMethod.update_count()
     except Exception as e:
         print("ERROR:", e)
-        flash('An error occurred while re-doing GeneFamilyMethod counts', 'danger')
+        flash("An error occurred while re-doing GeneFamilyMethod counts", "danger")
     else:
-        flash('GeneFamilyMethod count updated', 'success')
+        flash("GeneFamilyMethod count updated", "success")
 
     try:
         Species.update_counts()
     except Exception as e:
         print("ERROR:", e)
-        flash('An error occurred while re-doing Species counts', 'danger')
+        flash("An error occurred while re-doing Species counts", "danger")
     else:
-        flash('Species count updated', 'success')
+        flash("Species count updated", "success")
 
     try:
         GO.update_species_counts()
     except Exception as e:
         print("ERROR:", e)
-        flash('An error occurred while re-doing GO counts', 'danger')
+        flash("An error occurred while re-doing GO counts", "danger")
     else:
-        flash('GO count updated', 'success')
+        flash("GO count updated", "success")
 
-    return redirect(url_for('admin.index'))
+    return redirect(url_for("admin.index"))
