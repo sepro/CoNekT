@@ -1,4 +1,6 @@
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Tests](https://github.com/sepro/CoNekT/actions/workflows/python-unittest.yml/badge.svg)](https://github.com/sepro/CoNekT/actions/workflows/python-unittest.yml)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 # *CoNekT:* Coexpression Network Toolkit
 
