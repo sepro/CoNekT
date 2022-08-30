@@ -1,5 +1,0 @@
-planet/static/js/* linguist-vendored
-planet/static/js/planet* linguist-vendored=false
-
-planet/static/css/* linguist-vendored
-planet/static/css/main.css linguist-vendored=false
