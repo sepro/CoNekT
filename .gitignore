@@ -13,7 +13,6 @@ bin
 lib
 include
 pip-selfcheck.json
-scripts
 
 /config.py
 
