@@ -30,7 +30,7 @@ idna==2.7
 itsdangerous==0.24
 Jinja2==2.11.3
 macholib==1.9
-Mako==1.0.7
+Mako==1.2.2
 Markdown==2.6.11
 MarkupSafe==1.1.1
 mpmath==1.0.0
