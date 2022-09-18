@@ -67,7 +67,8 @@ from where the GO terms in the file originate from (the source).
 ![GO gene](../images/add_go_gene.png "Adding GO terms for a species")
 
 **InterPro** domains can be imported directly from [InterProScan](http://www.ebi.ac.uk/interpro/download.html) output. 
-To do so, in the 'Admin panel', under 'Add' -> 'InterPro genes' select a species, select the file and click 'Add InterPro'
+To do so, in the 'Admin panel', under 'Add' -> 'InterPro genes' select a species, select the file and click 'Add InterPro'.
+InterProScan results must be in TSV format.
 
 ![InterPro gene](../images/add_interpro_gene.png "Adding InterPro terms for a species")
 

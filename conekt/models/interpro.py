@@ -232,7 +232,7 @@ class Interpro(db.Model):
     @staticmethod
     def add_interpro_from_interproscan(filename, species_id):
         """
-        Adds GO annotation from InterProScan Output
+        Adds InterPro annotation from InterProScan Output
 
         :param filename: Path to the annotation file
         :return:
