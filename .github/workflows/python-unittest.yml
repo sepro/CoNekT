@@ -25,8 +25,8 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Unit test and codecov Generate Report
-        run: |
-          pip install coverage
-          coverage run run_unittest.py
+      run: |
+        pip install coverage
+        coverage run run_unittest.py
     - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v3
