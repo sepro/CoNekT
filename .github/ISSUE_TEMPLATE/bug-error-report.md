@@ -20,6 +20,8 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem, or a stracktrace to show which error occurs and where.
 
 **Details about your system:**
+   
+ - Python version
  - OS: [e.g. Windows, Linux]
  - Webserver (NGINX, Apache, internal, ...)
  - Database
