@@ -1,8 +1,9 @@
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Project Status: Unsupported – The project has reached a stable, usable state but the author(s) have ceased all work on it. A new maintainer may be desired.](https://www.repostatus.org/badges/latest/unsupported.svg)](https://www.repostatus.org/#unsupported)
 [![Tests](https://github.com/sepro/CoNekT/actions/workflows/python-unittest.yml/badge.svg)](https://github.com/sepro/CoNekT/actions/workflows/python-unittest.yml)
 [![Python 3.9 Unittest](https://github.com/sepro/CoNekT/actions/workflows/python39-unittest.yml/badge.svg)](https://github.com/sepro/CoNekT/actions/workflows/python39-unittest.yml)
 [![codecov](https://codecov.io/gh/sepro/CoNekT/branch/master/graph/badge.svg?token=7AtQXvFWcJ)](https://codecov.io/gh/sepro/CoNekT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 
 # *CoNekT:* Coexpression Network Toolkit
 
