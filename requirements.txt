@@ -23,7 +23,7 @@ Flask-SQLAlchemy==2.3.2
 Flask-Testing==0.7.1
 flask-whooshee==0.6.0
 Flask-WTF==0.14.2
-future==0.16.0
+future==0.18.3
 htmlmin==0.1.12
 humanfriendly==4.15.1
 idna==2.7
